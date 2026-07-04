@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { BackNav } from '@/components/BackNav';
 
 interface LeaderboardEntry {
   user_id: string;
@@ -20,9 +21,11 @@ export default async function LeaderboardPage() {
   const entries = (data ?? []) as LeaderboardEntry[];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10 px-4" dir="rtl">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
+      <BackNav backHref="/" backLabel="דף הבית" />
+      <div className="py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-black text-slate-900 mb-8">🏆 לוח ישיבות</h1>
+        <h1 className="text-2xl font-black text-slate-900 dark:text-white mb-8">🏆 לוח מובילים</h1>
 
         {entries.length === 0 ? (
           <div className="text-center text-slate-400 py-20">עדיין אין נתונים בלוח</div>
@@ -53,6 +56,7 @@ export default async function LeaderboardPage() {
             })}
           </div>
         )}
+      </div>
       </div>
     </div>
   );

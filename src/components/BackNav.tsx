@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { UserMenu } from '@/components/UserMenu';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface BackNavProps {
   backHref?: string;
@@ -42,12 +44,17 @@ export function BackNav({ backHref = '/', backLabel = 'דף הבית', title }: 
           </>
         )}
 
-        <Link
-          href="/"
-          className="mr-auto text-xs text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors flex-shrink-0"
-        >
-          🏠 בית
-        </Link>
+        {/* Left side (RTL): home shortcut on desktop + user + theme, one tidy group */}
+        <div className="mr-auto flex items-center gap-2 flex-shrink-0">
+          <Link
+            href="/"
+            className="hidden md:block text-xs text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+          >
+            🏠 בית
+          </Link>
+          <UserMenu />
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Quick-link strip — hidden on mobile (BottomNav handles it), visible on desktop */}

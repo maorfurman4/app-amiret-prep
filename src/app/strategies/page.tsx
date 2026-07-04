@@ -1,3 +1,5 @@
+import { BackNav } from '@/components/BackNav';
+
 const STRATEGIES = [
   {
     id: 'sentence-completion',
@@ -104,8 +106,9 @@ const COLOR_MAP: Record<string, { bg: string; border: string; badge: string; hea
 export default function StrategiesPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-24" dir="rtl">
+      <BackNav backHref="/" backLabel="דף הבית" />
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-5 sticky top-0 z-10">
+      <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-5">
         <h1 className="text-2xl font-black text-slate-900 dark:text-white">
           🧠 אסטרטגיות
         </h1>

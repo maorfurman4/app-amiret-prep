@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { UserMenu } from '@/components/UserMenu';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const LEARN_LINKS = [
   { href: '/practice',     icon: '✏️', title: 'תרגול ממוקד',   sub: 'לפי סוג שאלה' },
@@ -14,8 +16,14 @@ const TRACK_LINKS = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex flex-col items-center px-4 pt-14 pb-8 text-white" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex flex-col items-center px-4 pt-4 pb-8 text-white" dir="rtl">
       <div className="w-full max-w-lg space-y-7">
+        {/* Top bar: account + theme, in-flow (not floating) */}
+        <div className="flex items-center justify-end gap-2 [&_a]:text-slate-200 [&_a:hover]:text-white [&_a:hover]:bg-white/10">
+          <UserMenu />
+          <ThemeToggle />
+        </div>
+
         <div className="text-center">
           <div className="text-5xl mb-3">🎓</div>
           <h1 className="text-4xl font-black mb-2">הכנה לאמירנ&quot;ט</h1>

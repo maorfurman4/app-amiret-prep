@@ -565,22 +565,22 @@ export default function VocabularyPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center" dir="rtl">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center" dir="rtl">
         <div className="text-slate-400 text-lg">טוען מילים...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
 
       <div className="max-w-lg mx-auto px-4 pt-4 pb-32">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-slate-900">📖 אוצר מילים</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">📖 אוצר מילים</h1>
           <button
             onClick={() => setShowFavoritesList(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-50 border border-red-200 text-red-600 font-semibold text-sm hover:bg-red-100 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-50 dark:bg-red-900/25 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 font-semibold text-sm hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
           >
             <span>❤️</span>
             <span>מועדפים</span>
@@ -596,14 +596,14 @@ export default function VocabularyPage() {
         {showFavoritesList && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowFavoritesList(false)}>
             <div
-              className="bg-white rounded-t-3xl w-full max-w-lg max-h-[80vh] flex flex-col"
+              className="bg-white dark:bg-slate-800 rounded-t-3xl w-full max-w-lg max-h-[80vh] flex flex-col"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
                 <div className="flex items-center gap-2">
                   <span className="text-xl">❤️</span>
-                  <span className="font-bold text-slate-900 text-lg">מילים שמורות</span>
+                  <span className="font-bold text-slate-900 dark:text-white text-lg">מילים שמורות</span>
                   <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-full">{favorites.size}</span>
                 </div>
                 <button onClick={() => setShowFavoritesList(false)} className="text-slate-400 hover:text-slate-600 text-2xl leading-none">×</button>
@@ -641,9 +641,9 @@ export default function VocabularyPage() {
                 ) : (
                   <div className="space-y-2">
                     {allWords.filter(w => favorites.has(w.id)).map(w => (
-                      <div key={w.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
+                      <div key={w.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600">
                         <div dir="ltr" className="flex-1 min-w-0">
-                          <div className="font-bold text-slate-900 text-sm">{w.word}</div>
+                          <div className="font-bold text-slate-900 dark:text-white text-sm">{w.word}</div>
                           <div className="text-slate-500 text-xs mt-0.5">{w.hebrew_translation}</div>
                           {w.example_sentence && (
                             <div className="text-slate-400 text-xs mt-0.5 italic truncate">{w.example_sentence}</div>
@@ -671,7 +671,7 @@ export default function VocabularyPage() {
         )}
 
         {/* ── Mode Switcher ─────────────────────────────────────────────────── */}
-        <div className="flex rounded-xl bg-slate-200 p-1 mb-5 gap-1">
+        <div className="flex rounded-xl bg-slate-200 dark:bg-slate-800 p-1 mb-5 gap-1">
           {([
             { id: 'flashcard', label: 'כרטיסיות' },
             { id: 'quiz',      label: 'חידון' },
@@ -680,7 +680,7 @@ export default function VocabularyPage() {
             <button
               key={m.id}
               onClick={() => setMode(m.id)}
-              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${mode === m.id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${mode === m.id ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
             >{m.label}</button>
           ))}
         </div>
@@ -694,7 +694,7 @@ export default function VocabularyPage() {
               <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => setShowFilterDrawer(true)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-colors ${hasActive ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'}`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-colors ${hasActive ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-blue-300'}`}
                 >
                   🔍 סינון{activeCount > 0 ? ` (${activeCount})` : ''}
                 </button>
@@ -723,7 +723,6 @@ export default function VocabularyPage() {
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-400 mt-2 pr-1">{filteredWords.length} מילים</p>
             </div>
           );
         })()}
@@ -809,18 +808,14 @@ export default function VocabularyPage() {
         ════════════════════════════════════════════════════════════════════ */}
         {mode === 'flashcard' && (
           <>
-            <p className="text-slate-500 text-xs text-center mb-4">
-              החלק ימינה = ידעתי ✓ &nbsp;|&nbsp; החלק שמאלה = לא ידעתי ✗
-            </p>
-
             {deck.length > 0 && (
               <div className="mb-4">
                 <div className="flex justify-between text-xs text-slate-500 mb-1.5">
-                  <span>נותרו <span className="font-bold text-slate-700">{deck.length}</span> מילים</span>
+                  <span>נותרו <span className="font-bold text-slate-700 dark:text-slate-200">{deck.length}</span> מילים</span>
                   {known.size > 0 && <span>ידעת <span className="font-bold text-green-600">{known.size}</span> / {allWords.length} ({Math.round(known.size / allWords.length * 100)}%)</span>}
                 </div>
                 {known.size > 0 && (
-                  <div className="w-full bg-slate-200 rounded-full h-1.5">
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
                     <div className="bg-green-500 h-1.5 rounded-full transition-all" style={{ width: `${Math.round(known.size / allWords.length * 100)}%` }} />
                   </div>
                 )}
@@ -875,7 +870,7 @@ export default function VocabularyPage() {
                       <div className="text-amber-500 text-lg mb-4">{'★'.repeat(current.difficulty_level)}{'☆'.repeat(5 - current.difficulty_level)}</div>
 
                       {showHint ? (
-                        <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-900 italic leading-relaxed text-left">
+                        <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl text-sm text-amber-900 dark:text-amber-200 italic leading-relaxed text-left">
                           &quot;{current.example_sentence}&quot;
                         </div>
                       ) : (
@@ -888,7 +883,7 @@ export default function VocabularyPage() {
 
                       <button
                         onClick={e => { e.stopPropagation(); setFlipped(true); }}
-                        className="mt-6 w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-sm font-medium text-slate-700 transition-colors"
+                        className="mt-6 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-sm font-medium text-slate-700 dark:text-slate-200 transition-colors"
                         dir="rtl"
                       >הצג תרגום ←</button>
                     </div>
@@ -898,10 +893,10 @@ export default function VocabularyPage() {
                         <span className="text-lg font-bold text-slate-500">{current.word}</span>
                         <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-lg">🔊</button>
                       </div>
-                      <div className="text-3xl font-black text-blue-700 mb-3">{current.hebrew_translation}</div>
-                      <p className="text-slate-600 text-sm leading-relaxed mb-4">{current.definition}</p>
+                      <div className="text-3xl font-black text-blue-700 dark:text-blue-400 mb-3">{current.hebrew_translation}</div>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">{current.definition}</p>
                       {current.example_sentence && (
-                        <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-500 italic leading-relaxed text-left" dir="ltr">
+                        <div className="p-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-xs text-slate-500 dark:text-slate-400 italic leading-relaxed text-left" dir="ltr">
                           &quot;{current.example_sentence}&quot;
                         </div>
                       )}
@@ -918,7 +913,7 @@ export default function VocabularyPage() {
                 {known.size > 0 && !filterCat && !filterDiff && !search && !activePack ? (
                   <>
                     <div className="text-5xl mb-4">🎉</div>
-                    <div className="text-xl font-bold text-slate-800 mb-2">כל הכבוד! סיימת את כל הכרטיסיות</div>
+                    <div className="text-xl font-bold text-slate-800 dark:text-white mb-2">כל הכבוד! סיימת את כל הכרטיסיות</div>
                     <p className="text-slate-500 text-sm mb-6">ידעת {known.size} מילים</p>
                     <button onClick={handleResetAll} className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors">
                       התחל מחדש 🔄
@@ -938,21 +933,27 @@ export default function VocabularyPage() {
                 <button
                   onClick={handleUnknown}
                   disabled={!!animating}
-                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-red-50 border-2 border-red-200 text-red-600 font-bold text-lg hover:bg-red-100 active:scale-95 transition-all disabled:opacity-50"
+                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-red-50 dark:bg-red-900/25 border-2 border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 font-bold text-lg hover:bg-red-100 dark:hover:bg-red-900/40 active:scale-95 transition-all disabled:opacity-50"
                 >✗<br /><span className="text-sm font-medium">לא ידעתי</span></button>
                 <button
                   onClick={handleKnew}
                   disabled={!!animating}
-                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-green-50 border-2 border-green-200 text-green-600 font-bold text-lg hover:bg-green-100 active:scale-95 transition-all disabled:opacity-50"
+                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-green-50 dark:bg-green-900/25 border-2 border-green-200 dark:border-green-800 text-green-600 dark:text-green-300 font-bold text-lg hover:bg-green-100 dark:hover:bg-green-900/40 active:scale-95 transition-all disabled:opacity-50"
                 >✓<br /><span className="text-sm font-medium">ידעתי</span></button>
               </div>
+            )}
+
+            {current && (
+              <p className="text-slate-400 dark:text-slate-500 text-[11px] text-center mt-3">
+                אפשר גם להחליק את הכרטיס: ימינה = ידעתי ✓ | שמאלה = לא ידעתי ✗
+              </p>
             )}
 
             {knownWords.length > 0 && (
               <div className="mt-8 border-t border-slate-200 pt-6">
                 <button
                   onClick={() => setShowKnownList(v => !v)}
-                  className="w-full flex items-center justify-between px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-sm font-medium text-green-800 hover:bg-green-100 transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-3 bg-green-50 dark:bg-green-900/25 border border-green-200 dark:border-green-800 rounded-xl text-sm font-medium text-green-800 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors"
                 >
                   <span>ידעת {knownWords.length} מילים ✓</span>
                   <span>{showKnownList ? '▲ סגור' : '▼ הצג'}</span>

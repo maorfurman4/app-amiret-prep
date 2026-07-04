@@ -58,8 +58,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-slate-400">טוען תוצאות...</div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-800/60">
+        <div className="text-slate-400 dark:text-slate-500">טוען תוצאות...</div>
       </div>
     );
   }
@@ -88,19 +88,19 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   }
 
   return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
       <div className="max-w-2xl mx-auto space-y-8 py-8 px-4">
         {/* Score card */}
-        <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 text-center">
-          <div className="text-6xl font-black text-slate-900 mb-2">{score}</div>
+        <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-700 text-center">
+          <div className="text-6xl font-black text-slate-900 dark:text-white mb-2">{score}</div>
           <div className={`text-xl font-bold mb-1 ${classification.color}`}>{classification.label}</div>
-          <div className="text-slate-500 text-sm mb-6">{classification.description}</div>
-          <div className="text-slate-700 font-medium">
+          <div className="text-slate-500 dark:text-slate-400 text-sm mb-6">{classification.description}</div>
+          <div className="text-slate-700 dark:text-slate-200 font-medium">
             {totalCorrect} / {totalQuestions} תשובות נכונות
           </div>
           {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
-            <div className="text-xs text-slate-400 mt-1">
+            <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">
               כולל פרק ניסיוני — טעויות בו לא הורידו את הציון
             </div>
           )}
@@ -123,9 +123,9 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           ];
           const currentBand = bands.find(b => score >= b.min && score <= b.max);
           return (
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-              <h2 className="font-bold text-slate-900 mb-1">תחזית ציון AMIRET</h2>
-              <p className="text-slate-500 text-sm mb-4">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+              <h2 className="font-bold text-slate-900 dark:text-white mb-1">תחזית ציון AMIRET</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">
                 על בסיס הביצועים שלך, הציון הצפוי הוא בטווח {lo}–{hi}
               </p>
               {/* Gradient score bar — RTL: low scores (50) on the right */}
@@ -148,15 +148,15 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                   className="absolute -top-0.5 w-0.5 h-6 bg-slate-900"
                   style={{ right: `calc(${pct}% - 1px)` }}
                 />
-                <div className="flex justify-between text-xs text-slate-400 mt-1.5">
+                <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500 mt-1.5">
                   <span>50</span>
                   <span>150</span>
                 </div>
               </div>
               {currentBand && (
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
                   <div className={`w-3 h-3 rounded-full flex-shrink-0 ${currentBand.color}`} />
-                  <span className="text-sm font-semibold text-slate-800">{currentBand.label}</span>
+                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">{currentBand.label}</span>
                 </div>
               )}
             </div>
@@ -164,8 +164,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         })()}
 
         {/* Score scale */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <h2 className="font-bold text-slate-900 mb-4">סקאלת ציונים</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+          <h2 className="font-bold text-slate-900 dark:text-white mb-4">סקאלת ציונים</h2>
           {[
             { range: '134–150', label: 'פטור מלא', color: 'bg-green-500', min: 134, max: 150 },
             { range: '120–133', label: 'מתקדמים ב\'', color: 'bg-blue-500', min: 120, max: 133 },
@@ -175,18 +175,18 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             { range: '50–69',  label: 'טרום-בסיסי א\'', color: 'bg-red-700', min: 50, max: 69 },
           ].map(row => (
             <div key={row.range} className={`flex items-center gap-3 p-3 rounded-xl mb-2 ${
-              score >= row.min && score <= row.max ? 'bg-slate-100 ring-2 ring-blue-400' : ''
+              score >= row.min && score <= row.max ? 'bg-slate-100 dark:bg-slate-700 ring-2 ring-blue-400' : ''
             }`}>
               <div className={`w-3 h-3 rounded-full ${row.color}`} />
-              <span className="font-mono text-sm text-slate-600">{row.range}</span>
-              <span className="text-sm text-slate-800">{row.label}</span>
+              <span className="font-mono text-sm text-slate-600 dark:text-slate-300">{row.range}</span>
+              <span className="text-sm text-slate-800 dark:text-slate-100">{row.label}</span>
             </div>
           ))}
         </div>
 
         {/* Breakdown by question type */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <h2 className="font-bold text-slate-900 mb-4">פירוט לפי סוג שאלה</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+          <h2 className="font-bold text-slate-900 dark:text-white mb-4">פירוט לפי סוג שאלה</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
             {Object.entries(byType).map(([type, { correct, total }]) => {
               const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
@@ -203,8 +203,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             })}
           </div>
 
-          <h3 className="font-semibold text-slate-700 text-sm mb-3">פירוט לפי פרק — והמסלול האדפטיבי שלך</h3>
-          <p className="text-xs text-slate-400 mb-3">
+          <h3 className="font-semibold text-slate-700 dark:text-slate-200 text-sm mb-3">פירוט לפי פרק — והמסלול האדפטיבי שלך</h3>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mb-3">
             רמה 1–5 = רמת הקושי שאליה ניתב אותך האלגוריתם בכל פרק. במבחן האמיתי, רק הגעה לרמות הגבוהות מאפשרת ציון גבוה.
           </p>
           <div className="space-y-3">
@@ -222,18 +222,18 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-slate-700 flex items-center gap-1.5">
+                      <span className="text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                         {TYPE_LABELS[cfg?.type ?? sr.type]}
                         {isExperimental && (
                           <span className="px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-semibold">ניסיוני</span>
                         )}
                         {difficulty && (
-                          <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 text-[10px] font-mono">רמה {difficulty}/5</span>
+                          <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-mono">רמה {difficulty}/5</span>
                         )}
                       </span>
-                      <span className="text-slate-500">{sr.correctCount}/{sr.totalCount}</span>
+                      <span className="text-slate-500 dark:text-slate-400">{sr.correctCount}/{sr.totalCount}</span>
                     </div>
-                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${
                           pct >= 75 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-red-500'
@@ -242,7 +242,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                       />
                     </div>
                   </div>
-                  <span className="text-sm font-medium text-slate-600 w-10 text-left">{pct}%</span>
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 w-10 text-left">{pct}%</span>
                 </div>
               );
             })}
@@ -263,9 +263,9 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
         {/* AI Explanations — only when there are mistakes */}
         {!session.is_practice && totalCorrect < totalQuestions && (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-slate-900">הסברים על טעויות</h2>
+              <h2 className="font-bold text-slate-900 dark:text-white">הסברים על טעויות</h2>
               {!explanations && (
                 <button
                   onClick={loadExplanations}
@@ -277,9 +277,9 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               )}
             </div>
             {explanations ? (
-              <div className="text-slate-700 text-sm leading-relaxed whitespace-pre-wrap max-h-96 overflow-y-auto">{explanations}</div>
+              <div className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed whitespace-pre-wrap max-h-96 overflow-y-auto">{explanations}</div>
             ) : (
-              <div className="text-slate-400 text-sm">לחץ כדי לקבל הסברים מותאמים אישית</div>
+              <div className="text-slate-400 dark:text-slate-500 text-sm">לחץ כדי לקבל הסברים מותאמים אישית</div>
             )}
           </div>
         )}
@@ -294,7 +294,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           </button>
           <button
             onClick={() => router.push('/stats')}
-            className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-colors"
+            className="flex-1 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-semibold hover:bg-slate-200 transition-colors"
           >
             הסטטיסטיקה שלי
           </button>

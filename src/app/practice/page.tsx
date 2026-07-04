@@ -211,23 +211,23 @@ export default function PracticePage() {
 
   if (step === 'pick-type') {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col" dir="rtl">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg">
-          <h1 className="text-2xl font-bold text-slate-900 mb-1">תרגול סעיף</h1>
-          <p className="text-slate-500 mb-8 text-sm">בחר את סוג השאלות שתרצה לתרגל</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">תרגול סעיף</h1>
+          <p className="text-slate-500 dark:text-slate-400 mb-8 text-sm">בחר את סוג השאלות שתרצה לתרגל</p>
           <div className="space-y-3">
             {TYPE_OPTIONS.map(opt => (
               <button
                 key={opt.type}
                 onClick={() => { setType(opt.type); setStep('pick-difficulty'); }}
-                className="w-full text-right p-5 bg-white rounded-2xl border-2 border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex items-center gap-4"
+                className="w-full text-right p-5 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:shadow-md transition-all flex items-center gap-4"
               >
                 <span className="text-3xl">{opt.icon}</span>
                 <div>
-                  <div className="font-bold text-slate-900 text-lg">{opt.label}</div>
-                  <div className="text-slate-500 text-sm">{opt.desc}</div>
+                  <div className="font-bold text-slate-900 dark:text-white text-lg">{opt.label}</div>
+                  <div className="text-slate-500 dark:text-slate-400 text-sm">{opt.desc}</div>
                 </div>
               </button>
             ))}
@@ -240,13 +240,13 @@ export default function PracticePage() {
 
   if (step === 'pick-difficulty') {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4 py-12" dir="rtl">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-4 py-12" dir="rtl">
         <div className="w-full max-w-lg">
-          <button onClick={() => setStep('pick-type')} className="text-slate-400 text-sm mb-6 hover:text-slate-600">
+          <button onClick={() => setStep('pick-type')} className="text-slate-400 dark:text-slate-500 text-sm mb-6 hover:text-slate-600">
             ← חזרה
           </button>
-          <h1 className="text-2xl font-bold text-slate-900 mb-1">רמת קושי</h1>
-          <p className="text-slate-500 mb-8 text-sm">בחר את רמת הקושי של השאלות</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">רמת קושי</h1>
+          <p className="text-slate-500 dark:text-slate-400 mb-8 text-sm">בחר את רמת הקושי של השאלות</p>
           <div className="grid grid-cols-3 gap-3">
             {DIFFICULTY_OPTIONS.map(opt => (
               <button
@@ -255,11 +255,11 @@ export default function PracticePage() {
                   setDiff(opt.value);
                   setStep('pick-count');
                 }}
-                className="p-4 bg-white rounded-2xl border-2 border-slate-200 hover:border-blue-400 hover:shadow-md transition-all text-center"
+                className="p-4 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:shadow-md transition-all text-center"
               >
-                <div className="text-2xl font-black text-slate-900">{opt.label}</div>
-                <div className="text-xs font-semibold text-slate-700 mt-1">{opt.sublabel}</div>
-                <div className="text-xs text-slate-400 mt-0.5">{opt.range}</div>
+                <div className="text-2xl font-black text-slate-900 dark:text-white">{opt.label}</div>
+                <div className="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1">{opt.sublabel}</div>
+                <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{opt.range}</div>
               </button>
             ))}
           </div>
@@ -270,13 +270,13 @@ export default function PracticePage() {
 
   if (step === 'pick-count') {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4 py-12" dir="rtl">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-4 py-12" dir="rtl">
         <div className="w-full max-w-lg">
-          <button onClick={() => setStep('pick-difficulty')} className="text-slate-400 text-sm mb-6 hover:text-slate-600">
+          <button onClick={() => setStep('pick-difficulty')} className="text-slate-400 dark:text-slate-500 text-sm mb-6 hover:text-slate-600">
             ← חזרה
           </button>
-          <h1 className="text-2xl font-bold text-slate-900 mb-1">כמות שאלות</h1>
-          <p className="text-slate-500 mb-8 text-sm">כמה שאלות תרצה לתרגל?</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">כמות שאלות</h1>
+          <p className="text-slate-500 dark:text-slate-400 mb-8 text-sm">כמה שאלות תרצה לתרגל?</p>
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">{error}</div>
           )}
@@ -288,7 +288,7 @@ export default function PracticePage() {
                 className={`p-6 rounded-2xl border-2 transition-all text-center ${
                   selectedCount === n
                     ? 'border-blue-500 bg-blue-50 text-blue-900'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:border-blue-300'
                 }`}
               >
                 <div className="text-4xl font-black">{n}</div>
@@ -298,11 +298,11 @@ export default function PracticePage() {
           </div>
 
           {/* Exam mode toggle */}
-          <div className="mt-6 bg-white rounded-2xl border-2 border-slate-200 p-4">
+          <div className="mt-6 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="font-bold text-slate-900">מצב בחינה</div>
-                <div className="text-xs text-slate-500 mt-0.5">ללא הסברים מיידיים, עם טיימר לכל שאלה</div>
+                <div className="font-bold text-slate-900 dark:text-white">מצב בחינה</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ללא הסברים מיידיים, עם טיימר לכל שאלה</div>
               </div>
               <button
                 role="switch"
@@ -313,7 +313,7 @@ export default function PracticePage() {
                 }`}
               >
                 <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white dark:bg-slate-800 shadow transition-transform ${
                     examMode ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />
@@ -338,12 +338,12 @@ export default function PracticePage() {
     const isLast = currentIndex === questions.length - 1;
 
     return (
-      <div className="min-h-screen bg-slate-50" dir="rtl">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
         {/* Header */}
-        <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
+        <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
           <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
             <div>
-              <div className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <div className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 {TYPE_OPTIONS.find(t => t.type === selectedType)?.label}
                 {examMode && (
                   <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">
@@ -351,7 +351,7 @@ export default function PracticePage() {
                   </span>
                 )}
               </div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-slate-500 dark:text-slate-400">
                 שאלה {currentIndex + 1} מתוך {questions.length}
               </div>
             </div>
@@ -372,7 +372,7 @@ export default function PracticePage() {
                     className={`w-2 h-2 rounded-full transition-colors ${
                       i < currentIndex
                         ? answers[i] === questions[i].correct_answer ? 'bg-green-500' : 'bg-red-400'
-                        : i === currentIndex ? 'bg-blue-600' : 'bg-slate-200'
+                        : i === currentIndex ? 'bg-blue-600' : 'bg-slate-200 dark:bg-slate-700'
                     }`}
                   />
                 ))}
@@ -425,7 +425,7 @@ export default function PracticePage() {
     const color = pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
 
     return (
-      <div className="min-h-screen bg-slate-50 px-4 py-8" dir="rtl">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 px-4 py-8" dir="rtl">
         <div className="max-w-2xl mx-auto">
           {/* Score summary */}
           <div className="text-center space-y-4 mb-10">
@@ -437,14 +437,14 @@ export default function PracticePage() {
             )}
             <div>
               <div className={`text-5xl font-black ${color}`}>{correctCount}/{questions.length}</div>
-              <div className="text-slate-500 mt-1 text-lg">{pct}% נכון</div>
+              <div className="text-slate-500 dark:text-slate-400 mt-1 text-lg">{pct}% נכון</div>
             </div>
-            <div className="bg-white rounded-2xl border border-slate-200 p-4 text-sm text-slate-600">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-600 dark:text-slate-300">
               {pct >= 80 && 'מצוין! אתה שולט בחומר הזה.'}
               {pct >= 60 && pct < 80 && 'טוב! עוד קצת תרגול ותגיע לשלמות.'}
               {pct < 60 && 'כדאי לחזור על החומר הזה ולתרגל שוב.'}
               {questions.length - correctCount > 0 && (
-                <div className="mt-2 text-slate-400 text-xs">
+                <div className="mt-2 text-slate-400 dark:text-slate-500 text-xs">
                   {questions.length - correctCount} טעויות מתוך {questions.length} שאלות
                 </div>
               )}
@@ -458,7 +458,7 @@ export default function PracticePage() {
               </button>
               <button
                 onClick={() => router.push('/exam')}
-                className="w-full py-3 bg-white border border-slate-300 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+                className="w-full py-3 bg-white dark:bg-slate-800 border border-slate-300 text-slate-700 dark:text-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors"
               >
                 חזרה לתפריט
               </button>
@@ -468,7 +468,7 @@ export default function PracticePage() {
           {/* Exam mode: full question review with explanations */}
           {examMode && (
             <div className="space-y-6">
-              <h2 className="text-xl font-bold text-slate-900 border-b border-slate-200 pb-3">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-3">
                 סקירת שאלות והסברים
               </h2>
               {questions.map((q, i) => {
@@ -489,10 +489,10 @@ export default function PracticePage() {
                       <span>{isCorrect ? '✓' : '✗'}</span>
                       <span>שאלה {i + 1}</span>
                       {answers[i] === null && (
-                        <span className="text-slate-500 font-normal">(לא נענתה — פג הזמן)</span>
+                        <span className="text-slate-500 dark:text-slate-400 font-normal">(לא נענתה — פג הזמן)</span>
                       )}
                     </div>
-                    <div className="bg-white">
+                    <div className="bg-white dark:bg-slate-800">
                       <QuestionCard
                         question={q}
                         questionNumber={i + 1}
@@ -517,7 +517,7 @@ export default function PracticePage() {
                 </button>
                 <button
                   onClick={() => router.push('/exam')}
-                  className="w-full py-3 bg-white border border-slate-300 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+                  className="w-full py-3 bg-white dark:bg-slate-800 border border-slate-300 text-slate-700 dark:text-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors"
                 >
                   חזרה לתפריט
                 </button>
@@ -531,9 +531,9 @@ export default function PracticePage() {
 
   // Loading / error fallback
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center" dir="rtl">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center" dir="rtl">
       {loading
-        ? <div className="text-slate-400">טוען שאלות...</div>
+        ? <div className="text-slate-400 dark:text-slate-500">טוען שאלות...</div>
         : <div className="text-center">
             <div className="text-red-500 mb-3">{error ?? 'שגיאה לא צפויה'}</div>
             <button onClick={handleRestart} className="text-blue-600 underline text-sm">נסה שוב</button>

@@ -43,7 +43,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
 
   if (fetchError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-800/60" dir="rtl">
         <div className="text-center">
           <div className="text-red-500 text-xl mb-3">שגיאה בטעינת השאלות</div>
           <button onClick={() => { setFetchError(false); window.location.reload(); }} className="text-blue-600 underline text-sm">נסה שוב</button>
@@ -54,8 +54,8 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
 
   if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-slate-400">טוען שאלות...</div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-800/60">
+        <div className="text-slate-400 dark:text-slate-500">טוען שאלות...</div>
       </div>
     );
   }
@@ -89,14 +89,14 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
   };
 
   return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
+      <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <div className="text-sm font-bold text-slate-900">סקירת מבחן</div>
-              <div className="text-xs text-slate-500">
+              <div className="text-sm font-bold text-slate-900 dark:text-white">סקירת מבחן</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">
                 {filteredIndices.length} שאלות
                 {filter === 'wrong' ? ' שגויות' : filter === 'correct' ? ' נכונות' : ''}
               </div>
@@ -122,7 +122,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                   filter === opt.value
                     ? 'bg-blue-600 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
                 }`}
               >
                 {opt.label}
@@ -160,14 +160,14 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
         {/* Main question area */}
         <main className="flex-1 min-w-0">
           {filteredIndices.length === 0 ? (
-            <div className="text-center py-20 text-slate-400">
+            <div className="text-center py-20 text-slate-400 dark:text-slate-500">
               <div className="text-4xl mb-3">{filter === 'wrong' ? '🎉' : '📋'}</div>
               <div>{filter === 'wrong' ? 'אין טעויות! ענית נכון על הכל' : 'לא נמצאו שאלות'}</div>
             </div>
           ) : (
             <>
               <div ref={questionRef}>
-                <div className="text-xs text-slate-400 mb-3 flex items-center gap-2">
+                <div className="text-xs text-slate-400 dark:text-slate-500 mb-3 flex items-center gap-2">
                   <span>{TYPE_ICONS[question.sectionType] ?? '📝'}</span>
                   <span>פרק {question.sectionIndex}</span>
                   <span>·</span>
@@ -189,7 +189,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                 <button
                   onClick={() => goTo(Math.max(0, currentIndex - 1))}
                   disabled={currentIndex === 0}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 disabled:opacity-40 hover:bg-slate-100 text-sm"
+                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-100 text-sm"
                 >
                   קודם &rsaquo;
                 </button>
@@ -219,7 +219,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                 <button
                   onClick={() => goTo(Math.min(filteredIndices.length - 1, currentIndex + 1))}
                   disabled={currentIndex === filteredIndices.length - 1}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 disabled:opacity-40 hover:bg-slate-100 text-sm"
+                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-100 text-sm"
                 >
                   &lsaquo; הבא
                 </button>

@@ -151,21 +151,21 @@ export default function ReviewQueuePage() {
 
   if (step === 'loading') {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center" dir="rtl">
-        <div className="text-slate-400 text-lg">טוען שאלות לחזרה...</div>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center" dir="rtl">
+        <div className="text-slate-400 dark:text-slate-500 text-lg">טוען שאלות לחזרה...</div>
       </div>
     );
   }
 
   if (step === 'error') {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col" dir="rtl">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-4">
             <div className="text-5xl">⚠️</div>
-            <h1 className="text-xl font-bold text-slate-900">שגיאה בטעינה</h1>
-            <p className="text-slate-500 text-sm">לא ניתן לטעון את השאלות. בדוק חיבור אינטרנט.</p>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white">שגיאה בטעינה</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">לא ניתן לטעון את השאלות. בדוק חיבור אינטרנט.</p>
             <button
               onClick={() => fetchDueQuestions(guestId)}
               className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
@@ -180,13 +180,13 @@ export default function ReviewQueuePage() {
 
   if (step === 'empty') {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col" dir="rtl">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-6">
             <div className="text-6xl">🎉</div>
-            <h1 className="text-2xl font-bold text-slate-900">כל הכבוד!</h1>
-            <p className="text-slate-500">אין שאלות לחזרה כרגע. בוא שוב מחר 🎉</p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">כל הכבוד!</h1>
+            <p className="text-slate-500 dark:text-slate-400">אין שאלות לחזרה כרגע. בוא שוב מחר 🎉</p>
             <button
               onClick={() => router.push('/exam')}
               className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
@@ -204,14 +204,14 @@ export default function ReviewQueuePage() {
     const color = pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
 
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4" dir="rtl">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-4" dir="rtl">
         <div className="w-full max-w-sm text-center space-y-6">
           <div className="text-6xl">{pct >= 80 ? '🎉' : pct >= 60 ? '💪' : '📚'}</div>
           <div>
             <div className={`text-5xl font-black ${color}`}>{correctCount}/{questions.length}</div>
-            <div className="text-slate-500 mt-1 text-lg">{pct}% נכון בחזרה</div>
+            <div className="text-slate-500 dark:text-slate-400 mt-1 text-lg">{pct}% נכון בחזרה</div>
           </div>
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 text-sm text-slate-600">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-600 dark:text-slate-300">
             {pct >= 80 && 'מצוין! אתה שולט בשאלות האלה.'}
             {pct >= 60 && pct < 80 && 'טוב! עוד קצת תרגול ותגיע לשלמות.'}
             {pct < 60 && 'הלמידה לוקחת זמן — ממשיכים לחזור!'}
@@ -231,7 +231,7 @@ export default function ReviewQueuePage() {
             </button>
             <button
               onClick={() => router.push('/exam')}
-              className="w-full py-3 bg-white border border-slate-300 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+              className="w-full py-3 bg-white dark:bg-slate-800 border border-slate-300 text-slate-700 dark:text-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors"
             >
               חזרה לתפריט
             </button>
@@ -244,9 +244,9 @@ export default function ReviewQueuePage() {
   // ─── Question picker panel ─────────────────────────────────────────────────
   const QuestionPicker = () => (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowQuestionPicker(false)}>
-      <div className="bg-white rounded-t-3xl w-full max-w-lg max-h-[70vh] flex flex-col" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-          <span className="font-bold text-slate-900 text-lg">בחר שאלה</span>
+      <div className="bg-white dark:bg-slate-800 rounded-t-3xl w-full max-w-lg max-h-[70vh] flex flex-col" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-700">
+          <span className="font-bold text-slate-900 dark:text-white text-lg">בחר שאלה</span>
           <div className="flex items-center gap-3">
             <button
               onClick={handleRestartSession}
@@ -260,7 +260,7 @@ export default function ReviewQueuePage() {
             >
               🗑 נקה הכל
             </button>
-            <button onClick={() => setShowQuestionPicker(false)} className="text-slate-400 hover:text-slate-600 text-2xl leading-none">×</button>
+            <button onClick={() => setShowQuestionPicker(false)} className="text-slate-400 dark:text-slate-500 hover:text-slate-600 text-2xl leading-none">×</button>
           </div>
         </div>
         <div className="overflow-y-auto flex-1 px-4 py-3 space-y-2">
@@ -269,7 +269,7 @@ export default function ReviewQueuePage() {
             const correct = answered && answers[i] === q.correct_answer;
             const wrong = answered && answers[i] !== q.correct_answer;
             return (
-              <div key={q.id} className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${i === currentIndex ? 'border-orange-400 bg-orange-50' : 'border-slate-200 bg-slate-50 hover:bg-slate-100'}`}>
+              <div key={q.id} className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${i === currentIndex ? 'border-orange-400 bg-orange-50' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100'}`}>
                 <button
                   onClick={() => handleJumpTo(i)}
                   className="flex-1 flex items-center gap-3 text-right"
@@ -278,17 +278,17 @@ export default function ReviewQueuePage() {
                     i === currentIndex ? 'bg-orange-500 text-white' :
                     correct ? 'bg-green-500 text-white' :
                     wrong ? 'bg-red-400 text-white' :
-                    'bg-slate-200 text-slate-600'
+                    'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                   }`}>
                     {correct ? '✓' : wrong ? '✗' : i + 1}
                   </span>
-                  <span className="text-sm text-slate-700 text-right leading-snug line-clamp-2 flex-1">
+                  <span className="text-sm text-slate-700 dark:text-slate-200 text-right leading-snug line-clamp-2 flex-1">
                     {q.text.length > 80 ? q.text.slice(0, 80) + '…' : q.text}
                   </span>
                 </button>
                 <button
                   onClick={() => handleDeleteQuestion(q.id)}
-                  className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors text-base"
+                  className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors text-base"
                   title="הסר מהרשימה"
                 >
                   🗑
@@ -306,17 +306,17 @@ export default function ReviewQueuePage() {
   const isLast = currentIndex === questions.length - 1;
 
   return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
       {showQuestionPicker && <QuestionPicker />}
 
-      <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
+      <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-slate-900">חזרה על טעויות</span>
+              <span className="text-sm font-bold text-slate-900 dark:text-white">חזרה על טעויות</span>
               <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">חזרה</span>
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-slate-500 dark:text-slate-400">
               {currentIndex + 1}/{questions.length} שאלות
             </div>
           </div>
@@ -333,7 +333,7 @@ export default function ReviewQueuePage() {
                   className={`w-2 h-2 rounded-full transition-colors ${
                     i < currentIndex
                       ? answers[i] === questions[i].correct_answer ? 'bg-green-500' : 'bg-red-400'
-                      : i === currentIndex ? 'bg-orange-500' : 'bg-slate-200'
+                      : i === currentIndex ? 'bg-orange-500' : 'bg-slate-200 dark:bg-slate-700'
                   }`}
                 />
               ))}
@@ -341,7 +341,7 @@ export default function ReviewQueuePage() {
             {/* Restart session button */}
             <button
               onClick={handleRestartSession}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors text-lg"
+              className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors text-lg"
               title="ריסטרט — חזרה לשאלה ראשונה"
             >
               ↺
@@ -365,7 +365,7 @@ export default function ReviewQueuePage() {
           {/* Delete current question */}
           <button
             onClick={() => handleDeleteQuestion(question.id)}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors text-sm font-medium"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors text-sm font-medium"
           >
             🗑 הסר שאלה
           </button>

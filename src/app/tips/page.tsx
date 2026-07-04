@@ -29,14 +29,14 @@ const CARDS = [
 
 export default function TipsIndexPage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col" dir="rtl">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
       <div className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-2xl">
           <div className="text-center mb-10">
             <div className="text-4xl mb-3">✨</div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">אסטרטגיות לפי סוג שאלה</h1>
-            <p className="text-slate-500 text-sm leading-relaxed">
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">אסטרטגיות לפי סוג שאלה</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
               בחר סוג שאלה כדי לקרוא טיפים, שיטות וטעויות נפוצות
             </p>
           </div>
@@ -46,23 +46,23 @@ export default function TipsIndexPage() {
               <Link
                 key={card.href}
                 href={card.href}
-                className={`group flex items-start gap-4 p-6 bg-white rounded-2xl border-2 border-slate-200 ${card.accent} hover:shadow-md transition-all`}
+                className={`group flex items-start gap-4 p-6 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 ${card.accent} hover:shadow-md transition-all`}
               >
                 <div className="text-3xl mt-0.5">{card.icon}</div>
                 <div className="flex-1">
-                  <div className="text-lg font-bold text-slate-900 mb-1 group-hover:text-blue-700 transition-colors">
+                  <div className="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-blue-700 transition-colors">
                     {card.title}
                   </div>
-                  <div className="text-sm text-slate-500 leading-relaxed">{card.desc}</div>
+                  <div className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{card.desc}</div>
                 </div>
-                <div className="text-slate-300 group-hover:text-blue-400 transition-colors text-xl self-center">
+                <div className="text-slate-300 dark:text-slate-600 group-hover:text-blue-400 transition-colors text-xl self-center">
                   ←
                 </div>
               </Link>
             ))}
           </div>
 
-          <p className="text-center text-xs text-slate-400 mt-8">
+          <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-8">
             כל האסטרטגיות מותאמות לפורמט האמירנ&quot;ט הנוכחי
           </p>
         </div>

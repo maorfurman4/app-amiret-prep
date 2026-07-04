@@ -49,7 +49,7 @@ CREATE TABLE exam_sessions (
   completed_at                timestamptz,
 
   -- Server-driven timer state
-  current_section_index       int  NOT NULL DEFAULT 1,  -- 1-6; 7 = finished
+  current_section_index       int  NOT NULL DEFAULT 1,  -- 1-7 (7 = experimental); 8 = finished
   current_section_expires_at  timestamptz,               -- server clock, prevents F5 cheating
 
   -- Adaptive state

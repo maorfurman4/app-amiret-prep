@@ -36,10 +36,13 @@ export interface Question {
 }
 
 export interface SectionConfig {
-  index: number;            // 1-6
+  index: number;            // 1-7
   type: QuestionType;
   questionCount: number;
   durationSeconds: number;
+  // Like the real AMIRNET pilot section: wrong answers never lower the
+  // final score, but correct answers can raise it.
+  experimental?: boolean;
 }
 
 export const SECTION_CONFIGS: SectionConfig[] = [
@@ -49,7 +52,12 @@ export const SECTION_CONFIGS: SectionConfig[] = [
   { index: 4, type: 'restatement',            questionCount: 3, durationSeconds: 360 },
   { index: 5, type: 'restatement',            questionCount: 3, durationSeconds: 360 },
   { index: 6, type: 'sentence_completion',    questionCount: 4, durationSeconds: 240 },
+  { index: 7, type: 'sentence_completion',    questionCount: 4, durationSeconds: 240, experimental: true },
 ];
+
+export function isExperimentalSection(sectionIndex: number): boolean {
+  return SECTION_CONFIGS[sectionIndex - 1]?.experimental === true;
+}
 
 export interface SectionResult {
   sectionIndex: number;
@@ -92,7 +100,8 @@ export const SCORE_CLASSIFICATIONS: ScoreClassification[] = [
   { label: 'מתקדמים ב\'', description: 'קורס מתקדמים ב\'', color: 'text-blue-600' },
   { label: 'מתקדמים א\'', description: 'קורס מתקדמים א\'', color: 'text-yellow-600' },
   { label: 'בסיסי', description: 'קורס בסיסי', color: 'text-orange-600' },
-  { label: 'טרום-בסיסי', description: 'קורס טרום-בסיסי', color: 'text-red-600' },
+  { label: 'טרום-בסיסי ב\'', description: 'קורס טרום-בסיסי ב\'', color: 'text-red-600' },
+  { label: 'טרום-בסיסי א\'', description: 'קורס טרום-בסיסי א\'', color: 'text-red-700' },
 ];
 
 export function classifyScore(score: number): ScoreClassification {
@@ -100,5 +109,6 @@ export function classifyScore(score: number): ScoreClassification {
   if (score >= 120) return SCORE_CLASSIFICATIONS[1];
   if (score >= 100) return SCORE_CLASSIFICATIONS[2];
   if (score >= 85)  return SCORE_CLASSIFICATIONS[3];
-  return SCORE_CLASSIFICATIONS[4];
+  if (score >= 70)  return SCORE_CLASSIFICATIONS[4];
+  return SCORE_CLASSIFICATIONS[5];
 }

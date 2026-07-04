@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
-import { SECTION_CONFIGS, type Question, type SectionResult } from '@/types/exam';
+import { SECTION_CONFIGS, isExperimentalSection, type Question, type SectionResult } from '@/types/exam';
 import { updateThetaAfterSection, routeNextDifficulty, thetaToScore, correctCount } from '@/lib/adaptive';
 import {
   fetchUnseenQuestions,
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
   const nextSectionIndex = body.sectionIndex + 1;
   const isLastSection = nextSectionIndex > SECTION_CONFIGS.length;
 
-  let updatePayload: Record<string, unknown> = {
+  const updatePayload: Record<string, unknown> = {
     theta: newTheta,
     theta_history: newHistory,
     current_section_index: nextSectionIndex,
@@ -107,10 +107,23 @@ export async function POST(req: NextRequest) {
   };
 
   if (isLastSection) {
-    // Exam complete — no more sections to fetch
+    // Exam complete — no more sections to fetch.
+    // AMIRNET rule: the experimental section can only RAISE the score.
+    // Base θ is estimated from scored sections only (1-6); if including the
+    // experimental answers yields a higher score, the higher one is kept.
+    const allResults = [...previousResults, result];
+    const scoredResults = allResults.filter(sr => !isExperimentalSection(sr.sectionIndex));
+    const baseTheta = updateThetaAfterSection(session.theta, {
+      questions: scoredResults.flatMap(sr => sr.questions as Question[]),
+      answers: scoredResults.flatMap(sr => sr.answers as (number | null)[]),
+    });
+    const baseScore = thetaToScore(baseTheta);
+    const scoreWithExperimental = thetaToScore(newTheta);
+    const finalIsExperimental = scoreWithExperimental > baseScore;
+
     updatePayload.completed_at = new Date().toISOString();
-    updatePayload.theta_final = newTheta;
-    updatePayload.score = thetaToScore(newTheta);
+    updatePayload.theta_final = finalIsExperimental ? newTheta : baseTheta;
+    updatePayload.score = Math.max(baseScore, scoreWithExperimental);
     updatePayload.current_section_expires_at = null;
   } else {
     // ── Step 2: Derive next difficulty from updated θ ──────────────────────────
@@ -196,7 +209,7 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     newTheta,
-    score: isLastSection ? thetaToScore(newTheta) : null,
+    score: isLastSection ? (updatePayload.score as number) : null,
     isComplete: isLastSection,
     nextSectionIndex: isLastSection ? null : nextSectionIndex,
     nextExpiresAt: updatePayload.current_section_expires_at ?? null,

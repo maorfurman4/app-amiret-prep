@@ -217,6 +217,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
                 פרק {currentSection} — {currentCfg?.type === 'sentence_completion' ? 'השלמת משפטים' :
                   currentCfg?.type === 'restatement' ? 'ניסוח מחדש' :
                   currentCfg?.type === 'reading_comprehension' ? 'הבנת הנקרא' : 'ESRA'}
+                {currentCfg?.experimental && (
+                  <span className="mr-1 px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 font-semibold">ניסיוני</span>
+                )}
               </span>
             </div>
             <ExamTimer
@@ -236,6 +239,13 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
       {/* Main exam area */}
       <main className="max-w-2xl mx-auto px-4 py-8">
+        {currentCfg?.experimental && (
+          <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl text-sm text-purple-900">
+            <span className="font-bold">פרק ניסיוני</span> — בדיוק כמו במבחן האמיתי: טעויות בפרק זה{' '}
+            <span className="font-semibold">לא מורידות</span> את הציון, אבל תשובות נכונות יכולות{' '}
+            <span className="font-semibold">להעלות</span> אותו. שווה להשקיע!
+          </div>
+        )}
         <QuestionCard
           question={question}
           questionNumber={currentQuestionIndex + 1}
@@ -302,6 +312,13 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             </button>
           )}
         </div>
+
+        {/* Official AMIRNET guidance */}
+        {!session.is_practice && (
+          <p className="mt-6 text-center text-xs text-slate-400">
+            שאלה ללא מענה נחשבת לתשובה שגויה — אם אינך בטוח, כדאי לנחש. אין קנס על טעות.
+          </p>
+        )}
       </main>
     </div>
   );

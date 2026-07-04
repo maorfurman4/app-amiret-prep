@@ -99,6 +99,11 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           <div className="text-slate-700 font-medium">
             {totalCorrect} / {totalQuestions} תשובות נכונות
           </div>
+          {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
+            <div className="text-xs text-slate-400 mt-1">
+              כולל פרק ניסיוני — טעויות בו לא הורידו את הציון
+            </div>
+          )}
         </div>
 
         {/* Score Prediction */}
@@ -113,7 +118,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             { min: 120, max: 133, label: "מתקדמים ב' — קורס מקוצר אחד", color: 'bg-blue-500' },
             { min: 100, max: 119, label: "מתקדמים א' — קורס אחד", color: 'bg-yellow-500' },
             { min: 85,  max: 99,  label: 'בסיסי — שני קורסים', color: 'bg-orange-500' },
-            { min: 50,  max: 84,  label: 'טרום-בסיסי — שלושה קורסים', color: 'bg-red-500' },
+            { min: 70,  max: 84,  label: "טרום-בסיסי ב'", color: 'bg-red-500' },
+            { min: 50,  max: 69,  label: "טרום-בסיסי א'", color: 'bg-red-700' },
           ];
           const currentBand = bands.find(b => score >= b.min && score <= b.max);
           return (
@@ -122,24 +128,25 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               <p className="text-slate-500 text-sm mb-4">
                 על בסיס הביצועים שלך, הציון הצפוי הוא בטווח {lo}–{hi}
               </p>
-              {/* Gradient score bar */}
+              {/* Gradient score bar — RTL: low scores (50) on the right */}
               <div className="relative mb-5">
                 <div className="h-5 rounded-full overflow-hidden flex">
-                  <div className="bg-red-400"    style={{ width: '34%' }} />
+                  <div className="bg-red-700"    style={{ width: '20%' }} />
+                  <div className="bg-red-400"    style={{ width: '15%' }} />
                   <div className="bg-orange-400" style={{ width: '15%' }} />
-                  <div className="bg-yellow-400" style={{ width: '19%' }} />
-                  <div className="bg-blue-400"   style={{ width: '13%' }} />
-                  <div className="bg-green-500"  style={{ width: '19%' }} />
+                  <div className="bg-yellow-400" style={{ width: '20%' }} />
+                  <div className="bg-blue-400"   style={{ width: '14%' }} />
+                  <div className="bg-green-500"  style={{ width: '16%' }} />
                 </div>
                 {/* Range bracket */}
                 <div
                   className="absolute top-0 h-5 border-2 border-slate-800 rounded bg-white/30"
-                  style={{ left: `${loPct}%`, width: `${Math.max(hiPct - loPct, 2)}%` }}
+                  style={{ right: `${loPct}%`, width: `${Math.max(hiPct - loPct, 2)}%` }}
                 />
                 {/* Current score needle */}
                 <div
                   className="absolute -top-0.5 w-0.5 h-6 bg-slate-900"
-                  style={{ left: `calc(${pct}% - 1px)` }}
+                  style={{ right: `calc(${pct}% - 1px)` }}
                 />
                 <div className="flex justify-between text-xs text-slate-400 mt-1.5">
                   <span>50</span>
@@ -164,7 +171,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             { range: '120–133', label: 'מתקדמים ב\'', color: 'bg-blue-500', min: 120, max: 133 },
             { range: '100–119', label: 'מתקדמים א\'', color: 'bg-yellow-500', min: 100, max: 119 },
             { range: '85–99',  label: 'בסיסי', color: 'bg-orange-500', min: 85, max: 99 },
-            { range: '50–84',  label: 'טרום-בסיסי', color: 'bg-red-500', min: 50, max: 84 },
+            { range: '70–84',  label: 'טרום-בסיסי ב\'', color: 'bg-red-500', min: 70, max: 84 },
+            { range: '50–69',  label: 'טרום-בסיסי א\'', color: 'bg-red-700', min: 50, max: 69 },
           ].map(row => (
             <div key={row.range} className={`flex items-center gap-3 p-3 rounded-xl mb-2 ${
               score >= row.min && score <= row.max ? 'bg-slate-100 ring-2 ring-blue-400' : ''
@@ -195,19 +203,34 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             })}
           </div>
 
-          <h3 className="font-semibold text-slate-700 text-sm mb-3">פירוט לפי פרק</h3>
+          <h3 className="font-semibold text-slate-700 text-sm mb-3">פירוט לפי פרק — והמסלול האדפטיבי שלך</h3>
+          <p className="text-xs text-slate-400 mb-3">
+            רמה 1–5 = רמת הקושי שאליה ניתב אותך האלגוריתם בכל פרק. במבחן האמיתי, רק הגעה לרמות הגבוהות מאפשרת ציון גבוה.
+          </p>
           <div className="space-y-3">
             {sectionResults.map((sr) => {
               const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
               const pct = sr.totalCount > 0 ? Math.round((sr.correctCount / sr.totalCount) * 100) : 0;
+              const difficulty = sr.questions?.[0]?.difficulty_level;
+              const isExperimental = cfg?.experimental === true;
               return (
                 <div key={sr.sectionIndex} className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold flex-shrink-0">
+                  <div className={`w-6 h-6 rounded-full text-xs flex items-center justify-center font-bold flex-shrink-0 ${
+                    isExperimental ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+                  }`}>
                     {sr.sectionIndex}
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-slate-700">{TYPE_LABELS[cfg?.type ?? sr.type]}</span>
+                      <span className="text-slate-700 flex items-center gap-1.5">
+                        {TYPE_LABELS[cfg?.type ?? sr.type]}
+                        {isExperimental && (
+                          <span className="px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-semibold">ניסיוני</span>
+                        )}
+                        {difficulty && (
+                          <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-500 text-[10px] font-mono">רמה {difficulty}/5</span>
+                        )}
+                      </span>
                       <span className="text-slate-500">{sr.correctCount}/{sr.totalCount}</span>
                     </div>
                     <div className="h-2 bg-slate-100 rounded-full overflow-hidden">

@@ -3,13 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+// 5 tabs max — thumb-friendly on narrow screens.
+// חזרה חכמה, אסטרטגיות, טיפים ולוח מובילים נגישים מדף הבית.
 const TABS = [
   { href: '/',            icon: '🏠', label: 'בית'       },
   { href: '/exam',        icon: '🎯', label: 'מבחן'      },
   { href: '/practice',    icon: '✏️', label: 'תרגול'    },
-  { href: '/review-queue',icon: '🔄', label: 'חזרה'      },
-  { href: '/vocabulary',  icon: '📖', label: 'אוצר מילים' },
-  { href: '/strategies',  icon: '🧠', label: 'אסטרטגיות' },
+  { href: '/vocabulary',  icon: '📖', label: 'מילים'     },
   { href: '/stats',       icon: '📊', label: 'סטטיסטיקה' },
 ];
 

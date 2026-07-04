@@ -10,7 +10,7 @@ const MODES: { mode: ExamMode; title: string; desc: string; icon: string; isPrac
   {
     mode: 'full',
     title: 'מבחן מלא',
-    desc: '6 פרקים, טיימר קשיח, אלגוריתם אדפטיבי — בדיוק כמו האמירנ"ט האמיתי',
+    desc: '6 פרקים + פרק ניסיוני, טיימר קשיח, אלגוריתם אדפטיבי — בדיוק כמו האמירנ"ט האמיתי',
     icon: '🎯',
   },
   {

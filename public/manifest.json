@@ -1,7 +1,7 @@
 {
-  "name": "הכנה לאמירנט",
-  "short_name": "אמירנט",
-  "description": "תרגול ומבחן הכנה למבחן אמירנט",
+  "name": "134+ — הכנה לאמירנט",
+  "short_name": "134+",
+  "description": "134+ — תרגול ומבחני הכנה אדפטיביים לאמירנט, בדרך לפטור",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",

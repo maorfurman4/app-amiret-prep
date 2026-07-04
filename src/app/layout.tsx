@@ -6,8 +6,13 @@ import { BottomNav } from '@/components/BottomNav';
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 
 export const metadata: Metadata = {
-  title: 'הכנה לאמירנ"ט',
-  description: 'פלטפורמת הכנה אדפטיבית למבחן אמירנ"ט — אלגוריתם IRT 3PL מדויק',
+  title: '134+ | הכנה לאמירנ"ט',
+  description: '134+ — פלטפורמת הכנה אדפטיבית למבחן אמירנ"ט, בדרך לפטור',
+  appleWebApp: {
+    title: '134+',
+    capable: true,
+    statusBarStyle: 'black-translucent',
+  },
   icons: {
     icon: [
       { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },

@@ -26,8 +26,10 @@ export default function HomePage() {
 
         <div className="text-center">
           <div className="text-5xl mb-3">🎓</div>
-          <h1 className="text-4xl font-black mb-2">הכנה לאמירנ&quot;ט</h1>
-          <p className="text-slate-300">פלטפורמת ההכנה המדוייקת ביותר לציון הטוב ביותר</p>
+          <h1 className="text-5xl font-black mb-2 tracking-tight" dir="ltr">
+            134<span className="text-blue-400">+</span>
+          </h1>
+          <p className="text-slate-300">ההכנה המדויקת ביותר לאמירנ&quot;ט — בדרך לפטור</p>
         </div>
 
         {/* Primary action */}

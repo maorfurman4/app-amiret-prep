@@ -294,8 +294,10 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🎓</div>
-          <h1 className="text-3xl font-black text-white">הכנה לאמירנ&quot;ט</h1>
-          <p className="text-slate-400 text-sm mt-2">פלטפורמת ההכנה המדוייקת ביותר</p>
+          <h1 className="text-4xl font-black text-white tracking-tight" dir="ltr">
+            134<span className="text-blue-400">+</span>
+          </h1>
+          <p className="text-slate-400 text-sm mt-2">ההכנה המדויקת ביותר לאמירנ&quot;ט</p>
         </div>
 
         {/* Card */}

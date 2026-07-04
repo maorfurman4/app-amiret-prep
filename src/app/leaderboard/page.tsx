@@ -3,8 +3,7 @@ import { BackNav } from '@/components/BackNav';
 
 interface LeaderboardEntry {
   user_id: string;
-  email: string;
-  full_name: string | null;
+  display_name: string | null;
   avatar_url: string | null;
   best_score: number;
   total_exams: number;
@@ -33,7 +32,7 @@ export default async function LeaderboardPage() {
           <div className="space-y-3">
             {entries.map((entry, i) => {
               const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
-              const name = entry.full_name ?? entry.email?.split('@')[0] ?? 'אנונימי';
+              const name = entry.display_name ?? 'לומד/ת אנונימי/ת';
 
               return (
                 <div

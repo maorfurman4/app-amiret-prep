@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
 
   if (type === 'reading_comprehension') {
     // For random: pick a random passage from any difficulty level
-    let passageQuery = supabase.from('passages').select('id, text, difficulty_level, b').limit(100);
+    let passageQuery = supabase.from('passages').select('id, text, difficulty_level, b').eq('active', true).limit(100);
     if (diffParam !== 'random') passageQuery = passageQuery.eq('difficulty_level', difficulty);
 
     const { data: passages } = await passageQuery;
@@ -57,6 +57,7 @@ export async function GET(req: NextRequest) {
       .select('*')
       .eq('type', 'reading_comprehension')
       .eq('passage_id', passage.id)
+      .eq('active', true)
       .limit(5);
 
     const questions: Question[] = (qs ?? []).map(q => ({
@@ -74,7 +75,7 @@ export async function GET(req: NextRequest) {
     const perLevel = Math.ceil((count * 2) / 5); // fetch extra per level then trim
     const fetches = await Promise.all(
       LEVELS.map(lv =>
-        supabase.from('questions').select('*').eq('type', type).eq('difficulty_level', lv).limit(perLevel + 5)
+        supabase.from('questions').select('*').eq('type', type).eq('difficulty_level', lv).eq('active', true).limit(perLevel + 5)
       )
     );
     const pool = fetches.flatMap(r => r.data ?? []) as Question[];
@@ -90,6 +91,7 @@ export async function GET(req: NextRequest) {
     .select('*')
     .eq('type', type)
     .eq('difficulty_level', difficulty)
+    .eq('active', true)
     .limit(count + 10);
 
   if (!qs?.length) {

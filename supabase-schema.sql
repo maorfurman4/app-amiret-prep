@@ -11,6 +11,7 @@ CREATE TABLE passages (
   text            text NOT NULL,
   difficulty_level int  NOT NULL CHECK (difficulty_level BETWEEN 1 AND 5),
   b               float NOT NULL DEFAULT 0.0,  -- IRT difficulty
+  active          boolean NOT NULL DEFAULT true,
   created_at      timestamptz DEFAULT now()
 );
 
@@ -33,11 +34,13 @@ CREATE TABLE questions (
   b               float NOT NULL DEFAULT 0.0,  -- difficulty (-3 to 3)
   c               float NOT NULL DEFAULT 0.25, -- guessing
   difficulty_level int  NOT NULL CHECK (difficulty_level BETWEEN 1 AND 5),
+  active          boolean NOT NULL DEFAULT true, -- false = soft-retired (e.g. duplicate)
   created_by      text DEFAULT 'ai',            -- 'ai' | 'admin'
   created_at      timestamptz DEFAULT now()
 );
 
 CREATE INDEX idx_questions_type_difficulty ON questions(type, difficulty_level);
+CREATE INDEX idx_questions_active ON questions(type, difficulty_level) WHERE active;
 CREATE INDEX idx_questions_passage ON questions(passage_id) WHERE passage_id IS NOT NULL;
 
 -- ─── Exam Sessions ───────────────────────────────────────────────

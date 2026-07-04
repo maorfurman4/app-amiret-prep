@@ -36,7 +36,8 @@ export async function fetchUnseenQuestions({
     .from('questions')
     .select('id')
     .eq('type', type)
-    .eq('difficulty_level', difficultyLevel);
+    .eq('difficulty_level', difficultyLevel)
+    .eq('active', true);
   const typeDiffIds = (allQsOfTypeDiff ?? []).map((r: { id: string }) => r.id);
 
   let seenIds: string[] = [];
@@ -81,6 +82,7 @@ async function queryQuestions(
     .select('*')
     .eq('type', type)
     .eq('difficulty_level', difficultyLevel)
+    .eq('active', true)
     .limit(limit + 10);
 
   if (excludeIds.length > 0) {
@@ -174,6 +176,7 @@ async function queryPassage(
     .from('passages')
     .select('id, text, difficulty_level, b')
     .eq('difficulty_level', difficultyLevel)
+    .eq('active', true)
     .limit(20);
   if (excludeIds.length > 0) {
     q = q.not('id', 'in', `(${excludeIds.join(',')})`);

@@ -170,6 +170,7 @@ export async function POST(req: NextRequest) {
           .select('*')
           .eq('type', nextCfg.type)
           .eq('difficulty_level', nextDifficulty)
+          .eq('active', true)
           .limit(nextCfg.questionCount + 10);
         if (usedQIds.length > 0) {
           qQuery = qQuery.not('id', 'in', `(${usedQIds.join(',')})`);

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import type { Question } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
+import { authFetch } from '@/lib/auth-fetch';
 
 type Step = 'loading' | 'empty' | 'error' | 'reviewing' | 'done';
 
@@ -37,7 +38,7 @@ export default function ReviewQueuePage() {
   const fetchDueQuestions = async (id: string) => {
     setStep('loading');
     try {
-      const res = await fetch(`/api/review-queue?guestId=${encodeURIComponent(id)}`);
+      const res = await authFetch(`/api/review-queue?guestId=${encodeURIComponent(id)}`);
       const data = await res.json() as { questions: Question[]; count: number };
       if (!data.questions || data.questions.length === 0) {
         setStep('empty');
@@ -66,7 +67,7 @@ export default function ReviewQueuePage() {
     const wasCorrect = optionIndex === questions[currentIndex].correct_answer;
     if (wasCorrect) setCorrectCount(c => c + 1);
 
-    fetch('/api/review-queue', {
+    authFetch('/api/review-queue', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -113,7 +114,7 @@ export default function ReviewQueuePage() {
       setShowQuestionPicker(false);
     }
 
-    fetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}&questionId=${encodeURIComponent(questionId)}`, {
+    authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}&questionId=${encodeURIComponent(questionId)}`, {
       method: 'DELETE',
     }).catch(() => {});
   };
@@ -121,7 +122,7 @@ export default function ReviewQueuePage() {
   // Clear ALL questions
   const handleClearAll = async () => {
     if (!window.confirm(`למחוק את כל ${questions.length} השאלות מרשימת החזרה?`)) return;
-    fetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`, { method: 'DELETE' }).catch(() => {});
+    authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`, { method: 'DELETE' }).catch(() => {});
     setStep('empty');
   };
 

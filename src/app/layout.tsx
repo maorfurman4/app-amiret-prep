@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Geist } from 'next/font/google';
 import './globals.css';
 import { BottomNav } from '@/components/BottomNav';
+import { PwaUpdater } from '@/components/PwaUpdater';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col bg-slate-50 dark:bg-slate-900 pb-24 md:pb-0">
         {children}
         <BottomNav />
+        <PwaUpdater />
       </body>
     </html>
   );

@@ -8,8 +8,7 @@ import { getServerClients } from '@/lib/supabase-server';
  * auto-advances the section (caller should handle this).
  */
 export async function GET(req: NextRequest) {
-  const { authClient, supabase } = await getServerClients();
-  const { data: { user } } = await authClient.auth.getUser();
+  const { supabase, user } = await getServerClients();
 
   const sessionId = req.nextUrl.searchParams.get('sessionId');
   const guestId = req.nextUrl.searchParams.get('guestId');

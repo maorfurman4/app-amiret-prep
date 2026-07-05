@@ -13,8 +13,7 @@ import { fetchUnseenQuestions, recordSeenQuestions } from '@/lib/question-histor
  * see the same question twice until the full pool is exhausted (then resets).
  */
 export async function POST(req: NextRequest) {
-  const { authClient, supabase } = await getServerClients();
-  const { data: { user } } = await authClient.auth.getUser();
+  const { supabase, user } = await getServerClients();
   let body: { mode?: ExamMode; isPractice?: boolean; guestId?: string };
   try {
     body = await req.json() as { mode?: ExamMode; isPractice?: boolean; guestId?: string };

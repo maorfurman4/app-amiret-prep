@@ -52,7 +52,7 @@ export function QuestionCard({
     <div className="w-full max-w-2xl mx-auto">
       {/* Question header */}
       <div className="flex items-center justify-between mb-4" dir="rtl">
-        <span className="text-sm text-slate-500 font-medium">
+        <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">
           שאלה {questionNumber} מתוך {totalInSection}
         </span>
         <div className="flex gap-1">
@@ -62,7 +62,7 @@ export function QuestionCard({
               className={`w-2 h-2 rounded-full transition-colors ${
                 i < questionNumber - 1 ? 'bg-blue-500' :
                 i === questionNumber - 1 ? 'bg-blue-700' :
-                'bg-slate-200'
+                'bg-slate-200 dark:bg-slate-700'
               }`}
             />
           ))}
@@ -71,19 +71,19 @@ export function QuestionCard({
 
       {/* Passage for reading comprehension */}
       {question.passage && (
-        <div dir="ltr" className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm leading-relaxed text-slate-700 font-medium max-h-56 overflow-y-auto text-left">
-          <div className="text-xs text-slate-400 mb-2 font-normal">Reading Passage</div>
+        <div dir="ltr" className="mb-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-medium max-h-56 overflow-y-auto text-left">
+          <div className="text-xs text-slate-400 dark:text-slate-500 mb-2 font-normal">Reading Passage</div>
           {question.passage.text}
         </div>
       )}
 
       {/* Restatement — amber banner + original sentence */}
       {question.type === 'restatement' && (
-        <div className="mb-6 px-4 py-3 bg-amber-50 border-r-4 border-amber-400 rounded-xl" dir="rtl">
-          <div className="text-xs text-amber-700 font-bold mb-2 uppercase tracking-wide">
+        <div className="mb-6 px-4 py-3 bg-amber-50 dark:bg-amber-950/30 border-r-4 border-amber-400 dark:border-amber-600 rounded-xl" dir="rtl">
+          <div className="text-xs text-amber-700 dark:text-amber-400 font-bold mb-2 uppercase tracking-wide">
             📌 המשפט המקורי — מצא את הניסוח השקול:
           </div>
-          <div className="text-base font-semibold text-amber-900 leading-relaxed" dir="ltr">
+          <div className="text-base font-semibold text-amber-900 dark:text-amber-100 leading-relaxed" dir="ltr">
             {question.text}
           </div>
         </div>
@@ -91,7 +91,7 @@ export function QuestionCard({
 
       {/* Question text */}
       {question.type !== 'restatement' && (
-        <div dir="ltr" className="mb-6 text-lg font-semibold text-slate-900 leading-relaxed text-left">
+        <div dir="ltr" className="mb-6 text-lg font-semibold text-slate-900 dark:text-white leading-relaxed text-left">
           {question.text}
         </div>
       )}
@@ -110,17 +110,17 @@ export function QuestionCard({
               onClick={() => onSelect(i)}
               disabled={showResult}
               className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-all flex items-center gap-3 ${
-                showCorrect  ? 'border-green-500 bg-green-50 text-green-800' :
-                isWrong      ? 'border-red-500 bg-red-50 text-red-800' :
-                isSelected   ? 'border-blue-500 bg-blue-50 text-blue-900 font-medium' :
-                               'border-slate-200 bg-white text-slate-800 hover:border-blue-300 hover:bg-blue-50/40'
+                showCorrect  ? 'border-green-500 bg-green-50 dark:bg-green-950/40 text-green-800 dark:text-green-300' :
+                isWrong      ? 'border-red-500 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300' :
+                isSelected   ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-blue-200 font-medium' :
+                               'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:border-blue-300 hover:bg-blue-50/40 dark:hover:bg-slate-700'
               }`}
             >
               <span className={`flex-shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
                 showCorrect  ? 'border-green-500 bg-green-500 text-white' :
                 isWrong      ? 'border-red-500 bg-red-500 text-white' :
                 isSelected   ? 'border-blue-500 bg-blue-500 text-white' :
-                               'border-slate-300 text-slate-500'
+                               'border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400'
               }`}>
                 {OPTION_LABELS[i]}
               </span>
@@ -138,18 +138,18 @@ export function QuestionCard({
           {!hintVisible ? (
             <button
               onClick={() => setHintVisible(true)}
-              className="text-sm text-amber-600 hover:text-amber-700 flex items-center gap-1.5 transition-colors"
+              className="text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 transition-colors"
             >
               <span>💡</span>
               <span>רמז — כיוון לפתרון</span>
             </button>
           ) : (
-            <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl">
+            <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl">
               <div className="flex items-center gap-1.5 mb-1">
                 <span className="text-base">💡</span>
-                <span className="text-xs font-bold text-amber-700">רמז — כיוון לפתרון</span>
+                <span className="text-xs font-bold text-amber-700 dark:text-amber-400">רמז — כיוון לפתרון</span>
               </div>
-              <p className="text-sm text-amber-900 leading-relaxed">{hintStrategy}</p>
+              <p className="text-sm text-amber-900 dark:text-amber-200 leading-relaxed">{hintStrategy}</p>
             </div>
           )}
         </div>
@@ -158,33 +158,33 @@ export function QuestionCard({
       {/* Practice explanation — after answer */}
       {isPractice && showResult && explanation && (
         <div className="mt-6 space-y-3" dir="rtl">
-          <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+          <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-xl">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-lg">✅</span>
-              <span className="font-bold text-green-800 text-sm">מדוע התשובה הנכונה נכונה</span>
+              <span className="font-bold text-green-800 dark:text-green-300 text-sm">מדוע התשובה הנכונה נכונה</span>
             </div>
-            <p className="text-green-900 text-sm leading-relaxed">{explanation.correct_reason}</p>
+            <p className="text-green-900 dark:text-green-200 text-sm leading-relaxed">{explanation.correct_reason}</p>
           </div>
 
           {explanation.options_analysis.length > 0 && (
-            <div className="p-4 bg-white border border-slate-200 rounded-xl">
-              <div className="font-bold text-slate-700 text-sm mb-3">🔍 שלבי שלילה:</div>
+            <div className="p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
+              <div className="font-bold text-slate-700 dark:text-slate-200 text-sm mb-3">🔍 שלבי שלילה:</div>
               <div className="space-y-2">
                 {question.options.map((opt, i) => {
                   const correct = i === question.correct_answer;
                   return (
                     <div
                       key={i}
-                      className={`flex gap-3 text-sm p-2.5 rounded-lg ${correct ? 'bg-green-50' : 'bg-red-50/60'}`}
+                      className={`flex gap-3 text-sm p-2.5 rounded-lg ${correct ? 'bg-green-50 dark:bg-green-950/30' : 'bg-red-50/60 dark:bg-red-950/20'}`}
                     >
                       <span className={`font-bold text-xs mt-0.5 flex-shrink-0 ${correct ? 'text-green-600' : 'text-red-400'}`}
                         style={{ minWidth: '4.5rem' }}>
                         {correct ? `✅ שלב ${i+1}: בחר` : `❌ שלב ${i+1}: שלל`}
                       </span>
                       <div dir="ltr" className="flex-1">
-                        <span className="font-medium text-slate-800">{opt.text}</span>
+                        <span className="font-medium text-slate-800 dark:text-slate-100">{opt.text}</span>
                         {explanation.options_analysis[i] && (
-                          <p className={`mt-1 text-xs leading-relaxed ${correct ? 'text-green-700' : 'text-red-600'}`} dir="rtl">
+                          <p className={`mt-1 text-xs leading-relaxed ${correct ? 'text-green-700 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`} dir="rtl">
                             {explanation.options_analysis[i]}
                           </p>
                         )}
@@ -197,12 +197,12 @@ export function QuestionCard({
           )}
 
           {explanation.strategy && (
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-xl">
+            <div className="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-lg">💡</span>
-                <span className="font-bold text-blue-800 text-sm">טיפ אסטרטגי</span>
+                <span className="font-bold text-blue-800 dark:text-blue-300 text-sm">טיפ אסטרטגי</span>
               </div>
-              <p className="text-blue-900 text-sm leading-relaxed">{explanation.strategy}</p>
+              <p className="text-blue-900 dark:text-blue-200 text-sm leading-relaxed">{explanation.strategy}</p>
             </div>
           )}
         </div>

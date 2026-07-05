@@ -6,6 +6,7 @@ import { ExamTimer } from '@/components/exam/ExamTimer';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { SectionProgress } from '@/components/exam/SectionProgress';
 import { SECTION_CONFIGS, type Question } from '@/types/exam';
+import { authFetch } from '@/lib/auth-fetch';
 
 interface SessionState {
   id: string;
@@ -42,7 +43,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   // Load or recover session state from server
   const loadSession = useCallback(async () => {
-    const res = await fetch(`/api/exam/state?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId ?? '')}`);
+    const res = await authFetch(`/api/exam/state?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId ?? '')}`);
     if (!res.ok) { setError('לא ניתן לטעון את המבחן'); return; }
     const data = await res.json() as { session: SessionState; remainingMs: number; timerExpired: boolean };
 
@@ -124,7 +125,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     setIsSubmitting(true);
 
     try {
-      const res = await fetch('/api/exam/answer', {
+      const res = await authFetch('/api/exam/answer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -187,7 +188,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900" dir="rtl">
         <div className="text-center">
           <div className="text-red-500 text-xl mb-4">{error}</div>
           <button onClick={loadSession} className="text-blue-600 underline">נסה שוב</button>
@@ -198,8 +199,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   if (!session || currentQuestions.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50" dir="rtl">
-        <div className="text-slate-400 text-lg">טוען מבחן...</div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900" dir="rtl">
+        <div className="text-slate-400 dark:text-slate-500 text-lg">טוען מבחן...</div>
       </div>
     );
   }
@@ -207,26 +208,26 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const question = currentQuestions[currentQuestionIndex];
 
   return (
-    <div className="min-h-screen bg-slate-50" dir="rtl">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
+      <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <button
               onClick={() => setExitConfirm(true)}
               aria-label="יציאה מהמבחן"
-              className="flex-shrink-0 w-8 h-8 rounded-full border border-slate-300 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors text-sm font-bold"
+              className="flex-shrink-0 w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200 transition-colors text-sm font-bold"
             >
               ✕
             </button>
             <div className="flex flex-col flex-1">
-              <span className="text-sm font-bold text-slate-900">מבחן אמירנ"ט</span>
-              <span className="text-xs text-slate-500">
+              <span className="text-sm font-bold text-slate-900 dark:text-white">מבחן אמירנ"ט</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">
                 פרק {currentSection} — {currentCfg?.type === 'sentence_completion' ? 'השלמת משפטים' :
                   currentCfg?.type === 'restatement' ? 'ניסוח מחדש' :
                   currentCfg?.type === 'reading_comprehension' ? 'הבנת הנקרא' : 'ESRA'}
                 {currentCfg?.experimental && (
-                  <span className="mr-1 px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 font-semibold">ניסיוני</span>
+                  <span className="mr-1 px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 font-semibold">ניסיוני</span>
                 )}
               </span>
             </div>
@@ -249,8 +250,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       <main className="max-w-2xl mx-auto px-4 py-8">
         {/* Exit confirmation */}
         {exitConfirm && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl" dir="rtl">
-            <p className="text-red-800 text-sm font-semibold mb-3">
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl" dir="rtl">
+            <p className="text-red-800 dark:text-red-300 text-sm font-semibold mb-3">
               לצאת מהמבחן ולחזור לדף הבית? תוכל להמשיך את המבחן מאותה נקודה מאוחר יותר.
             </p>
             <div className="flex gap-2">
@@ -262,7 +263,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               </button>
               <button
                 onClick={() => setExitConfirm(false)}
-                className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 text-sm hover:bg-slate-100 transition-colors"
+                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
               >
                 המשך במבחן
               </button>
@@ -271,7 +272,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         )}
 
         {currentCfg?.experimental && (
-          <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl text-sm text-purple-900">
+          <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl text-sm text-purple-900 dark:text-purple-200">
             <p>
               <span className="font-bold">פרק ניסיוני — לא חובה!</span> במבחן האמיתי הפרק הניסיוני
               יכול להכיל מטלות מסוגים חדשים (למשל מטלת כתיבה או האזנה) שמאל"ו בודק. טעויות בו{' '}
@@ -281,7 +282,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <button
               onClick={() => session && submitSection(session, answers)}
               disabled={isSubmitting}
-              className="mt-3 px-4 py-2 rounded-lg border border-purple-300 text-purple-700 text-sm font-semibold hover:bg-purple-100 transition-colors disabled:opacity-60"
+              className="mt-3 px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-300 text-sm font-semibold hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors disabled:opacity-60"
             >
               דלג על הפרק וסיים את המבחן ←
             </button>
@@ -299,10 +300,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
         {/* Inline submit warning */}
         {submitWarning && (
-          <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-xl flex items-center justify-between gap-3" dir="rtl">
-            <p className="text-orange-800 text-sm">{submitWarning}</p>
+          <div className="mt-4 p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl flex items-center justify-between gap-3" dir="rtl">
+            <p className="text-orange-800 dark:text-orange-300 text-sm">{submitWarning}</p>
             <div className="flex gap-2 flex-shrink-0">
-              <button onClick={() => setSubmitWarning(null)} className="text-xs px-3 py-1.5 rounded-lg border border-orange-300 text-orange-700 hover:bg-orange-100">ביטול</button>
+              <button onClick={() => setSubmitWarning(null)} className="text-xs px-3 py-1.5 rounded-lg border border-orange-300 dark:border-orange-700 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/40">ביטול</button>
               <button onClick={handleConfirmSubmit} className="text-xs px-3 py-1.5 rounded-lg bg-orange-500 text-white hover:bg-orange-600">אישור</button>
             </div>
           </div>
@@ -313,7 +314,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           <button
             onClick={handlePrev}
             disabled={currentQuestionIndex === 0}
-            className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 disabled:opacity-40 hover:bg-slate-100 transition-colors text-sm"
+            className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm"
           >
             קודם &rsaquo;
           </button>
@@ -327,8 +328,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
                 aria-label={`שאלה ${i + 1}${answers[i] === null ? ' — לא נענתה' : ''}`}
                 className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${
                   i === currentQuestionIndex ? 'bg-blue-600 text-white scale-110 ring-2 ring-blue-300' :
-                  answers[i] !== null ? 'bg-blue-100 text-blue-700' :
-                  'bg-slate-100 text-slate-400 border-2 border-dashed border-slate-300 hover:border-slate-400'
+                  answers[i] !== null ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' :
+                  'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-slate-400'
                 }`}
               >
                 {i + 1}
@@ -356,7 +357,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
         {/* Official AMIRNET guidance */}
         {!session.is_practice && (
-          <p className="mt-6 text-center text-xs text-slate-400">
+          <p className="mt-6 text-center text-xs text-slate-400 dark:text-slate-500">
             שאלה ללא מענה נחשבת לתשובה שגויה — אם אינך בטוח, כדאי לנחש. אין קנס על טעות.
           </p>
         )}

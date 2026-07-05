@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { ExamMode } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
+import { authFetch } from '@/lib/auth-fetch';
 
 const MODES: { mode: ExamMode; title: string; desc: string; icon: string; isPractice?: boolean }[] = [
   {
@@ -37,7 +38,7 @@ export default function ExamModePage() {
   useEffect(() => {
     const guestId = localStorage.getItem('amiret_guest_id') ?? '';
     if (!guestId) return;
-    fetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`)
+    authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`)
       .then(r => r.ok ? r.json() : null)
       .then((d: { count: number } | null) => { if (d?.count) setReviewCount(d.count); })
       .catch(() => {});
@@ -68,7 +69,7 @@ export default function ExamModePage() {
 
     try {
       const guestId = getOrCreateGuestId();
-      const res = await fetch('/api/exam/start', {
+      const res = await authFetch('/api/exam/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mode, isPractice, guestId }),

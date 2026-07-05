@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
+import type { User } from '@supabase/supabase-js';
 
 /**
  * Returns both an auth client (reads user session from cookies)
@@ -14,7 +15,21 @@ export async function getServerClients() {
     createServerSupabaseClient(),
     hasServiceKey ? createAdminSupabaseClient() : createServerSupabaseClient(),
   ]);
-  return { authClient, supabase: dbClient };
+
+  // The browser keeps the session in localStorage (not cookies), so clients
+  // send the access token via the Authorization header; cookies are a fallback.
+  let user: User | null = null;
+  try {
+    const hdrs = await headers();
+    const auth = hdrs.get('authorization') ?? '';
+    const token = auth.toLowerCase().startsWith('bearer ') ? auth.slice(7) : null;
+    const { data } = token
+      ? await authClient.auth.getUser(token)
+      : await authClient.auth.getUser();
+    user = data.user;
+  } catch { /* unauthenticated */ }
+
+  return { authClient, supabase: dbClient, user };
 }
 
 export async function createServerSupabaseClient() {

@@ -6,6 +6,7 @@ import { QuestionCard } from '@/components/exam/QuestionCard';
 import { classifyScore, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
+import { authFetch } from '@/lib/auth-fetch';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
 type Difficulty = 1 | 2 | 3 | 4 | 5 | 'random';
@@ -101,7 +102,7 @@ export default function PracticePage() {
     // Track answers for spaced repetition (fire-and-forget)
     const isCorrect = optionIndex === questions[currentIndex]?.correct_answer;
     const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
-    fetch('/api/review-queue', {
+    authFetch('/api/review-queue', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ guestId, questionId: questions[currentIndex].id, wasCorrect: isCorrect }),

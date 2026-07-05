@@ -29,21 +29,21 @@ export function SectionProgress({ currentSection, completedSections }: SectionPr
                 isCurrent ? (cfg.experimental
                               ? 'bg-purple-600 border-purple-600 text-white shadow-md shadow-purple-200'
                               : 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-200') :
-                cfg.experimental ? 'bg-white border-purple-300 text-purple-400 border-dashed' :
-                            'bg-white border-slate-300 text-slate-400'
+                cfg.experimental ? 'bg-white dark:bg-slate-800 border-purple-300 dark:border-purple-700 text-purple-400 border-dashed' :
+                            'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-400 dark:text-slate-500'
               }`}>
                 {isDone ? '✓' : cfg.index}
               </div>
               <span className={`mt-1 text-[10px] whitespace-nowrap ${
                 isCurrent ? (cfg.experimental ? 'text-purple-600 font-semibold' : 'text-blue-600 font-semibold') :
                 isDone    ? 'text-green-600' :
-                cfg.experimental ? 'text-purple-400' : 'text-slate-400'
+                cfg.experimental ? 'text-purple-400' : 'text-slate-400 dark:text-slate-500'
               }`}>
                 {cfg.experimental ? 'ניסיוני' : TYPE_LABELS[cfg.type]}
               </span>
             </div>
             {cfg.index < SECTION_CONFIGS.length && (
-              <div className={`w-6 h-0.5 mb-4 transition-all ${isDone ? 'bg-green-400' : 'bg-slate-200'}`} />
+              <div className={`w-6 h-0.5 mb-4 transition-all ${isDone ? 'bg-green-400' : 'bg-slate-200 dark:bg-slate-700'}`} />
             )}
           </div>
         );

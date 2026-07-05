@@ -12,8 +12,7 @@ function nextInterval(currentDays: number): number {
  * Returns due questions (next_review_at <= now()) with full question data.
  */
 export async function GET(req: NextRequest) {
-  const { authClient, supabase } = await getServerClients();
-  const { data: { user } } = await authClient.auth.getUser();
+  const { supabase, user } = await getServerClients();
   const guestId = req.nextUrl.searchParams.get('guestId');
 
   if (!user && !guestId) {
@@ -87,8 +86,7 @@ export async function GET(req: NextRequest) {
  * DELETE /api/review-queue?guestId=xxx&questionId=yyy — remove one question
  */
 export async function DELETE(req: NextRequest) {
-  const { authClient, supabase } = await getServerClients();
-  const { data: { user } } = await authClient.auth.getUser();
+  const { supabase, user } = await getServerClients();
   const guestId = req.nextUrl.searchParams.get('guestId');
   const questionId = req.nextUrl.searchParams.get('questionId');
 
@@ -115,8 +113,7 @@ export async function DELETE(req: NextRequest) {
  * - Correct in review: double interval or remove if graduated
  */
 export async function POST(req: NextRequest) {
-  const { authClient, supabase } = await getServerClients();
-  const { data: { user } } = await authClient.auth.getUser();
+  const { supabase, user } = await getServerClients();
 
   let body: { guestId?: string; questionId: string; wasCorrect: boolean };
   try {

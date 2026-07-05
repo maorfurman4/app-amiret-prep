@@ -20,8 +20,7 @@ import {
  * Uses user_question_history / user_passage_history for cross-session deduplication.
  */
 export async function POST(req: NextRequest) {
-  const { authClient, supabase } = await getServerClients();
-  const { data: { user } } = await authClient.auth.getUser();
+  const { supabase, user } = await getServerClients();
 
   let body: { sessionId: string; sectionIndex: number; answers: (number | null)[]; guestId?: string };
   try {

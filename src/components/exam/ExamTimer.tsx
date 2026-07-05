@@ -38,12 +38,12 @@ export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
   }, [expiresAt, isPractice, computeRemaining]);
 
   if (remainingMs === null && !isPractice) {
-    return <div className="w-24 h-10 rounded-xl bg-slate-100 animate-pulse" />;
+    return <div className="w-24 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 animate-pulse" />;
   }
 
   if (isPractice) {
     return (
-      <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-sm font-medium">
+      <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm font-medium">
         <span className="text-base">⏸</span>
         מוד תרגול
       </div>
@@ -60,8 +60,8 @@ export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
   return (
     <div className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl font-mono transition-all ${
       isExpired ? 'bg-red-600 text-white animate-pulse' :
-      isWarning  ? 'bg-red-50 text-red-600 border-2 border-red-500' :
-                   'bg-slate-100 text-slate-700'
+      isWarning  ? 'bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border-2 border-red-500' :
+                   'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
     }`}>
       {isWarning && !isExpired && (
         <div className="text-xs font-bold text-red-600 animate-bounce">

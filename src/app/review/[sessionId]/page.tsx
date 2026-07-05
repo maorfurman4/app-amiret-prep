@@ -4,6 +4,7 @@ import { use, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import type { Question } from '@/types/exam';
+import { authFetch } from '@/lib/auth-fetch';
 
 type Filter = 'all' | 'wrong' | 'correct';
 
@@ -35,7 +36,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
 
   useEffect(() => {
     const guestId = localStorage.getItem('amiret_guest_id') ?? '';
-    fetch(`/api/exam/review?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId)}`)
+    authFetch(`/api/exam/review?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId)}`)
       .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
       .then((d: ReviewData) => setData(d))
       .catch(() => setFetchError(true));

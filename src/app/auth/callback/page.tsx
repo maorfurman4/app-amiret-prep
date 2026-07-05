@@ -15,15 +15,31 @@ function CallbackHandler() {
 
     // With flowType: 'implicit', Supabase puts the session in the URL hash.
     // detectSessionInUrl: true auto-processes it and fires SIGNED_IN.
+    // Move any guest-mode history onto the account (fire-and-forget, idempotent)
+    const mergeGuest = (accessToken: string) => {
+      const guestId = localStorage.getItem('amiret_guest_id');
+      if (!guestId) return;
+      fetch('/api/auth/merge-guest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+        body: JSON.stringify({ guestId }),
+        keepalive: true,
+      }).catch(() => {});
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
+        mergeGuest(session.access_token);
         router.replace(safeNext);
       }
     });
 
     // Fallback: if already signed in or no hash event fires
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) router.replace(safeNext);
+      if (session) {
+        mergeGuest(session.access_token);
+        router.replace(safeNext);
+      }
     });
 
     // Last resort timeout — only redirect if session exists, otherwise show error

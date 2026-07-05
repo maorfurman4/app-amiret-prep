@@ -381,13 +381,20 @@ export default function StrategiesPage() {
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
             {[
               { icon: '📚', text: '20 דקות קריאה באנגלית כל יום — טקסט לא קל מדי ולא קשה מדי. זו ההמלצה המשותפת לכל המכונים.' },
-              { icon: '🔗', text: 'שינון מילות קישור — הן מופיעות בכל שלושת סוגי השאלות. תרגל את חבילת 208 המחברים באוצר המילים.' },
-              { icon: '⏱️', text: 'סימולציות בתנאי אמת עם טיימר — ההבדל בין לדעת אנגלית ובין לדעת להיבחן. מבחן מלא כאן באתר = בדיוק זה.' },
-              { icon: '🔁', text: 'חזרה על טעויות — כל שאלה שטעית בה נכנסת אצלנו לתור החזרה החכמה. 10 דקות של חזרה שוות יותר מ-50 שאלות חדשות.' },
+              { icon: '🔗', text: 'שינון מילות קישור — הן מופיעות בכל שלושת סוגי השאלות. תרגל את חבילת 208 המחברים באוצר המילים.', href: '/vocabulary?pack=connectors', cta: 'לתרגול המחברים ←' },
+              { icon: '⏱️', text: 'סימולציות בתנאי אמת עם טיימר — ההבדל בין לדעת אנגלית ובין לדעת להיבחן. מבחן מלא כאן באתר = בדיוק זה.', href: '/exam', cta: 'למבחן מלא ←' },
+              { icon: '🔁', text: 'חזרה על טעויות — כל שאלה שטעית בה נכנסת אצלנו לתור החזרה החכמה. 10 דקות של חזרה שוות יותר מ-50 שאלות חדשות.', href: '/review-queue', cta: 'לתור החזרה ←' },
             ].map((h, i) => (
               <div key={i} className="flex items-start gap-3 p-4">
                 <span className="text-xl flex-shrink-0">{h.icon}</span>
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{h.text}</p>
+                <div>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{h.text}</p>
+                  {h.href && (
+                    <Link href={h.href} className="inline-block mt-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                      {h.cta}
+                    </Link>
+                  )}
+                </div>
               </div>
             ))}
           </div>

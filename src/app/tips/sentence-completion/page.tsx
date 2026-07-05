@@ -145,7 +145,7 @@ export default function SentenceCompletionTipsPage() {
           </div>
 
           {/* Connectors pack CTA */}
-          <Link href="/vocabulary" className="block bg-amber-50 border border-amber-200 rounded-2xl p-5 hover:bg-amber-100 transition-colors">
+          <Link href="/vocabulary?pack=connectors" className="block bg-amber-50 border border-amber-200 rounded-2xl p-5 hover:bg-amber-100 transition-colors">
             <div className="flex items-center gap-3">
               <span className="text-3xl">🔗</span>
               <div className="flex-1">

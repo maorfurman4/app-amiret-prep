@@ -181,6 +181,12 @@ export default function VocabularyPage() {
   const [showTimedConfig, setShowTimedConfig] = useState(false);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
 
+  // ─── Deep link: /vocabulary?pack=connectors opens that themed pack ────────
+  useEffect(() => {
+    const pack = new URLSearchParams(window.location.search).get('pack');
+    if (pack) setActivePack(pack);
+  }, []);
+
   // ─── Load auth user ────────────────────────────────────────────────────────
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {

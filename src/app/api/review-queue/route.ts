@@ -143,8 +143,9 @@ export async function POST(req: NextRequest) {
       .from('review_queue').select('times_wrong')
       .eq(ownCol, ownVal).eq('question_id', questionId).single();
 
+    // A fresh mistake is due immediately (Anki-style): the user can review it
+    // right away; spaced intervals kick in only after a correct review.
     const nextReview = new Date(now);
-    nextReview.setDate(nextReview.getDate() + 1);
 
     if (existing) {
       await supabase.from('review_queue')

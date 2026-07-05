@@ -31,6 +31,16 @@ export default function RestatementTipsPage() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
             <h2 className="text-lg font-bold text-slate-900 mb-4">השיטה הבסיסית</h2>
             <div className="border-l-4 border-purple-500 bg-purple-50/50 p-4 rounded-r-xl mb-4">
+              <p className="font-bold text-slate-800 text-sm mb-1">מצא את גרעין המשפט: מי עשה מה, למי, ומה הקשר הלוגי</p>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                פרק את משפט המקור לשלושה רכיבים: <span className="font-semibold">מי</span> (הנושא),{' '}
+                <span className="font-semibold">מה קרה</span> (הפעולה והתוצאה), ו
+                <span className="font-semibold">איזה קשר לוגי</span> מחבר ביניהם — ניגוד (although, despite),
+                סיבה-תוצאה (because, therefore) או תנאי (if, unless). התשובה הנכונה חייבת לשמור על
+                שלושת הרכיבים בדיוק, גם אם המילים והסדר שונים לגמרי.
+              </p>
+            </div>
+            <div className="border-l-4 border-purple-500 bg-purple-50/50 p-4 rounded-r-xl mb-4">
               <p className="font-bold text-slate-800 text-sm mb-1">התמקד במשמעות — לא במילים</p>
               <p className="text-slate-600 text-sm leading-relaxed">
                 קרא את המשפט המקורי ותנסח לעצמך בעברית מה הוא אומר. לאחר מכן בדוק כל אפשרות —

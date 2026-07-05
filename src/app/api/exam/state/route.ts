@@ -33,13 +33,17 @@ export async function GET(req: NextRequest) {
     timerExpired = remainingMs === 0;
   }
 
-  // Strip correct_answer from all questions before sending to client
-  // to prevent cheating during active exam
-  const safeSession = {
+  // Real exam: strip correct_answer AND explanation (its options_analysis marks
+  // the right option) so the client cannot cheat mid-exam.
+  // Practice mode NEEDS both — the client colors answers and shows explanations
+  // immediately, so stripping them broke practice feedback entirely.
+  const safeSession = session.is_practice ? session : {
     ...session,
     questions_by_section: Object.fromEntries(
       Object.entries((session.questions_by_section as Record<string, unknown[]>) ?? {}).map(
-        ([k, qs]) => [k, (qs as Record<string, unknown>[]).map(({ correct_answer: _ca, ...rest }) => rest)]
+        ([k, qs]) => [k, (qs as Record<string, unknown>[]).map(
+          ({ correct_answer: _ca, explanation: _ex, ...rest }) => rest
+        )]
       )
     ),
   };

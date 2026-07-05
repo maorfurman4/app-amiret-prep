@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import { classifyScore, SECTION_CONFIGS, type SectionResult } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
@@ -34,44 +33,57 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 
 export default function StatsPage() {
   const supabase = createClient();
-  const router = useRouter();
   const [stats, setStats] = useState<Stats | null>(null);
   const [weakness, setWeakness] = useState<WeaknessData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.replace('/auth/login?next=/stats');
+      // Works for both logged-in users and guests — stats are computed
+      // directly from completed exam sessions, keyed by the same user_id
+      // the exam APIs write (auth id or the localStorage guest UUID).
+      const userKey = user?.id ?? localStorage.getItem('amiret_guest_id');
+      if (!userKey) {
+        setLoading(false);
         return;
       }
 
-      // Fetch user_stats and recent exam sessions in parallel
-      Promise.all([
-        supabase
-          .from('user_stats')
-          .select('*')
-          .eq('user_id', user.id)
-          .single(),
-        supabase
-          .from('exam_sessions')
-          .select('section_results')
-          .eq('user_id', user.id)
-          .eq('is_practice', false)
-          .order('created_at', { ascending: false })
-          .limit(10),
-      ]).then(([statsRes, sessionsRes]) => {
-        setStats(statsRes.data as unknown as Stats);
+      supabase
+        .from('exam_sessions')
+        .select('score, completed_at, section_results')
+        .eq('user_id', userKey)
+        .eq('is_practice', false)
+        .not('completed_at', 'is', null)
+        .not('score', 'is', null)
+        .order('completed_at', { ascending: true })
+        .then(({ data: sessions }) => {
+          const rows = (sessions ?? []) as { score: number; completed_at: string; section_results: unknown }[];
 
-        // Aggregate weakness data from recent sessions
-        if (sessionsRes.data && sessionsRes.data.length > 0) {
+          if (rows.length === 0) {
+            setStats({ total_exams: 0, best_score: null, avg_score: null, score_history: [], performance_by_type: {} });
+            setLoading(false);
+            return;
+          }
+
+          const scores = rows.map(r => r.score);
+          const performanceByType: Record<string, { correct: number; total: number }> = {};
           const byType: Record<string, { correct: number; total: number }> = {};
           const byDifficulty: Record<string, { correct: number; total: number }> = {};
+          const recent = rows.slice(-10);
 
-          for (const session of sessionsRes.data) {
-            const sectionResults = ((session as unknown as { section_results: unknown }).section_results ?? []) as SectionResult[];
-            for (const sr of sectionResults) {
-              // Aggregate by question type
+          for (const row of rows) {
+            for (const sr of ((row.section_results ?? []) as SectionResult[])) {
+              const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
+              const t = cfg?.type ?? sr.type;
+              if (!t) continue;
+              if (!performanceByType[t]) performanceByType[t] = { correct: 0, total: 0 };
+              performanceByType[t].correct += sr.correctCount ?? 0;
+              performanceByType[t].total += sr.totalCount ?? 0;
+            }
+          }
+
+          for (const row of recent) {
+            for (const sr of ((row.section_results ?? []) as SectionResult[])) {
               const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
               const t = cfg?.type ?? sr.type;
               if (t) {
@@ -91,11 +103,16 @@ export default function StatsPage() {
             }
           }
 
+          setStats({
+            total_exams: rows.length,
+            best_score: Math.max(...scores),
+            avg_score: scores.reduce((a, b) => a + b, 0) / scores.length,
+            score_history: rows.map(r => ({ date: r.completed_at, score: r.score })),
+            performance_by_type: performanceByType,
+          });
           setWeakness({ byType, byDifficulty });
-        }
-
-        setLoading(false);
-      });
+          setLoading(false);
+        });
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

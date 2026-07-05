@@ -24,8 +24,6 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   const supabase = createClient();
 
   const [session, setSession] = useState<SessionData | null>(null);
-  const [explanations, setExplanations] = useState<string>('');
-  const [loadingExplanations, setLoadingExplanations] = useState(false);
 
   useEffect(() => {
     supabase
@@ -37,24 +35,6 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         if (data) setSession(data as SessionData);
       });
   }, [sessionId]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const loadExplanations = async () => {
-    setLoadingExplanations(true);
-    try {
-      const res = await fetch('/api/ai/explanations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId }),
-      });
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json() as { explanation: string };
-      setExplanations(data.explanation ?? 'לא ניתן לייצר הסברים כרגע.');
-    } catch {
-      setExplanations('שגיאה בטעינת הסברים. נסה שוב מאוחר יותר.');
-    } finally {
-      setLoadingExplanations(false);
-    }
-  };
 
   if (!session) {
     return (
@@ -260,29 +240,6 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             <div className="mr-auto text-blue-400 text-xl">›</div>
           </div>
         </Link>
-
-        {/* AI Explanations — only when there are mistakes */}
-        {!session.is_practice && totalCorrect < totalQuestions && (
-          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-slate-900 dark:text-white">הסברים על טעויות</h2>
-              {!explanations && (
-                <button
-                  onClick={loadExplanations}
-                  disabled={loadingExplanations}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-60 transition-colors"
-                >
-                  {loadingExplanations ? 'מייצר...' : 'צור הסברים עם AI ✨'}
-                </button>
-              )}
-            </div>
-            {explanations ? (
-              <div className="text-slate-700 dark:text-slate-200 text-sm leading-relaxed whitespace-pre-wrap max-h-96 overflow-y-auto">{explanations}</div>
-            ) : (
-              <div className="text-slate-400 dark:text-slate-500 text-sm">לחץ כדי לקבל הסברים מותאמים אישית</div>
-            )}
-          </div>
-        )}
 
         {/* Actions */}
         <div className="flex gap-3">

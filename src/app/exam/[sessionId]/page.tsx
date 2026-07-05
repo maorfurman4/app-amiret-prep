@@ -28,6 +28,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const isSubmittingRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [submitWarning, setSubmitWarning] = useState<string | null>(null);
+  const [exitConfirm, setExitConfirm] = useState(false);
 
   // Practice mode: track which question indices have been answered (locked)
   const [lockedAnswers, setLockedAnswers] = useState<Set<number>>(new Set());
@@ -211,7 +212,14 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       <header className="sticky top-0 z-10 bg-white border-b border-slate-200 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-col">
+            <button
+              onClick={() => setExitConfirm(true)}
+              aria-label="יציאה מהמבחן"
+              className="flex-shrink-0 w-8 h-8 rounded-full border border-slate-300 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors text-sm font-bold"
+            >
+              ✕
+            </button>
+            <div className="flex flex-col flex-1">
               <span className="text-sm font-bold text-slate-900">מבחן אמירנ"ט</span>
               <span className="text-xs text-slate-500">
                 פרק {currentSection} — {currentCfg?.type === 'sentence_completion' ? 'השלמת משפטים' :
@@ -239,11 +247,44 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
       {/* Main exam area */}
       <main className="max-w-2xl mx-auto px-4 py-8">
+        {/* Exit confirmation */}
+        {exitConfirm && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl" dir="rtl">
+            <p className="text-red-800 text-sm font-semibold mb-3">
+              לצאת מהמבחן ולחזור לדף הבית? תוכל להמשיך את המבחן מאותה נקודה מאוחר יותר.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => router.push('/')}
+                className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-bold hover:bg-red-600 transition-colors"
+              >
+                כן, צא לדף הבית
+              </button>
+              <button
+                onClick={() => setExitConfirm(false)}
+                className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 text-sm hover:bg-slate-100 transition-colors"
+              >
+                המשך במבחן
+              </button>
+            </div>
+          </div>
+        )}
+
         {currentCfg?.experimental && (
           <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl text-sm text-purple-900">
-            <span className="font-bold">פרק ניסיוני</span> — בדיוק כמו במבחן האמיתי: טעויות בפרק זה{' '}
-            <span className="font-semibold">לא מורידות</span> את הציון, אבל תשובות נכונות יכולות{' '}
-            <span className="font-semibold">להעלות</span> אותו. שווה להשקיע!
+            <p>
+              <span className="font-bold">פרק ניסיוני — לא חובה!</span> במבחן האמיתי הפרק הניסיוני
+              יכול להכיל מטלות מסוגים חדשים (למשל מטלת כתיבה או האזנה) שמאל"ו בודק. טעויות בו{' '}
+              <span className="font-semibold">לא מורידות</span> את הציון, ותשובות נכונות יכולות{' '}
+              <span className="font-semibold">להעלות</span> אותו במעט (עד 2 נקודות).
+            </p>
+            <button
+              onClick={() => session && submitSection(session, answers)}
+              disabled={isSubmitting}
+              className="mt-3 px-4 py-2 rounded-lg border border-purple-300 text-purple-700 text-sm font-semibold hover:bg-purple-100 transition-colors disabled:opacity-60"
+            >
+              דלג על הפרק וסיים את המבחן ←
+            </button>
           </div>
         )}
         <QuestionCard

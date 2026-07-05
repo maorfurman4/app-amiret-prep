@@ -118,7 +118,9 @@ export async function POST(req: NextRequest) {
       answers: scoredResults.flatMap(sr => sr.answers as (number | null)[]),
     });
     const baseScore = thetaToScore(baseTheta);
-    const scoreWithExperimental = thetaToScore(newTheta);
+    // Official AMIRNET rule: the experimental section can only raise the
+    // final score, and by at most 2 points.
+    const scoreWithExperimental = Math.min(thetaToScore(newTheta), baseScore + 2);
     const finalIsExperimental = scoreWithExperimental > baseScore;
 
     updatePayload.completed_at = new Date().toISOString();

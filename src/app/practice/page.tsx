@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionCard } from '@/components/exam/QuestionCard';
-import type { Question, QuestionType } from '@/types/exam';
+import { classifyScore, type Question, type QuestionType } from '@/types/exam';
+import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
@@ -424,6 +425,19 @@ export default function PracticePage() {
     const pct = Math.round((correctCount / questions.length) * 100);
     const color = pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
 
+    // Level diagnosis via IRT — same 3PL model the adaptive exam uses.
+    // Most meaningful in mixed mode, where questions span all 5 levels.
+    const hasIrtParams = questions.every(q => isFinite(q.a) && isFinite(q.b) && isFinite(q.c));
+    const diagTheta = hasIrtParams
+      ? estimateThetaEAP(
+          questions.map(q => ({ a: q.a, b: q.b, c: q.c })),
+          questions.map((q, i) => (answers[i] === q.correct_answer ? 1 : 0)),
+        )
+      : null;
+    const diagScore = diagTheta !== null ? thetaToScore(diagTheta) : null;
+    const diagLevel = diagTheta !== null ? routeNextDifficulty(diagTheta) : null;
+    const diagClass = diagScore !== null ? classifyScore(diagScore) : null;
+
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 px-4 py-8" dir="rtl">
         <div className="max-w-2xl mx-auto">
@@ -449,6 +463,34 @@ export default function PracticePage() {
                 </div>
               )}
             </div>
+
+            {/* Level diagnosis — IRT-based, like the real adaptive exam */}
+            {diagLevel !== null && diagScore !== null && diagClass !== null && (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 text-right">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xl">🎯</span>
+                  <span className="font-bold text-slate-900 dark:text-white">אבחון רמה</span>
+                  {selectedDiff === 'random' && (
+                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">רמה מעורבת</span>
+                  )}
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <div className="text-sm text-slate-500 dark:text-slate-400">הרמה המשוערת שלך</div>
+                    <div className="text-2xl font-black text-slate-900 dark:text-white">רמה {diagLevel}/5</div>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm text-slate-500 dark:text-slate-400">ציון אמירנ"ט משוער</div>
+                    <div className={`text-2xl font-black ${diagClass.color}`}>~{diagScore}</div>
+                    <div className={`text-xs font-semibold ${diagClass.color}`}>{diagClass.label}</div>
+                  </div>
+                </div>
+                <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
+                  הערכה סטטיסטית לפי מודל ה-IRT של המבחן האדפטיבי — מבוססת על {questions.length} שאלות בלבד.
+                  {selectedDiff !== 'random' && ' לאבחון מדויק יותר, תרגל ברמה מעורבת או עשה מבחן מלא.'}
+                </p>
+              </div>
+            )}
             <div className="space-y-3">
               <button
                 onClick={handleRestart}

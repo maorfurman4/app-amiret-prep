@@ -71,7 +71,7 @@ export function QuestionCard({
 
       {/* Passage for reading comprehension */}
       {question.passage && (
-        <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm leading-relaxed text-slate-700 font-medium max-h-56 overflow-y-auto">
+        <div dir="ltr" className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm leading-relaxed text-slate-700 font-medium max-h-56 overflow-y-auto text-left">
           <div className="text-xs text-slate-400 mb-2 font-normal">Reading Passage</div>
           {question.passage.text}
         </div>
@@ -91,13 +91,13 @@ export function QuestionCard({
 
       {/* Question text */}
       {question.type !== 'restatement' && (
-        <div className="mb-6 text-lg font-semibold text-slate-900 leading-relaxed">
+        <div dir="ltr" className="mb-6 text-lg font-semibold text-slate-900 leading-relaxed text-left">
           {question.text}
         </div>
       )}
 
-      {/* Options */}
-      <div className="space-y-3">
+      {/* Options — English answers are always laid out LTR */}
+      <div className="space-y-3" dir="ltr">
         {question.options.map((option, i) => {
           const isSelected = selectedAnswer === i;
           const isCorrect = question.correct_answer === i;

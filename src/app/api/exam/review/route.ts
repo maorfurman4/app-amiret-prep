@@ -14,6 +14,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });
   }
 
+  // Ownership is mandatory: without an authenticated user or a guestId,
+  // a session id alone must not be enough to read exam content.
+  if (!sessionOwner) {
+    return NextResponse.json({ error: 'auth required' }, { status: 401 });
+  }
+
   const query = supabase
     .from('exam_sessions')
     .select('questions_by_section, answers_by_section, section_results, is_practice, completed_at')

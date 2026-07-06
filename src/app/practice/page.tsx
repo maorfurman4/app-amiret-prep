@@ -26,6 +26,14 @@ const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; sublabel: string; 
   { value: 'random', label: '🎲', sublabel: 'מעורב', range: 'מכל הרמות' },
 ];
 
+// Authentic AMIRNET section format: question count + hard section timer
+const SECTION_FORMAT: Record<QuestionType, { count: number; seconds: number }> = {
+  sentence_completion: { count: 4, seconds: 240 },
+  restatement: { count: 3, seconds: 360 },
+  reading_comprehension: { count: 5, seconds: 900 },
+  esra: { count: 4, seconds: 240 },
+};
+
 const EXAM_TIMER_SECONDS: Record<QuestionType, number> = {
   sentence_completion: 45,
   restatement: 50,
@@ -47,6 +55,9 @@ export default function PracticePage() {
   const [selectedDiff, setDiff]       = useState<Difficulty | null>(null);
   const [selectedCount, setCount]     = useState<5 | 10>(5);
   const [examMode, setExamMode]       = useState(false);
+  const [sectionMode, setSectionMode] = useState(false);
+  const [sectionTimeLeft, setSectionTimeLeft] = useState(0);
+  const sectionTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [loading, setLoading]         = useState(false);
   const [error, setError]             = useState<string | null>(null);
@@ -54,6 +65,23 @@ export default function PracticePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers]         = useState<(number | null)[]>([]);
   const [showResult, setShowResult]   = useState(false);
+
+  // Deep link: /practice?type=X&difficulty=Y jumps straight to count selection
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const t = sp.get('type');
+    const d = sp.get('difficulty');
+    if (t && ['sentence_completion', 'restatement', 'reading_comprehension'].includes(t)) {
+      setType(t as QuestionType);
+      if (d) {
+        const diff: Difficulty = d === 'random' ? 'random' : (Math.max(1, Math.min(5, parseInt(d, 10) || 3)) as Difficulty);
+        setDiff(diff);
+        setStep('pick-count');
+      } else {
+        setStep('pick-difficulty');
+      }
+    }
+  }, []);
 
   // Exam mode timer
   const [timeLeft, setTimeLeft]       = useState<number>(0);
@@ -77,8 +105,11 @@ export default function PracticePage() {
         return;
       }
       const data = await res.json() as { questions: Question[] };
-      setQuestions(data.questions);
-      setAnswers(Array(data.questions.length).fill(null));
+      const qs = sectionMode && selectedType
+        ? data.questions.slice(0, SECTION_FORMAT[selectedType].count)
+        : data.questions;
+      setQuestions(qs);
+      setAnswers(Array(qs.length).fill(null));
       setCurrentIndex(0);
       setShowResult(false);
       setStep('practicing');
@@ -91,6 +122,14 @@ export default function PracticePage() {
 
   const handleSelect = (optionIndex: number) => {
     if (showResult) return;
+    // Section mode: answers stay editable until the section is submitted,
+    // and spaced-repetition tracking happens once at the end.
+    if (sectionMode) {
+      const next = [...answers];
+      next[currentIndex] = optionIndex;
+      setAnswers(next);
+      return;
+    }
     // In exam mode, only allow one selection per question
     if (examMode && answers[currentIndex] !== null) return;
     const next = [...answers];
@@ -109,6 +148,46 @@ export default function PracticePage() {
     }).catch(() => {});
   };
 
+  // Section mode: submit the whole section (manually or on timeout)
+  const finishSection = useCallback(() => {
+    if (sectionTimerRef.current) { clearInterval(sectionTimerRef.current); sectionTimerRef.current = null; }
+    const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
+    questions.forEach((q, i) => {
+      authFetch('/api/review-queue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ guestId, questionId: q.id, wasCorrect: answers[i] === q.correct_answer }),
+      }).catch(() => {});
+    });
+    setStep('done');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questions, answers]);
+
+  // Section mode: one hard countdown for the whole section, like the real exam
+  useEffect(() => {
+    if (step !== 'practicing' || !sectionMode || !selectedType) return;
+    setSectionTimeLeft(SECTION_FORMAT[selectedType].seconds);
+    sectionTimerRef.current = setInterval(() => {
+      setSectionTimeLeft(prev => {
+        if (prev <= 1) {
+          if (sectionTimerRef.current) { clearInterval(sectionTimerRef.current); sectionTimerRef.current = null; }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => { if (sectionTimerRef.current) { clearInterval(sectionTimerRef.current); sectionTimerRef.current = null; } };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, sectionMode, selectedType]);
+
+  // Auto-submit when the section timer hits zero
+  useEffect(() => {
+    if (sectionMode && step === 'practicing' && sectionTimeLeft === 0 && sectionTimerRef.current === null && questions.length > 0) {
+      finishSection();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionTimeLeft, sectionMode, step]);
+
   const handleRestart = () => {
     setStep('pick-type');
     setType(null);
@@ -118,6 +197,7 @@ export default function PracticePage() {
     setAnswers([]);
     setError(null);
     setExamMode(false);
+    setSectionMode(false);
   };
 
   const correctCount = answers.filter((a, i) => a === questions[i]?.correct_answer).length;
@@ -134,7 +214,7 @@ export default function PracticePage() {
 
   // Exam mode: reset timer when question changes
   useEffect(() => {
-    if (step !== 'practicing' || !examMode || !selectedType) return;
+    if (step !== 'practicing' || !examMode || sectionMode || !selectedType) return;
 
     // Clear any existing interval
     if (timerRef.current) clearInterval(timerRef.current);
@@ -180,8 +260,8 @@ export default function PracticePage() {
     if (step !== 'practicing') return;
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if (examMode) {
-        // In exam mode: number keys select answer
+      if (examMode || sectionMode) {
+        // Exam/section mode: number keys select answer
         const idx = parseInt(e.key) - 1;
         if (idx >= 0 && idx < (questions[currentIndex]?.options.length ?? 0)) {
           handleSelect(idx);
@@ -282,7 +362,7 @@ export default function PracticePage() {
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">{error}</div>
           )}
-          <div className="grid grid-cols-2 gap-4">
+          <div className={`grid grid-cols-2 gap-4 ${sectionMode ? 'hidden' : ''}`}>
             {([5, 10] as const).map(n => (
               <button
                 key={n}
@@ -299,28 +379,26 @@ export default function PracticePage() {
             ))}
           </div>
 
-          {/* Exam mode toggle */}
-          <div className="mt-6 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-bold text-slate-900 dark:text-white">מצב בחינה</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ללא הסברים מיידיים, עם טיימר לכל שאלה</div>
-              </div>
+          {/* Practice mode selector */}
+          <div className="mt-6 space-y-2">
+            {[
+              { id: 'learn', title: 'למידה', desc: 'הסבר מיידי אחרי כל תשובה — בקצב שלך', active: !examMode && !sectionMode, on: () => { setExamMode(false); setSectionMode(false); } },
+              { id: 'perQ', title: 'אימון מהירות', desc: 'טיימר לכל שאלה בנפרד, הסברים בסוף', active: examMode && !sectionMode, on: () => { setExamMode(true); setSectionMode(false); } },
+              { id: 'section', title: 'מקבץ בתנאי אמת 🎯', desc: selectedType ? `בדיוק כמו במבחן: ${SECTION_FORMAT[selectedType].count} שאלות ב-${SECTION_FORMAT[selectedType].seconds / 60} דקות, ניווט חופשי, הסברים בסוף` : '', active: sectionMode, on: () => { setExamMode(false); setSectionMode(true); } },
+            ].map(m => (
               <button
-                role="switch"
-                aria-checked={examMode}
-                onClick={() => setExamMode(v => !v)}
-                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                  examMode ? 'bg-blue-600' : 'bg-slate-300'
+                key={m.id}
+                onClick={m.on}
+                className={`w-full text-right p-4 rounded-2xl border-2 transition-all ${
+                  m.active
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/40'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-300'
                 }`}
               >
-                <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white dark:bg-slate-800 shadow transition-transform ${
-                    examMode ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
+                <div className={`font-bold ${m.active ? 'text-blue-900 dark:text-blue-200' : 'text-slate-900 dark:text-white'}`}>{m.title}</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{m.desc}</div>
               </button>
-            </div>
+            ))}
           </div>
 
           <button
@@ -328,7 +406,7 @@ export default function PracticePage() {
             disabled={loading}
             className="mt-8 w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-lg hover:bg-blue-700 transition-colors disabled:opacity-60"
           >
-            {loading ? 'טוען...' : examMode ? 'התחל בחינה' : 'התחל תרגול'}
+            {loading ? 'טוען...' : sectionMode ? 'התחל מקבץ אמיתי' : examMode ? 'התחל בחינה' : 'התחל תרגול'}
           </button>
         </div>
       </div>
@@ -352,6 +430,11 @@ export default function PracticePage() {
                     מצב בחינה
                   </span>
                 )}
+                {sectionMode && (
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">
+                    מקבץ בתנאי אמת
+                  </span>
+                )}
               </div>
               <div className="text-xs text-slate-500 dark:text-slate-400">
                 שאלה {currentIndex + 1} מתוך {questions.length}
@@ -360,13 +443,37 @@ export default function PracticePage() {
 
             <div className="flex items-center gap-3">
               {/* Timer (exam mode only) */}
-              {examMode && (
+              {examMode && !sectionMode && (
                 <div className={`font-mono text-xl font-black tabular-nums ${timerColor(timeLeft)}`}>
                   {formatTime(timeLeft)}
                 </div>
               )}
+              {/* Section timer — one hard countdown for the whole section */}
+              {sectionMode && (
+                <div className={`font-mono text-xl font-black tabular-nums ${sectionTimeLeft <= 30 ? 'text-red-600' : sectionTimeLeft <= 60 ? 'text-yellow-500' : 'text-slate-700 dark:text-slate-200'}`}>
+                  {formatTime(sectionTimeLeft)}
+                </div>
+              )}
 
-              {/* Progress dots */}
+              {/* Progress dots — clickable free navigation in section mode */}
+              {sectionMode ? (
+                <div className="flex gap-1.5">
+                  {questions.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentIndex(i)}
+                      aria-label={`שאלה ${i + 1}`}
+                      className={`w-7 h-7 rounded-full text-xs font-bold transition-all ${
+                        i === currentIndex ? 'bg-blue-600 text-white ring-2 ring-blue-300' :
+                        answers[i] !== null ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' :
+                        'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 border border-dashed border-slate-300 dark:border-slate-600'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
+              ) : (
               <div className="flex gap-1">
                 {questions.map((_, i) => (
                   <div
@@ -379,6 +486,7 @@ export default function PracticePage() {
                   />
                 ))}
               </div>
+              )}
             </div>
           </div>
         </header>
@@ -390,8 +498,8 @@ export default function PracticePage() {
             totalInSection={questions.length}
             selectedAnswer={answers[currentIndex] ?? null}
             onSelect={handleSelect}
-            isPractice={!examMode}
-            showResult={examMode ? false : showResult}
+            isPractice={!examMode && !sectionMode}
+            showResult={examMode || sectionMode ? false : showResult}
           />
 
           {/* Normal mode: show Next button after answering */}
@@ -406,8 +514,36 @@ export default function PracticePage() {
             </div>
           )}
 
+          {/* Section mode: free prev/next + finish */}
+          {sectionMode && (
+            <div className="mt-6 flex items-center justify-between gap-3">
+              <button
+                onClick={() => setCurrentIndex(i => Math.max(0, i - 1))}
+                disabled={currentIndex === 0}
+                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm"
+              >
+                קודם ›
+              </button>
+              {currentIndex < questions.length - 1 ? (
+                <button
+                  onClick={() => setCurrentIndex(i => Math.min(questions.length - 1, i + 1))}
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm font-medium"
+                >
+                  ‹ הבא
+                </button>
+              ) : (
+                <button
+                  onClick={finishSection}
+                  className="px-5 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-bold"
+                >
+                  סיים מקבץ ✓
+                </button>
+              )}
+            </div>
+          )}
+
           {/* Exam mode: show Next button only after answer selected */}
-          {examMode && answers[currentIndex] !== null && (
+          {examMode && !sectionMode && answers[currentIndex] !== null && (
             <div className="mt-6 flex justify-start">
               <button
                 onClick={handleNext}
@@ -445,9 +581,9 @@ export default function PracticePage() {
           {/* Score summary */}
           <div className="text-center space-y-4 mb-10">
             <div className="text-6xl">{pct >= 80 ? '🎉' : pct >= 60 ? '💪' : '📚'}</div>
-            {examMode && (
+            {(examMode || sectionMode) && (
               <div className="inline-block bg-amber-100 text-amber-700 text-sm font-bold px-3 py-1 rounded-full">
-                תוצאת מצב בחינה
+                {sectionMode ? 'תוצאת מקבץ בתנאי אמת' : 'תוצאת מצב בחינה'}
               </div>
             )}
             <div>
@@ -509,7 +645,7 @@ export default function PracticePage() {
           </div>
 
           {/* Exam mode: full question review with explanations */}
-          {examMode && (
+          {(examMode || sectionMode) && (
             <div className="space-y-6">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-3">
                 סקירת שאלות והסברים

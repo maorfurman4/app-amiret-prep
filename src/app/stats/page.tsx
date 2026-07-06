@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { classifyScore, SECTION_CONFIGS, type SectionResult } from '@/types/exam';
+import { routeNextDifficulty } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
 
 interface Stats {
@@ -308,6 +309,26 @@ export default function StatsPage() {
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700">
             <h2 className="font-bold text-slate-900 dark:text-white mb-1">ניתוח חולשות</h2>
             <p className="text-slate-400 dark:text-slate-500 text-xs mb-4">מבוסס על 10 המבחנים האחרונים שלך</p>
+
+            {/* One-tap targeted practice at the right level */}
+            {weakestType && (() => {
+              const lastScore = (stats.score_history ?? []).slice(-1)[0]?.score ?? 100;
+              const level = routeNextDifficulty((lastScore - 100) / 20);
+              return (
+                <a
+                  href={`/practice?type=${weakestType.type}&difficulty=${level}`}
+                  className="flex items-center justify-between gap-3 mb-4 p-4 bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors"
+                >
+                  <div>
+                    <div className="text-white font-bold text-sm">🎯 תרגל את החולשה שלך עכשיו</div>
+                    <div className="text-blue-100 text-xs mt-0.5">
+                      {TYPE_LABELS[weakestType.type] ?? weakestType.type} ברמה {level} — נבחר אוטומטית לפי הביצועים שלך
+                    </div>
+                  </div>
+                  <span className="text-white text-xl">‹</span>
+                </a>
+              );
+            })()}
 
             {/* By question type */}
             <div className="space-y-3 mb-5">

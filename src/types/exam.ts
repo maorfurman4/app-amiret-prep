@@ -68,6 +68,7 @@ export interface SectionResult {
   thetaAfter: number;
   correctCount: number;
   totalCount: number;
+  timings?: number[]; // seconds spent per question (client-reported, optional)
 }
 
 export interface ExamSession {

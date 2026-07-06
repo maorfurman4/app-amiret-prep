@@ -22,7 +22,7 @@ import {
 export async function POST(req: NextRequest) {
   const { supabase, user } = await getServerClients();
 
-  let body: { sessionId: string; sectionIndex: number; answers: (number | null)[]; guestId?: string };
+  let body: { sessionId: string; sectionIndex: number; answers: (number | null)[]; guestId?: string; timings?: number[] };
   try {
     body = await req.json() as typeof body;
   } catch {
@@ -77,6 +77,13 @@ export async function POST(req: NextRequest) {
   const sectionForAdaptive = { questions: allQuestions, answers: allAnswers };
   const newTheta = updateThetaAfterSection(session.theta, sectionForAdaptive);
 
+  // Optional per-question pace data — accepted only if well-formed
+  const timings = Array.isArray(body.timings)
+    && body.timings.length === currentQuestions.length
+    && body.timings.every(t => typeof t === 'number' && isFinite(t) && t >= 0 && t < 3600)
+    ? body.timings.map(t => Math.round(t))
+    : undefined;
+
   const currentSectionResult = { questions: currentQuestions, answers: body.answers };
   const result: SectionResult = {
     sectionIndex: body.sectionIndex,
@@ -87,6 +94,7 @@ export async function POST(req: NextRequest) {
     thetaAfter: newTheta,
     correctCount: correctCount(currentSectionResult),
     totalCount: currentQuestions.length,
+    ...(timings ? { timings } : {}),
   };
 
   const newHistory = [

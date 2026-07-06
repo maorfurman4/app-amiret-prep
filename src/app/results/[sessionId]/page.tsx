@@ -229,6 +229,74 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           </div>
         </div>
 
+        {/* Pace analysis — shown only when timings were recorded */}
+        {sectionResults.some(sr => sr.timings && sr.timings.length > 0) && (() => {
+          const PER_Q_BUDGET: Record<string, number> = { sentence_completion: 60, restatement: 120, reading_comprehension: 180 };
+          const STUCK_CAP: Record<string, number> = { sentence_completion: 90, restatement: 150, reading_comprehension: 180 };
+          const withTimings = sectionResults.filter(sr => sr.timings && sr.timings.length > 0);
+          const overCap = withTimings.flatMap(sr => {
+            const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
+            const cap = STUCK_CAP[cfg?.type ?? sr.type] ?? 90;
+            return (sr.timings ?? []).map((t, i) => ({ section: sr.sectionIndex, q: i + 1, t, cap,
+              wrong: sr.answers?.[i] !== sr.questions?.[i]?.correct_answer })).filter(x => x.t > x.cap);
+          });
+          return (
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+              <h2 className="font-bold text-slate-900 dark:text-white mb-1">⏱️ ניתוח קצב</h2>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
+                כמה זמן השקעת בכל פרק ביחס לתקציב — קצב הוא חצי מהציון באמירנ"ט
+              </p>
+              <div className="space-y-3 mb-4">
+                {withTimings.map(sr => {
+                  const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
+                  const type = cfg?.type ?? sr.type;
+                  const used = (sr.timings ?? []).reduce((a, b) => a + b, 0);
+                  const budget = cfg?.durationSeconds ?? 240;
+                  const pctUsed = Math.min(100, Math.round((used / budget) * 100));
+                  const avg = Math.round(used / Math.max(1, (sr.timings ?? []).length));
+                  const perQ = PER_Q_BUDGET[type] ?? 60;
+                  return (
+                    <div key={sr.sectionIndex}>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-slate-700 dark:text-slate-200">
+                          פרק {sr.sectionIndex} — {TYPE_LABELS[type]}
+                        </span>
+                        <span className={`font-mono text-xs ${avg > perQ ? 'text-orange-500' : 'text-slate-500 dark:text-slate-400'}`}>
+                          ממוצע {avg} שנ׳/שאלה
+                        </span>
+                      </div>
+                      <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full ${pctUsed >= 95 ? 'bg-red-500' : pctUsed >= 75 ? 'bg-yellow-500' : 'bg-green-500'}`}
+                          style={{ width: `${pctUsed}%` }}
+                        />
+                      </div>
+                      <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                        נוצלו {Math.round(used)} מתוך {budget} שניות ({pctUsed}%)
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {overCap.length > 0 ? (
+                <div className="p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl">
+                  <div className="text-sm font-semibold text-orange-800 dark:text-orange-300 mb-1">
+                    ⚠️ {overCap.length} שאלות חרגו מ"תקציב התקיעה"
+                  </div>
+                  <div className="text-xs text-orange-700 dark:text-orange-400 leading-relaxed">
+                    {overCap.slice(0, 4).map(x => `פרק ${x.section} שאלה ${x.q}: ${Math.round(x.t)} שנ׳${x.wrong ? ' (וגם שגויה — נחש ותתקדם!)' : ''}`).join(' · ')}
+                    {overCap.length > 4 && ` · ועוד ${overCap.length - 4}`}
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-xl text-sm text-green-800 dark:text-green-300 font-medium">
+                  ✓ קצב מצוין — אף שאלה לא חרגה מתקציב התקיעה
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
         {/* Review all questions */}
         <Link href={`/review/${sessionId}`} className="block">
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-center gap-4 hover:bg-blue-100 transition-colors cursor-pointer">

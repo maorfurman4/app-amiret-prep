@@ -34,6 +34,11 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   // Practice mode: track which question indices have been answered (locked)
   const [lockedAnswers, setLockedAnswers] = useState<Set<number>>(new Set());
 
+  // Pace tracking: seconds spent per question in the current section
+  const timingsRef = useRef<number[]>([]);
+  const lastTickRef = useRef<number>(Date.now());
+  const prevIndexRef = useRef(0);
+
   const [guestId, setGuestId] = useState<string | null>(null);
 
   // Read guestId after hydration — avoids SSR/client mismatch
@@ -59,6 +64,11 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     setSession(data.session);
     setAnswers(existingAnswers ?? Array(questionCount).fill(null));
 
+    // Reset pace tracking for the new section
+    timingsRef.current = [];
+    lastTickRef.current = Date.now();
+    prevIndexRef.current = 0;
+
     // If timer already expired on server, submit immediately
     if (data.timerExpired) {
       await submitSection(data.session, Array(questionCount).fill(null));
@@ -76,6 +86,15 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const completedSections = session
     ? Object.keys(session.answers_by_section).map(Number).filter(n => n < currentSection)
     : [];
+
+  // Accumulate time on the question we just left
+  useEffect(() => {
+    const now = Date.now();
+    const prev = prevIndexRef.current;
+    timingsRef.current[prev] = (timingsRef.current[prev] ?? 0) + (now - lastTickRef.current) / 1000;
+    lastTickRef.current = now;
+    prevIndexRef.current = currentQuestionIndex;
+  }, [currentQuestionIndex]);
 
   // Keyboard shortcuts: 1-4 select answer, Enter/Space go next question
   useEffect(() => {
@@ -133,6 +152,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           sectionIndex: sess.current_section_index,
           answers: sectionAnswers,
           guestId,
+          timings: sectionAnswers.map((_, i) => Math.round(
+            (timingsRef.current[i] ?? 0) + (i === prevIndexRef.current ? (Date.now() - lastTickRef.current) / 1000 : 0)
+          )),
         }),
       });
 

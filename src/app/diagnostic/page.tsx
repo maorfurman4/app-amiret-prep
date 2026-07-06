@@ -193,9 +193,9 @@ export default function DiagnosticPage() {
             <h2 className="font-bold text-blue-900 dark:text-blue-300 text-sm mb-2">💡 מאיפה להתחיל</h2>
             <ul className="text-sm text-blue-900 dark:text-blue-200 space-y-1.5 leading-relaxed">
               {weakest && weakest[1].correct / weakest[1].total < 0.75 && (
-                <li>• הנקודה החלשה שלך: <span className="font-bold">{weakLabel}</span> — קרא את <Link href={weakTipHref} className="underline font-semibold">מדריך הטכניקה</Link> ותרגל אותה ממוקד ברמה {level}.</li>
+                <li>• הנקודה החלשה שלך: <span className="font-bold">{weakLabel}</span> — קרא את <Link href={weakTipHref} className="underline font-semibold">מדריך הטכניקה</Link> ו<Link href={`/practice?type=${weakest[0]}&difficulty=${level}`} className="underline font-semibold">תרגל אותה ממוקד ברמה {level}</Link>.</li>
               )}
-              <li>• תרגל ב<Link href="/practice" className="underline font-semibold">תרגול ממוקד</Link> ברמה {level}{level < 5 ? ` ואז עלה ל-${level + 1}` : ''}.</li>
+              <li>• תרגל ב<Link href={`/practice?type=sentence_completion&difficulty=${level}`} className="underline font-semibold">תרגול ממוקד</Link> ברמה {level}{level < 5 ? ` ואז עלה ל-${level + 1}` : ''}.</li>
               <li>• כשאתה מרגיש מוכן — <Link href="/exam" className="underline font-semibold">מבחן מלא</Link> ייתן ציון מדויק יותר (כולל הבנת הנקרא).</li>
               {score < 100 && <li>• חזק את הבסיס עם <Link href="/vocabulary" className="underline font-semibold">אוצר המילים</Link> — 10 דקות ביום.</li>}
             </ul>

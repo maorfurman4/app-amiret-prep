@@ -139,6 +139,22 @@ export default function ExamModePage() {
           </button>
         </div>
 
+        {/* Quick diagnostic */}
+        <div className="mt-4">
+          <Link
+            href="/diagnostic"
+            className="block w-full text-right p-6 bg-teal-50 dark:bg-teal-900/20 rounded-2xl border-2 border-teal-200 dark:border-teal-700 hover:border-teal-400 hover:shadow-md transition-all"
+          >
+            <div className="flex items-center gap-4">
+              <span className="text-3xl">🩺</span>
+              <div>
+                <div className="text-lg font-bold text-teal-900 dark:text-teal-200">אבחון רמה מהיר</div>
+                <div className="text-sm text-teal-700 dark:text-teal-400 leading-relaxed">12 שאלות אדפטיביות בכ-10 דקות — גלה את הרמה שלך ומאיפה להתחיל</div>
+              </div>
+            </div>
+          </Link>
+        </div>
+
         {/* Vocabulary link */}
         <div className="mt-4 text-center">
           <Link

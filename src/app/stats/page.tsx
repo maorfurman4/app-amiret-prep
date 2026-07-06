@@ -183,11 +183,79 @@ export default function StatsPage() {
           </div>
         )}
 
+        {/* 134+ goal tracker */}
+        {(stats.score_history ?? []).length > 0 && (() => {
+          const hist = (stats.score_history ?? []).map(h => h.score);
+          const last = hist[hist.length - 1];
+          const best = stats.best_score ?? last;
+          const reached = best >= 134;
+          const gap = Math.max(0, 134 - best);
+          // Linear trend over the last (up to) 10 exams
+          const recent = hist.slice(-10);
+          let slope = 0;
+          if (recent.length >= 2) {
+            const n = recent.length;
+            const xm = (n - 1) / 2;
+            const ym = recent.reduce((a, b) => a + b, 0) / n;
+            let num = 0, den = 0;
+            recent.forEach((y, i) => { num += (i - xm) * (y - ym); den += (i - xm) * (i - xm); });
+            slope = den > 0 ? num / den : 0;
+          }
+          const examsToGo = reached ? 0 : (slope >= 0.3 ? Math.max(1, Math.ceil((134 - last) / slope)) : null);
+          const pct = Math.min(100, Math.max(0, ((best - 50) / 84) * 100));
+          return (
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between mb-1">
+                <h2 className="font-bold text-slate-900 dark:text-white">🎯 הדרך ל-134+</h2>
+                {reached && <span className="text-xs font-bold bg-green-500 text-white px-2 py-0.5 rounded-full">הגעת לפטור! 🎉</span>}
+              </div>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">134 = פטור מלא מקורסי אנגלית</p>
+              {/* Progress to goal */}
+              <div className="relative h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mb-2">
+                <div className={`absolute inset-y-0 right-0 rounded-full ${reached ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${pct}%` }} />
+              </div>
+              <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500 mb-4">
+                <span>134</span>
+                <span>הציון הטוב ביותר שלך: <span className="font-bold text-slate-700 dark:text-slate-200">{best}</span></span>
+                <span>50</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-center">
+                <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-3">
+                  <div className="text-2xl font-black text-slate-900 dark:text-white">{reached ? '✓' : gap}</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{reached ? 'עברת את היעד' : 'נקודות עד היעד'}</div>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-3">
+                  {reached ? (
+                    <>
+                      <div className="text-2xl font-black text-green-600">🏆</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">שמור על הכושר עם תרגול</div>
+                    </>
+                  ) : examsToGo !== null ? (
+                    <>
+                      <div className="text-2xl font-black text-slate-900 dark:text-white">~{examsToGo}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">מבחנים עד היעד בקצב הנוכחי (+{slope.toFixed(1)} נק׳ למבחן)</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-2xl font-black text-slate-400 dark:text-slate-500">—</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{hist.length < 2 ? 'עוד מבחן אחד ונחשב מגמה' : 'המגמה עדיין לא עולה — התמקד בחולשות למטה'}</div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Score history */}
         {(stats.score_history ?? []).length > 0 && (
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700">
             <h2 className="font-bold text-slate-900 dark:text-white mb-4">היסטוריית ציונים</h2>
-            <div className="flex items-end gap-2 h-24">
+            <div className="relative flex items-end gap-2 h-24">
+              {/* 134 target line */}
+              <div className="absolute inset-x-0 border-t-2 border-dashed border-green-400/70 z-10 pointer-events-none" style={{ bottom: '84%' }}>
+                <span className="absolute -top-2.5 left-0 text-[10px] font-bold text-green-500 bg-white dark:bg-slate-800 px-1 rounded">134</span>
+              </div>
               {(stats.score_history ?? []).slice(-20).map((entry, i) => {
                 const height = Math.max(8, ((entry.score - 50) / 100) * 100);
                 const cls = classifyScore(entry.score);

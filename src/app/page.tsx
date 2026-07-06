@@ -39,6 +39,16 @@ export default function HomePage() {
           🎯 התחל מבחן
         </Link>
 
+        {/* Quick diagnostic */}
+        <Link href="/diagnostic" className="flex items-center gap-3 p-4 -mt-3 bg-white shadow-sm border border-slate-200 hover:bg-slate-50 active:bg-slate-100 dark:bg-white/10 dark:shadow-none dark:border-transparent dark:hover:bg-white/20 dark:active:bg-white/25 rounded-2xl transition-colors">
+          <span className="text-2xl">🩺</span>
+          <div className="flex-1 text-right">
+            <div className="font-semibold text-sm">לא יודע מאיפה להתחיל? אבחון רמה מהיר</div>
+            <div className="text-slate-500 dark:text-slate-400 text-xs">12 שאלות אדפטיביות · ~10 דקות · רמה + תוכנית מותאמת</div>
+          </div>
+          <span className="text-slate-400">‹</span>
+        </Link>
+
         {/* Learning & practice */}
         <section>
           <h2 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-2 pr-1">לימוד ותרגול</h2>

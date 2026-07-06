@@ -35,6 +35,7 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 export default function StatsPage() {
   const supabase = createClient();
   const [stats, setStats] = useState<Stats | null>(null);
+  const [rawRows, setRawRows] = useState<{ score: number; completed_at: string; section_results: unknown }[]>([]);
   const [weakness, setWeakness] = useState<WeaknessData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -104,6 +105,7 @@ export default function StatsPage() {
             }
           }
 
+          setRawRows(rows);
           setStats({
             total_exams: rows.length,
             best_score: Math.max(...scores),
@@ -158,6 +160,59 @@ export default function StatsPage() {
       <BackNav backHref="/exam" backLabel="מבחן" />
       <div className="max-w-2xl mx-auto space-y-6 py-8 px-4">
         <h1 className="text-2xl font-black text-slate-900 dark:text-white">הסטטיסטיקה שלי</h1>
+
+        {/* Readiness report — ready / almost / not yet, with reasons */}
+        {rawRows.length >= 1 && (() => {
+          const last3 = rawRows.slice(-3).map(r => r.score);
+          const avg3 = last3.reduce((a, b) => a + b, 0) / last3.length;
+          const spread = last3.length >= 2 ? Math.max(...last3) - Math.min(...last3) : 0;
+          // per-type accuracy + high-level survival over last 3 exams
+          const typeAcc: Record<string, { c: number; t: number }> = {};
+          let hiCorrect = 0, hiTotal = 0, overCap = 0, timedQ = 0;
+          const CAPS: Record<string, number> = { sentence_completion: 90, restatement: 150, reading_comprehension: 180 };
+          for (const row of rawRows.slice(-3)) {
+            for (const sr of ((row.section_results ?? []) as SectionResult[])) {
+              const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
+              const t = cfg?.type ?? sr.type;
+              if (!typeAcc[t]) typeAcc[t] = { c: 0, t: 0 };
+              typeAcc[t].c += sr.correctCount ?? 0; typeAcc[t].t += sr.totalCount ?? 0;
+              const lvl = (sr.questions?.[0] as { difficulty_level?: number })?.difficulty_level ?? 0;
+              if (lvl >= 4) { hiCorrect += sr.correctCount ?? 0; hiTotal += sr.totalCount ?? 0; }
+              (sr.timings ?? []).forEach(sec => { timedQ++; if (sec > (CAPS[t] ?? 90)) overCap++; });
+            }
+          }
+          const reasons: { ok: boolean; text: string; href?: string }[] = [];
+          reasons.push({ ok: rawRows.length >= 3, text: rawRows.length >= 3 ? `${rawRows.length} מבחנים הושלמו` : `רק ${rawRows.length} מבחנים — צריך לפחות 3 למדידה יציבה`, href: rawRows.length >= 3 ? undefined : '/exam' });
+          reasons.push({ ok: avg3 >= 134, text: `ממוצע 3 אחרונים: ${Math.round(avg3)} ${avg3 >= 134 ? '— מעל קו הפטור' : `— עוד ${Math.max(1, Math.ceil(134 - avg3))} נק׳ לפטור`}` });
+          reasons.push({ ok: spread <= 12, text: spread <= 12 ? `יציבות טובה (פער ${spread} נק׳ בין המבחנים)` : `תנודתיות גבוהה (פער ${spread} נק׳) — עוד סימולציות ייצבו` });
+          const weakTypes = Object.entries(typeAcc).filter(([, d]) => d.t > 0 && d.c / d.t < 0.7);
+          reasons.push({ ok: weakTypes.length === 0, text: weakTypes.length === 0 ? 'כל סוגי השאלות מעל 70%' : `מתחת ל-70% ב: ${weakTypes.map(([t]) => TYPE_LABELS[t] ?? t).join(', ')}` });
+          if (hiTotal > 0) reasons.push({ ok: hiCorrect / hiTotal >= 0.55, text: `ברמות 4-5: ${Math.round((hiCorrect / hiTotal) * 100)}% ${hiCorrect / hiTotal >= 0.55 ? '— שורד בצמרת' : '— שם נקבע הפטור'}` });
+          if (timedQ > 0) reasons.push({ ok: overCap / timedQ <= 0.15, text: overCap === 0 ? 'קצב מצוין — אפס חריגות תקציב' : `${overCap} שאלות חרגו מתקציב הזמן` });
+          const okCount = reasons.filter(r => r.ok).length;
+          const verdict = okCount === reasons.length && rawRows.length >= 3 && avg3 >= 134
+            ? { label: 'מוכן למבחן! 🎉', cls: 'bg-green-500', desc: 'הביצועים יציבים ומעל קו הפטור — לך על זה.' }
+            : avg3 >= 120 && rawRows.length >= 3
+            ? { label: 'כמעט שם 💪', cls: 'bg-yellow-500', desc: 'הבסיס חזק — סגור את הפערים שמסומנים למטה.' }
+            : { label: 'עוד לא — ממשיכים לעבוד 📚', cls: 'bg-slate-500', desc: 'תוכנית: מבחן מלא + תרגול חולשה ממוקד כל יום.' };
+          return (
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-3 mb-1">
+                <span className={`px-3 py-1 rounded-full text-white text-sm font-bold ${verdict.cls}`}>{verdict.label}</span>
+                <h2 className="font-bold text-slate-900 dark:text-white text-sm">דו"ח מוכנות למבחן</h2>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">{verdict.desc}</p>
+              <div className="space-y-1.5">
+                {reasons.map((r, i) => (
+                  <div key={i} className="flex items-start gap-2 text-sm">
+                    <span className={r.ok ? 'text-green-500' : 'text-orange-400'}>{r.ok ? '✓' : '•'}</span>
+                    <span className="text-slate-600 dark:text-slate-300">{r.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Summary cards */}
         <div className="grid grid-cols-3 gap-4">

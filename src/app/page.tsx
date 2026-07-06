@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { UserMenu } from '@/components/UserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { StreakBadge } from '@/components/StreakBadge';
 
 const LEARN_LINKS = [
   { href: '/practice',     icon: '✏️', title: 'תרגול ממוקד',   sub: 'לפי סוג שאלה' },
@@ -22,6 +23,7 @@ export default function HomePage() {
       <div className="w-full max-w-lg space-y-7">
         {/* Top bar: account + theme, in-flow (not floating) */}
         <div className="flex items-center justify-end gap-2 [&_a]:text-slate-600 [&_a:hover]:text-slate-900 [&_a:hover]:bg-slate-200/60 dark:[&_a]:text-slate-200 dark:[&_a:hover]:text-white dark:[&_a:hover]:bg-white/10">
+          <div className="ml-auto"><StreakBadge /></div>
           <UserMenu />
           <ThemeToggle />
         </div>

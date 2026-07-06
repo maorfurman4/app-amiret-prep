@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
+import { authFetch } from '@/lib/auth-fetch';
 
 interface VocabWord {
   id: string;
@@ -187,6 +188,16 @@ export default function VocabularyPage() {
     if (pack) setActivePack(pack);
   }, []);
 
+  // ─── Personal pack: words from the user's own SC mistakes ─────────────────
+  const [myWords, setMyWords] = useState<VocabWord[]>([]);
+  useEffect(() => {
+    const guestId = localStorage.getItem('amiret_guest_id') ?? '';
+    authFetch(`/api/my-words?guestId=${encodeURIComponent(guestId)}`)
+      .then(r => (r.ok ? r.json() : { words: [] }))
+      .then((d: { words: VocabWord[] }) => setMyWords(d.words ?? []))
+      .catch(() => {});
+  }, []);
+
   // ─── Load auth user ────────────────────────────────────────────────────────
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -269,6 +280,7 @@ export default function VocabularyPage() {
 
   // ─── Themed packs definition ───────────────────────────────────────────────
   const THEMED_PACKS = [
+    ...(myWords.length > 0 ? [{ id: 'my-mistakes', label: `🔻 המילים שהפילו אותי (${myWords.length})`, filter: (w: VocabWord) => w.category === 'my-mistakes' }] : []),
     { id: 'verbs',      label: '⚡ פעלים חזקים',    filter: (w: VocabWord) => w.category === 'verbs' },
     { id: 'connectors', label: '🔗 מחברים ומעברים', filter: (w: VocabWord) => w.category === 'connectors' },
     { id: 'academic',   label: '🎓 אקדמי',           filter: (w: VocabWord) => w.category === 'academic' },
@@ -281,10 +293,11 @@ export default function VocabularyPage() {
 
   // ─── Compute filtered words ────────────────────────────────────────────────
   const filteredWords = (() => {
-    let filtered = allWords;
+    // The personal mistakes pack is synthesized from wrong answers, not the vocab table
+    let filtered = activePack === 'my-mistakes' ? myWords : allWords;
 
     // Apply themed pack first if active
-    if (activePack) {
+    if (activePack && activePack !== 'my-mistakes') {
       const pack = THEMED_PACKS.find(p => p.id === activePack);
       if (pack) filtered = filtered.filter(pack.filter);
     }

@@ -6,6 +6,7 @@ import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
 import { classifyScore, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
+import { recordActivity } from '@/lib/streak';
 
 /**
  * Quick adaptive diagnostic: 3 stages × 4 questions (~10 minutes).
@@ -63,6 +64,7 @@ export default function DiagnosticPage() {
 
   const handleNext = () => {
     if (selected === null) return;
+    recordActivity();
     const newDoneQs = [...doneQuestions, questions[qIdx]];
     const newDoneAns = [...doneAnswers, selected];
     setDoneQuestions(newDoneQs);

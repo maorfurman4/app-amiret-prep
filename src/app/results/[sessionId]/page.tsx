@@ -3,8 +3,8 @@
 import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
+import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
 
@@ -21,18 +21,15 @@ interface SessionData {
 export default function ResultsPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = use(params);
   const router = useRouter();
-  const supabase = createClient();
 
   const [session, setSession] = useState<SessionData | null>(null);
 
   useEffect(() => {
-    supabase
-      .from('exam_sessions')
-      .select('score, theta_final, theta_history, section_results, answers_by_section, questions_by_section, is_practice')
-      .eq('id', sessionId)
-      .single()
-      .then(({ data }) => {
-        if (data) setSession(data as SessionData);
+    const guestId = localStorage.getItem('amiret_guest_id') ?? '';
+    authFetch(`/api/exam/results?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId)}`)
+      .then(r => (r.ok ? r.json() : null))
+      .then((d: { session: SessionData } | null) => {
+        if (d?.session) setSession(d.session);
       });
   }, [sessionId]); // eslint-disable-line react-hooks/exhaustive-deps
 

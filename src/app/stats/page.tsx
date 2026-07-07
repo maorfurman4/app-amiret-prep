@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
+import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult } from '@/types/exam';
 import { routeNextDifficulty } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
@@ -50,16 +51,10 @@ export default function StatsPage() {
         return;
       }
 
-      supabase
-        .from('exam_sessions')
-        .select('score, completed_at, section_results')
-        .eq('user_id', userKey)
-        .eq('is_practice', false)
-        .not('completed_at', 'is', null)
-        .not('score', 'is', null)
-        .order('completed_at', { ascending: true })
-        .then(({ data: sessions }) => {
-          const rows = (sessions ?? []) as { score: number; completed_at: string; section_results: unknown }[];
+      authFetch(`/api/stats?guestId=${encodeURIComponent(localStorage.getItem('amiret_guest_id') ?? '')}`)
+        .then(r => (r.ok ? r.json() : { sessions: [] }))
+        .then((d: { sessions: { score: number; completed_at: string; section_results: unknown }[] }) => {
+          const rows = d.sessions ?? [];
 
           if (rows.length === 0) {
             setStats({ total_exams: 0, best_score: null, avg_score: null, score_history: [], performance_by_type: {} });

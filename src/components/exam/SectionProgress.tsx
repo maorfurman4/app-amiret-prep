@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { SECTION_CONFIGS } from '@/types/exam';
 
 interface SectionProgressProps {
@@ -15,14 +16,23 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 export function SectionProgress({ currentSection, completedSections }: SectionProgressProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const currentRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll so the current section stays in view (centered) as it advances —
+  // otherwise on narrow screens sections 4-7 stay hidden off to the side.
+  useEffect(() => {
+    currentRef.current?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }, [currentSection]);
+
   return (
-    <div className="flex items-center gap-1 overflow-x-auto pb-1" dir="rtl">
+    <div ref={containerRef} className="flex items-center gap-1 overflow-x-auto pb-1 scroll-smooth" dir="rtl">
       {SECTION_CONFIGS.map((cfg) => {
         const isDone = completedSections.includes(cfg.index);
         const isCurrent = currentSection === cfg.index;
 
         return (
-          <div key={cfg.index} className="flex items-center gap-1 flex-shrink-0">
+          <div key={cfg.index} ref={isCurrent ? currentRef : undefined} className="flex items-center gap-1 flex-shrink-0">
             <div className={`flex flex-col items-center ${isCurrent ? 'scale-105' : ''}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
                 isDone    ? 'bg-green-500 border-green-500 text-white' :

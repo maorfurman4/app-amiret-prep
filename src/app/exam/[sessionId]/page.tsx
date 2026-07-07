@@ -102,6 +102,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     if (!session || currentQuestions.length === 0) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (isSubmittingRef.current) return;
       const idx = parseInt(e.key) - 1;
       if (idx >= 0 && idx < currentQuestions[currentQuestionIndex]?.options.length) {
         handleAnswer(currentQuestionIndex, idx);
@@ -129,6 +130,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   }, [session]);
 
   const handleAnswer = (questionIndex: number, optionIndex: number) => {
+    if (isSubmittingRef.current) return;
     recordActivity();
     setAnswers(prev => {
       const next = [...prev];
@@ -184,12 +186,14 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   }, [session, answers, submitSection]);
 
   const handleNext = () => {
+    if (isSubmittingRef.current) return;
     if (currentQuestionIndex < currentQuestions.length - 1) {
       setCurrentQuestionIndex(i => i + 1);
     }
   };
 
   const handlePrev = () => {
+    if (isSubmittingRef.current) return;
     if (currentQuestionIndex > 0) setCurrentQuestionIndex(i => i - 1);
   };
 
@@ -239,8 +243,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           <div className="flex items-center justify-between gap-4">
             <button
               onClick={() => setExitConfirm(true)}
+              disabled={isSubmitting}
               aria-label="יציאה מהמבחן"
-              className="flex-shrink-0 w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200 transition-colors text-sm font-bold"
+              className="flex-shrink-0 w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200 transition-colors text-sm font-bold disabled:opacity-40"
             >
               ✕
             </button>
@@ -281,7 +286,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <div className="flex gap-2">
               <button
                 onClick={() => router.push('/')}
-                className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-bold hover:bg-red-600 transition-colors"
+                disabled={isSubmitting}
+                className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-bold hover:bg-red-600 transition-colors disabled:opacity-50"
               >
                 כן, צא לדף הבית
               </button>
@@ -312,23 +318,31 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             </button>
           </div>
         )}
-        <QuestionCard
-          question={question}
-          questionNumber={currentQuestionIndex + 1}
-          totalInSection={currentQuestions.length}
-          selectedAnswer={answers[currentQuestionIndex] ?? null}
-          onSelect={(idx) => handleAnswer(currentQuestionIndex, idx)}
-          isPractice={session.is_practice}
-          showResult={session.is_practice && lockedAnswers.has(currentQuestionIndex)}
-        />
+        <div className={isSubmitting ? 'opacity-50 pointer-events-none transition-opacity' : 'transition-opacity'}>
+          <QuestionCard
+            question={question}
+            questionNumber={currentQuestionIndex + 1}
+            totalInSection={currentQuestions.length}
+            selectedAnswer={answers[currentQuestionIndex] ?? null}
+            onSelect={(idx) => handleAnswer(currentQuestionIndex, idx)}
+            isPractice={session.is_practice}
+            showResult={session.is_practice && lockedAnswers.has(currentQuestionIndex)}
+          />
+        </div>
+        {isSubmitting && (
+          <div className="flex items-center justify-center gap-2 mt-4 text-sm text-slate-500 dark:text-slate-400" dir="rtl">
+            <span className="w-4 h-4 border-2 border-slate-300 dark:border-slate-600 border-t-blue-500 rounded-full animate-spin" />
+            שולח את הפרק וטוען את הבא — רגע אחד...
+          </div>
+        )}
 
         {/* Inline submit warning */}
         {submitWarning && (
           <div className="mt-4 p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl flex items-center justify-between gap-3" dir="rtl">
             <p className="text-orange-800 dark:text-orange-300 text-sm">{submitWarning}</p>
             <div className="flex gap-2 flex-shrink-0">
-              <button onClick={() => setSubmitWarning(null)} className="text-xs px-3 py-1.5 rounded-lg border border-orange-300 dark:border-orange-700 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/40">ביטול</button>
-              <button onClick={handleConfirmSubmit} className="text-xs px-3 py-1.5 rounded-lg bg-orange-500 text-white hover:bg-orange-600">אישור</button>
+              <button onClick={() => setSubmitWarning(null)} disabled={isSubmitting} className="text-xs px-3 py-1.5 rounded-lg border border-orange-300 dark:border-orange-700 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/40 disabled:opacity-50">ביטול</button>
+              <button onClick={handleConfirmSubmit} disabled={isSubmitting} className="text-xs px-3 py-1.5 rounded-lg bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-50">אישור</button>
             </div>
           </div>
         )}
@@ -337,7 +351,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         <div className="mt-8 flex items-center justify-between gap-3">
           <button
             onClick={handlePrev}
-            disabled={currentQuestionIndex === 0}
+            disabled={currentQuestionIndex === 0 || isSubmitting}
             className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm"
           >
             קודם &rsaquo;
@@ -348,9 +362,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             {currentQuestions.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setCurrentQuestionIndex(i)}
+                onClick={() => { if (!isSubmitting) setCurrentQuestionIndex(i); }}
+                disabled={isSubmitting}
                 aria-label={`שאלה ${i + 1}${answers[i] === null ? ' — לא נענתה' : ''}`}
-                className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${
+                className={`w-8 h-8 rounded-full text-xs font-bold transition-all disabled:opacity-40 ${
                   i === currentQuestionIndex ? 'bg-blue-600 text-white scale-110 ring-2 ring-blue-300' :
                   answers[i] !== null ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' :
                   'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-slate-400'
@@ -364,7 +379,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           {currentQuestionIndex < currentQuestions.length - 1 ? (
             <button
               onClick={handleNext}
-              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm font-medium"
+              disabled={isSubmitting}
+              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm font-medium disabled:opacity-50"
             >
               &lsaquo; הבא
             </button>

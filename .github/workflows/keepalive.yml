@@ -1,0 +1,24 @@
+name: Supabase Keepalive
+
+on:
+  schedule:
+    # Monday and Thursday, 06:00 UTC — keeps the gap between pings under
+    # Supabase's free-tier ~7-day inactivity auto-pause threshold.
+    - cron: "0 6 * * 1,4"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        env:
+          # Public project URL + anon key (already exposed client-side in the
+          # deployed app via NEXT_PUBLIC_*), safe to keep inline here.
+          SUPABASE_URL: https://pxksqbuqfwbrluuiyedp.supabase.co
+          SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4a3NxYnVxZndicmx1dWl5ZWRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4NzUxMzcsImV4cCI6MjA5NzQ1MTEzN30.rjGI4urf_sVvLF52SECw5AWyySgtw3fo3tjZ3lu_Wos
+        run: |
+          curl -sS -f \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            "$SUPABASE_URL/rest/v1/leaderboard?select=display_name&limit=1"

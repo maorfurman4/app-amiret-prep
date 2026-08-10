@@ -51,11 +51,15 @@ function LoginForm() {
     setError(null);
 
     if (tab === 'signup') {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) {
         setError(error.message.includes('already registered')
           ? 'כתובת האימייל הזו כבר רשומה — נסה להתחבר'
           : 'שגיאה בהרשמה, נסה שוב');
+      } else if (data.session) {
+        // Email confirmation is disabled on this project — signUp already
+        // returns an active session, so there's nothing to "check email" for.
+        router.push(next);
       } else {
         setSignUpDone(true);
       }

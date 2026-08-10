@@ -4,6 +4,7 @@ import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BackNav } from '@/components/BackNav';
+import { AuthCTA } from '@/components/AuthCTA';
 import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
@@ -82,6 +83,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             </div>
           )}
         </div>
+
+        <AuthCTA message="התחבר כדי לשמור את הציון הזה ולהמשיך מכל מכשיר — כל מה שעשית עד עכשיו יעבור אוטומטית לחשבון." />
 
         {/* Score Prediction */}
         {(() => {

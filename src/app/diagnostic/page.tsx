@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
+import { AuthCTA } from '@/components/AuthCTA';
 import { classifyScore, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
 import { recordActivity } from '@/lib/streak';
@@ -168,6 +169,8 @@ export default function DiagnosticPage() {
               {totalCorrect}/{totalAnswered} נכונות · נותבת דרך רמות {levelsSeen.join(' ← ')}
             </div>
           </div>
+
+          <AuthCTA message="התחבר כדי לשמור את האבחון הזה ולעקוב אחרי ההתקדמות שלך לאורך זמן." />
 
           {/* Per-type breakdown */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700">

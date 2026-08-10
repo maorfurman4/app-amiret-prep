@@ -244,7 +244,7 @@ function LoginForm() {
         <div className="space-y-1">
           <label className="block text-sm font-medium text-slate-700">אימייל</label>
           <input
-            type="email" value={email} onChange={e => setEmail(e.target.value)}
+            type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}
             required dir="ltr" placeholder="your@email.com" autoComplete="email"
             className="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-left placeholder:text-slate-400"
           />
@@ -263,7 +263,7 @@ function LoginForm() {
             )}
           </label>
           <input
-            type="password" value={password} onChange={e => setPassword(e.target.value)}
+            type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}
             required minLength={6} dir="ltr" placeholder="••••••••" autoComplete={tab === 'signup' ? 'new-password' : 'current-password'}
             className="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
           />

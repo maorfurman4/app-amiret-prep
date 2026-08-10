@@ -28,6 +28,7 @@ interface QuestionCardProps {
   onSelect: (index: number) => void;
   isPractice?: boolean;
   showResult?: boolean;
+  hideHeader?: boolean;
 }
 
 const OPTION_LABELS = ['1', '2', '3', '4'];
@@ -40,6 +41,7 @@ export function QuestionCard({
   onSelect,
   isPractice = false,
   showResult = false,
+  hideHeader = false,
 }: QuestionCardProps) {
   const [hintVisible, setHintVisible] = useState(false);
   useEffect(() => { setHintVisible(false); }, [question.id]);
@@ -50,24 +52,26 @@ export function QuestionCard({
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {/* Question header */}
-      <div className="flex items-center justify-between mb-4" dir="rtl">
-        <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">
-          שאלה {questionNumber} מתוך {totalInSection}
-        </span>
-        <div className="flex gap-1">
-          {Array.from({ length: totalInSection }).map((_, i) => (
-            <div
-              key={i}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                i < questionNumber - 1 ? 'bg-blue-500' :
-                i === questionNumber - 1 ? 'bg-blue-700' :
-                'bg-slate-200 dark:bg-slate-700'
-              }`}
-            />
-          ))}
+      {/* Question header — omitted when the parent page already shows question progress */}
+      {!hideHeader && (
+        <div className="flex items-center justify-between mb-4" dir="rtl">
+          <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+            שאלה {questionNumber} מתוך {totalInSection}
+          </span>
+          <div className="flex gap-1">
+            {Array.from({ length: totalInSection }).map((_, i) => (
+              <div
+                key={i}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  i < questionNumber - 1 ? 'bg-blue-500' :
+                  i === questionNumber - 1 ? 'bg-blue-700' :
+                  'bg-slate-200 dark:bg-slate-700'
+                }`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Passage for reading comprehension */}
       {question.passage && (

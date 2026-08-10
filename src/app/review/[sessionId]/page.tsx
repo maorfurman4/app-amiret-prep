@@ -182,6 +182,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                   onSelect={() => {}}
                   isPractice={true}
                   showResult={true}
+                  hideHeader
                 />
               </div>
 

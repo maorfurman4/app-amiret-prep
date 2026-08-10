@@ -360,6 +360,7 @@ export default function ReviewQueuePage() {
           onSelect={handleSelect}
           isPractice={true}
           showResult={showResult}
+          hideHeader
         />
 
         <div className="mt-6 flex items-center justify-between gap-3">

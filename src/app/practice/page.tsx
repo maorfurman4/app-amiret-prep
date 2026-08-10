@@ -502,6 +502,7 @@ export default function PracticePage() {
             onSelect={handleSelect}
             isPractice={!examMode && !sectionMode}
             showResult={examMode || sectionMode ? false : showResult}
+            hideHeader
           />
 
           {/* Normal mode: show Next button after answering */}
@@ -682,6 +683,7 @@ export default function PracticePage() {
                         onSelect={() => {}}
                         isPractice={true}
                         showResult={true}
+                        hideHeader
                       />
                     </div>
                   </div>

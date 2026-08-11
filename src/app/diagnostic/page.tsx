@@ -46,12 +46,18 @@ export default function DiagnosticPage() {
     setPhase('loading');
     const level = idx === 0 ? 3 : routeNextDifficulty(thetaOf(allQs, allAns));
     try {
-      const res = await fetch(`/api/practice/questions?type=${STAGES[idx].type}&difficulty=${level}&count=5`);
+      const res = await fetch(`/api/practice/questions?type=${STAGES[idx].type}&difficulty=${level}&count=10`);
       if (!res.ok) throw new Error();
       const data = await res.json() as { questions: Question[] };
       const seenIds = new Set(allQs.map(q => q.id));
       const fresh = data.questions.filter(q => !seenIds.has(q.id)).slice(0, PER_STAGE);
-      if (fresh.length === 0) throw new Error();
+      // Stage 1 and 3 share a question type (sentence_completion), so the fetched
+      // batch can partially overlap with stage 1's questions. Requesting 10
+      // candidates instead of 5 makes that rare, but if it still happens, fail
+      // into the existing error/retry screen rather than silently serving a
+      // short stage (this caused diagnostic sessions to end at 11/12 instead
+      // of 12/12, with a wrong "X מתוך Y" count on the final stage).
+      if (fresh.length < PER_STAGE) throw new Error();
       setQuestions(fresh);
       setLevelsSeen(prev => [...prev, level]);
       setQIdx(0);

@@ -50,6 +50,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   // Load or recover session state from server
   const loadSession = useCallback(async () => {
     const res = await authFetch(`/api/exam/state?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId ?? '')}`);
+    if (res.status === 429) { setError('יותר מדי בקשות בזמן קצר — חכה כדקה ולחץ "נסה שוב".'); return; }
     if (!res.ok) { setError('לא ניתן לטעון את המבחן'); return; }
     const data = await res.json() as { session: SessionState; remainingMs: number; timerExpired: boolean };
 
@@ -161,6 +162,15 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           )),
         }),
       });
+
+      if (res.status === 429) {
+        setError('יותר מדי בקשות בזמן קצר — התשובות שלך לא נשלחו. חכה כדקה ולחץ "נסה שוב".');
+        return;
+      }
+      if (!res.ok) {
+        setError('שגיאה בשליחת התשובות. נסה שוב.');
+        return;
+      }
 
       const data = await res.json() as { isComplete: boolean; nextSectionIndex: number; nextExpiresAt: string };
 

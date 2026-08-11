@@ -188,6 +188,15 @@ export default function VocabularyPage() {
     if (pack) setActivePack(pack);
   }, []);
 
+  // Ensure guestId exists on first visit — other pages (exam, review-queue)
+  // already do this, but a guest landing directly on /vocabulary never had
+  // one generated, silently breaking the "my mistakes" pack for them.
+  useEffect(() => {
+    if (!localStorage.getItem('amiret_guest_id')) {
+      localStorage.setItem('amiret_guest_id', crypto.randomUUID());
+    }
+  }, []);
+
   // ─── Personal pack: words from the user's own SC mistakes ─────────────────
   const [myWords, setMyWords] = useState<VocabWord[]>([]);
   useEffect(() => {
@@ -444,6 +453,7 @@ export default function VocabularyPage() {
     setTimedResults(newResults);
     setTimedSelected(optionIndex);
     setTimedCorrect(isCorrect);
+    if (isCorrect) setTimedScore(prev => prev + 1);
 
     setTimeout(() => advanceTimed(newResults), 1200);
   };
@@ -1012,6 +1022,11 @@ export default function VocabularyPage() {
               <div className="text-center py-16">
                 <div className="text-4xl mb-3">🔍</div>
                 <div className="text-slate-500">אין מילים תואמות לחיפוש</div>
+              </div>
+            ) : filteredWords.length < 4 ? (
+              <div className="text-center py-16">
+                <div className="text-4xl mb-3">🔍</div>
+                <div className="text-slate-500">צריך לפחות 4 מילים בסט הנוכחי לחידון</div>
               </div>
             ) : quizDone ? (
               /* Quiz done screen */

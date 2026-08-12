@@ -174,6 +174,9 @@ export default function DiagnosticPage() {
             <div className="text-xs text-slate-400 dark:text-slate-500 mt-2">
               {totalCorrect}/{totalAnswered} נכונות · נותבת דרך רמות {levelsSeen.join(' ← ')}
             </div>
+            <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-2">
+              סף הפטור/הרמה נקבע בנפרד בכל מוסד — {band.label} הוא הטווח הנפוץ, לא תקן מחייב אחיד
+            </div>
           </div>
 
           <AuthCTA message="התחבר כדי לשמור את האבחון הזה ולעקוב אחרי ההתקדמות שלך לאורך זמן." />

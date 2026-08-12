@@ -145,7 +145,10 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
         {/* Score scale */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-          <h2 className="font-bold text-slate-900 dark:text-white mb-4">סקאלת ציונים</h2>
+          <h2 className="font-bold text-slate-900 dark:text-white mb-1">סקאלת ציונים</h2>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
+            הסף המדויק לפטור/רמה נקבע בנפרד על ידי כל מוסד לימודים — הטווחים כאן הם הנפוצים ביותר בפועל, לא תקן מחייב אחיד.
+          </p>
           {[
             { range: '134–150', label: 'פטור מלא', color: 'bg-green-500', min: 134, max: 150 },
             { range: '120–133', label: 'מתקדמים ב\'', color: 'bg-blue-500', min: 120, max: 133 },

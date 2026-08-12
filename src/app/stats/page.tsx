@@ -231,6 +231,9 @@ export default function StatsPage() {
             <div className={`text-lg font-bold mt-1 ${classification.color}`}>
               {classification.label} — {classification.description}
             </div>
+            <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-2">
+              סף הפטור/הרמה נקבע בנפרד בכל מוסד — זהו הטווח הנפוץ, לא תקן מחייב אחיד
+            </div>
           </div>
         )}
 

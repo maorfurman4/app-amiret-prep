@@ -628,6 +628,7 @@ export default function PracticePage() {
                 <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
                   הערכה סטטיסטית לפי מודל ה-IRT של המבחן האדפטיבי — מבוססת על {questions.length} שאלות בלבד.
                   {selectedDiff !== 'random' && ' לאבחון מדויק יותר, תרגל ברמה מעורבת או עשה מבחן מלא.'}
+                  {' '}סף הפטור/הרמה עצמו נקבע בנפרד בכל מוסד — {diagClass.label} הוא הטווח הנפוץ, לא תקן מחייב אחיד.
                 </p>
               </div>
             )}

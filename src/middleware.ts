@@ -10,17 +10,25 @@ import { Redis } from '@upstash/redis/cloudflare';
 /**
  * Per-IP rate limiting for API routes.
  * Uses Upstash Redis (shared, real limiting across all serverless instances)
- * when UPSTASH_REDIS_REST_URL/TOKEN are configured. Falls back to an
- * in-memory per-instance window otherwise (best-effort only — Vercel spreads
- * requests across instances, so this fallback undercounts under real load).
+ * when the Vercel-managed Upstash integration's env vars are present. Falls
+ * back to an in-memory per-instance window otherwise (best-effort only —
+ * Vercel spreads requests across instances, so this fallback undercounts
+ * under real load).
+ *
+ * Var names: Vercel's "Connect to Project" flow for the Upstash Redis
+ * integration names these KV_REST_API_URL / KV_REST_API_TOKEN (a legacy
+ * naming carried over from Vercel KV, not UPSTASH_REDIS_REST_URL/TOKEN as
+ * the @upstash/redis docs' bare Upstash-account setup would suggest) — check
+ * the actual Environment Variables list in the Vercel dashboard if this
+ * integration is ever reconnected/renamed.
  */
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS = 120; // generous: a full exam flow uses ~3 calls/section
 
-const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+const redis = process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN
   ? new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+      url: process.env.KV_REST_API_URL,
+      token: process.env.KV_REST_API_TOKEN,
     })
   : null;
 

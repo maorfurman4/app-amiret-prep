@@ -6,9 +6,14 @@ import { PwaUpdater } from '@/components/PwaUpdater';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 
+const SITE_URL = 'https://amiret-prep.vercel.app';
+const TITLE = '134+ | הכנה לאמירנ"ט';
+const DESCRIPTION = '134+ — פלטפורמת הכנה אדפטיבית למבחן אמירנ"ט, בדרך לפטור';
+
 export const metadata: Metadata = {
-  title: '134+ | הכנה לאמירנ"ט',
-  description: '134+ — פלטפורמת הכנה אדפטיבית למבחן אמירנ"ט, בדרך לפטור',
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
   appleWebApp: {
     title: '134+',
     capable: true,
@@ -20,6 +25,19 @@ export const metadata: Metadata = {
       { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
     ],
     apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: '134+',
+    locale: 'he_IL',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
   },
 };
 

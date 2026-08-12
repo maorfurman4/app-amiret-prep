@@ -326,6 +326,11 @@ export default function VocabularyPage() {
   })();
 
   // ─── Rebuild flashcard deck on filter change ───────────────────────────────
+  // Only depend on favorites contents when the favorites pack itself is active —
+  // otherwise toggling ❤️ on the current card (which changes the `favorites` Set
+  // reference on every click) reshuffled the whole deck and jumped the user to a
+  // random card, losing their place mid-study.
+  const favoritesSignature = activePack === 'favorites' ? Array.from(favorites).sort().join(',') : '';
   useEffect(() => {
     if (!allWords.length) return;
     // Always shuffle from scratch so deck order is never derived from allWords order
@@ -333,7 +338,7 @@ export default function VocabularyPage() {
     setDeck(active);
     setFlipped(false);
     setShowHint(false);
-  }, [allWords, filterCat, filterDiff, search, known, activePack, favorites]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [allWords, filterCat, filterDiff, search, known, activePack, favoritesSignature]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Build quiz options for current question ───────────────────────────────
   const buildQuizOptions = useCallback((word: VocabWord, pool: VocabWord[]): string[] => {

@@ -344,6 +344,7 @@ export default function ReviewQueuePage() {
               onClick={handleRestartSession}
               className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors text-lg"
               title="ריסטרט — חזרה לשאלה ראשונה"
+              aria-label="ריסטרט — חזרה לשאלה ראשונה"
             >
               ↺
             </button>

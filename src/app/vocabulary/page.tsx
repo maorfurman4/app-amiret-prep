@@ -880,7 +880,8 @@ export default function VocabularyPage() {
                   <button
                     onClick={e => toggleFavorite(current.id, e)}
                     className="absolute top-4 right-4 text-xl z-10"
-                    title="מועדף"
+                    aria-label={favorites.has(current.id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
+                    aria-pressed={favorites.has(current.id)}
                   >{favorites.has(current.id) ? '❤️' : '🤍'}</button>
 
                   {!flipped ? (
@@ -1053,10 +1054,12 @@ export default function VocabularyPage() {
                             <div className="text-slate-500 text-xs">{w.hebrew_translation}</div>
                           </div>
                           <div className="flex items-center gap-2 mr-2">
-                            <button onClick={() => speak(w.word)} className="text-base hover:scale-110 transition-transform">🔊</button>
+                            <button onClick={() => speak(w.word)} className="text-base hover:scale-110 transition-transform" aria-label={`השמע הגייה של ${w.word}`}>🔊</button>
                             <button
                               onClick={e => toggleFavorite(w.id, e)}
                               className="text-base"
+                              aria-label={favorites.has(w.id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
+                              aria-pressed={favorites.has(w.id)}
                             >{favorites.has(w.id) ? '❤️' : '🤍'}</button>
                           </div>
                         </div>
@@ -1104,6 +1107,8 @@ export default function VocabularyPage() {
                     <button
                       onClick={e => toggleFavorite(quizDeck[quizIndex].id, e)}
                       className="text-xl"
+                      aria-label={favorites.has(quizDeck[quizIndex].id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
+                      aria-pressed={favorites.has(quizDeck[quizIndex].id)}
                     >{favorites.has(quizDeck[quizIndex].id) ? '❤️' : '🤍'}</button>
                     <div className="flex items-center gap-2" dir="ltr">
                       <span className="text-3xl font-black text-slate-900">{quizDeck[quizIndex].word}</span>
@@ -1294,6 +1299,8 @@ export default function VocabularyPage() {
                     <button
                       onClick={e => toggleFavorite(timedDeck[timedIndex].id, e)}
                       className="text-xl"
+                      aria-label={favorites.has(timedDeck[timedIndex].id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
+                      aria-pressed={favorites.has(timedDeck[timedIndex].id)}
                     >{favorites.has(timedDeck[timedIndex].id) ? '❤️' : '🤍'}</button>
                     <div className="flex items-center gap-2" dir="ltr">
                       <span className="text-3xl font-black text-slate-900">{timedDeck[timedIndex].word}</span>

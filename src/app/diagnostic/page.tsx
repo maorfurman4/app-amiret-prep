@@ -89,6 +89,13 @@ export default function DiagnosticPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ guestId, source: 'diagnostic' }),
       }).catch(() => {});
+      newDoneQs.forEach((q, i) => {
+        authFetch('/api/review-queue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ guestId, questionId: q.id, wasCorrect: newDoneAns[i] === q.correct_answer }),
+        }).catch(() => {});
+      });
     }
   };
 

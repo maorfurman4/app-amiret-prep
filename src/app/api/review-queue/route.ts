@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import type { Question } from '@/types/exam';
+import { recordWrongAnswers } from '@/lib/review-queue';
 
 function nextInterval(currentDays: number): number {
   const doubled = Math.max(currentDays, 1) * 2;
@@ -131,37 +132,11 @@ export async function POST(req: NextRequest) {
   const now = new Date();
   const ownCol = user ? 'user_id' : 'guest_id';
   const ownVal = user ? user.id : guestId!;
-  const insertBase = user
-    ? { user_id: user.id, question_id: questionId }
-    : { guest_id: guestId!, question_id: questionId };
 
   if (!wasCorrect) {
-    const { data: existing } = await supabase
-      .from('review_queue').select('times_wrong')
-      .eq(ownCol, ownVal).eq('question_id', questionId).single();
-
     // A fresh mistake is due immediately (Anki-style): the user can review it
     // right away; spaced intervals kick in only after a correct review.
-    const nextReview = new Date(now);
-
-    if (existing) {
-      await supabase.from('review_queue')
-        .update({
-          times_wrong: (existing as { times_wrong: number }).times_wrong + 1,
-          next_review_at: nextReview.toISOString(),
-          last_reviewed_at: now.toISOString(),
-          interval_days: 1,
-        })
-        .eq(ownCol, ownVal).eq('question_id', questionId);
-    } else {
-      await supabase.from('review_queue').insert({
-        ...insertBase,
-        times_wrong: 1,
-        next_review_at: nextReview.toISOString(),
-        last_reviewed_at: now.toISOString(),
-        interval_days: 1,
-      });
-    }
+    await recordWrongAnswers(supabase, ownCol, ownVal, [questionId]);
     return NextResponse.json({ ok: true, action: 'added_or_updated' });
   }
 

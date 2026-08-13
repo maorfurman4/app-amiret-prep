@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, isExperimentalSection, type Question, type SectionResult } from '@/types/exam';
 import { updateThetaAfterSection, routeNextDifficulty, thetaToScore, correctCount } from '@/lib/adaptive';
+import { recordWrongAnswers } from '@/lib/review-queue';
 import {
   fetchUnseenQuestions,
   recordSeenQuestions,
@@ -140,6 +141,17 @@ export async function POST(req: NextRequest) {
       await supabase
         .from('activity_log')
         .upsert({ user_id: userKey, activity_date: today, source: session.is_practice ? 'practice_exam' : 'exam' }, { onConflict: 'user_id,activity_date', ignoreDuplicates: true });
+
+      // Real exam answers are never sent back to the client (anti-cheat), so
+      // wrong questions are queued for review here, once, at completion.
+      const wrongQuestionIds = allResults.flatMap(sr =>
+        (sr.questions as Question[])
+          .filter((q, i) => (sr.answers as (number | null)[])[i] !== q.correct_answer)
+          .map(q => q.id)
+      );
+      if (wrongQuestionIds.length > 0) {
+        await recordWrongAnswers(supabase, user ? 'user_id' : 'guest_id', userKey, wrongQuestionIds);
+      }
     }
   } else {
     // ── Step 2: Derive next difficulty from updated θ ──────────────────────────

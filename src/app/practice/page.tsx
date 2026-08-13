@@ -7,7 +7,6 @@ import { classifyScore, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
-import { recordActivity } from '@/lib/streak';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
 type Difficulty = 1 | 2 | 3 | 4 | 5 | 'random';
@@ -123,7 +122,6 @@ export default function PracticePage() {
 
   const handleSelect = (optionIndex: number) => {
     if (showResult) return;
-    recordActivity();
     // Section mode: answers stay editable until the section is submitted,
     // and spaced-repetition tracking happens once at the end.
     if (sectionMode) {

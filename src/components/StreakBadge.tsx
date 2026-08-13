@@ -1,12 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getStreak } from '@/lib/streak';
+import { authFetch } from '@/lib/auth-fetch';
 
 /** Small daily-streak flame for the home page. Hidden until a streak exists. */
 export function StreakBadge() {
   const [streak, setStreak] = useState(0);
-  useEffect(() => { setStreak(getStreak()); }, []);
+
+  useEffect(() => {
+    const guestId = localStorage.getItem('amiret_guest_id') ?? '';
+    authFetch(`/api/streak?guestId=${encodeURIComponent(guestId)}`)
+      .then(r => (r.ok ? r.json() : null))
+      .then((d: { streak: number } | null) => { if (d) setStreak(d.streak); });
+  }, []);
+
   if (streak < 1) return null;
   return (
     <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/40 border border-orange-200 dark:border-orange-700">

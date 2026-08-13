@@ -7,7 +7,6 @@ import { QuestionCard } from '@/components/exam/QuestionCard';
 import { SectionProgress } from '@/components/exam/SectionProgress';
 import { SECTION_CONFIGS, type Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
-import { recordActivity } from '@/lib/streak';
 
 interface SessionState {
   id: string;
@@ -132,7 +131,6 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   const handleAnswer = (questionIndex: number, optionIndex: number) => {
     if (isSubmittingRef.current) return;
-    recordActivity();
     setAnswers(prev => {
       const next = [...prev];
       next[questionIndex] = optionIndex;

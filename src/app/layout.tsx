@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google';
 import './globals.css';
 import { BottomNav } from '@/components/BottomNav';
 import { PwaUpdater } from '@/components/PwaUpdater';
+import { ActivityGuardProvider } from '@/lib/activity-guard';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 
@@ -53,9 +54,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme');if(t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}})()` }} />
       </head>
       <body className="min-h-full flex flex-col bg-slate-50 dark:bg-slate-900 pb-24 md:pb-0">
-        {children}
-        <BottomNav />
-        <PwaUpdater />
+        <ActivityGuardProvider>
+          {children}
+          <BottomNav />
+          <PwaUpdater />
+        </ActivityGuardProvider>
       </body>
     </html>
   );

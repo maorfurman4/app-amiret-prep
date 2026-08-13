@@ -7,6 +7,7 @@ import { classifyScore, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
+import { useActivityGuard } from '@/lib/activity-guard';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
 type Difficulty = 1 | 2 | 3 | 4 | 5 | 'random';
@@ -49,6 +50,7 @@ function formatTime(seconds: number): string {
 
 export default function PracticePage() {
   const router = useRouter();
+  const { setInProgress } = useActivityGuard();
 
   const [step, setStep]               = useState<Step>('pick-type');
   const [selectedType, setType]       = useState<QuestionType | null>(null);
@@ -82,6 +84,13 @@ export default function PracticePage() {
       }
     }
   }, []);
+
+  // Flag mid-question activity so the bottom nav asks for a confirming
+  // second tap before navigating away to a different category.
+  useEffect(() => {
+    setInProgress(step === 'practicing');
+    return () => setInProgress(false);
+  }, [step, setInProgress]);
 
   // Exam mode timer
   const [timeLeft, setTimeLeft]       = useState<number>(0);

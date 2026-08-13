@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { MouseEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useActivityGuard } from '@/lib/activity-guard';
 
 // 5 tabs max — thumb-friendly on narrow screens.
 // חזרה חכמה, אסטרטגיות, טיפים ולוח מובילים נגישים מדף הבית.
@@ -13,6 +14,8 @@ const TABS = [
   { href: '/vocabulary',  icon: '📖', label: 'מילים'     },
   { href: '/stats',       icon: '📊', label: 'סטטיסטיקה' },
 ];
+
+const CONFIRM_WINDOW_MS = 2500;
 
 // Hide during active exam/review sessions
 function shouldHide(pathname: string): boolean {
@@ -25,6 +28,16 @@ function shouldHide(pathname: string): boolean {
 
 export function BottomNav() {
   const pathname = usePathname();
+  const { inProgress } = useActivityGuard();
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const pendingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Leaving the page (route actually changed) clears any pending confirm
+  useEffect(() => {
+    setPendingHref(null);
+    if (pendingTimerRef.current) clearTimeout(pendingTimerRef.current);
+  }, [pathname]);
+
   if (shouldHide(pathname)) return null;
 
   return (
@@ -39,16 +52,30 @@ export function BottomNav() {
             tab.href === '/'
               ? pathname === '/'
               : pathname === tab.href || pathname.startsWith(tab.href + '/');
-          // Clicking the tab you're already on is a no-op for Next's router
-          // (same URL → no navigation event → no remount), so any in-page
-          // state — practice's picked type, vocabulary's mode — just sits
-          // there. Force a hard reload back to that tab's home screen instead.
+          const isPending = pendingHref === tab.href;
+
           const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+            // Clicking the tab you're already on is a no-op for Next's router
+            // (same URL → no navigation event → no remount), so any in-page
+            // state — practice's picked type, vocabulary's mode — just sits
+            // there. Force a hard reload back to that tab's home screen instead.
             if (pathname === tab.href) {
               e.preventDefault();
               window.location.href = tab.href;
+              return;
+            }
+            // Mid-activity (e.g. answering a practice question): the first
+            // tap on a DIFFERENT tab just asks for confirmation instead of
+            // silently discarding progress. Second tap within the window
+            // goes through as a normal navigation.
+            if (inProgress && !isPending) {
+              e.preventDefault();
+              setPendingHref(tab.href);
+              if (pendingTimerRef.current) clearTimeout(pendingTimerRef.current);
+              pendingTimerRef.current = setTimeout(() => setPendingHref(null), CONFIRM_WINDOW_MS);
             }
           };
+
           return (
             <Link
               key={tab.href}
@@ -63,8 +90,12 @@ export function BottomNav() {
               {active && (
                 <span className="absolute top-0 inset-x-1 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-b-full" />
               )}
-              <span className="text-2xl leading-none">{tab.icon}</span>
-              <span className={`text-[11px] leading-tight ${active ? 'font-bold' : 'font-medium'}`}>
+              {isPending ? (
+                <span className="text-[10px] font-bold text-orange-500 leading-none whitespace-nowrap">לחץ שוב לצאת</span>
+              ) : (
+                <span className="text-2xl leading-none">{tab.icon}</span>
+              )}
+              <span className={`text-[11px] leading-tight ${active ? 'font-bold' : 'font-medium'} ${isPending ? 'text-orange-500' : ''}`}>
                 {tab.label}
               </span>
             </Link>

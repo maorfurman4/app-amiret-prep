@@ -24,8 +24,14 @@ export function PwaUpdater() {
     };
 
     const onControllerChange = () => {
-      // First controller on a fresh install is not an update
-      if (hadController) setUpdateReady(true);
+      // First controller on a fresh install is not an update. Also only
+      // ever show the banner once per tab session — deploying multiple
+      // times while the user has the app open shouldn't re-notify them
+      // each time; sessionStorage survives their own refresh too.
+      if (hadController && !sessionStorage.getItem('pwa_update_shown')) {
+        setUpdateReady(true);
+        sessionStorage.setItem('pwa_update_shown', '1');
+      }
       hadController = true;
     };
 

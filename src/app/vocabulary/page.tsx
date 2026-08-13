@@ -704,8 +704,13 @@ export default function VocabularyPage() {
                           <button onClick={() => speak(w.word)} className="text-lg hover:scale-110 transition-transform">🔊</button>
                           <button
                             onClick={() => removeFavorite(w.id)}
-                            className="text-red-400 hover:text-red-600 font-bold text-lg"
-                          >❤️</button>
+                            aria-label={`הסר את ${w.word} מהמועדפים`}
+                            title="הסר מהמועדפים"
+                            className="flex items-center gap-1 px-2 py-1 rounded-lg text-red-500 hover:text-white hover:bg-red-500 border border-red-200 dark:border-red-800 text-xs font-semibold transition-colors"
+                          >
+                            <span className="text-base leading-none">🗑️</span>
+                            <span>הסר</span>
+                          </button>
                         </div>
                       </div>
                     ))}

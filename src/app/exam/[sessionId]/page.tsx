@@ -222,6 +222,16 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     submitSection(session, answers);
   };
 
+  const [isExiting, setIsExiting] = useState(false);
+  const handleConfirmExit = async () => {
+    setIsExiting(true);
+    try {
+      await authFetch(`/api/exam/state?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId ?? '')}`, { method: 'DELETE' });
+    } finally {
+      router.push('/');
+    }
+  };
+
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900" dir="rtl">
@@ -289,19 +299,20 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         {exitConfirm && (
           <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl" dir="rtl">
             <p className="text-red-800 dark:text-red-300 text-sm font-semibold mb-3">
-              לצאת מהמבחן ולחזור לדף הבית? תוכל להמשיך את המבחן מאותה נקודה מאוחר יותר.
+              לצאת מהמבחן? המבחן הזה לא נשמר — היציאה תמחק אותו לצמיתות ותצטרך להתחיל מבחן חדש.
             </p>
             <div className="flex gap-2">
               <button
-                onClick={() => router.push('/')}
-                disabled={isSubmitting}
+                onClick={handleConfirmExit}
+                disabled={isSubmitting || isExiting}
                 className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-bold hover:bg-red-600 transition-colors disabled:opacity-50"
               >
-                כן, צא לדף הבית
+                {isExiting ? 'מוחק...' : 'כן, מחק וצא'}
               </button>
               <button
                 onClick={() => setExitConfirm(false)}
-                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                disabled={isExiting}
+                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
               >
                 המשך במבחן
               </button>

@@ -54,3 +54,30 @@ export async function GET(req: NextRequest) {
     serverNow: now,
   });
 }
+
+/**
+ * DELETE /api/exam/state?sessionId=xxx
+ * Exiting mid-exam has no resume flow (the /exam picker only ever starts a
+ * fresh session), so an abandoned session would otherwise sit in the DB
+ * forever. Deleting it on exit makes the "this exam is discarded" warning
+ * shown to the user actually true, and avoids orphaned rows.
+ */
+export async function DELETE(req: NextRequest) {
+  const { supabase, user } = await getServerClients();
+
+  const sessionId = req.nextUrl.searchParams.get('sessionId');
+  const guestId = req.nextUrl.searchParams.get('guestId');
+  if (!sessionId) return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });
+
+  const owner = user?.id ?? guestId;
+  if (!owner) return NextResponse.json({ error: 'auth required' }, { status: 401 });
+
+  await supabase
+    .from('exam_sessions')
+    .delete()
+    .eq('id', sessionId)
+    .eq('user_id', owner)
+    .is('completed_at', null); // never delete a finished exam
+
+  return NextResponse.json({ ok: true });
+}

@@ -7,6 +7,7 @@ import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
 import { classifyScore, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
+import { authFetch } from '@/lib/auth-fetch';
 
 /**
  * Quick adaptive diagnostic: 3 stages × 4 questions (~10 minutes).
@@ -82,6 +83,12 @@ export default function DiagnosticPage() {
       loadStage(stageIdx + 1, newDoneQs, newDoneAns);
     } else {
       setPhase('done');
+      const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
+      authFetch('/api/activity/complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ guestId, source: 'diagnostic' }),
+      }).catch(() => {});
     }
   };
 

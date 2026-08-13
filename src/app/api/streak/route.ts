@@ -3,10 +3,6 @@ import { getServerClients } from '@/lib/supabase-server';
 
 const TZ = 'Asia/Jerusalem';
 
-function localDateStr(iso: string): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date(iso));
-}
-
 function todayLocalStr(): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
 }
@@ -20,9 +16,9 @@ function addDays(dateStr: string, delta: number): string {
 /**
  * GET /api/streak?guestId=xxx
  * Streak = consecutive local (Israel) calendar days with at least one
- * completed exam/practice session, ending today or yesterday (grace
- * period so the flame survives until tonight). Server-computed from
- * completed_at so it isn't tied to any single device's local storage.
+ * completed exam/practice/diagnostic session, ending today or yesterday
+ * (grace period so the flame survives until tonight). Server-computed
+ * from activity_log so it isn't tied to any single device's local storage.
  */
 export async function GET(req: NextRequest) {
   const { supabase, user } = await getServerClients();
@@ -30,13 +26,12 @@ export async function GET(req: NextRequest) {
   const owner = user?.id ?? guestId;
   if (!owner) return NextResponse.json({ streak: 0 });
 
-  const { data: sessions } = await supabase
-    .from('exam_sessions')
-    .select('completed_at')
-    .eq('user_id', owner)
-    .not('completed_at', 'is', null);
+  const { data: rows } = await supabase
+    .from('activity_log')
+    .select('activity_date')
+    .eq('user_id', owner);
 
-  const days = new Set((sessions ?? []).map(s => localDateStr(s.completed_at as string)));
+  const days = new Set((rows ?? []).map(r => r.activity_date as string));
 
   let cursor = todayLocalStr();
   if (!days.has(cursor)) cursor = addDays(cursor, -1);

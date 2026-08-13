@@ -134,6 +134,13 @@ export async function POST(req: NextRequest) {
     updatePayload.theta_final = finalIsExperimental ? newTheta : baseTheta;
     updatePayload.score = Math.max(baseScore, scoreWithExperimental);
     updatePayload.current_section_expires_at = null;
+
+    if (userKey) {
+      const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
+      await supabase
+        .from('activity_log')
+        .upsert({ user_id: userKey, activity_date: today, source: session.is_practice ? 'practice_exam' : 'exam' }, { onConflict: 'user_id,activity_date', ignoreDuplicates: true });
+    }
   } else {
     // ── Step 2: Derive next difficulty from updated θ ──────────────────────────
     const nextDifficulty = routeNextDifficulty(newTheta);

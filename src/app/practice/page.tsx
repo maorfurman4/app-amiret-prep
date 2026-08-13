@@ -160,6 +160,11 @@ export default function PracticePage() {
       }).catch(() => {});
     });
     setStep('done');
+    authFetch('/api/activity/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guestId, source: 'practice' }),
+    }).catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions, answers]);
 
@@ -209,6 +214,12 @@ export default function PracticePage() {
       setShowResult(false);
     } else {
       setStep('done');
+      const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
+      authFetch('/api/activity/complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ guestId, source: 'practice' }),
+      }).catch(() => {});
     }
   }, [currentIndex, questions.length]);
 

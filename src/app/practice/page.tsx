@@ -120,6 +120,18 @@ export default function PracticePage() {
     }
   };
 
+  // Learn mode only: back to the previous question (re-shown as already
+  // answered, read-only), or to the difficulty picker from question 1 —
+  // untimed and non-adaptive, so revisiting a past question is safe.
+  const handlePrevQuestion = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(i => i - 1);
+      setShowResult(true);
+    } else {
+      setStep('pick-difficulty');
+    }
+  };
+
   const handleSelect = (optionIndex: number) => {
     if (showResult) return;
     // Section mode: answers stay editable until the section is submitted,
@@ -315,7 +327,9 @@ export default function PracticePage() {
               <button
                 key={opt.type}
                 onClick={() => { setType(opt.type); setStep('pick-difficulty'); }}
-                className="w-full text-right p-5 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:shadow-md transition-all flex items-center gap-4"
+                className={`w-full text-right p-5 bg-white dark:bg-slate-800 rounded-2xl border-2 hover:shadow-md transition-all flex items-center gap-4 ${
+                  selectedType === opt.type ? 'border-blue-500 ring-2 ring-blue-100 dark:ring-blue-900/40' : 'border-slate-200 dark:border-slate-700 hover:border-blue-400'
+                }`}
               >
                 <span className="text-3xl">{opt.icon}</span>
                 <div>
@@ -348,7 +362,9 @@ export default function PracticePage() {
                   setDiff(opt.value);
                   setStep('pick-count');
                 }}
-                className="p-4 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:shadow-md transition-all text-center"
+                className={`p-4 bg-white dark:bg-slate-800 rounded-2xl border-2 hover:shadow-md transition-all text-center ${
+                  selectedDiff === opt.value ? 'border-blue-500 ring-2 ring-blue-100 dark:ring-blue-900/40' : 'border-slate-200 dark:border-slate-700 hover:border-blue-400'
+                }`}
               >
                 <div className="text-2xl font-black text-slate-900 dark:text-white">{opt.label}</div>
                 <div className="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1">{opt.sublabel}</div>
@@ -514,15 +530,23 @@ export default function PracticePage() {
             hideHeader
           />
 
-          {/* Normal mode: show Next button after answering */}
-          {!examMode && showResult && (
-            <div className="mt-6 flex justify-start">
+          {/* Normal (learn) mode: back to previous question / picker + next */}
+          {!examMode && !sectionMode && (
+            <div className="mt-6 flex items-center justify-between gap-3">
               <button
-                onClick={handleNext}
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+                onClick={handlePrevQuestion}
+                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm"
               >
-                {isLast ? 'ראה תוצאות ✓' : 'שאלה הבאה ‹'}
+                {currentIndex === 0 ? '← לרמת קושי' : 'קודם ›'}
               </button>
+              {showResult && (
+                <button
+                  onClick={handleNext}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+                >
+                  {isLast ? 'ראה תוצאות ✓' : 'שאלה הבאה ‹'}
+                </button>
+              )}
             </div>
           )}
 

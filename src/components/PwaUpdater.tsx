@@ -48,7 +48,11 @@ export function PwaUpdater() {
   if (!updateReady) return null;
 
   return (
-    <div className="fixed bottom-24 md:bottom-6 inset-x-0 z-50 flex justify-center px-4" dir="rtl">
+    <div
+      className="fixed bottom-24 md:bottom-6 inset-x-0 z-50 flex justify-center px-4 transform-gpu"
+      style={{ WebkitTransform: 'translateZ(0)' }}
+      dir="rtl"
+    >
       <div className="flex items-center gap-3 bg-slate-900 dark:bg-slate-700 text-white rounded-2xl shadow-lg px-4 py-3 max-w-sm w-full">
         <span className="text-xl">✨</span>
         <span className="text-sm flex-1">גרסה חדשה של האתר זמינה</span>

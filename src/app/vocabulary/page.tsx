@@ -505,6 +505,24 @@ export default function VocabularyPage() {
     }
   };
 
+  const removeFavorite = (id: string) => {
+    const next = new Set(favorites);
+    next.delete(id);
+    setFavorites(next);
+    saveSet(FAV_KEY, next);
+    if (userId) {
+      supabase.from('user_vocab_favorites').delete().eq('user_id', userId).eq('word_id', id).then();
+    }
+  };
+
+  const clearAllFavorites = () => {
+    setFavorites(new Set());
+    saveSet(FAV_KEY, new Set());
+    if (userId) {
+      supabase.from('user_vocab_favorites').delete().eq('user_id', userId).then();
+    }
+  };
+
   // ─── Flashcard handlers ────────────────────────────────────────────────────
   const current = deck[0] ?? null;
 
@@ -656,8 +674,7 @@ export default function VocabularyPage() {
                   <button
                     onClick={() => {
                       if (!window.confirm(`למחוק את כל ${favorites.size} המועדפים?`)) return;
-                      setFavorites(new Set());
-                      saveSet(FAV_KEY, new Set());
+                      clearAllFavorites();
                     }}
                     className="px-3 py-2 bg-slate-100 text-slate-500 rounded-xl text-sm hover:bg-slate-200 transition-colors"
                   >נקה הכל</button>
@@ -686,12 +703,7 @@ export default function VocabularyPage() {
                         <div className="flex items-center gap-2 mr-3 flex-shrink-0">
                           <button onClick={() => speak(w.word)} className="text-lg hover:scale-110 transition-transform">🔊</button>
                           <button
-                            onClick={() => {
-                              const next = new Set(favorites);
-                              next.delete(w.id);
-                              setFavorites(next);
-                              saveSet(FAV_KEY, next);
-                            }}
+                            onClick={() => removeFavorite(w.id)}
                             className="text-red-400 hover:text-red-600 font-bold text-lg"
                           >❤️</button>
                         </div>

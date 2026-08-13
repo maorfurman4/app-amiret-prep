@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import type { MouseEvent } from 'react';
 
 // 5 tabs max — thumb-friendly on narrow screens.
 // חזרה חכמה, אסטרטגיות, טיפים ולוח מובילים נגישים מדף הבית.
@@ -38,10 +39,21 @@ export function BottomNav() {
             tab.href === '/'
               ? pathname === '/'
               : pathname === tab.href || pathname.startsWith(tab.href + '/');
+          // Clicking the tab you're already on is a no-op for Next's router
+          // (same URL → no navigation event → no remount), so any in-page
+          // state — practice's picked type, vocabulary's mode — just sits
+          // there. Force a hard reload back to that tab's home screen instead.
+          const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+            if (pathname === tab.href) {
+              e.preventDefault();
+              window.location.href = tab.href;
+            }
+          };
           return (
             <Link
               key={tab.href}
               href={tab.href}
+              onClick={handleClick}
               className={`relative flex-1 flex flex-col items-center pt-2.5 pb-2 gap-1 transition-colors ${
                 active
                   ? 'text-blue-600 dark:text-blue-400'

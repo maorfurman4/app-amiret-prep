@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import type { MouseEvent } from 'react';
 import { UserMenu } from '@/components/UserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -61,10 +62,17 @@ export function BackNav({ backHref = '/', backLabel = 'דף הבית', title }: 
       <div className="hidden md:flex items-center gap-1 px-4 pb-2 overflow-x-auto">
         {QUICK_LINKS.map(link => {
           const active = pathname === link.href || pathname.startsWith(link.href + '/');
+          const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+            if (pathname === link.href) {
+              e.preventDefault();
+              window.location.href = link.href;
+            }
+          };
           return (
             <Link
               key={link.href}
               href={link.href}
+              onClick={handleClick}
               className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors flex-shrink-0 ${
                 active
                   ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'

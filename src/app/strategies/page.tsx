@@ -63,6 +63,12 @@ interface QuestionGuide {
   approach: { step: string; detail: string }[];
   stuck: { step: string; detail: string }[];
   tipsHref: string;
+  workedExample: {
+    prompt: string;
+    options: string[];
+    correctIndex: number;
+    walkthrough: string[];
+  };
 }
 
 const QUESTION_GUIDES: QuestionGuide[] = [
@@ -86,6 +92,17 @@ const QUESTION_GUIDES: QuestionGuide[] = [
       { step: 'עברו 90 שניות?', detail: 'עצור. נחש מבין מה שנשאר, סמן, והתקדם. שאלה אחת לא שווה את שלוש האחרות.' },
     ],
     tipsHref: '/tips/sentence-completion',
+    workedExample: {
+      prompt: 'Although the manager praised the report, she asked the team to ___ several sections before the final submission.',
+      options: ['ignore', 'revise', 'publish', 'discard'],
+      correctIndex: 1,
+      walkthrough: [
+        'מילת קישור: "Although" = ניגוד. יש שבח ("praised") — אז מה שבא אחרי חייב להיות הפוך/מנוגד לשבח מוחלט, לא המשך חיובי סתמי.',
+        'השלמה עצמאית בראש: "היא ביקשה מהצוות לעשות משהו לדוחות לפני ההגשה" — סביר שמדובר בתיקון/שיפור, לא בפעולה קיצונית.',
+        'פסילה: "ignore" (להתעלם) סותר לוגית — למה לבקש להתעלם מסעיפים לפני הגשה סופית? "publish" (לפרסם) לא מתאים — זו כבר "הגשה סופית", לא פרסום. "discard" (לזרוק) קיצוני מדי מול "praised" (היא ציינה שבח, לא פסילה מוחלטת).',
+        '"revise" (לתקן/לערוך) — היחיד שמתיישב עם הניגוד העדין של "although": שבח כללי, אבל עדיין יש מה לשפר לפני הסוף. זו התשובה.',
+      ],
+    },
   },
   {
     id: 'restatement',
@@ -107,6 +124,23 @@ const QUESTION_GUIDES: QuestionGuide[] = [
       { step: 'עברו 2.5 דקות?', detail: 'פסול את מה שברור, בחר מהנותר, סמן והתקדם. עדיף לשמור דקה לשאלה השלישית.' },
     ],
     tipsHref: '/tips/restatement',
+    workedExample: {
+      prompt: 'Original: "Despite repeated warnings from the safety inspector, the factory continued operating without proper ventilation."',
+      options: [
+        'The factory ignored the safety warnings and kept working with poor ventilation.',
+        'The factory stopped operating after the safety inspector issued repeated warnings.',
+        'The safety inspector allowed the factory to work without ventilation.',
+        'The factory improved its ventilation after several warnings.',
+      ],
+      correctIndex: 0,
+      walkthrough: [
+        'גרעין המקור: מי=המפעל, מה=המשיך לעבוד בלי אוורור תקין, קשר לוגי="Despite" (למרות) = ניגוד בין האזהרות למעשה בפועל.',
+        'שומר 1 — כמת/שלילה: אין כימות מיוחד לבדוק כאן, אבל יש כיוון ברור: האזהרות לא מנעו את הפעולה.',
+        'שומר 2 — זמן/תוצאה: המקור אומר "continued operating" (המשיך לפעול), לא הפסיק. תשובה 2 ("stopped") הופכת את הכיוון לגמרי — פסילה.',
+        'תשובה 3 הופכת תפקידים (המפקח "אישר" במקום "הזהיר") — סותרת את "warnings" במקור. תשובה 4 ("improved") סותרת את "continued... without" — ההפך הגמור.',
+        'תשובה 1: "התעלם מהאזהרות והמשיך לעבוד עם אוורור לקוי" — אותו מי, אותו מה, אותו כיוון ניגוד בין האזהרה למעשה. זו הניסוח הנכון.',
+      ],
+    },
   },
   {
     id: 'reading-comprehension',
@@ -128,8 +162,115 @@ const QUESTION_GUIDES: QuestionGuide[] = [
       { step: 'הזמן נגמר ונשארו שאלות?', detail: 'בדקה האחרונה: מלא תשובה לכל שאלה שנותרה לפי "האמצעית והמאוזנת" מבין המסיחים. ריק = 0%, ניחוש מושכל = הרבה יותר.' },
     ],
     tipsHref: '/tips/reading-comprehension',
+    workedExample: {
+      prompt: 'קטע קצר: "Urban beekeeping has grown rapidly in the past decade. While rooftop hives can boost local pollination, experts caution that overcrowding hives in small areas may increase competition for limited flowers, sometimes harming wild bee populations rather than helping them." שאלה: According to the passage, urban beekeeping —',
+      options: [
+        'always helps wild bee populations to thrive',
+        'can sometimes harm wild bees if hives are too crowded',
+        'has been banned in most cities due to overcrowding',
+        'is only useful for producing honey commercially',
+      ],
+      correctIndex: 1,
+      walkthrough: [
+        'הצצה בשאלה קודם: מילת המפתח היא "urban beekeeping" ו"according to the passage" — שאלת פרט, לא הסקה. מחפשים משפט ספציפי, לא רושם כללי.',
+        'קריאת הקטע: המשפט השני מכיל את הניגוד (While = "בעוד ש") — יתרון (האבקה) מול סיכון (תחרות על פרחים, פגיעה בדבורים בר).',
+        'תשובה 1 ("always... thrive") — מילת קיצון "always" מול קטע שאומר "may... sometimes" — פסילה מיידית (זה בדיוק המלכודת של תשובות קיצוניות).',
+        'תשובה 3 — "banned" (נאסר) לא מוזכר בקטע בכלל — הזיה, לא מידע מהטקסט. תשובה 4 — "only for honey" גם לא מופיע, פרט מומצא.',
+        'תשובה 2 — משקפת בדיוק את הניגוד מהמשפט השני: "may... harming wild bee populations" = "can sometimes harm wild bees". זו התשובה הנתמכת ישירות בטקסט.',
+      ],
+    },
   },
 ];
+
+/* ─── מילון מילות הקישור החיוני ───────────────────────────────────────────── */
+
+interface Connector {
+  word: string;
+  meaning: string;
+  category: 'ניגוד' | 'סיבה-תוצאה' | 'תוספת' | 'תנאי';
+  note: string;
+  example: string;
+}
+
+const CONNECTORS: Connector[] = [
+  {
+    word: 'although / though',
+    meaning: 'אף על פי ש...',
+    category: 'ניגוד',
+    note: 'מחבר שני משפטים שלמים (subject + verb). "Although he was tired, he finished the race."',
+    example: 'Although the exam was long, most students finished on time.',
+  },
+  {
+    word: 'despite / in spite of',
+    meaning: 'למרות...',
+    category: 'ניגוד',
+    note: 'מלכודת דקדוקית קלאסית: אחריהן בא שם עצם או gerund (V-ing) — לא משפט שלם! "Despite the rain" (נכון) לעומת "Despite it rained" (שגוי — צריך "Despite the rain" או "Although it rained").',
+    example: 'Despite the heavy rain, the match continued as planned.',
+  },
+  {
+    word: 'however',
+    meaning: 'אולם / עם זאת',
+    category: 'ניגוד',
+    note: 'לא מחבר בין שני חלקי משפט ישירות — מתחיל משפט חדש או בא אחרי נקודה-פסיק (;). "The plan was solid; however, it failed."',
+    example: 'The results looked promising; however, further testing is required.',
+  },
+  {
+    word: 'whereas / while',
+    meaning: 'בעוד ש... (השוואה מנוגדת)',
+    category: 'ניגוד',
+    note: 'משווה בין שני דברים שונים, לא בהכרח "רעים" — סתם מדגיש הבדל. "Some prefer mornings, whereas others work better at night."',
+    example: 'The north wing was renovated, whereas the south wing remained untouched.',
+  },
+  {
+    word: 'because / since / as',
+    meaning: 'מכיוון ש... (סיבה)',
+    category: 'סיבה-תוצאה',
+    note: '"Because" חזק ומפורש יותר; "since"/"as" יכולות גם לציין זמן — הקשר קובע. הסיבה תמיד מסבירה את מה שבא לפניה.',
+    example: 'Because the bridge was closed, traffic was redirected downtown.',
+  },
+  {
+    word: 'therefore / thus / consequently',
+    meaning: 'לכן / כתוצאה מכך',
+    category: 'סיבה-תוצאה',
+    note: 'מציינות תוצאה — מה שבא אחריהן הוא ה-effect, לא ה-cause. שימו לב לכיוון: הסיבה תמיד קודמת.',
+    example: 'The flight was delayed; consequently, passengers missed their connections.',
+  },
+  {
+    word: 'moreover / furthermore / in addition',
+    meaning: 'יתרה מכך / בנוסף',
+    category: 'תוספת',
+    note: 'מוסיפות טיעון באותו כיוון (לא ניגוד!). אם המשפט הקודם היה שלילי, הבא גם יהיה שלילי — ולהפך.',
+    example: 'The hotel was overpriced; moreover, the service was disappointing.',
+  },
+  {
+    word: 'unless',
+    meaning: 'אלא אם כן (תנאי שלילי)',
+    category: 'תנאי',
+    note: '= "if not". "You will fail unless you study" = "You will fail if you do not study." קל להתבלבל כי המשמעות כבר שלילית מבלי מילת שלילה גלויה.',
+    example: 'The project will be delayed unless more staff are assigned.',
+  },
+  {
+    word: 'provided that / as long as',
+    meaning: 'בתנאי ש...',
+    category: 'תנאי',
+    note: 'תנאי חיובי — מציב דרישה שחייבת להתקיים כדי שמה שנאמר יקרה.',
+    example: 'You may reschedule the exam, provided that you notify the office 48 hours in advance.',
+  },
+  {
+    word: 'nevertheless / nonetheless',
+    meaning: 'אף על פי כן',
+    category: 'ניגוד',
+    note: 'דומות ל-"however" אך רשמיות יותר — נפוצות בקטעי הבנת הנקרא ברמה גבוהה.',
+    example: 'The evidence was weak; nevertheless, the committee approved the proposal.',
+  },
+];
+
+const CATEGORY_COLOR: Record<Connector['category'], string> = {
+  'ניגוד': 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300',
+  'סיבה-תוצאה': 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
+  'תוספת': 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300',
+  'תנאי': 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+};
 
 /* ─── איפה כן שווה להשקיע ─────────────────────────────────────────────────── */
 
@@ -317,6 +458,36 @@ export default function StrategiesPage() {
                     </div>
                   </div>
 
+                  {/* Worked example — full walkthrough */}
+                  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 mb-3">
+                    <h4 className="font-bold text-sm mb-3 text-slate-800 dark:text-slate-100">📝 דוגמה מלאה עם פתרון צעד-אחר-צעד:</h4>
+                    <p dir="ltr" className="text-sm text-slate-800 dark:text-slate-100 leading-relaxed mb-3 font-medium">
+                      {guide.workedExample.prompt}
+                    </p>
+                    <div dir="ltr" className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+                      {guide.workedExample.options.map((opt, i) => (
+                        <div
+                          key={i}
+                          className={`px-3 py-2 rounded-lg text-sm border ${
+                            i === guide.workedExample.correctIndex
+                              ? 'border-green-400 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300 font-semibold'
+                              : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400'
+                          }`}
+                        >
+                          {i + 1}. {opt} {i === guide.workedExample.correctIndex && '✓'}
+                        </div>
+                      ))}
+                    </div>
+                    <ol className="space-y-2">
+                      {guide.workedExample.walkthrough.map((line, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                          <span className="text-slate-300 dark:text-slate-600 flex-shrink-0 font-mono">{i + 1}.</span>
+                          <span>{line}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+
                   <Link href={guide.tipsHref} className={`inline-block text-xs font-semibold ${colors.heading} hover:underline`}>
                     ← לטיפים המורחבים והמלכודות של {guide.titleHe}
                   </Link>
@@ -326,9 +497,33 @@ export default function StrategiesPage() {
           </div>
         </section>
 
-        {/* ── 4. איפה כן שווה להשקיע ── */}
+        {/* ── 4. מילון מילות הקישור ── */}
         <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 4 · איפה כן שווה "להיתקע"</h2>
+          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 4 · 10 מילות הקישור שקובעות הכל</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+            כמעט כל שאלה בשלושת הסוגים נשענת על מילת קישור אחת שקובעת את כיוון התשובה. הכר אותן על בוריין —
+            כולל המלכודות הדקדוקיות שלהן.
+          </p>
+          <div className="space-y-3">
+            {CONNECTORS.map(c => (
+              <div key={c.word} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <div className="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
+                  <span dir="ltr" className="font-bold text-slate-900 dark:text-white text-sm">{c.word}</span>
+                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${CATEGORY_COLOR[c.category]}`}>{c.category}</span>
+                </div>
+                <p className="text-sm text-slate-700 dark:text-slate-200 font-medium mb-1.5">{c.meaning}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-2">{c.note}</p>
+                <p dir="ltr" className="text-xs text-slate-600 dark:text-slate-300 italic bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-1.5">
+                  {c.example}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── 5. איפה כן שווה להשקיע ── */}
+        <section>
+          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 5 · איפה כן שווה "להיתקע"</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
             לא כל הדקות שוות. אלו שלושת המקומות שבהם השקעת זמן באמת מזיזה את הציון:
           </p>
@@ -345,9 +540,9 @@ export default function StrategiesPage() {
           </div>
         </section>
 
-        {/* ── 5. שיטות מהשוק ── */}
+        {/* ── 6. שיטות מהשוק ── */}
         <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 5 · שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
+          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 6 · שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
             מכוני ההכנה חלוקים איך לגשת לקטע קריאה. אלו שלוש הגישות — ולמי כל אחת מתאימה:
           </p>
@@ -375,9 +570,9 @@ export default function StrategiesPage() {
           </div>
         </section>
 
-        {/* ── 6. הרגלי הכנה ── */}
+        {/* ── 7. הרגלי הכנה ── */}
         <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 6 · ההכנה שעובדת (לפי כל המכונים)</h2>
+          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 7 · ההכנה שעובדת (לפי כל המכונים)</h2>
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
             {[
               { icon: '📚', text: '20 דקות קריאה באנגלית כל יום — טקסט לא קל מדי ולא קשה מדי. זו ההמלצה המשותפת לכל המכונים.' },

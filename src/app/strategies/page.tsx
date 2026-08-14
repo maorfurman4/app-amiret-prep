@@ -185,94 +185,181 @@ const QUESTION_GUIDES: QuestionGuide[] = [
   },
 ];
 
-/* ─── מילון מילות הקישור החיוני ───────────────────────────────────────────── */
+/* ─── מילות הקישור — מודול לימודי מלא ─────────────────────────────────────── */
 
-interface Connector {
+interface ConnectorWord {
   word: string;
   meaning: string;
-  category: 'ניגוד' | 'סיבה-תוצאה' | 'תוספת' | 'תנאי';
-  note: string;
+  grammar: string;
   example: string;
+  exampleExplain: string;
 }
 
-const CONNECTORS: Connector[] = [
+interface ConnectorCategory {
+  id: string;
+  title: string;
+  icon: string;
+  color: string;
+  intro: string;
+  words: ConnectorWord[];
+}
+
+const CONNECTORS_INTRO =
+  'שאלת אמירנ"ט לא באמת בודקת אם אתה מכיר את המילה "despite". היא בודקת משהו הרבה יותר בסיסי: האם אתה מזהה את הקשר הלוגי בין שני חלקי המשפט. ' +
+  'תחשוב על זה כך — לפני שאתה קורא מילה אחת מהתשובות, המשפט כבר "אמר" לך אם הוא הולך להפתיע אותך (ניגוד), להסביר את עצמו (סיבה-תוצאה), ' +
+  'להוסיף על מה שכבר נאמר (תוספת), או להציב דרישה (תנאי). מילת הקישור היא התמרור הזה. מי שלומד לקרוא אותה נכון, פותר חצי מהשאלה עוד לפני שהגיע לפער או לתשובות.';
+
+const CONNECTORS_OUTRO =
+  'שימו לב: זו בדיוק אותה מיומנות שחוזרת בשלושת סוגי השאלות, רק בלבוש שונה. בהשלמת משפטים מילת הקישור אומרת לך איזה טון צריך במילה החסרה. ' +
+  'בניסוח מחדש היא חלק מ"הגרעין" שאתה מחלץ ממשפט המקור — ואם התשובה משנה בשקט "despite" ל-"because", זו כבר לא אותה טענה. ' +
+  'ובהבנת הנקרא היא זו שמסמנת לך איפה הקטע עומד לפנות — קדימה לאותו כיוון, או אחורה נגדו. ברגע שהיא הופכת אוטומטית, שלושת הסוגים נהיים קלים יותר בבת אחת.';
+
+const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
   {
-    word: 'although / though',
-    meaning: 'אף על פי ש...',
-    category: 'ניגוד',
-    note: 'מחבר שני משפטים שלמים (subject + verb). "Although he was tired, he finished the race."',
-    example: 'Although the exam was long, most students finished on time.',
+    id: 'contrast',
+    title: 'ניגוד',
+    icon: '⚡',
+    color: 'red',
+    intro:
+      'קבוצת הניגוד היא הכי נפוצה במבחן, כי היא יוצרת בדיוק את סוג המתח שהופך משפט לשאלה מעניינת: משהו אחד נכון, אבל קורה למרות זאת משהו הפוך או בלתי-צפוי. ' +
+      'ברגע שהעין שלך תופסת מילת ניגוד, המשימה הראשונה שלה היא לא להבין את שני חלקי המשפט לעומק — אלא רק לזהות שהם הולכים בכיוונים מנוגדים, ולצפות שהחלק שעדיין לא קראת "יסתור" את מה שכבר קראת. ' +
+      'זה חוסך זמן: אתה כבר יודע לאן המשפט הולך לפני שהגעת לשם.',
+    words: [
+      {
+        word: 'although / though',
+        meaning: 'אף על פי ש...',
+        grammar:
+          'אלו מילות חיבור-כפיפה (subordinating conjunctions) — ולכן חייב לבוא אחריהן משפט שלם, עם נושא ופועל משלו: "Although he was tired, he finished the race." ' +
+          'זה שונה מהותית מ-despite, ולבלבל ביניהן היא בדיוק המלכודת שהמבחן אוהב לבדוק.',
+        example: 'Although the exam was long, most students finished on time.',
+        exampleExplain:
+          'המשפט פותח ב"although" — סימן שמה שיבוא אחריו (התלמידים סיימו בזמן) הולך לסתור את מה שהיינו מצפים ממנו (מבחן ארוך = כנראה לא מספיקים). זו בדיוק תבנית "ציפייה מול תוצאה" האופיינית לניגוד.',
+      },
+      {
+        word: 'despite / in spite of',
+        meaning: 'למרות...',
+        grammar:
+          'בניגוד ל-although, אלו מילות יחס (prepositions) — ולכן אחריהן חייב לבוא שם עצם או gerund (V-ing), לא משפט שלם. "Despite the rain" נכון; "Despite it rained" שגוי. ' +
+          'אם צריך לתאר משפט שלם אחרי despite, פותרים את זה עם "the fact that": "Despite the fact that it rained." זו המלכודת הדקדוקית הכי נפוצה בקבוצת הניגוד — לכן שווה לזכור אותה בנפרד מ-although, גם אם המשמעות דומה.',
+        example: 'Despite the heavy rain, the match continued as planned.',
+        exampleExplain:
+          '"the heavy rain" הוא שם עצם, לא משפט — בדיוק כמו שהכלל מחייב. שימו לב שהמשמעות זהה ל-"Although it rained heavily" — רק המבנה הדקדוקי משתנה.',
+      },
+      {
+        word: 'however',
+        meaning: 'אולם / עם זאת',
+        grammar:
+          'זו מילת קישור בין-משפטית (conjunctive adverb), לא כפיפה — ולכן אינה מחברת ישירות שני חלקי משפט באותו משפט. היא באה אחרי נקודה, או אחרי נקודה-פסיק (;), ולרוב עם פסיק אחריה: "The plan was solid; however, it failed." ' +
+          'שימוש שגוי נפוץ הוא לחבר בה שני משפטים ישירות בפסיק בלבד — טעות דקדוקית שהאמירנ"ט בודק דרך שאלות דקדוק.',
+        example: 'The results looked promising; however, further testing is required.',
+        exampleExplain: 'שני משפטים עצמאיים לגמרי, מחוברים בנקודה-פסיק. "However" רק מסמן שהמשפט השני הולך נגד הרושם שהשאיר המשפט הראשון.',
+      },
+      {
+        word: 'whereas / while',
+        meaning: 'בעוד ש... (השוואה מנוגדת)',
+        grammar:
+          'שונות מ-although ב"עוצמה" — הן לא בהכרח מציגות משהו "רע" מול "טוב", אלא סתם מדגישות הבדל בין שני דברים מקבילים. שימושיות מאוד בשאלות שמשוות בין שתי קבוצות, שני זמנים, או שני מקומות.',
+        example: 'The north wing was renovated, whereas the south wing remained untouched.',
+        exampleExplain: 'אין כאן "הפתעה" במובן הדרמטי — רק ניגוד עובדתי נקי בין שני חלקי הבניין. זה ההבדל העדין בין whereas ל-although.',
+      },
+      {
+        word: 'nevertheless / nonetheless',
+        meaning: 'אף על פי כן',
+        grammar: 'מתנהגות דקדוקית בדיוק כמו however (מילות קישור בין-משפטיות), אך נחשבות רשמיות יותר — ולכן נפוצות בעיקר בקטעי הבנת הנקרא ברמה גבוהה, פחות בדיבור.',
+        example: 'The evidence was weak; nevertheless, the committee approved the proposal.',
+        exampleExplain: 'בדיוק מבנה however — אבל הרישום הרשמי מתאים יותר לטקסט אקדמי, שם תמצאו אותה הכי הרבה.',
+      },
+    ],
   },
   {
-    word: 'despite / in spite of',
-    meaning: 'למרות...',
-    category: 'ניגוד',
-    note: 'מלכודת דקדוקית קלאסית: אחריהן בא שם עצם או gerund (V-ing) — לא משפט שלם! "Despite the rain" (נכון) לעומת "Despite it rained" (שגוי — צריך "Despite the rain" או "Although it rained").',
-    example: 'Despite the heavy rain, the match continued as planned.',
+    id: 'cause-effect',
+    title: 'סיבה-תוצאה',
+    icon: '🔁',
+    color: 'blue',
+    intro:
+      'קבוצה זו מתפצלת לשני תפקידים שחשוב להבדיל ביניהם: מילים שמסמנות את הסיבה (מה שגרם), ומילים שמסמנות את התוצאה (מה שקרה בעקבות זאת). ' +
+      'הטעות הנפוצה ביותר בשאלות מהסוג הזה היא להתבלבל בכיוון — לחשוב שמה שבא אחרי "therefore" הוא הגורם, כשלמעשה זו התוצאה. ' +
+      'תרגיל מהיר שעובד תמיד: שאלו את עצמכם "מה קרה קודם?" — התשובה לכך היא תמיד הסיבה, לא משנה באיזה סדר המשפט כתוב אותה.',
+    words: [
+      {
+        word: 'because / since / as',
+        meaning: 'מכיוון ש... (סיבה)',
+        grammar:
+          '"Because" הכי חד וברור — משמש רק לסיבה. "Since" ו-"as" עלולות לבלבל כי הן משמשות גם לציון זמן ("Since 2020…" / "As I was walking…") — ההקשר קובע אם מדובר בסיבה או בזמן. ' +
+          'בכל שלוש המקרים, המשפט שאחריהן הוא תמיד הגורם למשפט האחר, לא התוצאה.',
+        example: 'Because the bridge was closed, traffic was redirected downtown.',
+        exampleExplain: 'הגשר הסגור הוא הסיבה; ניתוב התנועה הוא התוצאה. "Because" תמיד "מצביע" על הסיבה בדיוק כך.',
+      },
+      {
+        word: 'therefore / thus / consequently',
+        meaning: 'לכן / כתוצאה מכך',
+        grammar:
+          'ההפך המדויק מ-because מבחינת תפקיד: מה שבא אחריהן הוא ה-effect (התוצאה), לא ה-cause. הסיבה תמיד כבר נאמרה קודם במשפט הקודם. ' +
+          'זו הסיבה שכדאי לזכור אותן כזוג-נגד ל-because/since — אותו יחס סיבה-תוצאה, רק שהכיוון הדקדוקי של המשפט הפוך.',
+        example: 'The flight was delayed; consequently, passengers missed their connections.',
+        exampleExplain: 'העיכוב הוא הסיבה (נאמרה ראשונה); הפספוס של הטיסות המקשרות הוא התוצאה, מסומנת ב-"consequently". בדיוק כיוון הפוך מ-because.',
+      },
+    ],
   },
   {
-    word: 'however',
-    meaning: 'אולם / עם זאת',
-    category: 'ניגוד',
-    note: 'לא מחבר בין שני חלקי משפט ישירות — מתחיל משפט חדש או בא אחרי נקודה-פסיק (;). "The plan was solid; however, it failed."',
-    example: 'The results looked promising; however, further testing is required.',
+    id: 'addition',
+    title: 'תוספת',
+    icon: '➕',
+    color: 'green',
+    intro:
+      'מילות תוספת הן הכי "בטוחות" מבחינה לוגית — הן פשוט ממשיכות באותו כיוון שכבר התחיל. הכלל הזהב: אם המשפט הראשון היה שלילי, המשך עם "moreover" יהיה גם הוא שלילי (לא הפוך). ' +
+      'זו בדיוק הסיבה שהן קלות לזיהוי בטעויות מבחן — כל תשובה שמנסה "להפתיע" אחרי מילת תוספת, כנראה שגויה.',
+    words: [
+      {
+        word: 'moreover / furthermore / in addition',
+        meaning: 'יתרה מכך / בנוסף',
+        grammar: 'שלושתן מתפקדות כמעט זהה: מוסיפות טיעון נוסף באותו כיוון הרגשי/עובדתי של המשפט הקודם. חילופיות לחלוטין בשימוש היומיומי של רמת האמירנ"ט.',
+        example: 'The hotel was overpriced; moreover, the service was disappointing.',
+        exampleExplain: 'שתי תלונות, לא תלונה מול שבח. "Moreover" מוודא שאתם לא מצפים לתפנית — רק לעוד באותו כיוון.',
+      },
+    ],
   },
   {
-    word: 'whereas / while',
-    meaning: 'בעוד ש... (השוואה מנוגדת)',
-    category: 'ניגוד',
-    note: 'משווה בין שני דברים שונים, לא בהכרח "רעים" — סתם מדגיש הבדל. "Some prefer mornings, whereas others work better at night."',
-    example: 'The north wing was renovated, whereas the south wing remained untouched.',
-  },
-  {
-    word: 'because / since / as',
-    meaning: 'מכיוון ש... (סיבה)',
-    category: 'סיבה-תוצאה',
-    note: '"Because" חזק ומפורש יותר; "since"/"as" יכולות גם לציין זמן — הקשר קובע. הסיבה תמיד מסבירה את מה שבא לפניה.',
-    example: 'Because the bridge was closed, traffic was redirected downtown.',
-  },
-  {
-    word: 'therefore / thus / consequently',
-    meaning: 'לכן / כתוצאה מכך',
-    category: 'סיבה-תוצאה',
-    note: 'מציינות תוצאה — מה שבא אחריהן הוא ה-effect, לא ה-cause. שימו לב לכיוון: הסיבה תמיד קודמת.',
-    example: 'The flight was delayed; consequently, passengers missed their connections.',
-  },
-  {
-    word: 'moreover / furthermore / in addition',
-    meaning: 'יתרה מכך / בנוסף',
-    category: 'תוספת',
-    note: 'מוסיפות טיעון באותו כיוון (לא ניגוד!). אם המשפט הקודם היה שלילי, הבא גם יהיה שלילי — ולהפך.',
-    example: 'The hotel was overpriced; moreover, the service was disappointing.',
-  },
-  {
-    word: 'unless',
-    meaning: 'אלא אם כן (תנאי שלילי)',
-    category: 'תנאי',
-    note: '= "if not". "You will fail unless you study" = "You will fail if you do not study." קל להתבלבל כי המשמעות כבר שלילית מבלי מילת שלילה גלויה.',
-    example: 'The project will be delayed unless more staff are assigned.',
-  },
-  {
-    word: 'provided that / as long as',
-    meaning: 'בתנאי ש...',
-    category: 'תנאי',
-    note: 'תנאי חיובי — מציב דרישה שחייבת להתקיים כדי שמה שנאמר יקרה.',
-    example: 'You may reschedule the exam, provided that you notify the office 48 hours in advance.',
-  },
-  {
-    word: 'nevertheless / nonetheless',
-    meaning: 'אף על פי כן',
-    category: 'ניגוד',
-    note: 'דומות ל-"however" אך רשמיות יותר — נפוצות בקטעי הבנת הנקרא ברמה גבוהה.',
-    example: 'The evidence was weak; nevertheless, the committee approved the proposal.',
+    id: 'condition',
+    title: 'תנאי',
+    icon: '🔑',
+    color: 'amber',
+    intro:
+      'מילות תנאי מציבות דרישה: משהו יקרה, אבל רק אם (או רק אם לא) תנאי מסוים מתקיים. ההבדל הקריטי בקבוצה הזו הוא בין תנאי חיובי לתנאי שלילי — ו-"unless" הוא המועד הראשון להתבלבל בו, ' +
+      'כי הוא נשמע כמו מילה "רגילה" אבל למעשה מסתיר בתוכו שלילה שלמה.',
+    words: [
+      {
+        word: 'unless',
+        meaning: 'אלא אם כן (תנאי שלילי)',
+        grammar:
+          'שווה-ערך מדויק ל-"if not": "You will fail unless you study" = "You will fail if you do not study." הקושי הוא שהמילה עצמה לא "נשמעת" שלילית — אין בה not או never — ' +
+          'ולכן קל לפספס שהיא הופכת את כל התנאי לשלילי. הטריק: בכל פעם שרואים unless, ממירים אותה מיד בראש ל-"if...not" ואז קוראים שוב.',
+        example: 'The project will be delayed unless more staff are assigned.',
+        exampleExplain: 'זהה ל-"The project will be delayed if more staff are NOT assigned." הפרויקט יתעכב, והדרך היחידה למנוע זאת היא הקצאת עובדים נוספים.',
+      },
+      {
+        word: 'provided that / as long as',
+        meaning: 'בתנאי ש...',
+        grammar: 'תנאי חיובי ופשוט יותר מ-unless — אין כאן שלילה מוסתרת. מציגות דרישה ברורה: קורה X, בתנאי ש-Y מתקיים.',
+        example: 'You may reschedule the exam, provided that you notify the office 48 hours in advance.',
+        exampleExplain: 'אפשר לדחות את המבחן — אבל רק אם ההודעה ניתנה 48 שעות מראש. אין כאן שלילה נסתרת כמו ב-unless; הדרישה גלויה וברורה.',
+      },
+    ],
   },
 ];
 
-const CATEGORY_COLOR: Record<Connector['category'], string> = {
-  'ניגוד': 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300',
-  'סיבה-תוצאה': 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
-  'תוספת': 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300',
-  'תנאי': 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+const CATEGORY_COLOR: Record<string, string> = {
+  red: 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300',
+  blue: 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
+  green: 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300',
+  amber: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+};
+
+const CATEGORY_BORDER: Record<string, string> = {
+  red: 'border-red-200 dark:border-red-800',
+  blue: 'border-blue-200 dark:border-blue-800',
+  green: 'border-green-200 dark:border-green-800',
+  amber: 'border-amber-200 dark:border-amber-800',
 };
 
 /* ─── איפה כן שווה להשקיע ─────────────────────────────────────────────────── */
@@ -539,26 +626,43 @@ export default function StrategiesPage() {
 
             {topic === 'connectors' && (
               <section>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">10 מילות הקישור שקובעות הכל</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-                  כמעט כל שאלה בשלושת הסוגים נשענת על מילת קישור אחת שקובעת את כיוון התשובה. הכר אותן על בוריין —
-                  כולל המלכודות הדקדוקיות שלהן.
+                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">מילות הקישור שקובעות הכל</h2>
+
+                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mb-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                  {CONNECTORS_INTRO}
                 </p>
-                <div className="space-y-3">
-                  {CONNECTORS.map(c => (
-                    <div key={c.word} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                      <div className="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
-                        <span dir="ltr" className="font-bold text-slate-900 dark:text-white text-sm">{c.word}</span>
-                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${CATEGORY_COLOR[c.category]}`}>{c.category}</span>
+
+                <div className="space-y-8">
+                  {CONNECTOR_CATEGORIES.map(cat => (
+                    <div key={cat.id}>
+                      <div className="flex items-center gap-2.5 mb-2">
+                        <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg ${CATEGORY_COLOR[cat.color]}`}>{cat.icon}</span>
+                        <h3 className="font-black text-slate-900 dark:text-white text-base">{cat.title}</h3>
                       </div>
-                      <p className="text-sm text-slate-700 dark:text-slate-200 font-medium mb-1.5">{c.meaning}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-2">{c.note}</p>
-                      <p dir="ltr" className="text-xs text-slate-600 dark:text-slate-300 italic bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-1.5">
-                        {c.example}
-                      </p>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">{cat.intro}</p>
+
+                      <div className={`space-y-4 border-r-2 ${CATEGORY_BORDER[cat.color]} pr-4`}>
+                        {cat.words.map(w => (
+                          <div key={w.word}>
+                            <div className="flex items-baseline gap-2 flex-wrap mb-1">
+                              <span dir="ltr" className="font-bold text-slate-900 dark:text-white text-sm">{w.word}</span>
+                              <span className="text-slate-400 dark:text-slate-500 text-xs">— {w.meaning}</span>
+                            </div>
+                            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-2">{w.grammar}</p>
+                            <p dir="ltr" className="text-sm text-slate-800 dark:text-slate-100 italic bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-1.5 mb-1.5">
+                              {w.example}
+                            </p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{w.exampleExplain}</p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
+
+                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mt-6 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
+                  {CONNECTORS_OUTRO}
+                </p>
               </section>
             )}
 

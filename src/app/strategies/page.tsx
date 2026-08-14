@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { BackNav } from '@/components/BackNav';
 
@@ -52,7 +55,7 @@ const TIME_BUDGET = [
   },
 ];
 
-/* ─── שלוש שיטות עבודה לכל סוג שאלה ───────────────────────────────────────── */
+/* ─── שיטות עבודה לכל סוג שאלה ─────────────────────────────────────────────── */
 
 interface QuestionGuide {
   id: string;
@@ -342,7 +345,105 @@ const COLOR_MAP: Record<string, { bg: string; border: string; badge: string; hea
   },
 };
 
+/* ─── ניווט בקוביות ───────────────────────────────────────────────────────── */
+
+type TopicId =
+  | 'rules' | 'time' | 'sentence-completion' | 'restatement' | 'reading-comprehension'
+  | 'connectors' | 'invest' | 'methods' | 'habits';
+
+const TOPICS: { id: TopicId; icon: string; title: string; desc: string; color: string }[] = [
+  { id: 'rules', icon: '🔀', title: 'חוקי המשחק', desc: 'איך המבחן עובד — אדפטיביות, טיימר, ניקוד', color: 'bg-slate-100 dark:bg-slate-700' },
+  { id: 'time', icon: '⏱️', title: 'תקציב זמן', desc: 'כמה זמן לכל שאלה, ומתי לוותר ולנחש', color: 'bg-slate-100 dark:bg-slate-700' },
+  { id: 'sentence-completion', icon: '✏️', title: 'השלמת משפטים', desc: 'שיטת עבודה + דוגמה פתורה', color: 'bg-blue-50 dark:bg-blue-950/30' },
+  { id: 'restatement', icon: '🔄', title: 'ניסוח מחדש', desc: 'שיטת עבודה + דוגמה פתורה', color: 'bg-purple-50 dark:bg-purple-950/30' },
+  { id: 'reading-comprehension', icon: '📚', title: 'הבנת הנקרא', desc: 'שיטת עבודה + דוגמה פתורה', color: 'bg-emerald-50 dark:bg-emerald-950/30' },
+  { id: 'connectors', icon: '🔗', title: 'מילות קישור', desc: '10 המילים שקובעות כמעט כל שאלה', color: 'bg-amber-50 dark:bg-amber-950/30' },
+  { id: 'invest', icon: '💎', title: 'איפה שווה להשקיע', desc: 'לא כל הדקות שוות באותה מידה', color: 'bg-slate-100 dark:bg-slate-700' },
+  { id: 'methods', icon: '📖', title: 'שיטות קריאה', desc: 'מה מכוני ההכנה ממליצים — ולמה', color: 'bg-slate-100 dark:bg-slate-700' },
+  { id: 'habits', icon: '✅', title: 'הרגלי הכנה', desc: 'מה עובד באמת, לפי כל המכונים', color: 'bg-slate-100 dark:bg-slate-700' },
+];
+
+function QuestionGuideDetail({ guide }: { guide: QuestionGuide }) {
+  const colors = COLOR_MAP[guide.color];
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${colors.badge}`}>{guide.icon}</div>
+        <div>
+          <h1 className="text-xl font-black text-slate-900 dark:text-white leading-tight">{guide.titleHe}</h1>
+          <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">{guide.titleEn}</span>
+        </div>
+      </div>
+
+      <div className={`rounded-2xl border ${colors.bg} ${colors.border} p-4 mb-3`}>
+        <h4 className={`font-bold text-sm mb-3 ${colors.heading}`}>🧭 כך ניגשים לשאלה:</h4>
+        <ol className="space-y-3">
+          {guide.approach.map((s, i) => (
+            <li key={i} className="flex items-start gap-2.5">
+              <span className={`w-5 h-5 rounded-full ${colors.step} text-white text-[11px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5`}>{i + 1}</span>
+              <div>
+                <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{s.step}</span>
+                <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed mt-0.5">{s.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="rounded-2xl border border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/30 p-4 mb-3">
+        <h4 className="font-bold text-sm mb-3 text-orange-800 dark:text-orange-300">🆘 נתקעת? פרוטוקול החילוץ:</h4>
+        <div className="space-y-3">
+          {guide.stuck.map((s, i) => (
+            <div key={i} className="flex items-start gap-2.5">
+              <span className="text-orange-400 flex-shrink-0 mt-0.5 text-sm">◄</span>
+              <div>
+                <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{s.step}</span>
+                <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed mt-0.5">{s.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 mb-3">
+        <h4 className="font-bold text-sm mb-3 text-slate-800 dark:text-slate-100">📝 דוגמה מלאה עם פתרון צעד-אחר-צעד:</h4>
+        <p dir="ltr" className="text-sm text-slate-800 dark:text-slate-100 leading-relaxed mb-3 font-medium">
+          {guide.workedExample.prompt}
+        </p>
+        <div dir="ltr" className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+          {guide.workedExample.options.map((opt, i) => (
+            <div
+              key={i}
+              className={`px-3 py-2 rounded-lg text-sm border ${
+                i === guide.workedExample.correctIndex
+                  ? 'border-green-400 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300 font-semibold'
+                  : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400'
+              }`}
+            >
+              {i + 1}. {opt} {i === guide.workedExample.correctIndex && '✓'}
+            </div>
+          ))}
+        </div>
+        <ol className="space-y-2">
+          {guide.workedExample.walkthrough.map((line, i) => (
+            <li key={i} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              <span className="text-slate-300 dark:text-slate-600 flex-shrink-0 font-mono">{i + 1}.</span>
+              <span>{line}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <Link href={guide.tipsHref} className={`inline-block text-xs font-semibold ${colors.heading} hover:underline`}>
+        ← לטיפים המורחבים והמלכודות של {guide.titleHe}
+      </Link>
+    </div>
+  );
+}
+
 export default function StrategiesPage() {
+  const [topic, setTopic] = useState<TopicId | null>(null);
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-24" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
@@ -351,262 +452,207 @@ export default function StrategiesPage() {
       <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-5">
         <h1 className="text-2xl font-black text-slate-900 dark:text-white">🧠 המדריך המלא לפתרון האמירנ"ט</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          איך ניגשים לכל שאלה, מה עושים כשנתקעים, ואיפה כן שווה להשקיע זמן — מבוסס על השיטות המובילות בשוק
+          בחר נושא — כל נושא ממוקד ומהיר לגלילה
         </p>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-6 space-y-10">
-
-        {/* ── 1. חוקי המשחק ── */}
-        <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 1 · הבן את חוקי המשחק</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-            רוב הנקודות שהולכות לאיבוד באמירנ"ט לא קשורות לאנגלית — אלא לאי-הבנה של איך המבחן עובד.
-          </p>
-          <div className="space-y-3">
-            {GAME_RULES.map(rule => (
-              <div key={rule.title} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
-                <span className="text-2xl flex-shrink-0">{rule.icon}</span>
-                <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-1">{rule.title}</h3>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{rule.body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── 2. תקציב זמן ── */}
-        <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 2 · תקציב הזמן שלך — כולל "תקציב תקיעה"</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-            להיתקע זה חלק מהמבחן. ההבדל בין נבחן טוב לבינוני הוא שהטוב מחליט <span className="font-semibold">מראש</span> כמה
-            זמן מותר לו להיתקע — ועומד בזה.
-          </p>
-          <div className="space-y-3">
-            {TIME_BUDGET.map(row => (
-              <div key={row.section} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm">{row.section}</h3>
-                  <span className="text-xs font-mono bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-lg">{row.total}</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2 mb-2">
-                  <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl px-3 py-2">
-                    <div className="text-[11px] text-slate-400 dark:text-slate-500">זמן לשאלה</div>
-                    <div className="text-sm font-bold text-slate-800 dark:text-slate-100">{row.perQ}</div>
-                  </div>
-                  <div className="bg-orange-50 dark:bg-orange-950/30 rounded-xl px-3 py-2">
-                    <div className="text-[11px] text-orange-400">מקסימום תקיעה</div>
-                    <div className="text-sm font-bold text-orange-700 dark:text-orange-300">{row.stuckCap}</div>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{row.note}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── 3. מדריך לפי סוג שאלה ── */}
-        <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 3 · שיטת העבודה לכל סוג שאלה</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-            לכל סוג: איך ניגשים צעד-אחר-צעד, ומיד אחריו — פרוטוקול החילוץ כשנתקעים.
-          </p>
-          <div className="space-y-8">
-            {QUESTION_GUIDES.map(guide => {
-              const colors = COLOR_MAP[guide.color];
-              return (
-                <div key={guide.id}>
-                  {/* Section header */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${colors.badge}`}>{guide.icon}</div>
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white leading-tight">{guide.titleHe}</h3>
-                      <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">{guide.titleEn}</span>
-                    </div>
-                  </div>
-
-                  {/* Approach steps */}
-                  <div className={`rounded-2xl border ${colors.bg} ${colors.border} p-4 mb-3`}>
-                    <h4 className={`font-bold text-sm mb-3 ${colors.heading}`}>🧭 כך ניגשים לשאלה:</h4>
-                    <ol className="space-y-3">
-                      {guide.approach.map((s, i) => (
-                        <li key={i} className="flex items-start gap-2.5">
-                          <span className={`w-5 h-5 rounded-full ${colors.step} text-white text-[11px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5`}>{i + 1}</span>
-                          <div>
-                            <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{s.step}</span>
-                            <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed mt-0.5">{s.detail}</p>
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-
-                  {/* Stuck protocol */}
-                  <div className="rounded-2xl border border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/30 p-4 mb-3">
-                    <h4 className="font-bold text-sm mb-3 text-orange-800 dark:text-orange-300">🆘 נתקעת? פרוטוקול החילוץ:</h4>
-                    <div className="space-y-3">
-                      {guide.stuck.map((s, i) => (
-                        <div key={i} className="flex items-start gap-2.5">
-                          <span className="text-orange-400 flex-shrink-0 mt-0.5 text-sm">◄</span>
-                          <div>
-                            <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{s.step}</span>
-                            <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed mt-0.5">{s.detail}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Worked example — full walkthrough */}
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 mb-3">
-                    <h4 className="font-bold text-sm mb-3 text-slate-800 dark:text-slate-100">📝 דוגמה מלאה עם פתרון צעד-אחר-צעד:</h4>
-                    <p dir="ltr" className="text-sm text-slate-800 dark:text-slate-100 leading-relaxed mb-3 font-medium">
-                      {guide.workedExample.prompt}
-                    </p>
-                    <div dir="ltr" className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-                      {guide.workedExample.options.map((opt, i) => (
-                        <div
-                          key={i}
-                          className={`px-3 py-2 rounded-lg text-sm border ${
-                            i === guide.workedExample.correctIndex
-                              ? 'border-green-400 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300 font-semibold'
-                              : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400'
-                          }`}
-                        >
-                          {i + 1}. {opt} {i === guide.workedExample.correctIndex && '✓'}
-                        </div>
-                      ))}
-                    </div>
-                    <ol className="space-y-2">
-                      {guide.workedExample.walkthrough.map((line, i) => (
-                        <li key={i} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                          <span className="text-slate-300 dark:text-slate-600 flex-shrink-0 font-mono">{i + 1}.</span>
-                          <span>{line}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-
-                  <Link href={guide.tipsHref} className={`inline-block text-xs font-semibold ${colors.heading} hover:underline`}>
-                    ← לטיפים המורחבים והמלכודות של {guide.titleHe}
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ── 4. מילון מילות הקישור ── */}
-        <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 4 · 10 מילות הקישור שקובעות הכל</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-            כמעט כל שאלה בשלושת הסוגים נשענת על מילת קישור אחת שקובעת את כיוון התשובה. הכר אותן על בוריין —
-            כולל המלכודות הדקדוקיות שלהן.
-          </p>
-          <div className="space-y-3">
-            {CONNECTORS.map(c => (
-              <div key={c.word} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                <div className="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
-                  <span dir="ltr" className="font-bold text-slate-900 dark:text-white text-sm">{c.word}</span>
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${CATEGORY_COLOR[c.category]}`}>{c.category}</span>
-                </div>
-                <p className="text-sm text-slate-700 dark:text-slate-200 font-medium mb-1.5">{c.meaning}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-2">{c.note}</p>
-                <p dir="ltr" className="text-xs text-slate-600 dark:text-slate-300 italic bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-1.5">
-                  {c.example}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── 5. איפה כן שווה להשקיע ── */}
-        <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 5 · איפה כן שווה "להיתקע"</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-            לא כל הדקות שוות. אלו שלושת המקומות שבהם השקעת זמן באמת מזיזה את הציון:
-          </p>
-          <div className="space-y-3">
-            {INVEST_POINTS.map(p => (
-              <div key={p.title} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
-                <span className="text-xl flex-shrink-0">{p.icon}</span>
-                <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-1">{p.title}</h3>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{p.body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── 6. שיטות מהשוק ── */}
-        <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 6 · שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-            מכוני ההכנה חלוקים איך לגשת לקטע קריאה. אלו שלוש הגישות — ולמי כל אחת מתאימה:
-          </p>
-          <div className="space-y-3">
-            {MARKET_METHODS.map(m => (
-              <div
-                key={m.title}
-                className={`rounded-2xl border p-4 ${
-                  m.recommended
-                    ? 'bg-green-50 dark:bg-green-950/30 border-green-300 dark:border-green-700 ring-1 ring-green-300 dark:ring-green-700'
-                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'
-                }`}
+      <div className="max-w-2xl mx-auto px-4 py-6">
+        {topic === null ? (
+          /* ── מסך הקוביות ── */
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {TOPICS.map(t => (
+              <button
+                key={t.id}
+                onClick={() => setTopic(t.id)}
+                className={`${t.color} rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-right hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col gap-1.5`}
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm">{m.title}</h3>
-                  {m.recommended && (
-                    <span className="text-[10px] font-bold bg-green-500 text-white px-2 py-0.5 rounded-full">מומלץ</span>
-                  )}
-                </div>
-                <div className="text-xs text-slate-400 dark:text-slate-500 mb-2">{m.who}</div>
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-1">{m.fit}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{m.tradeoff}</p>
-              </div>
+                <span className="text-2xl">{t.icon}</span>
+                <span className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{t.title}</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">{t.desc}</span>
+              </button>
             ))}
           </div>
-        </section>
+        ) : (
+          /* ── תצוגת נושא בודד ── */
+          <div>
+            <button
+              onClick={() => setTopic(null)}
+              className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 mb-5 flex items-center gap-1"
+            >
+              ← כל הנושאים
+            </button>
 
-        {/* ── 7. הרגלי הכנה ── */}
-        <section>
-          <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שלב 7 · ההכנה שעובדת (לפי כל המכונים)</h2>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
-            {[
-              { icon: '📚', text: '20 דקות קריאה באנגלית כל יום — טקסט לא קל מדי ולא קשה מדי. זו ההמלצה המשותפת לכל המכונים.' },
-              { icon: '🔗', text: 'שינון מילות קישור — הן מופיעות בכל שלושת סוגי השאלות. תרגל את חבילת 208 המחברים באוצר המילים.', href: '/vocabulary?pack=connectors', cta: 'לתרגול המחברים ←' },
-              { icon: '⏱️', text: 'סימולציות בתנאי אמת עם טיימר — ההבדל בין לדעת אנגלית ובין לדעת להיבחן. מבחן מלא כאן באתר = בדיוק זה.', href: '/exam', cta: 'למבחן מלא ←' },
-              { icon: '🔁', text: 'חזרה על טעויות — כל שאלה שטעית בה נכנסת אצלנו לתור החזרה החכמה. 10 דקות של חזרה שוות יותר מ-50 שאלות חדשות.', href: '/review-queue', cta: 'לתור החזרה ←' },
-            ].map((h, i) => (
-              <div key={i} className="flex items-start gap-3 p-4">
-                <span className="text-xl flex-shrink-0">{h.icon}</span>
-                <div>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{h.text}</p>
-                  {h.href && (
-                    <Link href={h.href} className="inline-block mt-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
-                      {h.cta}
-                    </Link>
-                  )}
+            {topic === 'rules' && (
+              <section>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">חוקי המשחק</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                  רוב הנקודות שהולכות לאיבוד באמירנ"ט לא קשורות לאנגלית — אלא לאי-הבנה של איך המבחן עובד.
+                </p>
+                <div className="space-y-3">
+                  {GAME_RULES.map(rule => (
+                    <div key={rule.title} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
+                      <span className="text-2xl flex-shrink-0">{rule.icon}</span>
+                      <div>
+                        <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-1">{rule.title}</h3>
+                        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{rule.body}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              </section>
+            )}
 
-        {/* CTA */}
-        <div className="bg-blue-600 rounded-2xl p-5 text-center">
-          <p className="text-white font-bold mb-3">התיאוריה ברורה? עכשיו מיישמים.</p>
-          <div className="flex gap-3 justify-center">
-            <Link href="/exam" className="px-5 py-2.5 bg-white text-blue-700 rounded-xl text-sm font-bold hover:bg-blue-50 transition-colors">
-              🎯 מבחן מלא
-            </Link>
-            <Link href="/practice" className="px-5 py-2.5 bg-blue-500 text-white rounded-xl text-sm font-bold hover:bg-blue-400 transition-colors">
-              ✏️ תרגול ממוקד
-            </Link>
+            {topic === 'time' && (
+              <section>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">תקציב הזמן שלך — כולל "תקציב תקיעה"</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                  להיתקע זה חלק מהמבחן. ההבדל בין נבחן טוב לבינוני הוא שהטוב מחליט <span className="font-semibold">מראש</span> כמה
+                  זמן מותר לו להיתקע — ועומד בזה.
+                </p>
+                <div className="space-y-3">
+                  {TIME_BUDGET.map(row => (
+                    <div key={row.section} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-bold text-slate-900 dark:text-white text-sm">{row.section}</h3>
+                        <span className="text-xs font-mono bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-lg">{row.total}</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 mb-2">
+                        <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl px-3 py-2">
+                          <div className="text-[11px] text-slate-400 dark:text-slate-500">זמן לשאלה</div>
+                          <div className="text-sm font-bold text-slate-800 dark:text-slate-100">{row.perQ}</div>
+                        </div>
+                        <div className="bg-orange-50 dark:bg-orange-950/30 rounded-xl px-3 py-2">
+                          <div className="text-[11px] text-orange-400">מקסימום תקיעה</div>
+                          <div className="text-sm font-bold text-orange-700 dark:text-orange-300">{row.stuckCap}</div>
+                        </div>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{row.note}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {(topic === 'sentence-completion' || topic === 'restatement' || topic === 'reading-comprehension') && (
+              <QuestionGuideDetail guide={QUESTION_GUIDES.find(g => g.id === topic)!} />
+            )}
+
+            {topic === 'connectors' && (
+              <section>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">10 מילות הקישור שקובעות הכל</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                  כמעט כל שאלה בשלושת הסוגים נשענת על מילת קישור אחת שקובעת את כיוון התשובה. הכר אותן על בוריין —
+                  כולל המלכודות הדקדוקיות שלהן.
+                </p>
+                <div className="space-y-3">
+                  {CONNECTORS.map(c => (
+                    <div key={c.word} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                      <div className="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
+                        <span dir="ltr" className="font-bold text-slate-900 dark:text-white text-sm">{c.word}</span>
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${CATEGORY_COLOR[c.category]}`}>{c.category}</span>
+                      </div>
+                      <p className="text-sm text-slate-700 dark:text-slate-200 font-medium mb-1.5">{c.meaning}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-2">{c.note}</p>
+                      <p dir="ltr" className="text-xs text-slate-600 dark:text-slate-300 italic bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-1.5">
+                        {c.example}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {topic === 'invest' && (
+              <section>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">איפה כן שווה "להיתקע"</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                  לא כל הדקות שוות. אלו שלושת המקומות שבהם השקעת זמן באמת מזיזה את הציון:
+                </p>
+                <div className="space-y-3">
+                  {INVEST_POINTS.map(p => (
+                    <div key={p.title} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
+                      <span className="text-xl flex-shrink-0">{p.icon}</span>
+                      <div>
+                        <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-1">{p.title}</h3>
+                        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{p.body}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {topic === 'methods' && (
+              <section>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                  מכוני ההכנה חלוקים איך לגשת לקטע קריאה. אלו שלוש הגישות — ולמי כל אחת מתאימה:
+                </p>
+                <div className="space-y-3">
+                  {MARKET_METHODS.map(m => (
+                    <div
+                      key={m.title}
+                      className={`rounded-2xl border p-4 ${
+                        m.recommended
+                          ? 'bg-green-50 dark:bg-green-950/30 border-green-300 dark:border-green-700 ring-1 ring-green-300 dark:ring-green-700'
+                          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-bold text-slate-900 dark:text-white text-sm">{m.title}</h3>
+                        {m.recommended && (
+                          <span className="text-[10px] font-bold bg-green-500 text-white px-2 py-0.5 rounded-full">מומלץ</span>
+                        )}
+                      </div>
+                      <div className="text-xs text-slate-400 dark:text-slate-500 mb-2">{m.who}</div>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-1">{m.fit}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{m.tradeoff}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {topic === 'habits' && (
+              <section>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-1">ההכנה שעובדת (לפי כל המכונים)</h2>
+                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
+                  {[
+                    { icon: '📚', text: '20 דקות קריאה באנגלית כל יום — טקסט לא קל מדי ולא קשה מדי. זו ההמלצה המשותפת לכל המכונים.' },
+                    { icon: '🔗', text: 'שינון מילות קישור — הן מופיעות בכל שלושת סוגי השאלות. תרגל את חבילת 208 המחברים באוצר המילים.', href: '/vocabulary?pack=connectors', cta: 'לתרגול המחברים ←' },
+                    { icon: '⏱️', text: 'סימולציות בתנאי אמת עם טיימר — ההבדל בין לדעת אנגלית ובין לדעת להיבחן. מבחן מלא כאן באתר = בדיוק זה.', href: '/exam', cta: 'למבחן מלא ←' },
+                    { icon: '🔁', text: 'חזרה על טעויות — כל שאלה שטעית בה נכנסת אצלנו לתור החזרה החכמה. 10 דקות של חזרה שוות יותר מ-50 שאלות חדשות.', href: '/review-queue', cta: 'לתור החזרה ←' },
+                  ].map((h, i) => (
+                    <div key={i} className="flex items-start gap-3 p-4">
+                      <span className="text-xl flex-shrink-0">{h.icon}</span>
+                      <div>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{h.text}</p>
+                        {h.href && (
+                          <Link href={h.href} className="inline-block mt-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                            {h.cta}
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* CTA */}
+            <div className="bg-blue-600 rounded-2xl p-5 text-center mt-8">
+              <p className="text-white font-bold mb-3">התיאוריה ברורה? עכשיו מיישמים.</p>
+              <div className="flex gap-3 justify-center">
+                <Link href="/exam" className="px-5 py-2.5 bg-white text-blue-700 rounded-xl text-sm font-bold hover:bg-blue-50 transition-colors">
+                  🎯 מבחן מלא
+                </Link>
+                <Link href="/practice" className="px-5 py-2.5 bg-blue-500 text-white rounded-xl text-sm font-bold hover:bg-blue-400 transition-colors">
+                  ✏️ תרגול ממוקד
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

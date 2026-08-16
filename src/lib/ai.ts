@@ -75,8 +75,13 @@ Return a JSON array where each element has:
     {"id": "d", "text": "option D"}
   ],
   "correct_answer": 0, // 0-indexed (0=a, 1=b, 2=c, 3=d)
-  "explanation": "clear explanation in Hebrew of why the correct answer is right"
+  "explanation": "a JSON string (escaped) with this exact shape: {\\"correct_reason\\": \\"...\\", \\"options_analysis\\": [\\"...\\", \\"...\\", \\"...\\", \\"...\\"], \\"strategy\\": \\"...\\"}"
 }
+
+The "explanation" field must itself be a JSON-encoded string matching this structure:
+- "correct_reason": in Hebrew, why the correct option is right — translate the key English word/phrase and explain the logic.
+- "options_analysis": exactly 4 Hebrew strings, one per option in order (a, b, c, d). For the correct option, start with "נכון! " then the reason. For each wrong option, translate its key word and explain specifically why it fails (contradicts the passage/logic, wrong tone, wrong grammar, too extreme, etc.) — not just "incorrect".
+- "strategy": in Hebrew, a short transferable tip — the general technique that would lead to the answer even without knowing the specific vocabulary (e.g. a connector word's logic, a grammar pattern, or a process-of-elimination cue).
 
 IMPORTANT:
 - All Hebrew text must be grammatically correct Modern Israeli Hebrew

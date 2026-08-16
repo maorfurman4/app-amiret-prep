@@ -17,12 +17,19 @@ import { authFetch } from '@/lib/auth-fetch';
  */
 
 type Stage = { type: QuestionType; label: string };
+// 6/6 split between the two types the diagnostic can adaptively route
+// within (no reading comprehension — that always requires a full 5-question
+// passage, which would roughly double the diagnostic's length). Previously
+// 8 sentence-completion / 4 restatement, which made the restatement
+// per-category score swing by 25% per question — too noisy to act on.
 const STAGES: Stage[] = [
   { type: 'sentence_completion', label: 'השלמת משפטים' },
   { type: 'restatement', label: 'ניסוח מחדש' },
   { type: 'sentence_completion', label: 'השלמת משפטים' },
+  { type: 'restatement', label: 'ניסוח מחדש' },
 ];
-const PER_STAGE = 4;
+const PER_STAGE = 3;
+const LOW_SAMPLE_THRESHOLD = 5;
 
 type Phase = 'intro' | 'loading' | 'answering' | 'done' | 'error';
 
@@ -116,7 +123,7 @@ export default function DiagnosticPage() {
               בדיוק כמו במבחן האמיתי — ובסוף תקבל רמה מאובחנת, ציון משוער והמלצה מאיפה להתחיל.
             </p>
             <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-500 dark:text-slate-400 text-right space-y-1.5">
-              <div>✏️ 8 שאלות השלמת משפטים + 🔄 4 ניסוח מחדש</div>
+              <div>✏️ 6 שאלות השלמת משפטים + 🔄 6 ניסוח מחדש</div>
               <div>⏱️ ללא טיימר — אבל נסה לענות בקצב טבעי</div>
               <div>📊 האבחון מבוסס על אותו מודל סטטיסטי (IRT) של המבחן המלא</div>
             </div>
@@ -199,6 +206,7 @@ export default function DiagnosticPage() {
             <div className="space-y-3">
               {Object.entries(byType).map(([t, d]) => {
                 const pct = Math.round((d.correct / d.total) * 100);
+                const lowSample = d.total < LOW_SAMPLE_THRESHOLD;
                 return (
                   <div key={t}>
                     <div className="flex justify-between text-sm mb-1">
@@ -208,6 +216,11 @@ export default function DiagnosticPage() {
                     <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                       <div className={`h-full rounded-full ${pct >= 75 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${pct}%` }} />
                     </div>
+                    {lowSample && (
+                      <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
+                        עוד מעט נתונים — {d.total} שאלות בלבד, האחוז עוד לא מדויק מספיק להסתמך עליו
+                      </div>
+                    )}
                   </div>
                 );
               })}

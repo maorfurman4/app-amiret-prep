@@ -15,9 +15,14 @@ export async function GET(req: NextRequest) {
   if (!sessionId) return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });
 
   const sessionOwner = user?.id ?? guestId;
-  const query = supabase.from('exam_sessions').select('*').eq('id', sessionId);
-  if (sessionOwner) query.eq('user_id', sessionOwner);
-  const { data: session } = await query.single();
+  if (!sessionOwner) return NextResponse.json({ error: 'auth required' }, { status: 401 });
+
+  const { data: session } = await supabase
+    .from('exam_sessions')
+    .select('*')
+    .eq('id', sessionId)
+    .eq('user_id', sessionOwner)
+    .single();
 
   if (!session) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 

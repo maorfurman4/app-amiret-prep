@@ -31,10 +31,14 @@ export async function POST(req: NextRequest) {
   }
 
   const userKey = user?.id ?? body.guestId ?? null;
+  if (!userKey) return NextResponse.json({ error: 'auth required' }, { status: 401 });
 
-  const query = supabase.from('exam_sessions').select('*').eq('id', body.sessionId);
-  if (userKey) query.eq('user_id', userKey);
-  const { data: session, error: fetchErr } = await query.single();
+  const { data: session, error: fetchErr } = await supabase
+    .from('exam_sessions')
+    .select('*')
+    .eq('id', body.sessionId)
+    .eq('user_id', userKey)
+    .single();
 
   if (fetchErr || !session) {
     return NextResponse.json({ error: 'Session not found' }, { status: 404 });

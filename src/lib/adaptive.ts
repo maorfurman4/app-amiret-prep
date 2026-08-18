@@ -45,6 +45,7 @@ export function estimateThetaMLE(
   let theta = prevTheta;
   const MAX_ITER = 50;
   const TOLERANCE = 1e-6;
+  let lastDelta = Infinity;
 
   for (let iter = 0; iter < MAX_ITER; iter++) {
     let d1 = 0; // first derivative of log-likelihood
@@ -69,11 +70,27 @@ export function estimateThetaMLE(
     const delta = d1 / d2;
     theta -= delta;
     theta = Math.max(-3, Math.min(3, theta));
+    lastDelta = delta;
 
     if (Math.abs(delta) < TOLERANCE) break;
   }
 
-  return Math.max(-3, Math.min(3, theta));
+  theta = Math.max(-3, Math.min(3, theta));
+
+  // Undamped Newton-Raphson can overshoot past ±3 on a low- (but not zero-)
+  // scoring response set, get clamped back to the boundary, then recompute
+  // the identical oversized step from that same point on every remaining
+  // iteration — it never converges, it just returns the clamp value. That
+  // silently produced a hard floor/ceiling score for response patterns far
+  // short of "everything right" or "everything wrong". EAP has no such
+  // failure mode (it's a bounded weighted average, not an iterative walk),
+  // so fall back to it whenever the loop ends still at the boundary with a
+  // meaningful residual step — i.e. it got stuck, not genuinely converged.
+  if ((theta === -3 || theta === 3) && Math.abs(lastDelta) > TOLERANCE) {
+    return estimateThetaEAP(items, responses);
+  }
+
+  return theta;
 }
 
 // ─── EAP (Expected A Posteriori) ─────────────────────────────────────────────

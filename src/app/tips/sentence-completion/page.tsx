@@ -129,7 +129,7 @@ export default function SentenceCompletionTipsPage() {
               {[
                 {
                   trap: 'מילה שנשמעת נכון אבל לא מתאימה דקדוקית',
-                  detail: '"She gave a very _____ of the situation." — "describe" (פועל) נשמעת קרובה למשמעות הרצויה, אבל אחרי "a very" נדרש שם עצם: "description". המלכודת עובדת כי המשמעות מפתה אותך להתעלם מהתפקיד הדקדוקי.',
+                  detail: '"She gave a detailed _____ of the situation." — "describe" (פועל) נשמעת קרובה למשמעות הרצויה, אבל אחרי "a detailed" נדרש שם עצם: "description". המלכודת עובדת כי המשמעות מפתה אותך להתעלם מהתפקיד הדקדוקי.',
                 },
                 {
                   trap: 'מסיחים עם משמעות דומה',

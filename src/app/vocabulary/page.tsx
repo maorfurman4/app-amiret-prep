@@ -325,11 +325,26 @@ export default function VocabularyPage() {
     return filtered;
   })();
 
+  // Progress ("ידעת X / Y") is scoped to the active filter/pack, not the full
+  // 1158-word bank — otherwise finishing a 20-word themed pack always showed
+  // ~0-2%, which read as broken rather than "you finished this set."
+  const hasActiveFilter = !!(filterCat || filterDiff || search.trim() || activePack);
+  const progressScopeTotal = hasActiveFilter ? filteredWords.length : allWords.length;
+  const progressScopeKnown = hasActiveFilter ? filteredWords.filter(w => known.has(w.id)).length : known.size;
+
   // ─── Rebuild flashcard deck on filter change ───────────────────────────────
   // Only depend on favorites contents when the favorites pack itself is active —
   // otherwise toggling ❤️ on the current card (which changes the `favorites` Set
   // reference on every click) reshuffled the whole deck and jumped the user to a
   // random card, losing their place mid-study.
+  //
+  // `known` is deliberately NOT a dependency here for the same reason: marking a
+  // card "ידעתי" already removes it from the deck directly (see handleKnew's
+  // `setDeck(prev => prev.slice(1))`), so re-running this effect on every known-set
+  // change reshuffled the entire remaining deck and threw away the deferred
+  // ordering handleUnknown relies on to push "לא ידעתי" cards toward the end. The
+  // `known.has()` filter below still applies correctly on every genuine rebuild
+  // (filter/pack change) — it just doesn't need to re-trigger the rebuild itself.
   const favoritesSignature = activePack === 'favorites' ? Array.from(favorites).sort().join(',') : '';
   useEffect(() => {
     if (!allWords.length) return;
@@ -338,7 +353,7 @@ export default function VocabularyPage() {
     setDeck(active);
     setFlipped(false);
     setShowHint(false);
-  }, [allWords, filterCat, filterDiff, search, known, activePack, favoritesSignature]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [allWords, filterCat, filterDiff, search, activePack, favoritesSignature]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Build quiz options for current question ───────────────────────────────
   const buildQuizOptions = useCallback((word: VocabWord, pool: VocabWord[]): string[] => {
@@ -863,11 +878,11 @@ export default function VocabularyPage() {
               <div className="mb-4">
                 <div className="flex justify-between text-xs text-slate-500 mb-1.5">
                   <span>נותרו <span className="font-bold text-slate-700 dark:text-slate-200">{deck.length}</span> מילים</span>
-                  {known.size > 0 && <span>ידעת <span className="font-bold text-green-600">{known.size}</span> / {allWords.length} ({Math.round(known.size / allWords.length * 100)}%)</span>}
+                  {progressScopeKnown > 0 && <span>ידעת <span className="font-bold text-green-600">{progressScopeKnown}</span> / {progressScopeTotal} ({Math.round(progressScopeKnown / progressScopeTotal * 100)}%)</span>}
                 </div>
-                {known.size > 0 && (
+                {progressScopeKnown > 0 && (
                   <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
-                    <div className="bg-green-500 h-1.5 rounded-full transition-all" style={{ width: `${Math.round(known.size / allWords.length * 100)}%` }} />
+                    <div className="bg-green-500 h-1.5 rounded-full transition-all" style={{ width: `${Math.round(progressScopeKnown / progressScopeTotal * 100)}%` }} />
                   </div>
                 )}
               </div>
@@ -962,10 +977,12 @@ export default function VocabularyPage() {
               </div>
             ) : (
               <div className="text-center py-16">
-                {known.size > 0 && !filterCat && !filterDiff && !search && !activePack ? (
+                {filteredWords.length > 0 && known.size > 0 ? (
                   <>
                     <div className="text-5xl mb-4">🎉</div>
-                    <div className="text-xl font-bold text-slate-800 dark:text-white mb-2">כל הכבוד! סיימת את כל הכרטיסיות</div>
+                    <div className="text-xl font-bold text-slate-800 dark:text-white mb-2">
+                      {!filterCat && !filterDiff && !search && !activePack ? 'כל הכבוד! סיימת את כל הכרטיסיות' : 'כל הכבוד! סיימת את הסט הזה'}
+                    </div>
                     <p className="text-slate-500 text-sm mb-6">ידעת {known.size} מילים</p>
                     <button onClick={handleResetAll} className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors">
                       התחל מחדש 🔄

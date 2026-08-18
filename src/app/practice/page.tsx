@@ -231,8 +231,14 @@ export default function PracticePage() {
   // Keyboard shortcuts: 1-4 = select option, Space/Enter = next question
   const handleNext = useCallback(() => {
     if (currentIndex < questions.length - 1) {
-      setCurrentIndex(i => i + 1);
-      setShowResult(false);
+      // Learn mode's "prev" can land on an already-answered question; moving
+      // forward again must keep it locked/read-only (showResult=true) rather
+      // than unconditionally reopening it for a second answer — this was
+      // letting a re-picked answer overwrite the original and double-post to
+      // the review queue.
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      setShowResult(answers[nextIndex] !== null);
     } else {
       setStep('done');
       const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
@@ -242,7 +248,7 @@ export default function PracticePage() {
         body: JSON.stringify({ guestId, source: 'practice' }),
       }).catch(() => {});
     }
-  }, [currentIndex, questions.length]);
+  }, [currentIndex, questions.length, answers]);
 
   // Exam mode: reset timer when question changes
   useEffect(() => {

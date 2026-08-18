@@ -8,7 +8,7 @@ const CARDS = [
     href: '/tips/sentence-completion',
     icon: '✏️',
     title: 'השלמת משפטים',
-    desc: 'שיטה ב-4 שלבים לבחירת המילה הנכונה בהקשר',
+    desc: 'שיטה ב-5 שלבים לבחירת המילה הנכונה בהקשר',
     accent: 'group-hover:border-blue-400',
   },
   {

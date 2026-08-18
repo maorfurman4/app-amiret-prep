@@ -143,6 +143,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                 <button
                   key={flatIdx}
                   onClick={() => goTo(pos)}
+                  aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ' — נכונה' : ' — שגויה'}`}
                   className={`w-full py-1.5 rounded-lg text-xs font-bold transition-all ${
                     pos === currentIndex
                       ? 'bg-blue-600 text-white scale-105'
@@ -204,6 +205,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                       <button
                         key={flatIdx}
                         onClick={() => goTo(pos)}
+                        aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ' — נכונה' : ' — שגויה'}`}
                         className={`w-7 h-7 rounded-full text-xs font-bold transition-all ${
                           pos === currentIndex
                             ? 'bg-blue-600 text-white scale-110'

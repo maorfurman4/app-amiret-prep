@@ -45,6 +45,21 @@ function LoginForm() {
     if (error) { setError('שגיאה בכניסה עם Google'); setGoogleLoading(false); }
   };
 
+  // Moves guest-mode history (exam sessions, review queue, seen-question
+  // history) onto the account — was previously only wired up on the Google
+  // OAuth callback, so email/password users never got their guest progress
+  // merged in. Fire-and-forget, idempotent server-side.
+  const mergeGuest = (accessToken: string) => {
+    const guestId = localStorage.getItem('amiret_guest_id');
+    if (!guestId) return;
+    fetch('/api/auth/merge-guest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ guestId }),
+      keepalive: true,
+    }).catch(() => {});
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -59,15 +74,17 @@ function LoginForm() {
       } else if (data.session) {
         // Email confirmation is disabled on this project — signUp already
         // returns an active session, so there's nothing to "check email" for.
+        mergeGuest(data.session.access_token);
         router.push(next);
       } else {
         setSignUpDone(true);
       }
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         setError('אימייל או סיסמה שגויים');
-      } else {
+      } else if (data.session) {
+        mergeGuest(data.session.access_token);
         router.push(next);
       }
     }

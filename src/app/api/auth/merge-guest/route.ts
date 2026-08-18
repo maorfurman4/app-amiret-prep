@@ -65,6 +65,15 @@ export async function POST(req: NextRequest) {
   if (rows.length > 0) {
     const scores = rows.map(r => r.score);
     const meta = user.user_metadata as { full_name?: string; avatar_url?: string } | null;
+    // This route re-runs on every login (idempotent by design), so it must
+    // not clobber a display name the user deliberately set via the profile
+    // menu — only fall back to the OAuth-provided name when nothing custom
+    // exists yet.
+    const { data: existingStats } = await supabase
+      .from('user_stats')
+      .select('display_name, avatar_url')
+      .eq('user_id', user.id)
+      .maybeSingle();
     const stats = {
       user_id: user.id,
       total_exams: rows.length,
@@ -72,8 +81,8 @@ export async function POST(req: NextRequest) {
       avg_score: scores.reduce((a, b) => a + b, 0) / scores.length,
       last_exam_at: rows[rows.length - 1].completed_at,
       score_history: rows.map(r => ({ date: r.completed_at, score: r.score })),
-      display_name: meta?.full_name ?? null,
-      avatar_url: meta?.avatar_url ?? null,
+      display_name: existingStats?.display_name ?? meta?.full_name ?? null,
+      avatar_url: existingStats?.avatar_url ?? meta?.avatar_url ?? null,
     };
     await supabase.from('user_stats').upsert(stats, { onConflict: 'user_id' });
     await supabase.from('leaderboard').upsert({

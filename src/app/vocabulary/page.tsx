@@ -357,10 +357,16 @@ export default function VocabularyPage() {
 
   // ─── Build quiz options for current question ───────────────────────────────
   const buildQuizOptions = useCallback((word: VocabWord, pool: VocabWord[]): string[] => {
-    const wrong = getWrongOptions(word, pool);
+    let wrong = getWrongOptions(word, pool);
+    if (wrong.length < 3) {
+      // A narrow filtered/pack pool can run out of distinct-translation
+      // distractors, silently rendering a 2-3-option question. Fall back to
+      // the full bank so the quiz always has 4 options when one exists.
+      wrong = getWrongOptions(word, allWords);
+    }
     const all = shuffle([word.hebrew_translation, ...wrong]);
     return all;
-  }, []);
+  }, [allWords]);
 
   // ─── Start quiz ────────────────────────────────────────────────────────────
   const startQuiz = useCallback(() => {
@@ -399,15 +405,23 @@ export default function VocabularyPage() {
   // Sync timedIndex to ref (fix stale closure in timer)
   useEffect(() => { timedIndexRef.current = timedIndex; }, [timedIndex]);
 
-  // Start quiz/timed when mode switches
+  // Start quiz/timed when mode switches — but not if the user is switching
+  // BACK into a mode where they already had an unfinished run (e.g. tapped
+  // Flashcards mid-timed-quiz, then tapped back to מבחן מהיר). Previously
+  // this unconditionally reset to a fresh quiz / the setup screen, silently
+  // discarding in-progress score with no warning.
   useEffect(() => {
-    if (mode === 'quiz' && allWords.length > 0) startQuiz();
-    if (mode === 'timed' && allWords.length > 0) setShowTimedConfig(true);
+    if (mode === 'quiz' && allWords.length > 0 && (quizDeck.length === 0 || quizDone)) startQuiz();
+    if (mode === 'timed' && allWords.length > 0 && (timedDeck.length === 0 || timedDone)) setShowTimedConfig(true);
   }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Restart quiz when filters change mid-quiz
+  // Restart quiz when filters change mid-quiz. Only confirm if there's real
+  // progress to lose (quizScore.total > 0) — silently restarting an
+  // untouched quiz on the very first filter pick is fine and expected.
   useEffect(() => {
-    if (mode === 'quiz' && allWords.length > 0 && quizDeck.length > 0) startQuiz();
+    if (mode !== 'quiz' || allWords.length === 0 || quizDeck.length === 0) return;
+    if (quizScore.total > 0 && !window.confirm('שינוי הסינון יתחיל חידון חדש וימחק את ההתקדמות הנוכחית. להמשיך?')) return;
+    startQuiz();
   }, [filterCat, filterDiff, search, activePack]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Timed quiz timer ──────────────────────────────────────────────────────

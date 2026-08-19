@@ -500,6 +500,53 @@ const TOPICS: { id: TopicId; icon: string; title: string; desc: string; color: s
   { id: 'habits', icon: '✅', title: 'הרגלי הכנה', desc: 'מה עובד באמת, לפי כל המכונים', color: 'bg-slate-100 dark:bg-slate-700' },
 ];
 
+/* ─── תצוגת טקסט קריאה — מפרק פסקאות ארוכות למשפטים נפרדים, ומדגיש את
+   המסקנה המעשית (אם המחבר סימן אותה במפורש) כתיבת "בשורה תחתונה" נבדלת ───── */
+
+const TAKEAWAY_MARKERS = [
+  'המסקנה המעשית:', 'המסקנה החד-משמעית:', 'המסקנה:',
+  'הכלל הזהב:', 'הטריק:', 'שימו לב:', 'זכרו:', 'תרגיל מהיר שעובד תמיד:',
+];
+
+function splitIntoSentences(text: string): string[] {
+  return text
+    .split(/(?<=[.!?])\s+(?=\S)/)
+    .map(s => s.trim())
+    .filter(Boolean);
+}
+
+const TONE_CLASS: Record<'intro' | 'body' | 'muted', string> = {
+  intro: 'text-sm text-slate-700 dark:text-slate-200 leading-relaxed',
+  body: 'text-sm text-slate-600 dark:text-slate-300 leading-relaxed',
+  muted: 'text-xs text-slate-500 dark:text-slate-400 leading-relaxed',
+};
+
+function TextBlock({ text, tone = 'body' }: { text: string; tone?: 'intro' | 'body' | 'muted' }) {
+  const pClass = TONE_CLASS[tone];
+  const markerIdx = TAKEAWAY_MARKERS
+    .map(m => text.indexOf(m))
+    .filter(i => i !== -1)
+    .sort((a, b) => a - b)[0];
+
+  const lead = markerIdx !== undefined ? text.slice(0, markerIdx).trim() : text;
+  const takeaway = markerIdx !== undefined ? text.slice(markerIdx).trim() : null;
+  const leadSentences = splitIntoSentences(lead);
+
+  return (
+    <div>
+      {leadSentences.map((s, i) => (
+        <p key={i} className={`${pClass} ${i < leadSentences.length - 1 ? 'mb-1.5' : ''}`}>{s}</p>
+      ))}
+      {takeaway && (
+        <div className="mt-2 flex items-start gap-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl px-3 py-2">
+          <span className="text-sm flex-shrink-0 mt-0.5">💡</span>
+          <p className="text-slate-800 dark:text-slate-100 text-sm leading-relaxed font-medium">{takeaway}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function QuestionGuideDetail({ guide }: { guide: QuestionGuide }) {
   const colors = COLOR_MAP[guide.color];
   return (
@@ -512,9 +559,9 @@ function QuestionGuideDetail({ guide }: { guide: QuestionGuide }) {
         </div>
       </div>
 
-      <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mb-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-        {guide.intro}
-      </p>
+      <div className="mb-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+        <TextBlock text={guide.intro} tone="intro" />
+      </div>
 
       <div className={`rounded-2xl border ${colors.bg} ${colors.border} p-4 mb-3`}>
         <h4 className={`font-bold text-sm mb-3 ${colors.heading}`}>🧭 כך ניגשים לשאלה:</h4>
@@ -626,16 +673,16 @@ export default function StrategiesPage() {
             {topic === 'rules' && (
               <section>
                 <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">חוקי המשחק</h2>
-                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                  {RULES_INTRO}
-                </p>
+                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                  <TextBlock text={RULES_INTRO} tone="intro" />
+                </div>
                 <div className="space-y-4">
                   {GAME_RULES.map(rule => (
                     <div key={rule.title} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
                       <span className="text-2xl flex-shrink-0">{rule.icon}</span>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-1.5">{rule.title}</h3>
-                        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{rule.body}</p>
+                        <TextBlock text={rule.body} tone="body" />
                       </div>
                     </div>
                   ))}
@@ -646,9 +693,9 @@ export default function StrategiesPage() {
             {topic === 'time' && (
               <section>
                 <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">תקציב הזמן שלך — כולל "תקציב תקיעה"</h2>
-                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                  {TIME_INTRO}
-                </p>
+                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                  <TextBlock text={TIME_INTRO} tone="intro" />
+                </div>
                 <div className="space-y-3">
                   {TIME_BUDGET.map(row => (
                     <div key={row.section} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
@@ -666,7 +713,7 @@ export default function StrategiesPage() {
                           <div className="text-sm font-bold text-orange-700 dark:text-orange-300">{row.stuckCap}</div>
                         </div>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{row.note}</p>
+                      <TextBlock text={row.note} tone="muted" />
                     </div>
                   ))}
                 </div>
@@ -681,9 +728,9 @@ export default function StrategiesPage() {
               <section>
                 <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">מילות הקישור שקובעות הכל</h2>
 
-                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mb-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                  {CONNECTORS_INTRO}
-                </p>
+                <div className="mb-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                  <TextBlock text={CONNECTORS_INTRO} tone="intro" />
+                </div>
 
                 <div className="space-y-8">
                   {CONNECTOR_CATEGORIES.map(cat => (
@@ -692,7 +739,9 @@ export default function StrategiesPage() {
                         <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg ${CATEGORY_COLOR[cat.color]}`}>{cat.icon}</span>
                         <h3 className="font-black text-slate-900 dark:text-white text-base">{cat.title}</h3>
                       </div>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">{cat.intro}</p>
+                      <div className="mb-3">
+                        <TextBlock text={cat.intro} tone="body" />
+                      </div>
 
                       <div className={`space-y-4 border-r-2 ${CATEGORY_BORDER[cat.color]} pr-4`}>
                         {cat.words.map(w => (
@@ -701,11 +750,13 @@ export default function StrategiesPage() {
                               <span dir="ltr" className="font-bold text-slate-900 dark:text-white text-sm">{w.word}</span>
                               <span className="text-slate-400 dark:text-slate-500 text-xs">— {w.meaning}</span>
                             </div>
-                            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-2">{w.grammar}</p>
+                            <div className="mb-2">
+                              <TextBlock text={w.grammar} tone="body" />
+                            </div>
                             <p dir="ltr" className="text-sm text-slate-800 dark:text-slate-100 italic bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-1.5 mb-1.5">
                               {w.example}
                             </p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{w.exampleExplain}</p>
+                            <TextBlock text={w.exampleExplain} tone="muted" />
                           </div>
                         ))}
                       </div>
@@ -713,25 +764,25 @@ export default function StrategiesPage() {
                   ))}
                 </div>
 
-                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mt-6 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
-                  {CONNECTORS_OUTRO}
-                </p>
+                <div className="mt-6 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
+                  <TextBlock text={CONNECTORS_OUTRO} tone="intro" />
+                </div>
               </section>
             )}
 
             {topic === 'invest' && (
               <section>
                 <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">איפה כן שווה "להיתקע"</h2>
-                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                  {INVEST_INTRO}
-                </p>
+                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                  <TextBlock text={INVEST_INTRO} tone="intro" />
+                </div>
                 <div className="space-y-3">
                   {INVEST_POINTS.map(p => (
                     <div key={p.title} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
                       <span className="text-xl flex-shrink-0">{p.icon}</span>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-1">{p.title}</h3>
-                        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{p.body}</p>
+                        <TextBlock text={p.body} tone="body" />
                       </div>
                     </div>
                   ))}
@@ -742,9 +793,9 @@ export default function StrategiesPage() {
             {topic === 'methods' && (
               <section>
                 <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
-                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                  {METHODS_INTRO}
-                </p>
+                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                  <TextBlock text={METHODS_INTRO} tone="intro" />
+                </div>
                 <div className="space-y-3">
                   {MARKET_METHODS.map(m => (
                     <div
@@ -773,10 +824,12 @@ export default function StrategiesPage() {
             {topic === 'habits' && (
               <section>
                 <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">ההכנה שעובדת (לפי כל המכונים)</h2>
-                <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
-                  כל השיטות שראית עד כה (מילות קישור, שיטות עבודה לפי סוג, תזמון) הן מיומנויות — ומיומנות לא נקבעת בפעם אחת, היא נבנית בחזרות. ארבעת ההרגלים הבאים לא מחליפים את הידע האסטרטגי, אלא הופכים אותו לאוטומטי,
-                  כך שביום המבחן אתה לא צריך "לחשוב" על השיטה — אתה פשוט מיישם אותה.
-                </p>
+                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                  <TextBlock
+                    text='כל השיטות שראית עד כה (מילות קישור, שיטות עבודה לפי סוג, תזמון) הן מיומנויות — ומיומנות לא נקבעת בפעם אחת, היא נבנית בחזרות. ארבעת ההרגלים הבאים לא מחליפים את הידע האסטרטגי, אלא הופכים אותו לאוטומטי, כך שביום המבחן אתה לא צריך "לחשוב" על השיטה — אתה פשוט מיישם אותה.'
+                    tone="intro"
+                  />
+                </div>
                 <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
                   {[
                     { icon: '📚', text: '20 דקות קריאה באנגלית כל יום — טקסט לא קל מדי ולא קשה מדי. זו ההמלצה המשותפת לכל המכונים, כי היא בונה זיהוי דפוסי משפט (כולל מילות קישור) באופן טבעי, בלי לשנן בכוח.' },

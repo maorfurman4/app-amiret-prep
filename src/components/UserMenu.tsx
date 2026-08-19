@@ -7,7 +7,7 @@ import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import { authFetch } from '@/lib/auth-fetch';
 
-type Panel = 'menu' | 'name' | 'password';
+type Panel = 'menu' | 'name' | 'password' | 'avatar';
 
 export function UserMenu() {
   const supabase = createClient();
@@ -27,6 +27,11 @@ export function UserMenu() {
   const [pwSaving, setPwSaving] = useState(false);
   const [pwError, setPwError] = useState<string | null>(null);
   const [pwSuccess, setPwSuccess] = useState(false);
+
+  const [avatarOverride, setAvatarOverride] = useState<string | null | undefined>(undefined);
+  const [avatarSaving, setAvatarSaving] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // onAuthStateChange fires INITIAL_SESSION on mount with the persisted session
@@ -105,6 +110,44 @@ export function UserMenu() {
     }
   };
 
+  const handlePickAvatar = () => fileInputRef.current?.click();
+
+  const handleAvatarSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-selecting the same file later
+    if (!file) return;
+
+    setAvatarError(null);
+    setAvatarSaving(true);
+    try {
+      const body = new FormData();
+      body.append('file', file);
+      const res = await authFetch('/api/profile/upload-avatar', { method: 'POST', body });
+      const data = await res.json();
+      if (!res.ok) { setAvatarError(data.error ?? 'שגיאה בהעלאה'); return; }
+      setAvatarOverride(data.avatarUrl);
+    } catch {
+      setAvatarError('שגיאת רשת');
+    } finally {
+      setAvatarSaving(false);
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    setAvatarError(null);
+    setAvatarSaving(true);
+    try {
+      const res = await authFetch('/api/profile/upload-avatar', { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) { setAvatarError(data.error ?? 'שגיאה במחיקה'); return; }
+      setAvatarOverride(null);
+    } catch {
+      setAvatarError('שגיאת רשת');
+    } finally {
+      setAvatarSaving(false);
+    }
+  };
+
   if (!user) {
     return (
       <Link
@@ -117,11 +160,20 @@ export function UserMenu() {
   }
 
   const initial = (displayName || user.email || '?')[0].toUpperCase();
-  const avatarUrl = user.user_metadata?.avatar_url as string | undefined;
+  const avatarUrl = avatarOverride !== undefined
+    ? avatarOverride ?? undefined
+    : (user.user_metadata?.avatar_url as string | undefined);
   const canChangePassword = user.app_metadata?.provider === 'email';
 
   return (
     <div className="relative" ref={menuRef}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        className="hidden"
+        onChange={handleAvatarSelected}
+      />
       <button
         onClick={() => { setOpen(!open); setPanel('menu'); }}
         className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -153,6 +205,12 @@ export function UserMenu() {
                 📊 הסטטיסטיקה שלי
               </Link>
               <button
+                onClick={() => { setAvatarError(null); setPanel('avatar'); }}
+                className="w-full text-right px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+              >
+                🖼️ תמונת פרופיל
+              </button>
+              <button
                 onClick={() => { setNameInput(displayName); setNameError(null); setPanel('name'); }}
                 className="w-full text-right px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
               >
@@ -173,6 +231,43 @@ export function UserMenu() {
                 יציאה
               </button>
             </>
+          )}
+
+          {panel === 'avatar' && (
+            <div className="px-3 py-3 space-y-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-sm font-bold text-slate-800 dark:text-slate-100">תמונת פרופיל</span>
+                <button onClick={() => setPanel('menu')} className="text-slate-400 hover:text-slate-600 text-lg leading-none">×</button>
+              </div>
+              <div className="flex items-center justify-center">
+                {avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={avatarUrl} alt={initial} className="w-16 h-16 rounded-full object-cover" referrerPolicy="no-referrer" />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold select-none">
+                    {initial}
+                  </div>
+                )}
+              </div>
+              {avatarError && <p className="text-xs text-red-500 text-center">{avatarError}</p>}
+              <button
+                onClick={handlePickAvatar}
+                disabled={avatarSaving}
+                className="w-full py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+              >
+                {avatarSaving ? 'מעלה...' : 'בחר תמונה מהגלריה'}
+              </button>
+              {avatarUrl && (
+                <button
+                  onClick={handleRemoveAvatar}
+                  disabled={avatarSaving}
+                  className="w-full py-2 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+                >
+                  הסר תמונה
+                </button>
+              )}
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center">JPG, PNG, WEBP או GIF · עד 3MB</p>
+            </div>
           )}
 
           {panel === 'name' && (

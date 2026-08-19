@@ -9,6 +9,13 @@ import { authFetch } from '@/lib/auth-fetch';
 
 type Step = 'loading' | 'empty' | 'error' | 'reviewing' | 'done';
 
+const CATEGORY_LABELS: Record<string, string> = {
+  sentence_completion: 'השלמת משפטים',
+  restatement: 'ניסוח מחדש',
+  reading_comprehension: 'הבנת הנקרא',
+  esra: 'אנגלית ESRA',
+};
+
 export default function ReviewQueuePage() {
   const router = useRouter();
 
@@ -124,6 +131,34 @@ export default function ReviewQueuePage() {
     if (!window.confirm(`למחוק את כל ${questions.length} השאלות מרשימת החזרה?`)) return;
     authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`, { method: 'DELETE' }).catch(() => {});
     setStep('empty');
+  };
+
+  // Clear all questions of one category at once
+  const handleDeleteCategory = async (type: string) => {
+    const inCategory = questions.filter(q => q.type === type);
+    if (inCategory.length === 0) return;
+    if (!window.confirm(`למחוק את כל ${inCategory.length} השאלות בקטגוריית "${CATEGORY_LABELS[type] ?? type}"?`)) return;
+
+    const newQuestions = questions.filter(q => q.type !== type);
+    const newAnswers = questions.reduce<(number | null)[]>((acc, q, i) => {
+      if (q.type !== type) acc.push(answers[i]);
+      return acc;
+    }, []);
+
+    if (newQuestions.length === 0) {
+      setStep('empty');
+    } else {
+      setQuestions(newQuestions);
+      setAnswers(newAnswers);
+      if (currentIndex >= newQuestions.length) {
+        setCurrentIndex(newQuestions.length - 1);
+      }
+      setShowResult(false);
+    }
+
+    authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}&type=${encodeURIComponent(type)}`, {
+      method: 'DELETE',
+    }).catch(() => {});
   };
 
   // Jump to a specific question
@@ -243,6 +278,14 @@ export default function ReviewQueuePage() {
   }
 
   // ─── Question picker panel ─────────────────────────────────────────────────
+  const categoryGroups = questions.reduce<Record<string, { q: Question; i: number }[]>>((acc, q, i) => {
+    (acc[q.type] ??= []).push({ q, i });
+    return acc;
+  }, {});
+  const categoryOrder = Object.keys(categoryGroups).sort(
+    (a, b) => (CATEGORY_LABELS[a] ?? a).localeCompare(CATEGORY_LABELS[b] ?? b, 'he')
+  );
+
   const QuestionPicker = () => (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowQuestionPicker(false)}>
       <div className="bg-white dark:bg-slate-800 rounded-t-3xl w-full max-w-lg max-h-[70vh] flex flex-col" onClick={e => e.stopPropagation()}>
@@ -264,39 +307,56 @@ export default function ReviewQueuePage() {
             <button onClick={() => setShowQuestionPicker(false)} className="text-slate-400 dark:text-slate-500 hover:text-slate-600 text-2xl leading-none">×</button>
           </div>
         </div>
-        <div className="overflow-y-auto flex-1 px-4 py-3 space-y-2">
-          {questions.map((q, i) => {
-            const answered = answers[i] !== null;
-            const correct = answered && answers[i] === q.correct_answer;
-            const wrong = answered && answers[i] !== q.correct_answer;
-            return (
-              <div key={q.id} className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${i === currentIndex ? 'border-orange-400 bg-orange-50' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100'}`}>
+        <div className="overflow-y-auto flex-1 px-4 py-3 space-y-4">
+          {categoryOrder.map(type => (
+            <div key={type}>
+              <div className="flex items-center justify-between mb-2 px-1">
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                  {CATEGORY_LABELS[type] ?? type} · {categoryGroups[type].length}
+                </span>
                 <button
-                  onClick={() => handleJumpTo(i)}
-                  className="flex-1 flex items-center gap-3 text-right"
+                  onClick={() => handleDeleteCategory(type)}
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                 >
-                  <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                    i === currentIndex ? 'bg-orange-500 text-white' :
-                    correct ? 'bg-green-500 text-white' :
-                    wrong ? 'bg-red-400 text-white' :
-                    'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}>
-                    {correct ? '✓' : wrong ? '✗' : i + 1}
-                  </span>
-                  <span className="text-sm text-slate-700 dark:text-slate-200 text-right leading-snug line-clamp-2 flex-1">
-                    {q.text.length > 80 ? q.text.slice(0, 80) + '…' : q.text}
-                  </span>
-                </button>
-                <button
-                  onClick={() => handleDeleteQuestion(q.id)}
-                  className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors text-base"
-                  title="הסר מהרשימה"
-                >
-                  🗑
+                  🗑 מחק קטגוריה
                 </button>
               </div>
-            );
-          })}
+              <div className="space-y-2">
+                {categoryGroups[type].map(({ q, i }) => {
+                  const answered = answers[i] !== null;
+                  const correct = answered && answers[i] === q.correct_answer;
+                  const wrong = answered && answers[i] !== q.correct_answer;
+                  return (
+                    <div key={q.id} className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${i === currentIndex ? 'border-orange-400 bg-orange-50' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100'}`}>
+                      <button
+                        onClick={() => handleJumpTo(i)}
+                        className="flex-1 flex items-center gap-3 text-right"
+                      >
+                        <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                          i === currentIndex ? 'bg-orange-500 text-white' :
+                          correct ? 'bg-green-500 text-white' :
+                          wrong ? 'bg-red-400 text-white' :
+                          'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                        }`}>
+                          {correct ? '✓' : wrong ? '✗' : i + 1}
+                        </span>
+                        <span className="text-sm text-slate-700 dark:text-slate-200 text-right leading-snug line-clamp-2 flex-1">
+                          {q.text.length > 80 ? q.text.slice(0, 80) + '…' : q.text}
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteQuestion(q.id)}
+                        className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors text-base"
+                        title="הסר מהרשימה"
+                      >
+                        🗑
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

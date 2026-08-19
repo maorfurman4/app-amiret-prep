@@ -83,13 +83,16 @@ export async function GET(req: NextRequest) {
 }
 
 /**
- * DELETE /api/review-queue?guestId=xxx              — clear all (restart)
- * DELETE /api/review-queue?guestId=xxx&questionId=yyy — remove one question
+ * DELETE /api/review-queue?guestId=xxx                     — clear all (restart)
+ * DELETE /api/review-queue?guestId=xxx&questionId=yyy      — remove one question
+ * DELETE /api/review-queue?guestId=xxx&type=sentence_completion — remove all
+ *   queued questions of one question type (category)
  */
 export async function DELETE(req: NextRequest) {
   const { supabase, user } = await getServerClients();
   const guestId = req.nextUrl.searchParams.get('guestId');
   const questionId = req.nextUrl.searchParams.get('questionId');
+  const type = req.nextUrl.searchParams.get('type');
 
   if (!user && !guestId) {
     return NextResponse.json({ error: 'auth required' }, { status: 401 });
@@ -97,6 +100,23 @@ export async function DELETE(req: NextRequest) {
 
   const ownCol = user ? 'user_id' : 'guest_id';
   const ownVal = user ? user.id : guestId!;
+
+  if (type) {
+    const { data: owned } = await supabase
+      .from('review_queue').select('question_id').eq(ownCol, ownVal);
+    const ownedIds = (owned ?? []).map(r => r.question_id as string);
+    if (ownedIds.length === 0) return NextResponse.json({ ok: true });
+
+    const { data: matching } = await supabase
+      .from('questions').select('id').eq('type', type).in('id', ownedIds);
+    const matchingIds = (matching ?? []).map(r => r.id as string);
+    if (matchingIds.length === 0) return NextResponse.json({ ok: true });
+
+    const { error } = await supabase
+      .from('review_queue').delete().eq(ownCol, ownVal).in('question_id', matchingIds);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ ok: true });
+  }
 
   let q = supabase.from('review_queue').delete().eq(ownCol, ownVal);
   if (questionId) q = q.eq('question_id', questionId);

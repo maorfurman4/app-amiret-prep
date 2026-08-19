@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { classifyScore, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
@@ -67,6 +68,16 @@ export default function PracticePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers]         = useState<(number | null)[]>([]);
   const [showResult, setShowResult]   = useState(false);
+  const [reviewCount, setReviewCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const guestId = localStorage.getItem('amiret_guest_id') ?? '';
+    if (!guestId) return;
+    authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then((d: { count: number } | null) => { if (d?.count) setReviewCount(d.count); })
+      .catch(() => {});
+  }, []);
 
   // Deep link: /practice?type=X&difficulty=Y jumps straight to count selection
   useEffect(() => {
@@ -353,6 +364,36 @@ export default function PracticePage() {
                 </div>
               </button>
             ))}
+          </div>
+
+          {/* Review queue */}
+          <div className="mt-4">
+            <button
+              onClick={() => router.push('/review-queue')}
+              className="w-full text-right p-6 bg-orange-50 dark:bg-orange-900/20 rounded-2xl border-2 border-orange-200 dark:border-orange-700 hover:border-orange-400 hover:shadow-md transition-all flex items-center gap-4"
+            >
+              <span className="text-3xl">🔁</span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="text-lg font-bold text-orange-900 dark:text-orange-200">חזרה על טעויות</div>
+                  {reviewCount !== null && (
+                    <span className="px-2 py-0.5 bg-orange-500 text-white text-xs font-bold rounded-full">{reviewCount}</span>
+                  )}
+                </div>
+                <div className="text-sm text-orange-700 dark:text-orange-400 leading-relaxed">חזור על שאלות שטעית בהן — מערכת חזרה מרווחת</div>
+              </div>
+            </button>
+          </div>
+
+          {/* Vocabulary link */}
+          <div className="mt-4 text-center">
+            <Link
+              href="/vocabulary"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:shadow-sm transition-all text-sm text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400"
+            >
+              <span>📖</span>
+              <span>אוצר מילים — כרטיסיות לימוד</span>
+            </Link>
           </div>
         </div>
         </div>

@@ -33,16 +33,6 @@ export default function ExamModePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [reviewCount, setReviewCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    const guestId = localStorage.getItem('amiret_guest_id') ?? '';
-    if (!guestId) return;
-    authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`)
-      .then(r => r.ok ? r.json() : null)
-      .then((d: { count: number } | null) => { if (d?.count) setReviewCount(d.count); })
-      .catch(() => {});
-  }, []);
 
   const getOrCreateGuestId = () => {
     let id = localStorage.getItem('amiret_guest_id');
@@ -120,25 +110,6 @@ export default function ExamModePage() {
           ))}
         </div>
 
-        {/* Review queue */}
-        <div className="mt-4">
-          <button
-            onClick={() => router.push('/review-queue')}
-            className="w-full text-right p-6 bg-orange-50 dark:bg-orange-900/20 rounded-2xl border-2 border-orange-200 dark:border-orange-700 hover:border-orange-400 hover:shadow-md transition-all flex items-center gap-4"
-          >
-            <span className="text-3xl">🔁</span>
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="text-lg font-bold text-orange-900 dark:text-orange-200">חזרה על טעויות</div>
-                {reviewCount !== null && (
-                  <span className="px-2 py-0.5 bg-orange-500 text-white text-xs font-bold rounded-full">{reviewCount}</span>
-                )}
-              </div>
-              <div className="text-sm text-orange-700 dark:text-orange-400 leading-relaxed">חזור על שאלות שטעית בהן — מערכת חזרה מרווחת</div>
-            </div>
-          </button>
-        </div>
-
         {/* Quick diagnostic */}
         <div className="mt-4">
           <Link
@@ -152,17 +123,6 @@ export default function ExamModePage() {
                 <div className="text-sm text-teal-700 dark:text-teal-400 leading-relaxed">12 שאלות אדפטיביות בכ-10 דקות — גלה את הרמה שלך ומאיפה להתחיל</div>
               </div>
             </div>
-          </Link>
-        </div>
-
-        {/* Vocabulary link */}
-        <div className="mt-4 text-center">
-          <Link
-            href="/vocabulary"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:shadow-sm transition-all text-sm text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400"
-          >
-            <span>📖</span>
-            <span>אוצר מילים — כרטיסיות לימוד</span>
           </Link>
         </div>
 

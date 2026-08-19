@@ -7,7 +7,7 @@ import type { Question } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 
-type Step = 'loading' | 'empty' | 'error' | 'reviewing' | 'done';
+type Step = 'loading' | 'empty' | 'error' | 'overview' | 'reviewing' | 'done';
 
 const CATEGORY_LABELS: Record<string, string> = {
   sentence_completion: 'השלמת משפטים',
@@ -16,11 +16,36 @@ const CATEGORY_LABELS: Record<string, string> = {
   esra: 'אנגלית ESRA',
 };
 
+const CATEGORY_ICONS: Record<string, string> = {
+  sentence_completion: '✏️',
+  restatement: '🔄',
+  reading_comprehension: '📖',
+  esra: '🇬🇧',
+};
+
+function groupByCategory(list: Question[]): Record<string, Question[]> {
+  return list.reduce<Record<string, Question[]>>((acc, q) => {
+    (acc[q.type] ??= []).push(q);
+    return acc;
+  }, {});
+}
+
+function sortedCategories(groups: Record<string, unknown[]>): string[] {
+  return Object.keys(groups).sort(
+    (a, b) => (CATEGORY_LABELS[a] ?? a).localeCompare(CATEGORY_LABELS[b] ?? b, 'he')
+  );
+}
+
 export default function ReviewQueuePage() {
   const router = useRouter();
 
   const [guestId, setGuestId] = useState<string>('');
   const [step, setStep] = useState<Step>('loading');
+
+  // Master list — everything currently due, source of truth for the category overview.
+  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+
+  // Active reviewing session — a (possibly filtered-by-category) subset of allQuestions.
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>([]);
@@ -48,18 +73,28 @@ export default function ReviewQueuePage() {
       const res = await authFetch(`/api/review-queue?guestId=${encodeURIComponent(id)}`);
       const data = await res.json() as { questions: Question[]; count: number };
       if (!data.questions || data.questions.length === 0) {
+        setAllQuestions([]);
         setStep('empty');
       } else {
-        setQuestions(data.questions);
-        setAnswers(Array(data.questions.length).fill(null));
-        setCurrentIndex(0);
-        setShowResult(false);
-        setCorrectCount(0);
-        setStep('reviewing');
+        setAllQuestions(data.questions);
+        setStep('overview');
       }
     } catch {
       setStep('error');
     }
+  };
+
+  // Begin a reviewing session — either every due question, or just one category.
+  const handleStartReview = (categoryType?: string) => {
+    const subset = categoryType ? allQuestions.filter(q => q.type === categoryType) : allQuestions;
+    if (subset.length === 0) return;
+    setQuestions(subset);
+    setAnswers(Array(subset.length).fill(null));
+    setCurrentIndex(0);
+    setShowResult(false);
+    setCorrectCount(0);
+    setShowQuestionPicker(false);
+    setStep('reviewing');
   };
 
   const handleSelect = useCallback((optionIndex: number) => {
@@ -105,20 +140,28 @@ export default function ReviewQueuePage() {
 
   // Delete a single question from the queue
   const handleDeleteQuestion = async (questionId: string) => {
-    const idx = questions.findIndex(q => q.id === questionId);
-    const newQuestions = questions.filter(q => q.id !== questionId);
-    const newAnswers = answers.filter((_, i) => i !== idx);
+    const newAll = allQuestions.filter(q => q.id !== questionId);
+    setAllQuestions(newAll);
 
-    if (newQuestions.length === 0) {
-      setStep('empty');
-    } else {
-      setQuestions(newQuestions);
-      setAnswers(newAnswers);
-      if (currentIndex >= newQuestions.length) {
-        setCurrentIndex(newQuestions.length - 1);
+    if (step === 'reviewing' || showQuestionPicker) {
+      const idx = questions.findIndex(q => q.id === questionId);
+      if (idx !== -1) {
+        const newQuestions = questions.filter(q => q.id !== questionId);
+        const newAnswers = answers.filter((_, i) => i !== idx);
+        if (newQuestions.length === 0) {
+          setStep(newAll.length === 0 ? 'empty' : 'overview');
+        } else {
+          setQuestions(newQuestions);
+          setAnswers(newAnswers);
+          if (currentIndex >= newQuestions.length) {
+            setCurrentIndex(newQuestions.length - 1);
+          }
+          setShowResult(false);
+          setShowQuestionPicker(false);
+        }
       }
-      setShowResult(false);
-      setShowQuestionPicker(false);
+    } else if (newAll.length === 0) {
+      setStep('empty');
     }
 
     authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}&questionId=${encodeURIComponent(questionId)}`, {
@@ -128,32 +171,39 @@ export default function ReviewQueuePage() {
 
   // Clear ALL questions
   const handleClearAll = async () => {
-    if (!window.confirm(`למחוק את כל ${questions.length} השאלות מרשימת החזרה?`)) return;
+    if (!window.confirm(`למחוק את כל ${allQuestions.length} השאלות מרשימת החזרה?`)) return;
     authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`, { method: 'DELETE' }).catch(() => {});
+    setAllQuestions([]);
     setStep('empty');
   };
 
   // Clear all questions of one category at once
   const handleDeleteCategory = async (type: string) => {
-    const inCategory = questions.filter(q => q.type === type);
+    const inCategory = allQuestions.filter(q => q.type === type);
     if (inCategory.length === 0) return;
     if (!window.confirm(`למחוק את כל ${inCategory.length} השאלות בקטגוריית "${CATEGORY_LABELS[type] ?? type}"?`)) return;
 
-    const newQuestions = questions.filter(q => q.type !== type);
-    const newAnswers = questions.reduce<(number | null)[]>((acc, q, i) => {
-      if (q.type !== type) acc.push(answers[i]);
-      return acc;
-    }, []);
+    const newAll = allQuestions.filter(q => q.type !== type);
+    setAllQuestions(newAll);
 
-    if (newQuestions.length === 0) {
-      setStep('empty');
-    } else {
-      setQuestions(newQuestions);
-      setAnswers(newAnswers);
-      if (currentIndex >= newQuestions.length) {
-        setCurrentIndex(newQuestions.length - 1);
+    if (step === 'reviewing' || showQuestionPicker) {
+      const newQuestions = questions.filter(q => q.type !== type);
+      const newAnswers = questions.reduce<(number | null)[]>((acc, q, i) => {
+        if (q.type !== type) acc.push(answers[i]);
+        return acc;
+      }, []);
+      if (newQuestions.length === 0) {
+        setStep(newAll.length === 0 ? 'empty' : 'overview');
+      } else {
+        setQuestions(newQuestions);
+        setAnswers(newAnswers);
+        if (currentIndex >= newQuestions.length) {
+          setCurrentIndex(newQuestions.length - 1);
+        }
+        setShowResult(false);
       }
-      setShowResult(false);
+    } else if (newAll.length === 0) {
+      setStep('empty');
     }
 
     authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}&type=${encodeURIComponent(type)}`, {
@@ -235,6 +285,69 @@ export default function ReviewQueuePage() {
     );
   }
 
+  if (step === 'overview') {
+    const groups = groupByCategory(allQuestions);
+    const order = sortedCategories(groups);
+
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
+        <BackNav backHref="/exam" backLabel="מבחן" />
+        <div className="flex-1 px-4 py-8">
+          <div className="w-full max-w-lg mx-auto space-y-6">
+            <div className="text-center">
+              <div className="text-4xl mb-2">🔄</div>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">חזרה על טעויות</h1>
+              <p className="text-slate-500 dark:text-slate-400 mt-1">{allQuestions.length} שאלות ממתינות, מחולקות לפי קטגוריה</p>
+            </div>
+
+            <div className="space-y-3">
+              {order.map(type => (
+                <div
+                  key={type}
+                  className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700"
+                >
+                  <div className="text-2xl">{CATEGORY_ICONS[type] ?? '❓'}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-bold text-slate-900 dark:text-white">{CATEGORY_LABELS[type] ?? type}</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">{groups[type].length} שאלות</div>
+                  </div>
+                  <button
+                    onClick={() => handleStartReview(type)}
+                    className="px-3 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition-colors flex-shrink-0"
+                  >
+                    תרגל ‹
+                  </button>
+                  <button
+                    onClick={() => handleDeleteCategory(type)}
+                    className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors text-base flex-shrink-0"
+                    title={`מחק את כל שאלות ${CATEGORY_LABELS[type] ?? type}`}
+                  >
+                    🗑
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <button
+                onClick={() => handleStartReview()}
+                className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+              >
+                🎯 התחל חזרה על הכל ({allQuestions.length})
+              </button>
+              <button
+                onClick={handleClearAll}
+                className="w-full py-3 bg-white dark:bg-slate-800 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 rounded-xl font-medium hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+              >
+                🗑 מחק את כל השאלות
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (step === 'done') {
     const pct = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
     const color = pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
@@ -263,7 +376,7 @@ export default function ReviewQueuePage() {
               onClick={() => fetchDueQuestions(guestId)}
               className="w-full py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-colors"
             >
-              טען שאלות חדשות
+              חזרה לרשימת קטגוריות
             </button>
             <button
               onClick={() => router.push('/exam')}
@@ -277,14 +390,12 @@ export default function ReviewQueuePage() {
     );
   }
 
-  // ─── Question picker panel ─────────────────────────────────────────────────
-  const categoryGroups = questions.reduce<Record<string, { q: Question; i: number }[]>>((acc, q, i) => {
+  // ─── Question picker panel (mid-review — still grouped by category) ───────
+  const pickerGroups = questions.reduce<Record<string, { q: Question; i: number }[]>>((acc, q, i) => {
     (acc[q.type] ??= []).push({ q, i });
     return acc;
   }, {});
-  const categoryOrder = Object.keys(categoryGroups).sort(
-    (a, b) => (CATEGORY_LABELS[a] ?? a).localeCompare(CATEGORY_LABELS[b] ?? b, 'he')
-  );
+  const pickerOrder = sortedCategories(pickerGroups);
 
   const QuestionPicker = () => (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowQuestionPicker(false)}>
@@ -308,11 +419,11 @@ export default function ReviewQueuePage() {
           </div>
         </div>
         <div className="overflow-y-auto flex-1 px-4 py-3 space-y-4">
-          {categoryOrder.map(type => (
+          {pickerOrder.map(type => (
             <div key={type}>
               <div className="flex items-center justify-between mb-2 px-1">
                 <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                  {CATEGORY_LABELS[type] ?? type} · {categoryGroups[type].length}
+                  {CATEGORY_LABELS[type] ?? type} · {pickerGroups[type].length}
                 </span>
                 <button
                   onClick={() => handleDeleteCategory(type)}
@@ -322,7 +433,7 @@ export default function ReviewQueuePage() {
                 </button>
               </div>
               <div className="space-y-2">
-                {categoryGroups[type].map(({ q, i }) => {
+                {pickerGroups[type].map(({ q, i }) => {
                   const answered = answers[i] !== null;
                   const correct = answered && answers[i] === q.correct_answer;
                   const wrong = answered && answers[i] !== q.correct_answer;
@@ -375,7 +486,9 @@ export default function ReviewQueuePage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold text-slate-900 dark:text-white">חזרה על טעויות</span>
-              <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">חזרה</span>
+              <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">
+                {CATEGORY_LABELS[question.type] ?? question.type}
+              </span>
             </div>
             <div className="text-xs text-slate-500 dark:text-slate-400">
               {currentIndex + 1}/{questions.length} שאלות

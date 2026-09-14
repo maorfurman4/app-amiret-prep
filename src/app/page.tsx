@@ -7,6 +7,7 @@ import { HeroTagline } from '@/components/home/HeroTagline';
 import { DiagnosticBanner } from '@/components/home/DiagnosticBanner';
 import { ReviewQueueCard } from '@/components/home/ReviewQueueCard';
 import { StatsCard } from '@/components/home/StatsCard';
+import { StreakCelebration } from '@/components/home/StreakCelebration';
 
 const LEARN_LINKS_BEFORE = [
   { href: '/practice',   icon: '✏️', title: 'תרגול ממוקד', sub: 'לפי סוג שאלה' },
@@ -22,6 +23,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-100 to-slate-50 dark:from-slate-900 dark:to-slate-800 flex flex-col items-center px-4 pt-4 pb-8 text-slate-900 dark:text-white" dir="rtl">
       <DashboardSummaryProvider>
+        <StreakCelebration />
         <div className="w-full max-w-lg space-y-7">
           {/* Top bar: account + theme, in-flow (not floating) */}
           <div className="flex items-center justify-end gap-2 [&_a]:text-slate-600 [&_a:hover]:text-slate-900 [&_a:hover]:bg-slate-200/60 dark:[&_a]:text-slate-200 dark:[&_a:hover]:text-white dark:[&_a:hover]:bg-white/10">

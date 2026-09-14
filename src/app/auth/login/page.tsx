@@ -72,8 +72,9 @@ function LoginForm() {
           ? 'כתובת האימייל הזו כבר רשומה — נסה להתחבר'
           : 'שגיאה בהרשמה, נסה שוב');
       } else if (data.session) {
-        // Email confirmation is disabled on this project — signUp already
-        // returns an active session, so there's nothing to "check email" for.
+        // signUp() returns an active session immediately when email
+        // confirmation is off; falls to the "check your email" branch
+        // below when it's on (as it currently is in production).
         mergeGuest(data.session.access_token);
         router.push(next);
       } else {

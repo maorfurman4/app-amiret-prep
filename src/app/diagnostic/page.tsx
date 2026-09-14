@@ -10,9 +10,10 @@ import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adapt
 import { authFetch } from '@/lib/auth-fetch';
 
 /**
- * Quick adaptive diagnostic: 3 stages × 4 questions (~10 minutes).
- * Stage 1: sentence completion at level 3; each next stage is routed
- * by the cumulative IRT theta — the same 3PL model as the full exam.
+ * Quick adaptive diagnostic: 4 stages × 3 questions (~10 minutes),
+ * alternating sentence completion / restatement (see STAGES below).
+ * Stage 1 starts at level 3; each next stage is routed by the
+ * cumulative IRT theta — the same 3PL model as the full exam.
  * Pure statistics, no AI.
  */
 

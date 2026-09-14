@@ -138,7 +138,15 @@ export default function ReviewQueuePage() {
     setShowQuestionPicker(false);
   };
 
-  // Delete a single question from the queue
+  // Delete a single question from the queue. Deleting a DIFFERENT question
+  // than the one currently being viewed must not move the viewer — the old
+  // code kept currentIndex as a raw number, so removing an earlier item
+  // silently shifted every later index down by one and swapped in whatever
+  // question now landed on that number, resetting showResult along with it
+  // (reproduced live: reviewing question 3, deleting question 1 from the
+  // picker silently jumped the view to question 4). Fixed by tracking the
+  // active question by id and only touching currentIndex/showResult when
+  // the deleted question IS the one being viewed.
   const handleDeleteQuestion = async (questionId: string) => {
     const newAll = allQuestions.filter(q => q.id !== questionId);
     setAllQuestions(newAll);
@@ -146,6 +154,8 @@ export default function ReviewQueuePage() {
     if (step === 'reviewing' || showQuestionPicker) {
       const idx = questions.findIndex(q => q.id === questionId);
       if (idx !== -1) {
+        const activeId = questions[currentIndex]?.id;
+        const wasActive = activeId === questionId;
         const newQuestions = questions.filter(q => q.id !== questionId);
         const newAnswers = answers.filter((_, i) => i !== idx);
         if (newQuestions.length === 0) {
@@ -153,10 +163,13 @@ export default function ReviewQueuePage() {
         } else {
           setQuestions(newQuestions);
           setAnswers(newAnswers);
-          if (currentIndex >= newQuestions.length) {
-            setCurrentIndex(newQuestions.length - 1);
+          if (wasActive) {
+            setCurrentIndex(Math.min(idx, newQuestions.length - 1));
+            setShowResult(false);
+          } else {
+            const newIdx = newQuestions.findIndex(q => q.id === activeId);
+            setCurrentIndex(newIdx === -1 ? Math.min(currentIndex, newQuestions.length - 1) : newIdx);
           }
-          setShowResult(false);
           setShowQuestionPicker(false);
         }
       }
@@ -187,6 +200,8 @@ export default function ReviewQueuePage() {
     setAllQuestions(newAll);
 
     if (step === 'reviewing' || showQuestionPicker) {
+      const activeId = questions[currentIndex]?.id;
+      const wasActive = questions[currentIndex]?.type === type;
       const newQuestions = questions.filter(q => q.type !== type);
       const newAnswers = questions.reduce<(number | null)[]>((acc, q, i) => {
         if (q.type !== type) acc.push(answers[i]);
@@ -197,10 +212,13 @@ export default function ReviewQueuePage() {
       } else {
         setQuestions(newQuestions);
         setAnswers(newAnswers);
-        if (currentIndex >= newQuestions.length) {
-          setCurrentIndex(newQuestions.length - 1);
+        if (wasActive) {
+          setCurrentIndex(i => Math.min(i, newQuestions.length - 1));
+          setShowResult(false);
+        } else {
+          const newIdx = newQuestions.findIndex(q => q.id === activeId);
+          setCurrentIndex(newIdx === -1 ? Math.min(currentIndex, newQuestions.length - 1) : newIdx);
         }
-        setShowResult(false);
       }
     } else if (newAll.length === 0) {
       setStep('empty');

@@ -556,7 +556,7 @@ export default function VocabularyPage() {
   const current = deck[0] ?? null;
 
   const handleKnew = useCallback(() => {
-    if (!current) return;
+    if (!current || animating) return;
     const wordId = current.id;
     setAnimating('right');
     setTimeout(() => {
@@ -574,10 +574,10 @@ export default function VocabularyPage() {
         (supabase.from('user_vocab_known') as any).upsert({ user_id: userId, word_id: wordId }).then();
       }
     }, 280);
-  }, [current, known, userId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [current, known, userId, animating]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleUnknown = useCallback(() => {
-    if (!current) return;
+    if (!current || animating) return;
     setAnimating('left');
     setTimeout(() => {
       setDeck(prev => [...prev.slice(1), prev[0]]);
@@ -586,7 +586,7 @@ export default function VocabularyPage() {
       setDragX(0);
       setAnimating(null);
     }, 280);
-  }, [current]);
+  }, [current, animating]);
 
   const handleReturnToKnown = (wordId: string) => {
     const next = new Set(known);
@@ -997,7 +997,7 @@ export default function VocabularyPage() {
                     <div className="text-xl font-bold text-slate-800 dark:text-white mb-2">
                       {!filterCat && !filterDiff && !search && !activePack ? 'כל הכבוד! סיימת את כל הכרטיסיות' : 'כל הכבוד! סיימת את הסט הזה'}
                     </div>
-                    <p className="text-slate-500 text-sm mb-6">ידעת {known.size} מילים</p>
+                    <p className="text-slate-500 text-sm mb-6">ידעת {progressScopeKnown} מילים</p>
                     <button onClick={handleResetAll} className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors">
                       התחל מחדש 🔄
                     </button>

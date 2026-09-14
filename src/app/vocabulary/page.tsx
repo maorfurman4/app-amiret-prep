@@ -1077,7 +1077,11 @@ export default function VocabularyPage() {
                 <div className="text-4xl mb-3">🔍</div>
                 <div className="text-slate-500">אין מילים תואמות לחיפוש</div>
               </div>
-            ) : filteredWords.length < 4 ? (
+            ) : quizDeck.length < 4 ? (
+              /* Checks the deck actually in play, not the live filteredWords —
+                 narrowing the filter mid-quiz (and canceling the resulting
+                 "start a new quiz?" confirm) must not hide an otherwise-valid
+                 running quiz behind this error screen. */
               <div className="text-center py-16">
                 <div className="text-4xl mb-3">🔍</div>
                 <div className="text-slate-500">צריך לפחות 4 מילים בסט הנוכחי לחידון</div>
@@ -1264,7 +1268,12 @@ export default function VocabularyPage() {
                   {filteredWords.length < 4 && <p className="text-center text-xs text-red-500">צריך לפחות 4 מילים בסט הנוכחי</p>}
                 </div>
               </div>
-            ) : filteredWords.length < 4 ? (
+            ) : timedDeck.length < 4 ? (
+              /* Same fix as quiz mode above: gate on the deck actually
+                 running, not the live filteredWords — otherwise narrowing
+                 the filter mid-run hides the quiz behind this screen while
+                 the countdown timer keeps ticking (and auto-scoring wrong
+                 answers) invisibly in the background. */
               <div className="text-center py-16">
                 <div className="text-4xl mb-3">🔍</div>
                 <div className="text-slate-500">צריך לפחות 4 מילים למבחן מהיר</div>

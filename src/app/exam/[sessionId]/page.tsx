@@ -103,8 +103,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (isSubmittingRef.current) return;
+      const locked = session.is_practice && lockedAnswers.has(currentQuestionIndex);
       const idx = parseInt(e.key) - 1;
-      if (idx >= 0 && idx < currentQuestions[currentQuestionIndex]?.options.length) {
+      if (!locked && idx >= 0 && idx < currentQuestions[currentQuestionIndex]?.options.length) {
         handleAnswer(currentQuestionIndex, idx);
       } else if ((e.key === 'Enter' || e.key === ' ') && answers[currentQuestionIndex] !== null) {
         e.preventDefault();
@@ -115,7 +116,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [session, currentQuestions, currentQuestionIndex, answers]);
+  }, [session, currentQuestions, currentQuestionIndex, answers, lockedAnswers]);
 
   // Warn before leaving mid-exam (non-practice only)
   useEffect(() => {

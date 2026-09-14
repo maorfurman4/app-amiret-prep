@@ -516,16 +516,16 @@ export default function PracticePage() {
         {/* Header */}
         <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
           <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div>
-              <div className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                {TYPE_OPTIONS.find(t => t.type === selectedType)?.label}
+            <div className="min-w-0">
+              <div className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
+                <span className="whitespace-nowrap">{TYPE_OPTIONS.find(t => t.type === selectedType)?.label}</span>
                 {examMode && (
-                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">
+                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold whitespace-nowrap flex-shrink-0">
                     מצב בחינה
                   </span>
                 )}
                 {sectionMode && (
-                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold whitespace-nowrap flex-shrink-0">
                     מקבץ בתנאי אמת
                   </span>
                 )}

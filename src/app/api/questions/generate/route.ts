@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createAdminSupabaseClient } from '@/lib/supabase-server';
+import { getServerClients } from '@/lib/supabase-server';
+import { isAdminEmail } from '@/lib/admin';
 import { generateQuestions, generatePassage } from '@/lib/ai';
 import type { QuestionType, DifficultyLevel } from '@/types/exam';
 
@@ -9,14 +10,10 @@ import type { QuestionType, DifficultyLevel } from '@/types/exam';
  * NOT called during live exams.
  */
 export async function POST(req: NextRequest) {
-  const supabase = await createAdminSupabaseClient();
+  const { supabase, user } = await getServerClients();
 
-  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-  // Simple admin check via email (can be replaced with a roles table)
-  const adminEmails = (process.env.ADMIN_EMAILS ?? '').split(',').map(e => e.trim());
-  if (!adminEmails.includes(user.email ?? '')) {
+  if (!isAdminEmail(user.email)) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 

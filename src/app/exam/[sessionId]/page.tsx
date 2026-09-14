@@ -122,7 +122,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (session && !session.is_practice && !session.completed_at) {
         e.preventDefault();
-        e.returnValue = 'המבחן בעיצומו — יציאה עלולה לגרום לאיבוד הנתונים. להמשיך?';
+        e.returnValue = 'אם תצא עכשיו, ההתקדמות במבחן לא תישמר. לצאת בכל זאת?';
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -299,7 +299,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         {exitConfirm && (
           <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl" dir="rtl">
             <p className="text-red-800 dark:text-red-300 text-sm font-semibold mb-3">
-              לצאת מהמבחן? המבחן הזה לא נשמר — היציאה תמחק אותו לצמיתות ותצטרך להתחיל מבחן חדש.
+              בטוח שברצונך לצאת? ההתקדמות במבחן הנוכחי לא נשמרת, אז תוכל פשוט להתחיל מבחן חדש כשתהיה מוכן.
             </p>
             <div className="flex gap-2">
               <button
@@ -307,7 +307,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
                 disabled={isSubmitting || isExiting}
                 className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-bold hover:bg-red-600 transition-colors disabled:opacity-50"
               >
-                {isExiting ? 'מוחק...' : 'כן, מחק וצא'}
+                {isExiting ? 'יוצא...' : 'כן, לצאת מהמבחן'}
               </button>
               <button
                 onClick={() => setExitConfirm(false)}

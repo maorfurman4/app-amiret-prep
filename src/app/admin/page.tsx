@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { authFetch } from '@/lib/auth-fetch';
 import type { QuestionType, DifficultyLevel } from '@/types/exam';
 
 const QUESTION_TYPES: { value: QuestionType; label: string }[] = [
@@ -10,7 +12,35 @@ const QUESTION_TYPES: { value: QuestionType; label: string }[] = [
   { value: 'esra', label: 'ESRA אנגלית' },
 ];
 
+/**
+ * UX-level gate only — /api/questions/generate enforces the real
+ * ADMIN_EMAILS check server-side regardless of what this page does.
+ * Without this, any visitor could load the full panel UI (they just
+ * couldn't successfully submit).
+ */
+function useAdminGate() {
+  const router = useRouter();
+  const [status, setStatus] = useState<'checking' | 'allowed' | 'denied'>('checking');
+
+  useEffect(() => {
+    let cancelled = false;
+    authFetch('/api/admin/check')
+      .then(r => (r.ok ? r.json() as Promise<{ isAdmin: boolean }> : { isAdmin: false }))
+      .then(d => { if (!cancelled) setStatus(d.isAdmin ? 'allowed' : 'denied'); })
+      .catch(() => { if (!cancelled) setStatus('denied'); });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    if (status === 'denied') router.replace('/');
+  }, [status, router]);
+
+  return status;
+}
+
 export default function AdminPage() {
+  const gate = useAdminGate();
+
   const [type, setType] = useState<QuestionType>('sentence_completion');
   const [difficulty, setDifficulty] = useState<DifficultyLevel>(3);
   const [count, setCount] = useState(5);
@@ -25,7 +55,7 @@ export default function AdminPage() {
     setError(null);
 
     try {
-      const res = await fetch('/api/questions/generate', {
+      const res = await authFetch('/api/questions/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, difficulty, count, generatePassage }),
@@ -49,6 +79,9 @@ export default function AdminPage() {
       setLoading(false);
     }
   };
+
+  // Blank while checking (avoid a flash of the panel) and while redirecting a denied visitor.
+  if (gate !== 'allowed') return null;
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4" dir="rtl">
@@ -152,7 +185,7 @@ function BulkGenerateButton() {
     for (const t of types) {
       for (const d of difficulties) {
         setProgress(`מייצר ${t} רמה ${d}...`);
-        await fetch('/api/questions/generate', {
+        await authFetch('/api/questions/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type: t, difficulty: d, count: 5 }),
@@ -162,7 +195,7 @@ function BulkGenerateButton() {
 
     for (const d of difficulties) {
       setProgress(`מייצר קטע הבנת הנקרא רמה ${d}...`);
-      await fetch('/api/questions/generate', {
+      await authFetch('/api/questions/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type: 'reading_comprehension', difficulty: d, generatePassage: true }),

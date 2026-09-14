@@ -48,6 +48,23 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Streak badge animation — entrance pop + idle flame flicker (StreakBadge.tsx) */
+@theme {
+  --animate-streak-pop: streak-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-streak-flicker: streak-flicker 2.4s ease-in-out infinite;
+}
+
+@keyframes streak-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes streak-flicker {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(-3deg); }
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

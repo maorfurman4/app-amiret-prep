@@ -1,18 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { authFetch } from '@/lib/auth-fetch';
+import { useDashboardSummary } from '@/lib/dashboard-context';
 
 /** Small daily-streak flame for the home page. Hidden until a streak exists. */
 export function StreakBadge() {
-  const [streak, setStreak] = useState(0);
-
-  useEffect(() => {
-    const guestId = localStorage.getItem('amiret_guest_id') ?? '';
-    authFetch(`/api/streak?guestId=${encodeURIComponent(guestId)}`)
-      .then(r => (r.ok ? r.json() : null))
-      .then((d: { streak: number } | null) => { if (d) setStreak(d.streak); });
-  }, []);
+  const { data } = useDashboardSummary();
+  const streak = data?.streak ?? 0;
 
   if (streak < 1) return null;
   return (

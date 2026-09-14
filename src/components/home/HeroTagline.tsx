@@ -1,0 +1,24 @@
+'use client';
+
+import { useDashboardSummary } from '@/lib/dashboard-context';
+
+const DEFAULT_TAGLINE = 'ההכנה המדויקת ביותר לאמירנ"ט — בדרך לפטור';
+
+/**
+ * Replaces the static tagline with a personalized one once we know the
+ * user's last real-exam score. No score yet (new user / not loaded /
+ * network error) → identical default tagline, same markup/classes.
+ */
+export function HeroTagline() {
+  const { data } = useDashboardSummary();
+  const score = data?.lastScore;
+
+  let text = DEFAULT_TAGLINE;
+  if (score != null) {
+    text = score >= 134
+      ? `🎉 הציון האחרון שלך: ${score} — עברת את סף הפטור!`
+      : `הציון האחרון שלך: ${score} · עוד ${134 - score} נק׳ ל-134+`;
+  }
+
+  return <p className="text-slate-600 dark:text-slate-300">{text}</p>;
+}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import type { Question, QuestionType, DifficultyLevel } from '@/types/exam';
+import { fetchUnseenQuestions, recordSeenQuestions, fetchUnseenRCQuestions, recordSeenPassage } from '@/lib/question-history';
 
 function fisherYates<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -16,18 +17,26 @@ function fisherYates<T>(arr: T[]): T[] {
  * Returns a set of questions for focused section practice.
  * No session created — stateless, client manages progress.
  *
+ * Uses user_question_history / user_passage_history (same helpers as the
+ * exam flow) so a user never sees the same question/passage twice across
+ * practice sessions until the full pool for that type+difficulty is
+ * exhausted, at which point history resets and questions cycle again.
+ *
  * Query params:
  *   type     — sentence_completion | restatement | reading_comprehension
  *   difficulty — 1-5 | "random"
  *   count    — 5 | 10 (ignored for reading_comprehension, always returns 5)
+ *   guestId  — localStorage guest UUID, used when there is no authenticated user
  */
 export async function GET(req: NextRequest) {
-  const { supabase } = await getServerClients();
+  const { supabase, user } = await getServerClients();
 
   const { searchParams } = req.nextUrl;
   const type = searchParams.get('type') as QuestionType | null;
   const diffParam = searchParams.get('difficulty') ?? 'random';
   const countParam = parseInt(searchParams.get('count') ?? '5', 10);
+  const guestId = searchParams.get('guestId');
+  const userKey = user?.id ?? guestId ?? null;
 
   if (!type || !['sentence_completion', 'restatement', 'reading_comprehension'].includes(type)) {
     return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
@@ -40,65 +49,61 @@ export async function GET(req: NextRequest) {
     : (Math.max(1, Math.min(5, parseInt(diffParam, 10))) as DifficultyLevel);
 
   if (type === 'reading_comprehension') {
-    // For random: pick a random passage from any difficulty level
-    let passageQuery = supabase.from('passages').select('id, text, difficulty_level, b').eq('active', true).limit(100);
-    if (diffParam !== 'random') passageQuery = passageQuery.eq('difficulty_level', difficulty);
+    // `difficulty` already resolves a concrete 1-5 level even in random mode (see above).
+    const questions = await fetchUnseenRCQuestions({ supabase, userKey, difficultyLevel: difficulty, usedPIds: [] });
 
-    const { data: passages } = await passageQuery;
-
-    if (!passages?.length) {
+    if (!questions.length) {
       return NextResponse.json({ error: 'No passages found for this difficulty' }, { status: 404 });
     }
-
-    const passage = passages[Math.floor(Math.random() * passages.length)];
-
-    const { data: qs } = await supabase
-      .from('questions')
-      .select('*')
-      .eq('type', 'reading_comprehension')
-      .eq('passage_id', passage.id)
-      .eq('active', true)
-      .limit(5);
-
-    const questions: Question[] = (qs ?? []).map(q => ({
-      ...q,
-      passage: { id: passage.id, text: passage.text, difficulty_level: passage.difficulty_level, b: passage.b },
-    })) as Question[];
-
-    return NextResponse.json({ questions, difficulty: passage.difficulty_level });
+    if (userKey) await recordSeenPassage(supabase, userKey, questions[0].passage_id!);
+    return NextResponse.json({ questions, difficulty: questions[0].passage?.difficulty_level ?? difficulty });
   }
 
   // sentence_completion or restatement
   if (diffParam === 'random') {
-    // Random mode: fetch questions from ALL difficulty levels and mix them
+    // Random mode: fetch unseen questions from ALL difficulty levels and mix them
     const LEVELS: DifficultyLevel[] = [1, 2, 3, 4, 5];
     const perLevel = Math.ceil((count * 2) / 5); // fetch extra per level then trim
     const fetches = await Promise.all(
-      LEVELS.map(lv =>
-        supabase.from('questions').select('*').eq('type', type).eq('difficulty_level', lv).eq('active', true).limit(perLevel + 5)
-      )
+      LEVELS.map(lv => userKey
+        ? fetchUnseenQuestions({ supabase, userKey, type, difficultyLevel: lv, needed: perLevel })
+        : fetchRandomQuestionsNoHistory(supabase, type, lv, perLevel))
     );
-    const pool = fetches.flatMap(r => r.data ?? []) as Question[];
+    const pool = fetches.flat();
     if (!pool.length) {
       return NextResponse.json({ error: 'No questions found' }, { status: 404 });
     }
     const questions = fisherYates(pool).slice(0, count);
+    if (userKey) await recordSeenQuestions(supabase, userKey, questions.map(q => q.id));
     return NextResponse.json({ questions, difficulty: 'random' });
   }
 
-  const { data: qs } = await supabase
+  const questions = userKey
+    ? await fetchUnseenQuestions({ supabase, userKey, type, difficultyLevel: difficulty, needed: count })
+    : await fetchRandomQuestionsNoHistory(supabase, type, difficulty, count);
+
+  if (!questions.length) {
+    return NextResponse.json({ error: 'No questions found for this difficulty' }, { status: 404 });
+  }
+  if (userKey) await recordSeenQuestions(supabase, userKey, questions.map(q => q.id));
+
+  return NextResponse.json({ questions, difficulty });
+}
+
+// Fallback used only when no auth user AND no guestId is present (e.g. localStorage
+// blocked) — no cross-session identity to key history off of, so just shuffle the pool.
+async function fetchRandomQuestionsNoHistory(
+  supabase: Awaited<ReturnType<typeof getServerClients>>['supabase'],
+  type: QuestionType,
+  difficultyLevel: DifficultyLevel,
+  needed: number,
+): Promise<Question[]> {
+  const { data } = await supabase
     .from('questions')
     .select('*')
     .eq('type', type)
-    .eq('difficulty_level', difficulty)
+    .eq('difficulty_level', difficultyLevel)
     .eq('active', true)
-    .limit(count + 10);
-
-  if (!qs?.length) {
-    return NextResponse.json({ error: 'No questions found for this difficulty' }, { status: 404 });
-  }
-
-  const questions = fisherYates(qs as Question[]).slice(0, count);
-
-  return NextResponse.json({ questions, difficulty });
+    .limit(needed + 10);
+  return fisherYates((data ?? []) as Question[]).slice(0, needed);
 }

@@ -70,6 +70,15 @@ export default function PracticePage() {
   const [showResult, setShowResult]   = useState(false);
   const [reviewCount, setReviewCount] = useState<number | null>(null);
 
+  // A guest landing directly on /practice (not via /exam, /review-queue or
+  // /vocabulary, which already generate one) never had an id generated,
+  // silently breaking cross-session question deduplication for them.
+  useEffect(() => {
+    if (!localStorage.getItem('amiret_guest_id')) {
+      localStorage.setItem('amiret_guest_id', crypto.randomUUID());
+    }
+  }, []);
+
   useEffect(() => {
     const guestId = localStorage.getItem('amiret_guest_id') ?? '';
     if (!guestId) return;
@@ -113,12 +122,14 @@ export default function PracticePage() {
     setError(null);
     const diff = overrideDiff ?? selectedDiff;
     try {
+      const guestId = localStorage.getItem('amiret_guest_id') ?? '';
       const params = new URLSearchParams({
         type: selectedType!,
         difficulty: String(diff),
         count: String(selectedCount),
+        ...(guestId ? { guestId } : {}),
       });
-      const res = await fetch(`/api/practice/questions?${params}`);
+      const res = await authFetch(`/api/practice/questions?${params}`);
       if (!res.ok) {
         setError('לא נמצאו שאלות. נסה רמת קושי אחרת.');
         setLoading(false);

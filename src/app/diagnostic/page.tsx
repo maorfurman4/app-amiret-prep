@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
@@ -34,6 +34,14 @@ const LOW_SAMPLE_THRESHOLD = 5;
 type Phase = 'intro' | 'loading' | 'answering' | 'done' | 'error';
 
 export default function DiagnosticPage() {
+  // A guest landing directly on /diagnostic never had an id generated,
+  // silently breaking cross-session question deduplication for them.
+  useEffect(() => {
+    if (!localStorage.getItem('amiret_guest_id')) {
+      localStorage.setItem('amiret_guest_id', crypto.randomUUID());
+    }
+  }, []);
+
   const [phase, setPhase] = useState<Phase>('intro');
   const [stageIdx, setStageIdx] = useState(0);
   const [questions, setQuestions] = useState<Question[]>([]);      // current stage
@@ -53,7 +61,9 @@ export default function DiagnosticPage() {
     setPhase('loading');
     const level = idx === 0 ? 3 : routeNextDifficulty(thetaOf(allQs, allAns));
     try {
-      const res = await fetch(`/api/practice/questions?type=${STAGES[idx].type}&difficulty=${level}&count=10`);
+      const guestId = localStorage.getItem('amiret_guest_id') ?? '';
+      const gidParam = guestId ? `&guestId=${encodeURIComponent(guestId)}` : '';
+      const res = await authFetch(`/api/practice/questions?type=${STAGES[idx].type}&difficulty=${level}&count=10${gidParam}`);
       if (!res.ok) throw new Error();
       const data = await res.json() as { questions: Question[] };
       const seenIds = new Set(allQs.map(q => q.id));

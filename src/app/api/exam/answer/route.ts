@@ -69,6 +69,18 @@ export async function POST(req: NextRequest) {
   }
   const cfg = SECTION_CONFIGS[body.sectionIndex - 1];
 
+  // Server-side time enforcement. The client auto-submits at 0:00 and
+  // /api/exam/state auto-submits blanks if it sees an expired timer, so a
+  // hard reject here would just bounce those legitimate late-by-a-second
+  // submits. Instead, mirror the real exam: past the deadline (plus a short
+  // grace for network/clock skew) the section is scored as unanswered and
+  // the exam still advances. Practice sessions are untimed.
+  const LATE_GRACE_MS = 20_000;
+  const lateSubmission = !session.is_practice
+    && !!session.current_section_expires_at
+    && Date.now() > new Date(session.current_section_expires_at).getTime() + LATE_GRACE_MS;
+  const answers: (number | null)[] = lateSubmission ? currentQuestions.map(() => null) : body.answers;
+
   // ── Step 1: Update θ via MLE/EAP (cumulative — all sections, not just current) ─
   const previousResults = (session.section_results as SectionResult[]);
   const allQuestions: Question[] = [
@@ -77,7 +89,7 @@ export async function POST(req: NextRequest) {
   ];
   const allAnswers: (number | null)[] = [
     ...previousResults.flatMap(sr => sr.answers as (number | null)[]),
-    ...body.answers,
+    ...answers,
   ];
   const sectionForAdaptive = { questions: allQuestions, answers: allAnswers };
   const newTheta = updateThetaAfterSection(session.theta, sectionForAdaptive);
@@ -89,12 +101,12 @@ export async function POST(req: NextRequest) {
     ? body.timings.map(t => Math.round(t))
     : undefined;
 
-  const currentSectionResult = { questions: currentQuestions, answers: body.answers };
+  const currentSectionResult = { questions: currentQuestions, answers };
   const result: SectionResult = {
     sectionIndex: body.sectionIndex,
     type: cfg.type,
     questions: currentQuestions,
-    answers: body.answers,
+    answers,
     thetaBefore: session.theta,
     thetaAfter: newTheta,
     correctCount: correctCount(currentSectionResult),
@@ -114,7 +126,7 @@ export async function POST(req: NextRequest) {
     theta: newTheta,
     theta_history: newHistory,
     current_section_index: nextSectionIndex,
-    answers_by_section: { ...session.answers_by_section, [body.sectionIndex]: body.answers },
+    answers_by_section: { ...session.answers_by_section, [body.sectionIndex]: answers },
     section_results: [...(session.section_results as object[]), result],
   };
 
@@ -231,13 +243,23 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const { error: updateErr } = await supabase
+  // Conditional update: only if this section is STILL the active one. Two
+  // concurrent submits (double-tap, retry after a timeout, two tabs) would
+  // otherwise both pass the checks above and process the section twice.
+  // The loser gets 0 rows and a 409; the client reloads server state.
+  const { data: updated, error: updateErr } = await supabase
     .from('exam_sessions')
     .update(updatePayload)
-    .eq('id', body.sessionId);
+    .eq('id', body.sessionId)
+    .eq('current_section_index', body.sectionIndex)
+    .is('completed_at', null)
+    .select('id');
 
   if (updateErr) {
     return NextResponse.json({ error: 'Failed to update session' }, { status: 500 });
+  }
+  if (!updated || updated.length === 0) {
+    return NextResponse.json({ error: 'Section already submitted' }, { status: 409 });
   }
 
   return NextResponse.json({
@@ -246,5 +268,6 @@ export async function POST(req: NextRequest) {
     isComplete: isLastSection,
     nextSectionIndex: isLastSection ? null : nextSectionIndex,
     nextExpiresAt: updatePayload.current_section_expires_at ?? null,
+    lateSubmission,
   });
 }

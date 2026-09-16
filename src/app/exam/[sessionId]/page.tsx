@@ -29,6 +29,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const isSubmittingRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [submitWarning, setSubmitWarning] = useState<string | null>(null);
+  const [lateNotice, setLateNotice] = useState(false);
   const [exitConfirm, setExitConfirm] = useState(false);
 
   // Practice mode: track which question indices have been answered (locked)
@@ -46,8 +47,28 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     setGuestId(localStorage.getItem('amiret_guest_id') ?? null);
   }, []);
 
+  // In-section answers only reach the server on section submit, so a
+  // refresh / closed tab / dead network mid-section used to lose them while
+  // the server timer kept running. Mirror every pick to localStorage and
+  // restore it on load; the draft is dropped once the section is submitted.
+  const draftKey = (section: number) => `exam_draft:${sessionId}:${section}`;
+  const readDraft = (section: number, count: number): (number | null)[] | null => {
+    try {
+      const raw = localStorage.getItem(draftKey(section));
+      if (!raw) return null;
+      const arr = JSON.parse(raw) as unknown;
+      return Array.isArray(arr) && arr.length === count ? (arr as (number | null)[]) : null;
+    } catch { return null; }
+  };
+  const writeDraft = (section: number, arr: (number | null)[]) => {
+    try { localStorage.setItem(draftKey(section), JSON.stringify(arr)); } catch { /* storage full/blocked — draft is best-effort */ }
+  };
+  const clearDraft = (section: number) => { try { localStorage.removeItem(draftKey(section)); } catch { /* ignore */ } };
+
   // Load or recover session state from server
   const loadSession = useCallback(async () => {
+    // A retry after a failed load must be able to leave the error screen.
+    setError(null);
     const res = await authFetch(`/api/exam/state?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId ?? '')}`);
     if (res.status === 429) { setError('יותר מדי בקשות בזמן קצר — חכה כדקה ולחץ "נסה שוב".'); return; }
     if (!res.ok) { setError('לא ניתן לטעון את המבחן'); return; }
@@ -63,7 +84,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     const questionCount = (data.session.questions_by_section as Record<number, Question[]>)[section]?.length ?? 0;
 
     setSession(data.session);
-    setAnswers(existingAnswers ?? Array(questionCount).fill(null));
+    // Server-saved answers win; otherwise restore the local draft for this section.
+    setAnswers(existingAnswers ?? readDraft(section, questionCount) ?? Array(questionCount).fill(null));
 
     // Reset pace tracking for the new section
     timingsRef.current = [];
@@ -135,6 +157,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     setAnswers(prev => {
       const next = [...prev];
       next[questionIndex] = optionIndex;
+      if (session) writeDraft(session.current_section_index, next);
       return next;
     });
     if (session?.is_practice) {
@@ -166,12 +189,23 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         setError('יותר מדי בקשות בזמן קצר — התשובות שלך לא נשלחו. חכה כדקה ולחץ "נסה שוב".');
         return;
       }
+      if (res.status === 409) {
+        // This section was already processed (double submit / second tab /
+        // timed-out retry). The server is the source of truth — resync.
+        clearDraft(sess.current_section_index);
+        await loadSession();
+        setCurrentQuestionIndex(0);
+        setLockedAnswers(new Set());
+        return;
+      }
       if (!res.ok) {
         setError('שגיאה בשליחת התשובות. נסה שוב.');
         return;
       }
 
-      const data = await res.json() as { isComplete: boolean; nextSectionIndex: number; nextExpiresAt: string };
+      const data = await res.json() as { isComplete: boolean; nextSectionIndex: number; nextExpiresAt: string; lateSubmission?: boolean };
+      clearDraft(sess.current_section_index);
+      setLateNotice(!!data.lateSubmission);
 
       if (data.isComplete) {
         router.push(`/results/${sess.id}`);
@@ -226,6 +260,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const [isExiting, setIsExiting] = useState(false);
   const handleConfirmExit = async () => {
     setIsExiting(true);
+    for (let i = 1; i <= SECTION_CONFIGS.length; i++) clearDraft(i);
     try {
       await authFetch(`/api/exam/state?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId ?? '')}`, { method: 'DELETE' });
     } finally {
@@ -321,6 +356,12 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           </div>
         )}
 
+        {lateNotice && (
+          <div className="mb-6 p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl text-sm text-orange-800 dark:text-orange-300 flex items-center justify-between gap-3" dir="rtl">
+            <span>הפרק הקודם נשלח אחרי שנגמר הזמן — כמו במבחן האמיתי, הוא נחשב כלא נענה.</span>
+            <button onClick={() => setLateNotice(false)} className="text-xs underline flex-shrink-0">הבנתי</button>
+          </div>
+        )}
         {currentCfg?.experimental && (
           <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl text-sm text-purple-900 dark:text-purple-200">
             <p>

@@ -243,16 +243,14 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const handleSubmitSection = () => {
     if (!session) return;
     const unanswered = answers.filter(a => a === null).length;
+    // NITE rule: a section cannot be ended while questions are still blank —
+    // only the timer moves you on. Practice mode stays free.
     if (unanswered > 0 && !session.is_practice) {
-      setSubmitWarning(`השארת ${unanswered} שאלות ללא מענה — תשובה ריקה נחשבת שגויה. לחץ שוב לאישור.`);
+      setSubmitWarning(
+        `נותרו ${unanswered} שאלות ללא מענה. כמו במבחן האמיתי, אי אפשר לסיים פרק לפני שעונים על כולן — ואם לא יודעים, כדאי לנחש.`
+      );
       return;
     }
-    setSubmitWarning(null);
-    submitSection(session, answers);
-  };
-
-  const handleConfirmSubmit = () => {
-    if (!session) return;
     setSubmitWarning(null);
     submitSection(session, answers);
   };
@@ -401,10 +399,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         {submitWarning && (
           <div className="mt-4 p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl flex items-center justify-between gap-3" dir="rtl">
             <p className="text-orange-800 dark:text-orange-300 text-sm">{submitWarning}</p>
-            <div className="flex gap-2 flex-shrink-0">
-              <button onClick={() => setSubmitWarning(null)} disabled={isSubmitting} className="text-xs px-3 py-1.5 rounded-lg border border-orange-300 dark:border-orange-700 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/40 disabled:opacity-50">ביטול</button>
-              <button onClick={handleConfirmSubmit} disabled={isSubmitting} className="text-xs px-3 py-1.5 rounded-lg bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-50">אישור</button>
-            </div>
+            <button onClick={() => setSubmitWarning(null)} className="text-xs px-3 py-1.5 rounded-lg border border-orange-300 dark:border-orange-700 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/40 flex-shrink-0">הבנתי</button>
           </div>
         )}
 

@@ -28,6 +28,12 @@ function CallbackHandler() {
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // A password-recovery link must end on the reset screen no matter what
+      // `next` says, otherwise the user never gets to set a new password.
+      if (event === 'PASSWORD_RECOVERY' && session) {
+        router.replace('/auth/reset-password');
+        return;
+      }
       if (event === 'SIGNED_IN' && session) {
         mergeGuest(session.access_token);
         router.replace(safeNext);

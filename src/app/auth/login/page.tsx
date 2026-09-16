@@ -96,7 +96,9 @@ function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const redirectTo = `${window.location.origin}/auth/callback?next=/`;
+    // Land on the dedicated reset screen (via the callback, which consumes
+    // the recovery token from the URL hash) instead of bouncing to home.
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent('/auth/reset-password')}`;
     const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
     if (error) {
       setError('שגיאה בשליחת המייל, נסה שוב');

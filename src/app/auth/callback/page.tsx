@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -9,9 +9,23 @@ function CallbackHandler() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Read the hash synchronously: supabase-js strips it once it has processed
+  // the tokens, so by the time an effect runs it may already be gone.
+  const [initialHash] = useState(() => (typeof window !== 'undefined' ? window.location.hash : ''));
+
   useEffect(() => {
     const next = searchParams.get('next') ?? '/';
     const safeNext = next.startsWith('/') ? next : '/';
+
+    // Supabase redirects here with `#error=...&error_code=otp_expired` when a
+    // magic/recovery link is reused or expired. There is no session to wait
+    // for, so send the user somewhere that explains it instead of spinning
+    // for 6s and dumping them on the login form.
+    const hashParams = new URLSearchParams(initialHash.replace(/^#/, ''));
+    if (hashParams.get('error')) {
+      router.replace(safeNext === '/auth/reset-password' ? '/auth/reset-password' : '/auth/login');
+      return;
+    }
 
     // With flowType: 'implicit', Supabase puts the session in the URL hash.
     // detectSessionInUrl: true auto-processes it and fires SIGNED_IN.

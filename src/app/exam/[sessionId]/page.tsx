@@ -7,6 +7,7 @@ import { QuestionCard } from '@/components/exam/QuestionCard';
 import { SectionProgress } from '@/components/exam/SectionProgress';
 import { SECTION_CONFIGS, type Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
+import { clearExamDraft, readExamDraft, writeExamDraft } from '@/lib/exam-draft';
 
 interface SessionState {
   id: string;
@@ -51,19 +52,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   // refresh / closed tab / dead network mid-section used to lose them while
   // the server timer kept running. Mirror every pick to localStorage and
   // restore it on load; the draft is dropped once the section is submitted.
-  const draftKey = (section: number) => `exam_draft:${sessionId}:${section}`;
-  const readDraft = (section: number, count: number): (number | null)[] | null => {
-    try {
-      const raw = localStorage.getItem(draftKey(section));
-      if (!raw) return null;
-      const arr = JSON.parse(raw) as unknown;
-      return Array.isArray(arr) && arr.length === count ? (arr as (number | null)[]) : null;
-    } catch { return null; }
-  };
-  const writeDraft = (section: number, arr: (number | null)[]) => {
-    try { localStorage.setItem(draftKey(section), JSON.stringify(arr)); } catch { /* storage full/blocked — draft is best-effort */ }
-  };
-  const clearDraft = (section: number) => { try { localStorage.removeItem(draftKey(section)); } catch { /* ignore */ } };
+  const readDraft = (section: number, count: number) => readExamDraft(localStorage, sessionId, section, count);
+  const writeDraft = (section: number, arr: (number | null)[]) => writeExamDraft(localStorage, sessionId, section, arr);
+  const clearDraft = (section: number) => clearExamDraft(localStorage, sessionId, section);
 
   // Load or recover session state from server
   const loadSession = useCallback(async () => {

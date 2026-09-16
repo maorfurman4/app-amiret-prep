@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { recoveryLinkIsInvalid } from '@/lib/password-recovery';
 
 function CallbackHandler() {
   const supabase = createClient();
@@ -21,8 +22,7 @@ function CallbackHandler() {
     // magic/recovery link is reused or expired. There is no session to wait
     // for, so send the user somewhere that explains it instead of spinning
     // for 6s and dumping them on the login form.
-    const hashParams = new URLSearchParams(initialHash.replace(/^#/, ''));
-    if (hashParams.get('error')) {
+    if (recoveryLinkIsInvalid(initialHash)) {
       router.replace(safeNext === '/auth/reset-password' ? '/auth/reset-password' : '/auth/login');
       return;
     }

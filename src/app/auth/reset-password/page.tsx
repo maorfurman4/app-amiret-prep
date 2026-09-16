@@ -5,10 +5,13 @@ export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
+import {
+  classifyPasswordUpdateError,
+  MIN_PASSWORD_LENGTH,
+  validateNewPassword,
+} from '@/lib/password-recovery';
 
 type Phase = 'checking' | 'form' | 'done' | 'invalid';
-
-const MIN_PASSWORD_LENGTH = 6; // matches signup's rule and Supabase's default
 
 /**
  * Landing page for the "forgot password" email link.
@@ -64,12 +67,9 @@ export default function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (password.length < MIN_PASSWORD_LENGTH) {
-      setError(`הסיסמה חייבת להכיל לפחות ${MIN_PASSWORD_LENGTH} תווים`);
-      return;
-    }
-    if (password !== confirm) {
-      setError('הסיסמאות אינן זהות');
+    const validationError = validateNewPassword(password, confirm);
+    if (validationError) {
+      setError(validationError);
       return;
     }
     setSaving(true);
@@ -77,13 +77,11 @@ export default function ResetPasswordPage() {
     setSaving(false);
     if (updateErr) {
       // Supabase rejects reusing the current password and expired sessions.
-      const msg = updateErr.message.toLowerCase();
-      if (msg.includes('different from the old')) {
-        setError('הסיסמה החדשה חייבת להיות שונה מהסיסמה הנוכחית');
-      } else if (msg.includes('session') || updateErr.status === 401) {
+      const failure = classifyPasswordUpdateError(updateErr);
+      if (failure.invalidSession) {
         setPhase('invalid');
       } else {
-        setError('לא הצלחנו לעדכן את הסיסמה, נסה שוב');
+        setError(failure.message);
       }
       return;
     }

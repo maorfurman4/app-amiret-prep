@@ -55,6 +55,17 @@ export function BottomNav() {
           const isPending = pendingHref === tab.href;
 
           const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+            // Mid-activity (answering a practice question, mid vocab deck):
+            // the FIRST tap on any tab — including the one you're already on,
+            // which would otherwise hard-reload and wipe progress — only asks
+            // for confirmation. A second tap within the window goes through.
+            if (inProgress && !isPending) {
+              e.preventDefault();
+              setPendingHref(tab.href);
+              if (pendingTimerRef.current) clearTimeout(pendingTimerRef.current);
+              pendingTimerRef.current = setTimeout(() => setPendingHref(null), CONFIRM_WINDOW_MS);
+              return;
+            }
             // Clicking the tab you're already on is a no-op for Next's router
             // (same URL → no navigation event → no remount), so any in-page
             // state — practice's picked type, vocabulary's mode — just sits
@@ -62,17 +73,6 @@ export function BottomNav() {
             if (pathname === tab.href) {
               e.preventDefault();
               window.location.href = tab.href;
-              return;
-            }
-            // Mid-activity (e.g. answering a practice question): the first
-            // tap on a DIFFERENT tab just asks for confirmation instead of
-            // silently discarding progress. Second tap within the window
-            // goes through as a normal navigation.
-            if (inProgress && !isPending) {
-              e.preventDefault();
-              setPendingHref(tab.href);
-              if (pendingTimerRef.current) clearTimeout(pendingTimerRef.current);
-              pendingTimerRef.current = setTimeout(() => setPendingHref(null), CONFIRM_WINDOW_MS);
             }
           };
 

@@ -19,11 +19,18 @@ export async function GET(req: NextRequest) {
 
   const { data: session, error } = await supabase
     .from('exam_sessions')
-    .select('score, theta_final, theta_history, section_results, answers_by_section, questions_by_section, is_practice')
+    .select('score, theta_final, theta_history, section_results, answers_by_section, questions_by_section, is_practice, completed_at')
     .eq('id', sessionId)
     .eq('user_id', owner)
     .single();
 
   if (error || !session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
+
+  // questions_by_section carries correct_answer for every section. For a
+  // real (non-practice) exam that isn't finished yet, that is an answer key
+  // for the sections still in play — refuse until completed_at is set.
+  if (!session.is_practice && !session.completed_at) {
+    return NextResponse.json({ error: 'Exam not finished' }, { status: 403 });
+  }
   return NextResponse.json({ session });
 }

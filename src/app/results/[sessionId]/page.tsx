@@ -28,7 +28,11 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   useEffect(() => {
     const guestId = localStorage.getItem('amiret_guest_id') ?? '';
     authFetch(`/api/exam/results?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId)}`)
-      .then(r => (r.ok ? r.json() : null))
+      .then(r => {
+        // Not finished yet — the API refuses (403); send them back into the exam.
+        if (r.status === 403) { router.replace(`/exam/${sessionId}`); return null; }
+        return r.ok ? r.json() : null;
+      })
       .then((d: { session: SessionData } | null) => {
         if (d?.session) setSession(d.session);
       });

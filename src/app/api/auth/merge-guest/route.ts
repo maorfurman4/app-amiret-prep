@@ -23,6 +23,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid guestId' }, { status: 400 });
   }
 
+  // exam_sessions.user_id holds guest UUIDs and auth UUIDs in the same
+  // column, so without this check a logged-in caller could pass ANOTHER
+  // registered user's id as "guestId" and re-home that user's entire
+  // history onto their own account. Fail closed: if the admin lookup
+  // itself errors (no service role locally), refuse rather than merge.
+  const { data: existing, error: lookupErr } = await supabase.auth.admin.getUserById(guestId);
+  if (lookupErr && lookupErr.status !== 404) {
+    return NextResponse.json({ error: 'Could not verify guestId' }, { status: 503 });
+  }
+  if (existing?.user) {
+    return NextResponse.json({ error: 'Invalid guestId' }, { status: 403 });
+  }
+
   // 1. Exam sessions (completed and in-progress alike — the client now sends
   //    a bearer token, so merged in-progress sessions stay accessible)
   await supabase.from('exam_sessions').update({ user_id: user.id }).eq('user_id', guestId);

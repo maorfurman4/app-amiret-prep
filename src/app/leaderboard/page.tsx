@@ -2,7 +2,6 @@ import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { BackNav } from '@/components/BackNav';
 
 interface LeaderboardEntry {
-  user_id: string;
   display_name: string | null;
   avatar_url: string | null;
   best_score: number;
@@ -14,7 +13,10 @@ export default async function LeaderboardPage() {
   const supabase = await createServerSupabaseClient();
   const { data } = await supabase
     .from('leaderboard')
-    .select('*')
+    // Never select user_id here: the table is publicly readable and an auth
+    // user id is an identifier other endpoints key ownership on.
+    .select('display_name, avatar_url, best_score, total_exams, avg_score')
+    .order('best_score', { ascending: false })
     .limit(50);
 
   const entries = (data ?? []) as LeaderboardEntry[];
@@ -36,7 +38,7 @@ export default async function LeaderboardPage() {
 
               return (
                 <div
-                  key={entry.user_id}
+                  key={`${entry.display_name ?? 'anon'}-${i}`}
                   className={`flex items-center gap-4 p-4 rounded-2xl border ${
                     i === 0 ? 'bg-yellow-50 border-yellow-200' :
                     i === 1 ? 'bg-slate-100 border-slate-300' :

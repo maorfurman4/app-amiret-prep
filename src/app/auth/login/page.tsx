@@ -321,7 +321,7 @@ export default function LoginPage() {
           <h1 className="text-4xl font-black text-white tracking-tight" dir="ltr">
             134<span className="text-blue-400">+</span>
           </h1>
-          <p className="text-slate-400 text-sm mt-2">ההכנה המדויקת ביותר לאמירנ&quot;ט</p>
+          <p className="text-slate-400 text-sm mt-2">הכנה ממוקדת לאמירנ&quot;ט</p>
         </div>
 
         {/* Card */}

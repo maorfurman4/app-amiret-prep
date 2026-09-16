@@ -75,6 +75,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
       <div className="max-w-2xl mx-auto space-y-8 py-8 px-4">
         {/* Score card */}
         <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-700 text-center">
+          <div className="text-xs text-slate-400 dark:text-slate-500 mb-1">אומדן פנימי של האתר</div>
           <div className="text-6xl font-black text-slate-900 dark:text-white mb-2">{score}</div>
           <div className={`text-xl font-bold mb-1 ${classification.color}`}>{classification.label}</div>
           <div className="text-slate-500 dark:text-slate-400 text-sm mb-6">{classification.description}</div>
@@ -108,9 +109,9 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           const currentBand = bands.find(b => score >= b.min && score <= b.max);
           return (
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
-              <h2 className="font-bold text-slate-900 dark:text-white mb-1">תחזית ציון AMIRET</h2>
+              <h2 className="font-bold text-slate-900 dark:text-white mb-1">הערכת טווח ציון</h2>
               <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">
-                על בסיס הביצועים שלך, הציון הצפוי הוא בטווח {lo}–{hi}
+                על בסיס הביצועים שלך כאן, הטווח המוערך הוא {lo}–{hi} — אומדן פנימי של האתר, לא ציון רשמי של נית&quot;ה
               </p>
               {/* Gradient score bar — RTL: low scores (50) on the right */}
               <div className="relative mb-5">

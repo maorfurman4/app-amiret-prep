@@ -2,7 +2,7 @@
 
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
-const DEFAULT_TAGLINE = 'ההכנה המדויקת ביותר לאמירנ"ט — בדרך לפטור';
+const DEFAULT_TAGLINE = 'הכנה ממוקדת לאמירנ"ט — בדרך לפטור';
 
 /**
  * Replaces the static tagline with a personalized one once we know the

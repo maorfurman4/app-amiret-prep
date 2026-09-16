@@ -178,23 +178,23 @@ export default function StatsPage() {
           }
           const reasons: { ok: boolean; text: string; href?: string }[] = [];
           reasons.push({ ok: rawRows.length >= 3, text: rawRows.length >= 3 ? `${rawRows.length} מבחנים הושלמו` : `רק ${rawRows.length} מבחנים — צריך לפחות 3 למדידה יציבה`, href: rawRows.length >= 3 ? undefined : '/exam' });
-          reasons.push({ ok: avg3 >= 134, text: `ממוצע 3 אחרונים: ${Math.round(avg3)} ${avg3 >= 134 ? '— מעל קו הפטור' : `— עוד ${Math.max(1, Math.ceil(134 - avg3))} נק׳ לפטור`}` });
+          reasons.push({ ok: avg3 >= 134, text: `ממוצע 3 אומדנים אחרונים: ${Math.round(avg3)} ${avg3 >= 134 ? '— מעל 134 באומדן הפנימי' : `— פער של ${Math.max(1, Math.ceil(134 - avg3))} נק׳ מ-134 באומדן`}` });
           reasons.push({ ok: spread <= 12, text: spread <= 12 ? `יציבות טובה (פער ${spread} נק׳ בין המבחנים)` : `תנודתיות גבוהה (פער ${spread} נק׳) — עוד סימולציות ייצבו` });
           const weakTypes = Object.entries(typeAcc).filter(([, d]) => d.t > 0 && d.c / d.t < 0.7);
           reasons.push({ ok: weakTypes.length === 0, text: weakTypes.length === 0 ? 'כל סוגי השאלות מעל 70%' : `מתחת ל-70% ב: ${weakTypes.map(([t]) => TYPE_LABELS[t] ?? t).join(', ')}` });
-          if (hiTotal > 0) reasons.push({ ok: hiCorrect / hiTotal >= 0.55, text: `ברמות 4-5: ${Math.round((hiCorrect / hiTotal) * 100)}% ${hiCorrect / hiTotal >= 0.55 ? '— שורד בצמרת' : '— שם נקבע הפטור'}` });
+          if (hiTotal > 0) reasons.push({ ok: hiCorrect / hiTotal >= 0.55, text: `ברמות 4-5: ${Math.round((hiCorrect / hiTotal) * 100)}% ${hiCorrect / hiTotal >= 0.55 ? '— ביצוע יציב ברמות הגבוהות' : '— מומלץ לחזק את הרמות הגבוהות'}` });
           if (timedQ > 0) reasons.push({ ok: overCap / timedQ <= 0.15, text: overCap === 0 ? 'קצב מצוין — אפס חריגות תקציב' : `${overCap} שאלות חרגו מתקציב הזמן` });
           const okCount = reasons.filter(r => r.ok).length;
           const verdict = okCount === reasons.length && rawRows.length >= 3 && avg3 >= 134
-            ? { label: 'מוכן למבחן! 🎉', cls: 'bg-green-500', desc: 'הביצועים יציבים ומעל קו הפטור — לך על זה.' }
+            ? { label: 'מוכנות גבוהה לפי מדדי האתר 🎉', cls: 'bg-green-500', desc: 'הביצועים יציבים והאומדן הפנימי מעל 134. זו אינה תחזית ציון רשמית.' }
             : avg3 >= 120 && rawRows.length >= 3
             ? { label: 'כמעט שם 💪', cls: 'bg-yellow-500', desc: 'הבסיס חזק — סגור את הפערים שמסומנים למטה.' }
-            : { label: 'עוד לא — ממשיכים לעבוד 📚', cls: 'bg-slate-500', desc: 'תוכנית: מבחן מלא + תרגול חולשה ממוקד כל יום.' };
+            : { label: 'עוד לא — ממשיכים לעבוד 📚', cls: 'bg-slate-500', desc: 'תוכנית: סימולציית פרקי הליבה + תרגול חולשה ממוקד כל יום.' };
           return (
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3 mb-1">
                 <span className={`px-3 py-1 rounded-full text-white text-sm font-bold ${verdict.cls}`}>{verdict.label}</span>
-                <h2 className="font-bold text-slate-900 dark:text-white text-sm">דו"ח מוכנות למבחן</h2>
+                <h2 className="font-bold text-slate-900 dark:text-white text-sm">מדד מוכנות פנימי</h2>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">{verdict.desc}</p>
               <div className="space-y-1.5">
@@ -261,9 +261,9 @@ export default function StatsPage() {
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700">
               <div className="flex items-center justify-between mb-1">
                 <h2 className="font-bold text-slate-900 dark:text-white">🎯 הדרך ל-134+</h2>
-                {reached && <span className="text-xs font-bold bg-green-500 text-white px-2 py-0.5 rounded-full">הגעת לפטור! 🎉</span>}
+                {reached && <span className="text-xs font-bold bg-green-500 text-white px-2 py-0.5 rounded-full">האומדן הגיע ל-134+ 🎉</span>}
               </div>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">134 = פטור מלא מקורסי אנגלית</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">134 הוא סף פטור נפוץ; הנתונים כאן הם אומדן פנימי ולא ציון רשמי</p>
               {/* Progress to goal */}
               <div className="relative h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden mb-2">
                 <div className={`absolute inset-y-0 right-0 rounded-full ${reached ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${pct}%` }} />

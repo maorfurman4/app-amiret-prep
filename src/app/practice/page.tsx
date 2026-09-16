@@ -720,14 +720,14 @@ export default function PracticePage() {
                     <div className="text-2xl font-black text-slate-900 dark:text-white">רמה {diagLevel}/5</div>
                   </div>
                   <div className="text-left">
-                    <div className="text-sm text-slate-500 dark:text-slate-400">ציון אמירנ"ט משוער</div>
+                    <div className="text-sm text-slate-500 dark:text-slate-400">אומדן פנימי</div>
                     <div className={`text-2xl font-black ${diagClass.color}`}>~{diagScore}</div>
                     <div className={`text-xs font-semibold ${diagClass.color}`}>{diagClass.label}</div>
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
-                  הערכה סטטיסטית לפי מודל ה-IRT של המבחן האדפטיבי — מבוססת על {questions.length} שאלות בלבד.
-                  {selectedDiff !== 'random' && ' לאבחון מדויק יותר, תרגל ברמה מעורבת או עשה מבחן מלא.'}
+                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר — מבוססת על {questions.length} שאלות בלבד ואינה ציון רשמי של נית&quot;ה.
+                  {selectedDiff !== 'random' && ' לאומדן רחב יותר, תרגל ברמה מעורבת או בצע את סימולציית פרקי הליבה.'}
                   {' '}סף הפטור/הרמה עצמו נקבע בנפרד בכל מוסד — {diagClass.label} הוא הטווח הנפוץ, לא תקן מחייב אחיד.
                 </p>
               </div>

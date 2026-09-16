@@ -10,8 +10,8 @@ import { authFetch } from '@/lib/auth-fetch';
 const MODES: { mode: ExamMode; title: string; desc: string; icon: string; isPractice?: boolean }[] = [
   {
     mode: 'full',
-    title: 'מבחן מלא',
-    desc: '6 פרקים + פרק ניסיוני, טיימר קשיח, אלגוריתם אדפטיבי — במתכונת האמירנ"ט',
+    title: 'סימולציית פרקי הליבה',
+    desc: '6 פרקי הליבה בזמנים הרשמיים ובמבנה אדפטיבי, ולאחריהם תרגול חלופי. אינו מדמה עדיין את סוגי הפרקים הניסיוניים או הכתיבה',
     icon: '🎯',
   },
   {

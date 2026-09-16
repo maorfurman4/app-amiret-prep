@@ -49,7 +49,7 @@ export function SectionProgress({ currentSection, completedSections }: SectionPr
                 isDone    ? 'text-green-600' :
                 cfg.experimental ? 'text-purple-400' : 'text-slate-400 dark:text-slate-500'
               }`}>
-                {cfg.experimental ? 'ניסיוני' : TYPE_LABELS[cfg.type]}
+                {cfg.experimental ? 'תרגול חלופי' : TYPE_LABELS[cfg.type]}
               </span>
             </div>
             {cfg.index < SECTION_CONFIGS.length && (

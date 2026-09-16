@@ -97,12 +97,12 @@ export interface ScoreClassification {
 }
 
 export const SCORE_CLASSIFICATIONS: ScoreClassification[] = [
-  { label: 'פטור מלא', description: 'פטור מקורסי אנגלית', color: 'text-green-600' },
-  { label: 'מתקדמים ב\'', description: 'קורס מתקדמים ב\'', color: 'text-blue-600' },
-  { label: 'מתקדמים א\'', description: 'קורס מתקדמים א\'', color: 'text-yellow-600' },
-  { label: 'בסיסי', description: 'קורס בסיסי', color: 'text-orange-600' },
-  { label: 'טרום-בסיסי ב\'', description: 'קורס טרום-בסיסי ב\'', color: 'text-red-600' },
-  { label: 'טרום-בסיסי א\'', description: 'קורס טרום-בסיסי א\'', color: 'text-red-700' },
+  { label: 'טווח פטור נפוץ', description: 'אומדן פנימי; המוסד קובע את הסיווג בפועל', color: 'text-green-600' },
+  { label: 'טווח מתקדמים ב\'', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-blue-600' },
+  { label: 'טווח מתקדמים א\'', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-yellow-600' },
+  { label: 'טווח בסיסי', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-orange-600' },
+  { label: 'טווח טרום-בסיסי ב\'', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-red-600' },
+  { label: 'טווח טרום-בסיסי א\'', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-red-700' },
 ];
 
 export function classifyScore(score: number): ScoreClassification {

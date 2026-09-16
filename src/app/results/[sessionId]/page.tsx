@@ -84,7 +84,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           </div>
           {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
             <div className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-              כולל פרק ניסיוני — טעויות בו לא הורידו את הציון
+              כולל תרגול חלופי — הוא אינו חלק מהדמיית פרקי הליבה וטעויות בו לא הורידו את האומדן
             </div>
           )}
         </div>
@@ -213,7 +213,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                       <span className="text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                         {TYPE_LABELS[cfg?.type ?? sr.type]}
                         {isExperimental && (
-                          <span className="px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-semibold">ניסיוני</span>
+                          <span className="px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-semibold">תרגול חלופי</span>
                         )}
                         {difficulty && (
                           <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-mono">רמה {difficulty}/5</span>

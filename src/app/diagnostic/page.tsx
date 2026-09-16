@@ -130,13 +130,13 @@ export default function DiagnosticPage() {
             <div className="text-5xl">🩺</div>
             <h1 className="text-3xl font-black text-slate-900 dark:text-white">אבחון רמה מהיר</h1>
             <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-              12 שאלות אדפטיביות בכ-10 דקות. השאלות מתאימות את עצמן לרמה שלך תוך כדי —
-              בדיוק כמו במבחן האמיתי — ובסוף תקבל רמה מאובחנת, ציון משוער והמלצה מאיפה להתחיל.
+              12 שאלות אדפטיביות בכ-10 דקות. השאלות מתאימות את עצמן לרמה שלך תוך כדי,
+              ובסוף תקבל הערכת רמה פנימית והמלצה מאיפה להתחיל. זהו אבחון קצר, לא סימולציה של הבחינה.
             </p>
             <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-500 dark:text-slate-400 text-right space-y-1.5">
               <div>✏️ 6 שאלות השלמת משפטים + 🔄 6 ניסוח מחדש</div>
               <div>⏱️ ללא טיימר — אבל נסה לענות בקצב טבעי</div>
-              <div>📊 האבחון מבוסס על אותו מודל סטטיסטי (IRT) של המבחן המלא</div>
+              <div>📊 האבחון משתמש במודל ה-IRT הפנימי של האתר</div>
             </div>
             <button
               onClick={() => loadStage(0, [], [])}
@@ -200,7 +200,7 @@ export default function DiagnosticPage() {
           <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700 text-center">
             <div className="text-sm text-slate-500 dark:text-slate-400 mb-1">הרמה המאובחנת שלך</div>
             <div className="text-5xl font-black text-slate-900 dark:text-white mb-2">רמה {level}/5</div>
-            <div className={`text-lg font-bold ${band.color}`}>ציון משוער: ~{score} — {band.label}</div>
+            <div className={`text-lg font-bold ${band.color}`}>אומדן פנימי: ~{score} — {band.label}</div>
             <div className="text-xs text-slate-400 dark:text-slate-500 mt-2">
               {totalCorrect}/{totalAnswered} נכונות · נותבת דרך רמות {levelsSeen.join(' ← ')}
             </div>
@@ -246,13 +246,13 @@ export default function DiagnosticPage() {
                 <li>• הנקודה החלשה שלך: <span className="font-bold">{weakLabel}</span> — קרא את <Link href={weakTipHref} className="underline font-semibold">מדריך הטכניקה</Link> ו<Link href={`/practice?type=${weakest[0]}&difficulty=${level}`} className="underline font-semibold">תרגל אותה ממוקד ברמה {level}</Link>.</li>
               )}
               <li>• תרגל ב<Link href={`/practice?type=sentence_completion&difficulty=${level}`} className="underline font-semibold">תרגול ממוקד</Link> ברמה {level}{level < 5 ? ` ואז עלה ל-${level + 1}` : ''}.</li>
-              <li>• כשאתה מרגיש מוכן — <Link href="/exam" className="underline font-semibold">מבחן מלא</Link> ייתן ציון מדויק יותר (כולל הבנת הנקרא).</li>
+              <li>• כשאתה מרגיש מוכן — <Link href="/exam" className="underline font-semibold">סימולציית פרקי הליבה</Link> תיתן אומדן רחב יותר שכולל גם הבנת הנקרא.</li>
               {score < 100 && <li>• חזק את הבסיס עם <Link href="/vocabulary" className="underline font-semibold">אוצר המילים</Link> — 10 דקות ביום.</li>}
             </ul>
           </div>
 
           <div className="flex gap-3">
-            <Link href="/exam" className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-center transition-colors">למבחן מלא</Link>
+            <Link href="/exam" className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-center transition-colors">לסימולציית הליבה</Link>
             <Link href="/practice" className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-xl font-semibold text-center transition-colors hover:bg-slate-50 dark:hover:bg-slate-700">לתרגול ממוקד</Link>
           </div>
         </div>

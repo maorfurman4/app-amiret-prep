@@ -302,13 +302,13 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               ✕
             </button>
             <div className="flex flex-col flex-1">
-              <span className="text-sm font-bold text-slate-900 dark:text-white">מבחן אמירנ"ט</span>
+              <span className="text-sm font-bold text-slate-900 dark:text-white">סימולציית פרקי הליבה</span>
               <span className="text-xs text-slate-500 dark:text-slate-400">
                 פרק {currentSection} — {currentCfg?.type === 'sentence_completion' ? 'השלמת משפטים' :
                   currentCfg?.type === 'restatement' ? 'ניסוח מחדש' :
                   currentCfg?.type === 'reading_comprehension' ? 'הבנת הנקרא' : 'ESRA'}
                 {currentCfg?.experimental && (
-                  <span className="mr-1 px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 font-semibold">ניסיוני</span>
+                  <span className="mr-1 px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 font-semibold">תרגול חלופי</span>
                 )}
               </span>
             </div>
@@ -363,9 +363,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         {currentCfg?.experimental && (
           <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl text-sm text-purple-900 dark:text-purple-200">
             <p>
-              <span className="font-bold">פרק ניסיוני — לא חובה!</span> במבחן האמיתי הפרק הניסיוני
-              יכול להכיל מטלות מסוגים חדשים (למשל מטלת כתיבה או האזנה) שמאל"ו בודק. טעויות בו{' '}
-              <span className="font-semibold">לא מורידות</span> את הציון, ותשובות נכונות יכולות{' '}
+              <span className="font-bold">תרגול חלופי — לא חלק מהדמיית הליבה.</span> בבחינת אמירנ&quot;ט
+              הפרקים האחרונים עשויים להיות שני פרקים ניסיוניים מסוגים חדשים, או מטלת כתיבה אחת.
+              האתר עדיין אינו מדמה את סוגי השמע, יצירת המילים, הדקדוק בהקשר או הכתיבה. התרגול החלופי כאן{' '}
+              <span className="font-semibold">אינו מוריד</span> את האומדן הפנימי, ותשובות נכונות יכולות{' '}
               <span className="font-semibold">להעלות</span> אותו במעט (עד 2 נקודות).
             </p>
             <button
@@ -373,7 +374,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               disabled={isSubmitting}
               className="mt-3 px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-300 text-sm font-semibold hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors disabled:opacity-60"
             >
-              דלג על הפרק וסיים את המבחן ←
+              דלג על התרגול החלופי וסיים ←
             </button>
           </div>
         )}

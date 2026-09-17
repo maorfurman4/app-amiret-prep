@@ -4,21 +4,15 @@ import type { Question } from '@/types/exam';
 
 const mocks = vi.hoisted(() => ({
   getServerClients: vi.fn(),
-  fetchUnseenQuestions: vi.fn(),
-  recordSeenQuestions: vi.fn(),
-  fetchUnseenRCQuestions: vi.fn(),
-  recordSeenPassage: vi.fn(),
-  recordWrongAnswers: vi.fn(),
+  planUnseenQuestions: vi.fn(),
+  planUnseenRCQuestions: vi.fn(),
 }));
 
 vi.mock('@/lib/supabase-server', () => ({ getServerClients: mocks.getServerClients }));
 vi.mock('@/lib/question-history', () => ({
-  fetchUnseenQuestions: mocks.fetchUnseenQuestions,
-  recordSeenQuestions: mocks.recordSeenQuestions,
-  fetchUnseenRCQuestions: mocks.fetchUnseenRCQuestions,
-  recordSeenPassage: mocks.recordSeenPassage,
+  planUnseenQuestions: mocks.planUnseenQuestions,
+  planUnseenRCQuestions: mocks.planUnseenRCQuestions,
 }));
-vi.mock('@/lib/review-queue', () => ({ recordWrongAnswers: mocks.recordWrongAnswers }));
 
 import { POST } from './route';
 
@@ -63,31 +57,21 @@ function session(overrides: Record<string, unknown> = {}) {
 
 function createSupabase(
   sessionResult = session(),
-  updateResult: { data: { id: string }[] | null; error: unknown } = { data: [{ id: 'session-id' }], error: null },
+  updateResult: { data: boolean; error: unknown } = { data: true, error: null },
 ) {
-  let updatePayload: Record<string, unknown> | undefined;
   const fetchEq = vi.fn();
   const fetchSingle = vi.fn().mockResolvedValue({ data: sessionResult, error: null });
   const fetchChain = { eq: fetchEq, single: fetchSingle };
   fetchEq.mockReturnValue(fetchChain);
 
-  const updateSelect = vi.fn().mockResolvedValue(updateResult);
-  const updateIs = vi.fn().mockReturnValue({ select: updateSelect });
-  const updateEq = vi.fn();
-  const updateChain = { eq: updateEq, is: updateIs };
-  updateEq.mockReturnValue(updateChain);
-
   const select = vi.fn().mockReturnValue(fetchChain);
-  const update = vi.fn((payload: Record<string, unknown>) => {
-    updatePayload = payload;
-    return updateChain;
-  });
-  const from = vi.fn().mockReturnValue({ select, update });
+  const from = vi.fn().mockReturnValue({ select });
+  const rpc = vi.fn().mockResolvedValue(updateResult);
 
   return {
-    supabase: { from },
-    spies: { from, fetchEq, updateEq, updateIs, updateSelect },
-    getUpdatePayload: () => updatePayload,
+    supabase: { from, rpc },
+    spies: { from, fetchEq, rpc },
+    getUpdatePayload: () => rpc.mock.calls[0]?.[1]?.p_update as Record<string, unknown> | undefined,
   };
 }
 
@@ -104,8 +88,7 @@ function validBody(overrides: Record<string, unknown> = {}) {
 describe('POST /api/exam/answer', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.fetchUnseenQuestions.mockResolvedValue(questions);
-    mocks.recordSeenQuestions.mockResolvedValue(undefined);
+    mocks.planUnseenQuestions.mockResolvedValue({ questions, resetQuestionIds: [] });
   });
 
   it('rejects an answer list that does not match the section', async () => {
@@ -116,7 +99,7 @@ describe('POST /api/exam/answer', () => {
 
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({ error: 'Invalid answers length' });
-    expect(db.spies.updateEq).not.toHaveBeenCalled();
+    expect(db.spies.rpc).not.toHaveBeenCalled();
   });
 
   it('scores every late answer as unanswered before advancing', async () => {
@@ -138,15 +121,17 @@ describe('POST /api/exam/answer', () => {
   });
 
   it('returns a conflict when another request already advanced the section', async () => {
-    const db = createSupabase(session(), { data: [], error: null });
+    const db = createSupabase(session(), { data: false, error: null });
     mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null });
 
     const response = await POST(request(validBody()));
 
     expect(response.status).toBe(409);
     await expect(response.json()).resolves.toEqual({ error: 'Section already submitted' });
-    expect(db.spies.updateEq).toHaveBeenCalledWith('current_section_index', 1);
-    expect(db.spies.updateIs).toHaveBeenCalledWith('completed_at', null);
+    expect(db.spies.rpc).toHaveBeenCalledWith('commit_exam_section', expect.objectContaining({
+      p_section_index: 1,
+      p_owner_id: 'owner-id',
+    }));
   });
 
   it('uses the authenticated owner instead of a supplied guest id', async () => {
@@ -161,5 +146,23 @@ describe('POST /api/exam/answer', () => {
     expect(response.status).toBe(200);
     expect(db.spies.fetchEq).toHaveBeenNthCalledWith(1, 'id', 'session-id');
     expect(db.spies.fetchEq).toHaveBeenNthCalledWith(2, 'user_id', 'authenticated-owner');
+  });
+
+  it('commits question-history changes in the same RPC as the section', async () => {
+    const db = createSupabase();
+    mocks.planUnseenQuestions.mockResolvedValue({
+      questions,
+      resetQuestionIds: ['old-question-id'],
+    });
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null });
+
+    const response = await POST(request(validBody()));
+
+    expect(response.status).toBe(200);
+    expect(db.spies.rpc).toHaveBeenCalledWith('commit_exam_section', expect.objectContaining({
+      p_reset_question_ids: ['old-question-id'],
+      p_seen_question_ids: questions.map(question => question.id),
+      p_update: expect.objectContaining({ current_section_index: 2 }),
+    }));
   });
 });

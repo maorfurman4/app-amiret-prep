@@ -30,6 +30,31 @@ export async function fetchUnseenQuestions({
   difficultyLevel: number;
   needed: number;
 }): Promise<Question[]> {
+  const plan = await planUnseenQuestions({ supabase, userKey, type, difficultyLevel, needed });
+  if (plan.resetQuestionIds.length > 0) {
+    await supabase
+      .from('user_question_history')
+      .delete()
+      .eq('user_key', userKey)
+      .in('question_id', plan.resetQuestionIds);
+  }
+  return plan.questions;
+}
+
+/** Read-only selection plan for an atomic exam transition. */
+export async function planUnseenQuestions({
+  supabase,
+  userKey,
+  type,
+  difficultyLevel,
+  needed,
+}: {
+  supabase: SupabaseClient;
+  userKey: string;
+  type: string;
+  difficultyLevel: number;
+  needed: number;
+}): Promise<{ questions: Question[]; resetQuestionIds: string[] }> {
   // Get IDs already seen by this user for this type+difficulty combination only
   // (scoped to difficulty so reset doesn't wipe other difficulty levels)
   const { data: allQsOfTypeDiff } = await supabase
@@ -54,20 +79,11 @@ export async function fetchUnseenQuestions({
   let questions = await queryQuestions(supabase, type, difficultyLevel, needed, seenIds);
 
   if (questions.length >= needed) {
-    return questions.slice(0, needed);
-  }
-
-  // Not enough unseen → reset history for this type+difficulty only (not cross-difficulty)
-  if (seenIds.length > 0) {
-    await supabase
-      .from('user_question_history')
-      .delete()
-      .eq('user_key', userKey)
-      .in('question_id', typeDiffIds);
+    return { questions: questions.slice(0, needed), resetQuestionIds: [] };
   }
 
   questions = await queryQuestions(supabase, type, difficultyLevel, needed, []);
-  return questions.slice(0, needed);
+  return { questions: questions.slice(0, needed), resetQuestionIds: seenIds.length > 0 ? typeDiffIds : [] };
 }
 
 async function queryQuestions(
@@ -136,6 +152,25 @@ export async function fetchUnseenRCQuestions({
   difficultyLevel: number;
   usedPIds: string[];
 }): Promise<Question[]> {
+  const plan = await planUnseenRCQuestions({ supabase, userKey, difficultyLevel, usedPIds });
+  if (plan.resetPassageHistory && userKey) {
+    await supabase.from('user_passage_history').delete().eq('user_key', userKey);
+  }
+  return plan.questions;
+}
+
+/** Read-only RC selection plan for an atomic exam transition. */
+export async function planUnseenRCQuestions({
+  supabase,
+  userKey,
+  difficultyLevel,
+  usedPIds,
+}: {
+  supabase: SupabaseClient;
+  userKey: string | null;
+  difficultyLevel: number;
+  usedPIds: string[];
+}): Promise<{ questions: Question[]; resetPassageHistory: boolean }> {
   let excludePassageIds = [...usedPIds];
 
   if (userKey) {
@@ -151,20 +186,15 @@ export async function fetchUnseenRCQuestions({
 
   if (!passage && userKey) {
     // All passages seen — reset cross-session history and retry (keep in-session exclusions)
-    await supabase
-      .from('user_passage_history')
-      .delete()
-      .eq('user_key', userKey);
-
     const freshPassage = await queryPassage(supabase, difficultyLevel, usedPIds);
     if (freshPassage) {
-      return buildRCQuestions(supabase, freshPassage);
+      return { questions: await buildRCQuestions(supabase, freshPassage), resetPassageHistory: true };
     }
-    return [];
+    return { questions: [], resetPassageHistory: true };
   }
 
-  if (!passage) return [];
-  return buildRCQuestions(supabase, passage);
+  if (!passage) return { questions: [], resetPassageHistory: false };
+  return { questions: await buildRCQuestions(supabase, passage), resetPassageHistory: false };
 }
 
 async function queryPassage(

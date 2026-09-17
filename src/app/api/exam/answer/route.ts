@@ -2,12 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, isExperimentalSection, type Question, type SectionResult } from '@/types/exam';
 import { updateThetaAfterSection, routeNextDifficulty, thetaToScore, correctCount } from '@/lib/adaptive';
-import { recordWrongAnswers } from '@/lib/review-queue';
 import {
-  fetchUnseenQuestions,
-  recordSeenQuestions,
-  fetchUnseenRCQuestions,
-  recordSeenPassage,
+  planUnseenQuestions,
+  planUnseenRCQuestions,
 } from '@/lib/question-history';
 
 /**
@@ -129,6 +126,13 @@ export async function POST(req: NextRequest) {
     answers_by_section: { ...session.answers_by_section, [body.sectionIndex]: answers },
     section_results: [...(session.section_results as object[]), result],
   };
+  let resetQuestionIds: string[] = [];
+  let resetPassageHistory = false;
+  let seenQuestionIds: string[] = [];
+  let seenPassageId: string | null = null;
+  let activityDate: string | null = null;
+  let activitySource: string | null = null;
+  let wrongQuestionIds: string[] = [];
 
   if (isLastSection) {
     // Exam complete — no more sections to fetch.
@@ -152,23 +156,15 @@ export async function POST(req: NextRequest) {
     updatePayload.score = Math.max(baseScore, scoreWithExperimental);
     updatePayload.current_section_expires_at = null;
 
-    if (userKey) {
-      const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
-      await supabase
-        .from('activity_log')
-        .upsert({ user_id: userKey, activity_date: today, source: session.is_practice ? 'practice_exam' : 'exam' }, { onConflict: 'user_id,activity_date', ignoreDuplicates: true });
-
-      // Real exam answers are never sent back to the client (anti-cheat), so
-      // wrong questions are queued for review here, once, at completion.
-      const wrongQuestionIds = allResults.flatMap(sr =>
-        (sr.questions as Question[])
-          .filter((q, i) => (sr.answers as (number | null)[])[i] !== q.correct_answer)
-          .map(q => q.id)
-      );
-      if (wrongQuestionIds.length > 0) {
-        await recordWrongAnswers(supabase, user ? 'user_id' : 'guest_id', userKey, wrongQuestionIds);
-      }
-    }
+    activityDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
+    activitySource = session.is_practice ? 'practice_exam' : 'exam';
+    // Real exam answers are never sent back to the client (anti-cheat), so
+    // wrong questions are queued transactionally at completion.
+    wrongQuestionIds = allResults.flatMap(sr =>
+      (sr.questions as Question[])
+        .filter((q, i) => (sr.answers as (number | null)[])[i] !== q.correct_answer)
+        .map(q => q.id)
+    );
   } else {
     // ── Step 2: Derive next difficulty from updated θ ──────────────────────────
     const nextDifficulty = routeNextDifficulty(newTheta);
@@ -182,31 +178,31 @@ export async function POST(req: NextRequest) {
     let nextQuestions: Question[] = [];
 
     if (nextCfg.type === 'reading_comprehension') {
-      nextQuestions = await fetchUnseenRCQuestions({
+      const selection = await planUnseenRCQuestions({
         supabase,
         userKey,
         difficultyLevel: nextDifficulty,
         usedPIds,
       });
+      nextQuestions = selection.questions;
+      resetPassageHistory = selection.resetPassageHistory;
 
       if (nextQuestions.length > 0) {
-        const passageId = nextQuestions[0].passage_id!;
-        updatePayload.used_passage_ids = [...usedPIds, passageId];
-        if (userKey) {
-          await recordSeenPassage(supabase, userKey, passageId);
-        }
+        seenPassageId = nextQuestions[0].passage_id!;
+        updatePayload.used_passage_ids = [...usedPIds, seenPassageId];
       }
     } else {
       if (userKey) {
         // Cross-session deduplication
-        nextQuestions = await fetchUnseenQuestions({
+        const selection = await planUnseenQuestions({
           supabase,
           userKey,
           type: nextCfg.type,
           difficultyLevel: nextDifficulty,
           needed: nextCfg.questionCount,
         });
-        await recordSeenQuestions(supabase, userKey, nextQuestions.map(q => q.id));
+        nextQuestions = selection.questions;
+        resetQuestionIds = selection.resetQuestionIds;
       } else {
         // No user_key — fall back to in-session deduplication only
         let qQuery = supabase
@@ -227,6 +223,7 @@ export async function POST(req: NextRequest) {
     }
 
     const newQIds = nextQuestions.map(q => q.id);
+    seenQuestionIds = newQIds;
     updatePayload.used_question_ids = [...usedQIds, ...newQIds];
 
     // Write only the newly fetched section; keep completed sections for results page
@@ -243,22 +240,28 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Conditional update: only if this section is STILL the active one. Two
-  // concurrent submits (double-tap, retry after a timeout, two tabs) would
-  // otherwise both pass the checks above and process the section twice.
-  // The loser gets 0 rows and a 409; the client reloads server state.
-  const { data: updated, error: updateErr } = await supabase
-    .from('exam_sessions')
-    .update(updatePayload)
-    .eq('id', body.sessionId)
-    .eq('current_section_index', body.sectionIndex)
-    .is('completed_at', null)
-    .select('id');
+  // One database transaction commits the session and every durable side
+  // effect. The row-level conditional update makes concurrent submissions
+  // serialize; the loser returns false before any history writes can run.
+  const { data: updated, error: updateErr } = await supabase.rpc('commit_exam_section', {
+    p_session_id: body.sessionId,
+    p_owner_id: userKey,
+    p_section_index: body.sectionIndex,
+    p_update: updatePayload,
+    p_reset_question_ids: resetQuestionIds,
+    p_seen_question_ids: seenQuestionIds,
+    p_reset_passage_history: resetPassageHistory,
+    p_seen_passage_id: seenPassageId,
+    p_activity_date: activityDate,
+    p_activity_source: activitySource,
+    p_wrong_question_ids: wrongQuestionIds,
+    p_review_owner_type: user ? 'user' : 'guest',
+  });
 
   if (updateErr) {
     return NextResponse.json({ error: 'Failed to update session' }, { status: 500 });
   }
-  if (!updated || updated.length === 0) {
+  if (!updated) {
     return NextResponse.json({ error: 'Section already submitted' }, { status: 409 });
   }
 

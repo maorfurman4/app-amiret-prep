@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
-// The default @upstash/redis entry pulls in a Node.js-specific build (uses
-// process.version), which Next.js's Edge Runtime (what middleware always
-// runs on) rejects at build time. The /cloudflare build is a Web-standard
-// (fetch-only) variant with no Node API dependency — it works fine on
-// Vercel's Edge Runtime too, not just literally Cloudflare.
+// Fetch-only Redis client; works in the Node.js proxy runtime too.
 import { Redis } from '@upstash/redis/cloudflare';
 
 /**
@@ -62,7 +58,7 @@ function inMemoryLimit(ip: string): boolean {
   return timestamps.length <= MAX_REQUESTS;
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   if (!req.nextUrl.pathname.startsWith('/api/')) return NextResponse.next();
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';

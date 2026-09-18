@@ -9,9 +9,8 @@ import { getServerClients } from '@/lib/supabase-server';
  * so ownership must be enforced here instead of relying on the DB policy.
  */
 export async function GET(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+  const { supabase, user, guestId } = await getServerClients();
   const sessionId = req.nextUrl.searchParams.get('sessionId');
-  const guestId = req.nextUrl.searchParams.get('guestId');
   const owner = user?.id ?? guestId;
 
   if (!sessionId) return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });

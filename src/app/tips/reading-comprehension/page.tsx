@@ -21,8 +21,8 @@ export default function ReadingComprehensionTipsPage() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
             <h2 className="text-lg font-bold text-slate-900 mb-3">סדר הקריאה המומלץ — ולמה דווקא הוא</h2>
             <p className="text-slate-600 text-sm leading-relaxed mb-4">
-              שתי גישות קיצוניות נפוצות אצל מכוני הכנה: לקרוא את כל השאלות לפני הקטע (מסוכן — הופך את הקריאה ל"חיפוש" ומפספס
-              את הרעיון המרכזי), או לקרוא את הקטע במלואו בלי שום כיוון (מסוכן אחרת — קוראים "בחושך" וחוזרים לטקסט שוב ושוב).
+              שתי גישות קיצוניות נפוצות אצל מכוני הכנה: לקרוא את כל השאלות לפני הקטע (מסוכן — הופך את הקריאה ל&quot;חיפוש&quot; ומפספס
+              את הרעיון המרכזי), או לקרוא את הקטע במלואו בלי שום כיוון (מסוכן אחרת — קוראים &quot;בחושך&quot; וחוזרים לטקסט שוב ושוב).
               הגישה שעובדת הכי טוב היא <span className="font-semibold text-slate-800">משולבת</span>: הצצה קצרה שנותנת כיוון,
               ואז קריאה אחת מלאה שמכסה גם את הפרטים וגם את התמונה השלמה.
             </p>
@@ -136,7 +136,7 @@ export default function ReadingComprehensionTipsPage() {
             <div className="border-l-4 border-orange-400 bg-orange-50/50 p-4 rounded-r-xl">
               <p className="font-bold text-slate-800 text-sm mb-1">אל תתקע על שאלה קשה בעודך באמצע</p>
               <p className="text-slate-600 text-sm leading-relaxed">
-                באמירנ"ט שאלה ריקה ושאלה שגויה שוות בדיוק (אפס נקודות) — אין שום יתרון בהשארת שאלה ריקה. אם שאלה בודדת
+                באמירנ&quot;ט שאלה ריקה ושאלה שגויה שוות בדיוק (אפס נקודות) — אין שום יתרון בהשארת שאלה ריקה. אם שאלה בודדת
                 גוזלת יותר מ-3 דקות, סמן ניחוש ועבור לשאלה הבאה; חזור אליה רק אם נשאר זמן אחרי שכל השאר נענו.
               </p>
             </div>

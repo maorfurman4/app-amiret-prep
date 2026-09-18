@@ -39,7 +39,7 @@ function sortedCategories(groups: Record<string, unknown[]>): string[] {
 export default function ReviewQueuePage() {
   const router = useRouter();
 
-  const [guestId, setGuestId] = useState<string>('');
+  const guestId = ''; // Ownership is resolved from the server cookie or account.
   const [step, setStep] = useState<Step>('loading');
 
   // Master list — everything currently due, source of truth for the category overview.
@@ -53,24 +53,8 @@ export default function ReviewQueuePage() {
   const [correctCount, setCorrectCount] = useState(0);
   const [showQuestionPicker, setShowQuestionPicker] = useState(false);
 
-  useEffect(() => {
-    let id = localStorage.getItem('amiret_guest_id');
-    if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem('amiret_guest_id', id);
-    }
-    setGuestId(id);
-  }, []);
-
-  useEffect(() => {
-    if (!guestId) return;
-    fetchDueQuestions(guestId);
-  }, [guestId]);
-
-  const fetchDueQuestions = async (id: string) => {
-    setStep('loading');
-    try {
-      const res = await authFetch(`/api/review-queue?guestId=${encodeURIComponent(id)}`);
+  const fetchDueQuestions = useCallback((id: string) => authFetch(`/api/review-queue?guestId=${encodeURIComponent(id)}`).then(async res => {
+      if (!res.ok) throw new Error('Unable to load review questions');
       const data = await res.json() as { questions: Question[]; count: number };
       if (!data.questions || data.questions.length === 0) {
         setAllQuestions([]);
@@ -79,10 +63,9 @@ export default function ReviewQueuePage() {
         setAllQuestions(data.questions);
         setStep('overview');
       }
-    } catch {
-      setStep('error');
-    }
-  };
+  }).catch(() => { setStep('error'); }), []);
+
+  useEffect(() => { void fetchDueQuestions(''); }, [fetchDueQuestions]);
 
   // Begin a reviewing session — either every due question, or just one category.
   const handleStartReview = (categoryType?: string) => {
@@ -415,7 +398,7 @@ export default function ReviewQueuePage() {
   }, {});
   const pickerOrder = sortedCategories(pickerGroups);
 
-  const QuestionPicker = () => (
+  const questionPicker = (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowQuestionPicker(false)}>
       <div className="bg-white dark:bg-slate-800 rounded-t-3xl w-full max-w-lg max-h-[70vh] flex flex-col" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-700">
@@ -497,7 +480,7 @@ export default function ReviewQueuePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
-      {showQuestionPicker && <QuestionPicker />}
+      {showQuestionPicker && questionPicker}
 
       <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">

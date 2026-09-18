@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 
 /**
@@ -8,9 +8,8 @@ import { getServerClients } from '@/lib/supabase-server';
  * review_queue) contributes its correct word as a flashcard.
  * Graduating a question out of the review queue removes the word — mastered.
  */
-export async function GET(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
-  const guestId = req.nextUrl.searchParams.get('guestId');
+export async function GET() {
+  const { supabase, user, guestId } = await getServerClients();
   if (!user && !guestId) return NextResponse.json({ words: [] });
 
   let q = supabase.from('review_queue').select('question_id, times_wrong');

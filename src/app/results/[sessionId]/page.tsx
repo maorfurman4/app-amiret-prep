@@ -111,7 +111,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
               <h2 className="font-bold text-slate-900 dark:text-white mb-1">הערכת טווח ציון</h2>
               <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">
-                על בסיס הביצועים שלך כאן, הטווח המוערך הוא {lo}–{hi} — אומדן פנימי של האתר, לא ציון רשמי של נית&quot;ה
+                על בסיס הביצועים שלך כאן, הטווח המוערך הוא {lo}–{hi} — אומדן פנימי של האתר, לא ציון רשמי של מאל&quot;ו
               </p>
               {/* Gradient score bar — RTL: low scores (50) on the right */}
               <div className="relative mb-5">
@@ -252,7 +252,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
               <h2 className="font-bold text-slate-900 dark:text-white mb-1">⏱️ ניתוח קצב</h2>
               <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
-                כמה זמן השקעת בכל פרק ביחס לתקציב — קצב הוא חצי מהציון באמירנ"ט
+                כמה זמן השקעת בכל פרק ביחס לזמן המוקצב — ניהול זמן עוזר להשלים את הפרק
               </p>
               <div className="space-y-3 mb-4">
                 {withTimings.map(sr => {
@@ -289,7 +289,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               {overCap.length > 0 ? (
                 <div className="p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl">
                   <div className="text-sm font-semibold text-orange-800 dark:text-orange-300 mb-1">
-                    ⚠️ {overCap.length} שאלות חרגו מ"תקציב התקיעה"
+                    ⚠️ {overCap.length} שאלות חרגו מ&quot;תקציב התקיעה&quot;
                   </div>
                   <div className="text-xs text-orange-700 dark:text-orange-400 leading-relaxed">
                     {overCap.slice(0, 4).map(x => `פרק ${x.section} שאלה ${x.q}: ${Math.round(x.t)} שנ׳${x.wrong ? ' (וגם שגויה — נחש ותתקדם!)' : ''}`).join(' · ')}

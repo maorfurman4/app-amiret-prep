@@ -20,6 +20,8 @@ interface SessionState {
   completed_at: string | null;
 }
 
+const EMPTY_QUESTIONS: Question[] = [];
+
 export default function ExamPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = use(params);
   const router = useRouter();
@@ -38,29 +40,25 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   // Pace tracking: seconds spent per question in the current section
   const timingsRef = useRef<number[]>([]);
-  const lastTickRef = useRef<number>(Date.now());
+  const lastTickRef = useRef<number>(0);
   const prevIndexRef = useRef(0);
-
-  const [guestId, setGuestId] = useState<string | null>(null);
-
-  // Read guestId after hydration — avoids SSR/client mismatch
-  useEffect(() => {
-    setGuestId(localStorage.getItem('amiret_guest_id') ?? null);
-  }, []);
 
   // In-section answers only reach the server on section submit, so a
   // refresh / closed tab / dead network mid-section used to lose them while
   // the server timer kept running. Mirror every pick to localStorage and
   // restore it on load; the draft is dropped once the section is submitted.
-  const readDraft = (section: number, count: number) => readExamDraft(localStorage, sessionId, section, count);
-  const writeDraft = (section: number, arr: (number | null)[]) => writeExamDraft(localStorage, sessionId, section, arr);
-  const clearDraft = (section: number) => clearExamDraft(localStorage, sessionId, section);
+  const readDraft = useCallback((section: number, count: number) => {
+    try { return readExamDraft(localStorage, sessionId, section, count); } catch { return null; }
+  }, [sessionId]);
+  const writeDraft = useCallback((section: number, arr: (number | null)[]) => {
+    try { writeExamDraft(localStorage, sessionId, section, arr); } catch { /* Storage unavailable. */ }
+  }, [sessionId]);
+  const clearDraft = useCallback((section: number) => {
+    try { clearExamDraft(localStorage, sessionId, section); } catch { /* Storage unavailable. */ }
+  }, [sessionId]);
 
   // Load or recover session state from server
-  const loadSession = useCallback(async () => {
-    // A retry after a failed load must be able to leave the error screen.
-    setError(null);
-    const res = await authFetch(`/api/exam/state?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId ?? '')}`);
+  const loadSession = useCallback(() => authFetch(`/api/exam/state?sessionId=${sessionId}`).then(async res => {
     if (res.status === 429) { setError('יותר מדי בקשות בזמן קצר — חכה כדקה ולחץ "נסה שוב".'); return; }
     if (!res.ok) { setError('לא ניתן לטעון את המבחן'); return; }
     const data = await res.json() as { session: SessionState; remainingMs: number; timerExpired: boolean };
@@ -74,6 +72,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     const existingAnswers = (data.session.answers_by_section as Record<number, (number | null)[]>)[section];
     const questionCount = (data.session.questions_by_section as Record<number, Question[]>)[section]?.length ?? 0;
 
+    setError(null);
     setSession(data.session);
     // Server-saved answers win; otherwise restore the local draft for this section.
     setAnswers(existingAnswers ?? readDraft(section, questionCount) ?? Array(questionCount).fill(null));
@@ -83,20 +82,17 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     lastTickRef.current = Date.now();
     prevIndexRef.current = 0;
 
-    // If timer already expired on server, submit immediately
-    if (data.timerExpired) {
-      await submitSection(data.session, Array(questionCount).fill(null));
-    }
-  }, [sessionId, guestId]); // guestId must be here — loaded async after hydration
+  }).catch(() => {
+    setError('לא ניתן להתחבר. בדוק את החיבור ונסה שוב.');
+  }), [sessionId, router, readDraft]);
 
-  // Only run once guestId is resolved (null = not yet read from localStorage)
   useEffect(() => {
-    if (guestId !== null) loadSession();
+    void loadSession();
   }, [loadSession]);
 
   const currentSection = session?.current_section_index ?? 1;
   const currentCfg = SECTION_CONFIGS[currentSection - 1];
-  const currentQuestions = (session?.questions_by_section[currentSection] ?? []) as Question[];
+  const currentQuestions = session?.questions_by_section[currentSection] ?? EMPTY_QUESTIONS;
   const completedSections = session
     ? Object.keys(session.answers_by_section).map(Number).filter(n => n < currentSection)
     : [];
@@ -105,10 +101,35 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   useEffect(() => {
     const now = Date.now();
     const prev = prevIndexRef.current;
-    timingsRef.current[prev] = (timingsRef.current[prev] ?? 0) + (now - lastTickRef.current) / 1000;
+    timingsRef.current[prev] = (timingsRef.current[prev] ?? 0) + (now - (lastTickRef.current || now)) / 1000;
     lastTickRef.current = now;
     prevIndexRef.current = currentQuestionIndex;
   }, [currentQuestionIndex]);
+
+  // Warn before leaving mid-exam (non-practice only)
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (session && !session.is_practice && !session.completed_at) {
+        e.preventDefault();
+        e.returnValue = 'אם תצא עכשיו, ההתקדמות במבחן לא תישמר. לצאת בכל זאת?';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [session]);
+
+  const handleAnswer = useCallback((questionIndex: number, optionIndex: number) => {
+    if (isSubmittingRef.current) return;
+    setAnswers(prev => {
+      const next = [...prev];
+      next[questionIndex] = optionIndex;
+      if (session) writeDraft(session.current_section_index, next);
+      return next;
+    });
+    if (session?.is_practice) {
+      setLockedAnswers(prev => new Set([...prev, questionIndex]));
+    }
+  }, [session, writeDraft]);
 
   // Keyboard shortcuts: 1-4 select answer, Enter/Space go next question
   useEffect(() => {
@@ -129,32 +150,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [session, currentQuestions, currentQuestionIndex, answers, lockedAnswers]);
-
-  // Warn before leaving mid-exam (non-practice only)
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (session && !session.is_practice && !session.completed_at) {
-        e.preventDefault();
-        e.returnValue = 'אם תצא עכשיו, ההתקדמות במבחן לא תישמר. לצאת בכל זאת?';
-      }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [session]);
-
-  const handleAnswer = (questionIndex: number, optionIndex: number) => {
-    if (isSubmittingRef.current) return;
-    setAnswers(prev => {
-      const next = [...prev];
-      next[questionIndex] = optionIndex;
-      if (session) writeDraft(session.current_section_index, next);
-      return next;
-    });
-    if (session?.is_practice) {
-      setLockedAnswers(prev => new Set([...prev, questionIndex]));
-    }
-  };
+  }, [session, currentQuestions, currentQuestionIndex, answers, lockedAnswers, handleAnswer]);
 
   const submitSection = useCallback(async (sess: SessionState, sectionAnswers: (number | null)[]) => {
     if (isSubmittingRef.current) return;
@@ -169,7 +165,6 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           sessionId: sess.id,
           sectionIndex: sess.current_section_index,
           answers: sectionAnswers,
-          guestId,
           timings: sectionAnswers.map((_, i) => Math.round(
             (timingsRef.current[i] ?? 0) + (i === prevIndexRef.current ? (Date.now() - lastTickRef.current) / 1000 : 0)
           )),
@@ -212,7 +207,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       isSubmittingRef.current = false;
       setIsSubmitting(false);
     }
-  }, [loadSession, router]);
+  }, [loadSession, router, clearDraft]);
 
   const handleTimerExpire = useCallback(() => {
     if (!session) return;
@@ -249,11 +244,16 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const [isExiting, setIsExiting] = useState(false);
   const handleConfirmExit = async () => {
     setIsExiting(true);
-    for (let i = 1; i <= SECTION_CONFIGS.length; i++) clearDraft(i);
     try {
-      await authFetch(`/api/exam/state?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId ?? '')}`, { method: 'DELETE' });
-    } finally {
+      const response = await authFetch(`/api/exam/state?sessionId=${sessionId}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Discard failed');
+      for (let i = 1; i <= SECTION_CONFIGS.length; i++) clearDraft(i);
       router.push('/');
+    } catch {
+      setError('לא הצלחנו לבטל את המבחן. ההתקדמות נשמרה; נסה שוב.');
+      setExitConfirm(false);
+    } finally {
+      setIsExiting(false);
     }
   };
 

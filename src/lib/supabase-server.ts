@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies, headers } from 'next/headers';
-import type { User } from '@supabase/supabase-js';
+import { createClient, type User } from '@supabase/supabase-js';
+import { GUEST_COOKIE, guestSigningKey, verifyGuestToken } from './guest-token';
 
 /**
  * Returns both an auth client (reads user session from cookies)
@@ -19,17 +20,24 @@ export async function getServerClients() {
   // The browser keeps the session in localStorage (not cookies), so clients
   // send the access token via the Authorization header; cookies are a fallback.
   let user: User | null = null;
+  let invalidAuthorization = false;
   try {
     const hdrs = await headers();
     const auth = hdrs.get('authorization') ?? '';
     const token = auth.toLowerCase().startsWith('bearer ') ? auth.slice(7) : null;
-    const { data } = token
+    invalidAuthorization = !!auth;
+    const { data } = auth && !token ? { data: { user: null } } : token
       ? await authClient.auth.getUser(token)
       : await authClient.auth.getUser();
     user = data.user;
+    invalidAuthorization = !!auth && !user;
   } catch { /* unauthenticated */ }
 
-  return { authClient, supabase: dbClient, user };
+  const cookieStore = await cookies();
+  const guestId = invalidAuthorization ? null : verifyGuestToken(
+    cookieStore.get(GUEST_COOKIE)?.value, guestSigningKey(),
+  );
+  return { authClient, supabase: dbClient, user, guestId };
 }
 
 export async function createServerSupabaseClient() {
@@ -53,21 +61,11 @@ export async function createServerSupabaseClient() {
 }
 
 export async function createAdminSupabaseClient() {
-  const cookieStore = await cookies();
-  return createServerClient(
+  return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://placeholder.supabase.co',
     process.env.SUPABASE_SERVICE_ROLE_KEY ?? 'placeholder-service-key',
     {
-      cookies: {
-        getAll() { return cookieStore.getAll(); },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {}
-        },
-      },
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     }
   );
 }

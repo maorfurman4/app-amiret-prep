@@ -18,7 +18,7 @@ import {
  * Uses user_question_history / user_passage_history for cross-session deduplication.
  */
 export async function POST(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+  const { supabase, user, guestId } = await getServerClients();
 
   let body: { sessionId: string; sectionIndex: number; answers: (number | null)[]; guestId?: string; timings?: number[] };
   try {
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const userKey = user?.id ?? body.guestId ?? null;
+  const userKey = user?.id ?? guestId ?? null;
   if (!userKey) return NextResponse.json({ error: 'auth required' }, { status: 401 });
 
   const { data: session, error: fetchErr } = await supabase
@@ -222,6 +222,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    if (nextQuestions.length !== nextCfg.questionCount) {
+      return NextResponse.json({ error: 'לא ניתן לטעון פרק מלא כרגע. נסה שוב.' }, { status: 503 });
+    }
     const newQIds = nextQuestions.map(q => q.id);
     seenQuestionIds = newQIds;
     updatePayload.used_question_ids = [...usedQIds, ...newQIds];

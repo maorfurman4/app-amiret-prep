@@ -1,0 +1,1 @@
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(e=>Promise.all(e.map(async e=>{if("apis"===e)return caches.delete(e);let a=await caches.open(e),t=await a.keys();await Promise.all(t.filter(e=>{let a=new URL(e.url);return a.origin===self.location.origin&&a.pathname.startsWith("/api/")||a.hostname.endsWith(".supabase.co")}).map(e=>a.delete(e)))}))))});

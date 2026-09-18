@@ -22,7 +22,7 @@ export default function RestatementTipsPage() {
             <h2 className="text-lg font-bold text-slate-900 mb-3">מה הסעיף בודק — ולמה זו לא בדיקת אוצר מילים</h2>
             <p className="text-slate-600 text-sm leading-relaxed">
               מוצג לך משפט מקור, ועליך לבחור מבין 4 אפשרויות את זו שמבטאת <span className="font-semibold text-slate-800">אותה משמעות בדיוק</span> —
-              במבנה לשוני שונה לחלוטין. זו בדיוק הסיבה שהתשובה הנכונה כמעט אף פעם לא "נראית" הכי דומה למקור: תשובה שמעתיקה
+              במבנה לשוני שונה לחלוטין. זו בדיוק הסיבה שהתשובה הנכונה כמעט אף פעם לא &quot;נראית&quot; הכי דומה למקור: תשובה שמעתיקה
               80% מהמילים המקוריות היא בדרך כלל מלכודת שמחליפה בשקט פרט קריטי (כיוון, כמות, שלילה). המבחן בודק אם הבנת
               את <span className="font-semibold text-slate-800">הלוגיקה</span> של המשפט, לא אם זיהית מילים מוכרות בתוכו.
             </p>
@@ -37,7 +37,7 @@ export default function RestatementTipsPage() {
                 פרק את משפט המקור לשלושה רכיבים: <span className="font-semibold">מי</span> (הנושא),{' '}
                 <span className="font-semibold">מה קרה</span> (הפעולה והתוצאה), ו-
                 <span className="font-semibold">איזה קשר לוגי</span> מחבר ביניהם — ניגוד (although, despite),
-                סיבה-תוצאה (because, therefore) או תנאי (if, unless — ראה מדריך מילות הקישור). זה "תעודת הזהות" של המשפט:
+                סיבה-תוצאה (because, therefore) או תנאי (if, unless — ראה מדריך מילות הקישור). זה &quot;תעודת הזהות&quot; של המשפט:
                 כל תשובה שמשנה אפילו רכיב אחד מהשלושה — משנה משפט לגמרי אחר, גם אם היא נשמעת דומה.
               </p>
             </div>
@@ -45,7 +45,7 @@ export default function RestatementTipsPage() {
               <p className="font-bold text-slate-800 text-sm mb-1">התמקד במשמעות — לא במילים</p>
               <p className="text-slate-600 text-sm leading-relaxed">
                 נסח לעצמך בעברית מה המשפט אומר, לפני שאתה קורא אפשרות אחת. הסיבה: ברגע שאתה משווה מילה-למילה נגד האנגלית
-                המקורית, קל "להיתפס" על תשובה שחולקת אוצר מילים אבל לא לוגיקה. השוואה נגד תרגום עברי משלך מנטרלת את המלכודת
+                המקורית, קל &quot;להיתפס&quot; על תשובה שחולקת אוצר מילים אבל לא לוגיקה. השוואה נגד תרגום עברי משלך מנטרלת את המלכודת
                 הזו — כי אתה בודק רעיון מול רעיון, לא מילה מול מילה.
               </p>
             </div>
@@ -53,7 +53,7 @@ export default function RestatementTipsPage() {
               <p className="font-bold text-slate-800 text-sm mb-1">בדוק: האם כל חלקי המשמעות נשמרו?</p>
               <p className="text-slate-600 text-sm leading-relaxed">
                 משפטי מקור מכילים לרוב יותר ממידע אחד (למשל: מי + מתי + למה). תשובה נכונה שומרת על <span className="font-semibold">כולם</span> —
-                תשובה שמדייקת בחלק אחד ומחסירה או משנה חלק אחר עדיין נחשבת שגויה. זו הסיבה ש"קרוב" לא מספיק כאן.
+                תשובה שמדייקת בחלק אחד ומחסירה או משנה חלק אחר עדיין נחשבת שגויה. זו הסיבה ש&quot;קרוב&quot; לא מספיק כאן.
               </p>
             </div>
           </div>

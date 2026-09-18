@@ -13,7 +13,7 @@ import { fetchUnseenQuestions, recordSeenQuestions } from '@/lib/question-histor
  * see the same question twice until the full pool is exhausted (then resets).
  */
 export async function POST(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+  const { supabase, user, guestId } = await getServerClients();
   let body: { mode?: ExamMode; isPractice?: boolean; guestId?: string };
   try {
     body = await req.json() as { mode?: ExamMode; isPractice?: boolean; guestId?: string };
@@ -22,10 +22,14 @@ export async function POST(req: NextRequest) {
   }
 
   // user_key identifies the user across sessions (authenticated or guest)
-  const userKey = user?.id ?? body.guestId ?? crypto.randomUUID();
+  const userKey = user?.id ?? guestId;
+  if (!userKey) return NextResponse.json({ error: 'auth required' }, { status: 401 });
 
   const mode: ExamMode = body.mode ?? 'full';
   const isPractice = body.isPractice ?? false;
+  if (!['full', 'practice', 'section', 'esra'].includes(mode) || typeof isPractice !== 'boolean') {
+    return NextResponse.json({ error: 'Invalid exam settings' }, { status: 400 });
+  }
 
   // Initial θ=0 → difficulty level 3
   const initialDifficulty = routeNextDifficulty(0); // = 3
@@ -40,7 +44,7 @@ export async function POST(req: NextRequest) {
     needed: section1Cfg.questionCount,
   });
 
-  if (section1Questions.length === 0) {
+  if (section1Questions.length !== section1Cfg.questionCount) {
     return NextResponse.json({ error: 'No questions available. Please try again later.' }, { status: 503 });
   }
 

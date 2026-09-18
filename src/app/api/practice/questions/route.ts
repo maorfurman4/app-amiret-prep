@@ -29,13 +29,12 @@ function fisherYates<T>(arr: T[]): T[] {
  *   guestId  — localStorage guest UUID, used when there is no authenticated user
  */
 export async function GET(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+  const { supabase, user, guestId } = await getServerClients();
 
   const { searchParams } = req.nextUrl;
   const type = searchParams.get('type') as QuestionType | null;
   const diffParam = searchParams.get('difficulty') ?? 'random';
   const countParam = parseInt(searchParams.get('count') ?? '5', 10);
-  const guestId = searchParams.get('guestId');
   const userKey = user?.id ?? guestId ?? null;
 
   if (!type || !['sentence_completion', 'restatement', 'reading_comprehension'].includes(type)) {

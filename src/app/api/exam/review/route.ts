@@ -3,11 +3,10 @@ import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, type Question, type SectionResult } from '@/types/exam';
 
 export async function GET(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+  const { supabase, user, guestId } = await getServerClients();
 
   const url = new URL(req.url);
   const sessionId = url.searchParams.get('sessionId');
-  const guestId = url.searchParams.get('guestId');
   const sessionOwner = user?.id ?? guestId;
 
   if (!sessionId) {

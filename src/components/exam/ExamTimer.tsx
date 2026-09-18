@@ -11,7 +11,7 @@ interface ExamTimerProps {
 export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
   const onExpireRef = useRef(onExpire);
-  onExpireRef.current = onExpire;
+  useEffect(() => { onExpireRef.current = onExpire; }, [onExpire]);
 
   const WARN_THRESHOLD = 10_000; // 10 seconds
 
@@ -23,18 +23,18 @@ export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
   useEffect(() => {
     if (isPractice || !expiresAt) return;
 
-    setRemainingMs(computeRemaining());
-
-    const interval = setInterval(() => {
+    const tick = () => {
       const ms = computeRemaining();
       setRemainingMs(ms);
       if (ms <= 0) {
         clearInterval(interval);
         onExpireRef.current();
       }
-    }, 500);
+    };
+    const interval = setInterval(tick, 500);
+    const initialTick = setTimeout(tick, 0);
 
-    return () => clearInterval(interval);
+    return () => { clearInterval(interval); clearTimeout(initialTick); };
   }, [expiresAt, isPractice, computeRemaining]);
 
   if (remainingMs === null && !isPractice) {

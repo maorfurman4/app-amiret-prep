@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 
 /**
@@ -8,9 +8,8 @@ import { getServerClients } from '@/lib/supabase-server';
  * because guests have no auth.uid()), so the app must enforce "only your
  * own rows" here rather than trusting the client-side query filter.
  */
-export async function GET(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
-  const guestId = req.nextUrl.searchParams.get('guestId');
+export async function GET() {
+  const { supabase, user, guestId } = await getServerClients();
   const owner = user?.id ?? guestId;
   if (!owner) return NextResponse.json({ sessions: [] });
 

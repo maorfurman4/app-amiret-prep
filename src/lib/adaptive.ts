@@ -10,20 +10,6 @@ export function irtProbability(theta: number, { a, b, c }: IrtParams): number {
   return c + (1 - c) / (1 + Math.exp(-a * (theta - b)));
 }
 
-/**
- * Log-likelihood of observed response vector.
- * u=1 correct, u=0 incorrect.
- */
-function logLikelihood(theta: number, items: IrtParams[], responses: number[]): number {
-  let ll = 0;
-  for (let i = 0; i < items.length; i++) {
-    const p = irtProbability(theta, items[i]);
-    const u = responses[i];
-    ll += u * Math.log(Math.max(p, 1e-10)) + (1 - u) * Math.log(Math.max(1 - p, 1e-10));
-  }
-  return ll;
-}
-
 // ─── MLE (Newton-Raphson) ─────────────────────────────────────────────────────
 
 /**

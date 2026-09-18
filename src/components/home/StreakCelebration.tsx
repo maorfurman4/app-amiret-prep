@@ -27,9 +27,12 @@ export function StreakCelebration() {
   useEffect(() => {
     if (streak < 1) return;
     const today = todayLocal();
-    if (localStorage.getItem(SEEN_KEY) === today) return;
-    localStorage.setItem(SEEN_KEY, today);
-    setVisible(true);
+    try { if (localStorage.getItem(SEEN_KEY) === today) return; } catch { return; }
+    const showTimer = setTimeout(() => {
+      try { localStorage.setItem(SEEN_KEY, today); } catch { return; }
+      setVisible(true);
+    }, 300);
+    return () => clearTimeout(showTimer);
   }, [streak]);
 
   const dismiss = () => {
@@ -41,7 +44,7 @@ export function StreakCelebration() {
     if (!visible) return;
     const t = setTimeout(dismiss, 3000);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [visible]);
 
   if (!visible) return null;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Question } from '@/types/exam';
 
 interface ExplanationData {
@@ -43,8 +43,8 @@ export function QuestionCard({
   showResult = false,
   hideHeader = false,
 }: QuestionCardProps) {
-  const [hintVisible, setHintVisible] = useState(false);
-  useEffect(() => { setHintVisible(false); }, [question.id]);
+  const [hintQuestionId, setHintQuestionId] = useState<string | null>(null);
+  const hintVisible = hintQuestionId === question.id;
   const explanation = isPractice && showResult ? parseExplanation(question.explanation) : null;
   const hintStrategy = (question as Question & { hint?: string }).hint
     ?? parseExplanation(question.explanation)?.strategy
@@ -141,7 +141,7 @@ export function QuestionCard({
         <div className="mt-4" dir="rtl">
           {!hintVisible ? (
             <button
-              onClick={() => setHintVisible(true)}
+              onClick={() => setHintQuestionId(question.id)}
               className="text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 transition-colors"
             >
               <span>💡</span>

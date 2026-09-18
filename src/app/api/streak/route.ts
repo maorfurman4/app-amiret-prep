@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { computeStreak } from '@/lib/streak-server';
 
@@ -9,9 +9,8 @@ import { computeStreak } from '@/lib/streak-server';
  * case another page needs just the streak without the rest of the
  * dashboard payload.
  */
-export async function GET(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
-  const guestId = req.nextUrl.searchParams.get('guestId');
+export async function GET() {
+  const { supabase, user, guestId } = await getServerClients();
   const owner = user?.id ?? guestId;
   if (!owner) return NextResponse.json({ streak: 0 });
 

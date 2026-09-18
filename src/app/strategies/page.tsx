@@ -638,7 +638,7 @@ export default function StrategiesPage() {
 
       {/* Header */}
       <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-5">
-        <h1 className="text-2xl font-black text-slate-900 dark:text-white">🧠 המדריך המלא לפתרון האמירנ"ט</h1>
+        <h1 className="text-2xl font-black text-slate-900 dark:text-white">🧠 המדריך המלא לפתרון האמירנ&quot;ט</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           בחר נושא — כל נושא ממוקד ומהיר לגלילה
         </p>
@@ -692,7 +692,7 @@ export default function StrategiesPage() {
 
             {topic === 'time' && (
               <section>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">תקציב הזמן שלך — כולל "תקציב תקיעה"</h2>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">תקציב הזמן שלך — כולל &quot;תקציב תקיעה&quot;</h2>
                 <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
                   <TextBlock text={TIME_INTRO} tone="intro" />
                 </div>
@@ -772,7 +772,7 @@ export default function StrategiesPage() {
 
             {topic === 'invest' && (
               <section>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">איפה כן שווה "להיתקע"</h2>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">איפה כן שווה &quot;להיתקע&quot;</h2>
                 <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
                   <TextBlock text={INVEST_INTRO} tone="intro" />
                 </div>

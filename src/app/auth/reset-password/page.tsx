@@ -9,6 +9,7 @@ import {
   classifyPasswordUpdateError,
   MIN_PASSWORD_LENGTH,
   validateNewPassword,
+  recoveryLinkIsInvalid,
 } from '@/lib/password-recovery';
 
 type Phase = 'checking' | 'form' | 'done' | 'invalid';
@@ -33,6 +34,11 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     let cancelled = false;
+    if (new URLSearchParams(window.location.search).has('error') || recoveryLinkIsInvalid(window.location.hash)) {
+      // An existing sign-in must not hide an explicitly rejected recovery link.
+      Promise.resolve().then(() => { if (!cancelled) setPhase('invalid'); });
+      return () => { cancelled = true; };
+    }
 
     // Recovery tokens can still be in the hash if the user landed here
     // directly (older email links); detectSessionInUrl processes them and
@@ -73,8 +79,8 @@ export default function ResetPasswordPage() {
       return;
     }
     setSaving(true);
+    try {
     const { error: updateErr } = await supabase.auth.updateUser({ password });
-    setSaving(false);
     if (updateErr) {
       // Supabase rejects reusing the current password and expired sessions.
       const failure = classifyPasswordUpdateError(updateErr);
@@ -86,6 +92,11 @@ export default function ResetPasswordPage() {
       return;
     }
     setPhase('done');
+    } catch {
+      setError('לא הצלחנו להתחבר. בדוק את החיבור ונסה שוב.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const card = (() => {

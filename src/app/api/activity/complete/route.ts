@@ -10,7 +10,7 @@ const TZ = 'Asia/Jerusalem';
  * covers practice and diagnostic, which aren't persisted to exam_sessions.
  */
 export async function POST(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+  const { supabase, user, guestId } = await getServerClients();
   let body: { guestId?: string; source?: string };
   try {
     body = await req.json() as { guestId?: string; source?: string };
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const owner = user?.id ?? body.guestId;
+  const owner = user?.id ?? guestId;
   if (!owner) return NextResponse.json({ error: 'auth required' }, { status: 401 });
 
   const today = new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());

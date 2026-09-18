@@ -12,9 +12,8 @@ function nextInterval(currentDays: number): number {
  * GET /api/review-queue?guestId=xxx
  * Returns due questions (next_review_at <= now()) with full question data.
  */
-export async function GET(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
-  const guestId = req.nextUrl.searchParams.get('guestId');
+export async function GET() {
+  const { supabase, user, guestId } = await getServerClients();
 
   if (!user && !guestId) {
     return NextResponse.json({ questions: [], count: 0 });
@@ -89,8 +88,7 @@ export async function GET(req: NextRequest) {
  *   queued questions of one question type (category)
  */
 export async function DELETE(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
-  const guestId = req.nextUrl.searchParams.get('guestId');
+  const { supabase, user, guestId } = await getServerClients();
   const questionId = req.nextUrl.searchParams.get('questionId');
   const type = req.nextUrl.searchParams.get('type');
 
@@ -134,7 +132,7 @@ export async function DELETE(req: NextRequest) {
  * - Correct in review: double interval or remove if graduated
  */
 export async function POST(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+  const { supabase, user, guestId } = await getServerClients();
 
   let body: { guestId?: string; questionId: string; wasCorrect: boolean };
   try {
@@ -143,7 +141,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const { guestId, questionId, wasCorrect } = body;
+  const { questionId, wasCorrect } = body;
 
   if (!questionId || (!user && !guestId)) {
     return NextResponse.json({ error: 'questionId required' }, { status: 400 });
@@ -161,12 +159,12 @@ export async function POST(req: NextRequest) {
   }
 
   const { data: existing } = await supabase
-    .from('review_queue').select('interval_days, times_wrong')
+    .from('review_queue').select('interval_days')
     .eq(ownCol, ownVal).eq('question_id', questionId).single();
 
   if (!existing) return NextResponse.json({ ok: true, action: 'not_in_queue' });
 
-  const { interval_days, times_wrong } = existing as { interval_days: number; times_wrong: number };
+  const { interval_days } = existing as { interval_days: number };
   const newInterval = nextInterval(interval_days);
 
   if (newInterval >= 30) {

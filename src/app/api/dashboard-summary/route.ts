@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { computeStreak } from '@/lib/streak-server';
 
@@ -22,9 +22,8 @@ const EMPTY: DashboardSummary = { streak: 0, lastScore: null, examCount: 0, revi
  * single-row select, so this is the cheapest possible read for what the
  * home page actually renders. One round trip instead of three.
  */
-export async function GET(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
-  const guestId = req.nextUrl.searchParams.get('guestId');
+export async function GET() {
+  const { supabase, user, guestId } = await getServerClients();
   const owner = user?.id ?? guestId;
   if (!owner) return NextResponse.json(EMPTY);
 

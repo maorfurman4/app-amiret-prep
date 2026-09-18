@@ -93,7 +93,7 @@ describe('POST /api/exam/answer', () => {
 
   it('rejects an answer list that does not match the section', async () => {
     const db = createSupabase();
-    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null });
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
 
     const response = await POST(request(validBody({ answers: [0, 1] })));
 
@@ -106,7 +106,7 @@ describe('POST /api/exam/answer', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-09-16T10:00:21.000Z'));
     const db = createSupabase();
-    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null });
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
 
     const response = await POST(request(validBody()));
     const payload = db.getUpdatePayload();
@@ -122,7 +122,7 @@ describe('POST /api/exam/answer', () => {
 
   it('returns a conflict when another request already advanced the section', async () => {
     const db = createSupabase(session(), { data: false, error: null });
-    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null });
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
 
     const response = await POST(request(validBody()));
 
@@ -154,7 +154,7 @@ describe('POST /api/exam/answer', () => {
       questions,
       resetQuestionIds: ['old-question-id'],
     });
-    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null });
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
 
     const response = await POST(request(validBody()));
 

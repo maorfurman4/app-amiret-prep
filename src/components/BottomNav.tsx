@@ -28,15 +28,17 @@ function shouldHide(pathname: string): boolean {
 
 export function BottomNav() {
   const pathname = usePathname();
+  return <BottomNavContent key={pathname} pathname={pathname} />;
+}
+
+function BottomNavContent({ pathname }: { pathname: string }) {
   const { inProgress } = useActivityGuard();
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const pendingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Leaving the page (route actually changed) clears any pending confirm
-  useEffect(() => {
-    setPendingHref(null);
+  useEffect(() => () => {
     if (pendingTimerRef.current) clearTimeout(pendingTimerRef.current);
-  }, [pathname]);
+  }, []);
 
   if (shouldHide(pathname)) return null;
 

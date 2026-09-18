@@ -8,10 +8,9 @@ import { getServerClients } from '@/lib/supabase-server';
  * auto-advances the section (caller should handle this).
  */
 export async function GET(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+  const { supabase, user, guestId } = await getServerClients();
 
   const sessionId = req.nextUrl.searchParams.get('sessionId');
-  const guestId = req.nextUrl.searchParams.get('guestId');
   if (!sessionId) return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });
 
   const sessionOwner = user?.id ?? guestId;
@@ -43,11 +42,16 @@ export async function GET(req: NextRequest) {
   // immediately, so stripping them broke practice feedback entirely.
   const safeSession = session.is_practice ? session : {
     ...session,
+    section_results: [],
     questions_by_section: Object.fromEntries(
       Object.entries((session.questions_by_section as Record<string, unknown[]>) ?? {}).map(
-        ([k, qs]) => [k, (qs as Record<string, unknown>[]).map(
-          ({ correct_answer: _ca, explanation: _ex, ...rest }) => rest
-        )]
+        ([k, qs]) => [k, (qs as Record<string, unknown>[]).map(question => {
+          const safe = { ...question };
+          delete safe.correct_answer;
+          delete safe.explanation;
+          delete safe.hint;
+          return safe;
+        })]
       )
     ),
   };
@@ -68,21 +72,22 @@ export async function GET(req: NextRequest) {
  * shown to the user actually true, and avoids orphaned rows.
  */
 export async function DELETE(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+  const { supabase, user, guestId } = await getServerClients();
 
   const sessionId = req.nextUrl.searchParams.get('sessionId');
-  const guestId = req.nextUrl.searchParams.get('guestId');
   if (!sessionId) return NextResponse.json({ error: 'Missing sessionId' }, { status: 400 });
 
   const owner = user?.id ?? guestId;
   if (!owner) return NextResponse.json({ error: 'auth required' }, { status: 401 });
 
-  await supabase
+  const { error } = await supabase
     .from('exam_sessions')
     .delete()
     .eq('id', sessionId)
     .eq('user_id', owner)
     .is('completed_at', null); // never delete a finished exam
+
+  if (error) return NextResponse.json({ error: 'Could not discard exam' }, { status: 503 });
 
   return NextResponse.json({ ok: true });
 }

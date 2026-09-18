@@ -4,26 +4,33 @@ import { Suspense, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { recoveryLinkIsInvalid } from '@/lib/password-recovery';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 function CallbackHandler() {
-  const supabase = createClient();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   // Read the hash synchronously: supabase-js strips it once it has processed
   // the tokens, so by the time an effect runs it may already be gone.
   const [initialHash] = useState(() => (typeof window !== 'undefined' ? window.location.hash : ''));
+  const supabase = createClient();
 
   useEffect(() => {
-    const next = searchParams.get('next') ?? '/';
-    const safeNext = next.startsWith('/') ? next : '/';
+    const safeNext = safeRedirectPath(searchParams.get('next'));
+    const isRecovery = new URLSearchParams(initialHash.replace(/^#/, '')).get('type') === 'recovery';
+    let navigated = false;
+    const navigate = (destination: string) => {
+      if (navigated) return;
+      navigated = true;
+      router.replace(destination);
+    };
 
     // Supabase redirects here with `#error=...&error_code=otp_expired` when a
     // magic/recovery link is reused or expired. There is no session to wait
     // for, so send the user somewhere that explains it instead of spinning
     // for 6s and dumping them on the login form.
     if (recoveryLinkIsInvalid(initialHash)) {
-      router.replace(safeNext === '/auth/reset-password' ? '/auth/reset-password' : '/auth/login');
+      navigate('/auth/reset-password?error=invalid_link');
       return;
     }
 
@@ -31,12 +38,10 @@ function CallbackHandler() {
     // detectSessionInUrl: true auto-processes it and fires SIGNED_IN.
     // Move any guest-mode history onto the account (fire-and-forget, idempotent)
     const mergeGuest = (accessToken: string) => {
-      const guestId = localStorage.getItem('amiret_guest_id');
-      if (!guestId) return;
       fetch('/api/auth/merge-guest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-        body: JSON.stringify({ guestId }),
+        body: JSON.stringify({}),
         keepalive: true,
       }).catch(() => {});
     };
@@ -45,12 +50,12 @@ function CallbackHandler() {
       // A password-recovery link must end on the reset screen no matter what
       // `next` says, otherwise the user never gets to set a new password.
       if (event === 'PASSWORD_RECOVERY' && session) {
-        router.replace('/auth/reset-password');
+        navigate('/auth/reset-password');
         return;
       }
       if (event === 'SIGNED_IN' && session) {
         mergeGuest(session.access_token);
-        router.replace(safeNext);
+        navigate(isRecovery ? '/auth/reset-password' : safeNext);
       }
     });
 
@@ -58,17 +63,18 @@ function CallbackHandler() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         mergeGuest(session.access_token);
-        router.replace(safeNext);
+        navigate(isRecovery ? '/auth/reset-password' : safeNext);
       }
     });
 
     // Last resort timeout — only redirect if session exists, otherwise show error
     const timer = setTimeout(async () => {
       const { data: { session: fallbackSession } } = await supabase.auth.getSession();
-      router.replace(fallbackSession ? safeNext : '/auth/login');
+      navigate(fallbackSession ? (isRecovery ? '/auth/reset-password' : safeNext) : '/auth/login');
     }, 6000);
 
     return () => {
+      navigated = true;
       subscription.unsubscribe();
       clearTimeout(timer);
     };

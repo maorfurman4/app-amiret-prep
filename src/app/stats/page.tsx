@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { authFetch } from '@/lib/auth-fetch';
@@ -131,9 +132,9 @@ export default function StatsPage() {
           <div className="text-5xl mb-4">📊</div>
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">אין עדיין נתונים</h1>
           <p className="text-slate-500 dark:text-slate-400 mb-6">סיים לפחות מבחן אחד כדי לראות סטטיסטיקות</p>
-          <a href="/exam" className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+          <Link href="/exam" className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
             התחל מבחן
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -368,7 +369,7 @@ export default function StatsPage() {
               const lastScore = (stats.score_history ?? []).slice(-1)[0]?.score ?? 100;
               const level = routeNextDifficulty((lastScore - 100) / 20);
               return (
-                <a
+                <Link
                   href={`/practice?type=${weakestType.type}&difficulty=${level}`}
                   className="flex items-center justify-between gap-3 mb-4 p-4 bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors"
                 >
@@ -379,7 +380,7 @@ export default function StatsPage() {
                     </div>
                   </div>
                   <span className="text-white text-xl">‹</span>
-                </a>
+                </Link>
               );
             })()}
 

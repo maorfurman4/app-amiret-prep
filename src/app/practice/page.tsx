@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { classifyScore, type Question, type QuestionType } from '@/types/exam';
@@ -50,12 +50,23 @@ function formatTime(seconds: number): string {
 }
 
 export default function PracticePage() {
+  return <Suspense fallback={<div className="p-8 text-center">טוען תרגול...</div>}><PracticeContent /></Suspense>;
+}
+
+function PracticeContent() {
+  const params = useSearchParams();
+  const requestedType = params.get('type');
+  const initialType = TYPE_OPTIONS.some(option => option.type === requestedType) ? requestedType as QuestionType : null;
+  const requestedDiff = params.get('difficulty');
+  const initialDiff: Difficulty | null = initialType && requestedDiff
+    ? requestedDiff === 'random' ? 'random' : Math.max(1, Math.min(5, parseInt(requestedDiff, 10) || 3)) as Difficulty
+    : null;
   const router = useRouter();
   const { setInProgress } = useActivityGuard();
 
-  const [step, setStep]               = useState<Step>('pick-type');
-  const [selectedType, setType]       = useState<QuestionType | null>(null);
-  const [selectedDiff, setDiff]       = useState<Difficulty | null>(null);
+  const [step, setStep]               = useState<Step>(initialType ? initialDiff ? 'pick-count' : 'pick-difficulty' : 'pick-type');
+  const [selectedType, setType]       = useState<QuestionType | null>(initialType);
+  const [selectedDiff, setDiff]       = useState<Difficulty | null>(initialDiff);
   const [selectedCount, setCount]     = useState<5 | 10>(5);
   const [examMode, setExamMode]       = useState(false);
   const [sectionMode, setSectionMode] = useState(false);
@@ -86,23 +97,6 @@ export default function PracticePage() {
       .then(r => r.ok ? r.json() : null)
       .then((d: { count: number } | null) => { if (d?.count) setReviewCount(d.count); })
       .catch(() => {});
-  }, []);
-
-  // Deep link: /practice?type=X&difficulty=Y jumps straight to count selection
-  useEffect(() => {
-    const sp = new URLSearchParams(window.location.search);
-    const t = sp.get('type');
-    const d = sp.get('difficulty');
-    if (t && ['sentence_completion', 'restatement', 'reading_comprehension'].includes(t)) {
-      setType(t as QuestionType);
-      if (d) {
-        const diff: Difficulty = d === 'random' ? 'random' : (Math.max(1, Math.min(5, parseInt(d, 10) || 3)) as Difficulty);
-        setDiff(diff);
-        setStep('pick-count');
-      } else {
-        setStep('pick-difficulty');
-      }
-    }
   }, []);
 
   // Flag mid-question activity so the bottom nav asks for a confirming
@@ -143,6 +137,10 @@ export default function PracticePage() {
       setAnswers(Array(qs.length).fill(null));
       setCurrentIndex(0);
       setShowResult(false);
+      if (selectedType) {
+        setSectionTimeLeft(SECTION_FORMAT[selectedType].seconds);
+        setTimeLeft(EXAM_TIMER_SECONDS[selectedType]);
+      }
       setStep('practicing');
     } catch {
       setError('שגיאת רשת. בדוק חיבור אינטרנט.');
@@ -208,13 +206,12 @@ export default function PracticePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ guestId, source: 'practice' }),
     }).catch(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [questions, answers]);
 
   // Section mode: one hard countdown for the whole section, like the real exam
   useEffect(() => {
     if (step !== 'practicing' || !sectionMode || !selectedType) return;
-    setSectionTimeLeft(SECTION_FORMAT[selectedType].seconds);
     sectionTimerRef.current = setInterval(() => {
       setSectionTimeLeft(prev => {
         if (prev <= 1) {
@@ -225,7 +222,7 @@ export default function PracticePage() {
       });
     }, 1000);
     return () => { if (sectionTimerRef.current) { clearInterval(sectionTimerRef.current); sectionTimerRef.current = null; } };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [step, sectionMode, selectedType]);
 
   // Auto-submit when the section timer hits zero
@@ -259,6 +256,7 @@ export default function PracticePage() {
       // letting a re-picked answer overwrite the original and double-post to
       // the review queue.
       const nextIndex = currentIndex + 1;
+      if (examMode && selectedType) setTimeLeft(EXAM_TIMER_SECONDS[selectedType]);
       setCurrentIndex(nextIndex);
       setShowResult(answers[nextIndex] !== null);
     } else {
@@ -270,7 +268,7 @@ export default function PracticePage() {
         body: JSON.stringify({ guestId, source: 'practice' }),
       }).catch(() => {});
     }
-  }, [currentIndex, questions.length, answers]);
+  }, [currentIndex, questions.length, answers, examMode, selectedType]);
 
   // Exam mode: reset timer when question changes
   useEffect(() => {
@@ -279,9 +277,7 @@ export default function PracticePage() {
     // Clear any existing interval
     if (timerRef.current) clearInterval(timerRef.current);
 
-    const duration = EXAM_TIMER_SECONDS[selectedType];
     timerStartedRef.current = false;
-    setTimeLeft(duration);
 
     timerRef.current = setInterval(() => {
       setTimeLeft(prev => {
@@ -726,7 +722,7 @@ export default function PracticePage() {
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
-                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר — מבוססת על {questions.length} שאלות בלבד ואינה ציון רשמי של נית&quot;ה.
+                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר — מבוססת על {questions.length} שאלות בלבד ואינה ציון רשמי של מאל&quot;ו.
                   {selectedDiff !== 'random' && ' לאומדן רחב יותר, תרגל ברמה מעורבת או בצע את סימולציית פרקי הליבה.'}
                   {' '}סף הפטור/הרמה עצמו נקבע בנפרד בכל מוסד — {diagClass.label} הוא הטווח הנפוץ, לא תקן מחייב אחיד.
                 </p>

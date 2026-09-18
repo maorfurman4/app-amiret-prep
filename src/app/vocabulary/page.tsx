@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { Suspense, useState, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
@@ -128,6 +129,11 @@ function getWrongOptions(correct: VocabWord, pool: VocabWord[]): string[] {
 }
 
 export default function VocabularyPage() {
+  return <Suspense fallback={<div className="p-8 text-center">טוען מילים...</div>}><VocabularyContent /></Suspense>;
+}
+
+function VocabularyContent() {
+  const params = useSearchParams();
   const supabase = createClient();
 
   // Core state
@@ -142,7 +148,7 @@ export default function VocabularyPage() {
   const [filterCat, setFilterCat] = useState<string>('');
   const [filterDiff, setFilterDiff] = useState<number>(0);
   const [search, setSearch] = useState('');
-  const [activePack, setActivePack] = useState<string>('');
+  const [activePack, setActivePack] = useState<string>(params.get('pack') ?? '');
 
   // ─── Flashcard state ───────────────────────────────────────────────────────
   const [deck, setDeck] = useState<VocabWord[]>([]);
@@ -174,19 +180,13 @@ export default function VocabularyPage() {
   const [timedDone, setTimedDone] = useState(false);
   const [timedResults, setTimedResults] = useState<TimedResult[]>([]);
   const [timeLeft, setTimeLeft] = useState(20);
-  const [wordStart, setWordStart] = useState(Date.now());
+  const [wordStart, setWordStart] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timedIndexRef = useRef(0);
   const [timedWordCount, setTimedWordCount] = useState<5 | 10 | 20>(10);
   const [timedTimePerWord, setTimedTimePerWord] = useState<10 | 15 | 20 | 30>(20);
   const [showTimedConfig, setShowTimedConfig] = useState(false);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
-
-  // ─── Deep link: /vocabulary?pack=connectors opens that themed pack ────────
-  useEffect(() => {
-    const pack = new URLSearchParams(window.location.search).get('pack');
-    if (pack) setActivePack(pack);
-  }, []);
 
   // Ensure guestId exists on first visit — other pages (exam, review-queue)
   // already do this, but a guest landing directly on /vocabulary never had
@@ -240,8 +240,6 @@ export default function VocabularyPage() {
 
   // ─── Load from storage and DB ──────────────────────────────────────────────
   useEffect(() => {
-    setKnown(loadSet(STORAGE_KEY));
-    setFavorites(loadSet(FAV_KEY));
 
     const VOCAB_CACHE_KEY = 'vocab_cache_v3';
     const VOCAB_CACHE_TTL = 6 * 60 * 60 * 1000; // 6h
@@ -284,7 +282,11 @@ export default function VocabularyPage() {
         localStorage.setItem(VOCAB_CACHE_KEY, JSON.stringify({ data: shuffled, ts: Date.now() }));
       } catch { /* storage full */ }
     };
-    fetchAll();
+    void Promise.resolve().then(() => {
+      setKnown(loadSet(STORAGE_KEY));
+      setFavorites(loadSet(FAV_KEY));
+      return fetchAll();
+    });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Themed packs definition ───────────────────────────────────────────────
@@ -350,9 +352,12 @@ export default function VocabularyPage() {
     if (!allWords.length) return;
     // Always shuffle from scratch so deck order is never derived from allWords order
     const active = shuffle(filteredWords).filter(w => !known.has(w.id));
-    setDeck(active);
-    setFlipped(false);
-    setShowHint(false);
+    const frame = requestAnimationFrame(() => {
+      setDeck(active);
+      setFlipped(false);
+      setShowHint(false);
+    });
+    return () => cancelAnimationFrame(frame);
   }, [allWords, filterCat, filterDiff, search, activePack, favoritesSignature]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Build quiz options for current question ───────────────────────────────
@@ -405,24 +410,37 @@ export default function VocabularyPage() {
   // Sync timedIndex to ref (fix stale closure in timer)
   useEffect(() => { timedIndexRef.current = timedIndex; }, [timedIndex]);
 
-  // Start quiz/timed when mode switches — but not if the user is switching
-  // BACK into a mode where they already had an unfinished run (e.g. tapped
-  // Flashcards mid-timed-quiz, then tapped back to מבחן מהיר). Previously
-  // this unconditionally reset to a fresh quiz / the setup screen, silently
-  // discarding in-progress score with no warning.
-  useEffect(() => {
-    if (mode === 'quiz' && allWords.length > 0 && (quizDeck.length === 0 || quizDone)) startQuiz();
-    if (mode === 'timed' && allWords.length > 0 && (timedDeck.length === 0 || timedDone)) setShowTimedConfig(true);
-  }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Switching modes preserves an unfinished run; filters apply to the next run.
+  const changeMode = (nextMode: Mode) => {
+    setMode(nextMode);
+    if (nextMode === 'quiz' && allWords.length > 0 && (quizDeck.length === 0 || quizDone)) startQuiz();
+    if (nextMode === 'timed' && allWords.length > 0 && (timedDeck.length === 0 || timedDone)) setShowTimedConfig(true);
+  };
 
-  // Restart quiz when filters change mid-quiz. Only confirm if there's real
-  // progress to lose (quizScore.total > 0) — silently restarting an
-  // untouched quiz on the very first filter pick is fine and expected.
-  useEffect(() => {
-    if (mode !== 'quiz' || allWords.length === 0 || quizDeck.length === 0) return;
-    if (quizScore.total > 0 && !window.confirm('שינוי הסינון יתחיל חידון חדש וימחק את ההתקדמות הנוכחית. להמשיך?')) return;
-    startQuiz();
-  }, [filterCat, filterDiff, search, activePack]); // eslint-disable-line react-hooks/exhaustive-deps
+  const advanceTimed = useCallback((results: TimedResult[]) => {
+    const nextIndex = timedIndexRef.current + 1;
+    if (nextIndex >= timedDeck.length) {
+      const finalScore = results.filter(r => r.correct).length;
+      setTimedDone(true);
+      setTimedScore(finalScore);
+      // Save to history
+      const entry: TimedHistoryEntry = {
+        date: new Date().toLocaleDateString('he-IL'),
+        score: finalScore,
+        total: timedDeck.length,
+        pack: activePack || 'כל המילים',
+      };
+      saveTimedHistory([...loadTimedHistory(), entry]);
+      return;
+    }
+    timedIndexRef.current = nextIndex;
+    setTimedIndex(nextIndex);
+    setTimedSelected(null);
+    setTimedCorrect(null);
+    setTimeLeft(timedTimePerWord);
+    setWordStart(Date.now());
+    setTimedOptions(buildQuizOptions(timedDeck[nextIndex], filteredWords.length > 0 ? filteredWords : timedDeck));
+  }, [timedDeck, filteredWords, buildQuizOptions, timedTimePerWord, activePack]);
 
   // ─── Timed quiz timer ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -450,38 +468,13 @@ export default function VocabularyPage() {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [mode, timedIndex, timedDone, timedSelected, timedDeck]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const advanceTimed = useCallback((results: TimedResult[]) => {
-    const nextIndex = timedIndexRef.current + 1;
-    if (nextIndex >= timedDeck.length) {
-      const finalScore = results.filter(r => r.correct).length;
-      setTimedDone(true);
-      setTimedScore(finalScore);
-      // Save to history
-      const entry: TimedHistoryEntry = {
-        date: new Date().toLocaleDateString('he-IL'),
-        score: finalScore,
-        total: timedDeck.length,
-        pack: activePack || 'כל המילים',
-      };
-      saveTimedHistory([...loadTimedHistory(), entry]);
-      return;
-    }
-    timedIndexRef.current = nextIndex;
-    setTimedIndex(nextIndex);
-    setTimedSelected(null);
-    setTimedCorrect(null);
-    setTimeLeft(timedTimePerWord);
-    setWordStart(Date.now());
-    setTimedOptions(buildQuizOptions(timedDeck[nextIndex], filteredWords.length > 0 ? filteredWords : timedDeck));
-  }, [timedDeck, filteredWords, buildQuizOptions, timedTimePerWord]);
-
-  const handleTimedSelect = (optionIndex: number, option: string) => {
+  const handleTimedSelect = (optionIndex: number, option: string, answeredAt: number) => {
     if (timedSelected !== null || timedDone) return;
     if (timerRef.current) clearInterval(timerRef.current);
 
     const cur = timedDeck[timedIndex];
     const isCorrect = option === cur.hebrew_translation;
-    const elapsed = (Date.now() - wordStart) / 1000;
+    const elapsed = (answeredAt - wordStart) / 1000;
     const newResults = [...timedResults, { word: cur, correct: isCorrect, timeTaken: elapsed }];
 
     setTimedResults(newResults);
@@ -759,12 +752,15 @@ export default function VocabularyPage() {
           ] as { id: Mode; label: string }[]).map(m => (
             <button
               key={m.id}
-              onClick={() => setMode(m.id)}
+              onClick={() => changeMode(m.id)}
               className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${mode === m.id ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
             >{m.label}</button>
           ))}
         </div>
 
+        {mode === 'quiz' && quizDeck.length > 0 && !quizDone && (
+          <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">שינויי סינון יחולו בחידון הבא. החידון הנוכחי נשמר.</p>
+        )}
         {/* ── Filter button + active chips ──────────────────────────────────── */}
         {(() => {
           const hasActive = !!(activePack || filterCat || filterDiff || search);
@@ -1391,7 +1387,7 @@ export default function VocabularyPage() {
                       cls += 'bg-white border-slate-200 text-slate-400';
                     }
                     return (
-                      <button key={i} onClick={() => handleTimedSelect(i, opt)} className={cls} disabled={timedSelected !== null}>
+                      <button key={i} onClick={() => handleTimedSelect(i, opt, Date.now())} className={cls} disabled={timedSelected !== null}>
                         {opt}
                         {timedSelected !== null && isCorrectOpt && ' ✓'}
                         {timedSelected === i && !isCorrectOpt && ' ✗'}

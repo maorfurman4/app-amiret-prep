@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -10,15 +10,11 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
  * account, then recomputes user_stats + leaderboard from the merged history.
  * Idempotent — a second call finds nothing left to move.
  */
-export async function POST(req: NextRequest) {
-  const { supabase, user } = await getServerClients();
+export async function POST() {
+  const { supabase, user, guestId } = await getServerClients();
   if (!user) return NextResponse.json({ error: 'auth required' }, { status: 401 });
 
-  let body: { guestId?: unknown };
-  try { body = await req.json() as typeof body; }
-  catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
-
-  const guestId = body.guestId;
+  // Only the signed server cookie proves ownership, never the request body.
   if (typeof guestId !== 'string' || !UUID_RE.test(guestId) || guestId === user.id) {
     return NextResponse.json({ error: 'Invalid guestId' }, { status: 400 });
   }

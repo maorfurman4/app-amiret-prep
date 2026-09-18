@@ -5,14 +5,15 @@ export const dynamic = 'force-dynamic';
 import { Suspense, useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 function LoginForm() {
   const supabase = createClient();
   const router = useRouter();
   const params = useSearchParams();
-  const rawNext = params.get('next') ?? '/';
-  const next = rawNext.startsWith('/') ? rawNext : '/';
+  const next = safeRedirectPath(params.get('next'));
 
   const [tab, setTab] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ function LoginForm() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user ?? null));
-  }, []);
+  }, [supabase.auth]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -50,12 +51,10 @@ function LoginForm() {
   // OAuth callback, so email/password users never got their guest progress
   // merged in. Fire-and-forget, idempotent server-side.
   const mergeGuest = (accessToken: string) => {
-    const guestId = localStorage.getItem('amiret_guest_id');
-    if (!guestId) return;
     fetch('/api/auth/merge-guest', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-      body: JSON.stringify({ guestId }),
+      body: JSON.stringify({}),
       keepalive: true,
     }).catch(() => {});
   };
@@ -333,8 +332,8 @@ export default function LoginPage() {
 
         <p className="text-center text-slate-500 text-xs mt-6">
           ניתן להמשיך{' '}
-          <a href="/" className="text-slate-300 hover:text-white underline">ללא חשבון</a>
-          {' '}— הנתונים נשמרים רק במכשיר זה
+          <Link href="/" className="text-slate-300 hover:text-white underline">ללא חשבון</Link>
+          {' '}— ההתקדמות זמינה בדפדפן זה. מחיקת נתוני האתר עלולה לאבד את הגישה אליה
         </p>
       </div>
     </div>

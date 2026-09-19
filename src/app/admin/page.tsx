@@ -84,21 +84,21 @@ export default function AdminPage() {
   if (gate !== 'allowed') return null;
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10 px-4" dir="rtl">
+    <div className="min-h-screen bg-exam-paper py-10 px-4" dir="rtl">
       <div className="max-w-xl mx-auto space-y-6">
-        <h1 className="text-2xl font-black text-slate-900">⚙️ פאנל אדמין</h1>
-        <p className="text-slate-500 text-sm">
+        <h1 className="text-2xl font-black text-exam-ink">⚙️ פאנל אדמין</h1>
+        <p className="text-exam-ink-soft text-sm">
           שימוש ב-GPT-4o ליצירת שאלות ושמירה ישירה ל-Supabase.
           <strong> לא ישמש במהלך מבחן פעיל.</strong>
         </p>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-5">
+        <div className="bg-exam-surface rounded-md p-6 border border-exam-border space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">סוג שאלה</label>
+            <label className="block text-sm font-semibold text-exam-ink mb-2">סוג שאלה</label>
             <select
               value={type}
               onChange={e => setType(e.target.value as QuestionType)}
-              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+              className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2 text-sm focus:ring-2 focus:ring-exam-accent outline-none"
             >
               {QUESTION_TYPES.map(t => (
                 <option key={t.value} value={t.value}>{t.label}</option>
@@ -107,26 +107,26 @@ export default function AdminPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
+            <label className="block text-sm font-semibold text-exam-ink mb-2">
               רמת קושי: {difficulty}/5
             </label>
             <input
               type="range" min={1} max={5} value={difficulty}
               onChange={e => setDifficulty(parseInt(e.target.value) as DifficultyLevel)}
-              className="w-full accent-blue-600"
+              className="w-full accent-exam-accent"
             />
-            <div className="flex justify-between text-xs text-slate-400 mt-1">
+            <div className="flex justify-between text-xs text-exam-ink-soft mt-1">
               <span>קל מאוד</span><span>קשה מאוד</span>
             </div>
           </div>
 
           {type !== 'reading_comprehension' && (
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">כמות שאלות</label>
+              <label className="block text-sm font-semibold text-exam-ink mb-2">כמות שאלות</label>
               <input
                 type="number" min={1} max={20} value={count}
                 onChange={e => setCount(parseInt(e.target.value))}
-                className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+                className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2 text-sm focus:ring-2 focus:ring-exam-accent outline-none"
               />
             </div>
           )}
@@ -136,9 +136,9 @@ export default function AdminPage() {
               <input
                 type="checkbox" id="newPassage" checked={generatePassage}
                 onChange={e => setGeneratePassage(e.target.checked)}
-                className="accent-blue-600"
+                className="accent-exam-accent"
               />
-              <label htmlFor="newPassage" className="text-sm text-slate-700">
+              <label htmlFor="newPassage" className="text-sm text-exam-ink">
                 צור קטע חדש (5 שאלות)
               </label>
             </div>
@@ -147,23 +147,23 @@ export default function AdminPage() {
           <button
             onClick={handleGenerate}
             disabled={loading}
-            className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-60 transition-colors"
+            className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
           >
             {loading ? '⏳ מייצר שאלות עם GPT-4o...' : '✨ צור שאלות'}
           </button>
 
           {result && (
-            <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">{result}</div>
+            <div className="p-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-exam-sage-strong text-sm">{result}</div>
           )}
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>
+            <div className="p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm">{error}</div>
           )}
         </div>
 
         {/* Quick bulk generation */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <h2 className="font-bold text-slate-900 mb-3">יצירת מאגר מהיר (מומלץ לתחילת הדרך)</h2>
-          <p className="text-sm text-slate-500 mb-4">
+        <div className="bg-exam-surface rounded-md p-6 border border-exam-border">
+          <h2 className="font-bold text-exam-ink mb-3">יצירת מאגר מהיר (מומלץ לתחילת הדרך)</h2>
+          <p className="text-sm text-exam-ink-soft mb-4">
             צור 5 שאלות לכל שילוב של סוג × רמה = 75 שאלות + 5 קטעי קריאה
           </p>
           <BulkGenerateButton />
@@ -211,11 +211,11 @@ function BulkGenerateButton() {
       <button
         onClick={runBulk}
         disabled={running}
-        className="w-full py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 disabled:opacity-60 transition-colors"
+        className="w-full py-3 bg-exam-sage-strong text-white rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
       >
         {running ? '⏳ מייצר...' : '🚀 צור מאגר מלא'}
       </button>
-      {progress && <div className="mt-3 text-sm text-slate-600">{progress}</div>}
+      {progress && <div className="mt-3 text-sm text-exam-ink-soft">{progress}</div>}
     </div>
   );
 }

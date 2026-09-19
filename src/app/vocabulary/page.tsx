@@ -36,14 +36,14 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  general:     'bg-slate-100 text-slate-700',
-  academic:    'bg-blue-100 text-blue-700',
-  descriptive: 'bg-purple-100 text-purple-700',
-  verbs:       'bg-green-100 text-green-700',
-  connectors:  'bg-amber-100 text-amber-700',
-  nouns:       'bg-rose-100 text-rose-700',
-  advanced:    'bg-indigo-100 text-indigo-700',
-  adjectives:  'bg-pink-100 text-pink-700',
+  general:     'bg-exam-paper-alt text-exam-ink-soft',
+  academic:    'bg-exam-accent/10 text-exam-accent',
+  descriptive: 'bg-exam-alt-bg text-exam-alt',
+  verbs:       'bg-exam-sage-bg text-exam-sage-strong',
+  connectors:  'bg-exam-alt-bg text-exam-alt',
+  nouns:       'bg-exam-accent/10 text-exam-accent',
+  advanced:    'bg-exam-ink/10 text-exam-ink',
+  adjectives:  'bg-exam-sage-bg text-exam-sage-strong',
 };
 
 const STORAGE_KEY = 'vocab_known_ids';
@@ -635,7 +635,7 @@ function VocabularyContent() {
   const categories = [...new Set(allWords.map(w => w.category))].filter(c => categoryCounts[c] >= 5).sort();
 
   // ─── Timer bar color ───────────────────────────────────────────────────────
-  const timerColor = timeLeft > timedTimePerWord * 0.5 ? 'bg-green-500' : timeLeft > timedTimePerWord * 0.25 ? 'bg-yellow-500' : 'bg-red-500';
+  const timerColor = timeLeft > timedTimePerWord * 0.5 ? 'bg-exam-sage-strong' : timeLeft > timedTimePerWord * 0.25 ? 'bg-exam-alt' : 'bg-exam-wrong';
 
   if (loading) {
     return (
@@ -654,12 +654,12 @@ function VocabularyContent() {
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">📖 אוצר מילים</h1>
           <button
             onClick={() => setShowFavoritesList(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-50 dark:bg-red-900/25 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 font-semibold text-sm hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-sm bg-exam-wrong-bg border border-exam-wrong/40 text-exam-wrong font-semibold text-sm hover:opacity-80 transition-opacity"
           >
             <span>❤️</span>
             <span>מועדפים</span>
             {favorites.size > 0 && (
-              <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              <span className="bg-exam-wrong text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                 {favorites.size}
               </span>
             )}
@@ -678,7 +678,7 @@ function VocabularyContent() {
                 <div className="flex items-center gap-2">
                   <span className="text-xl">❤️</span>
                   <span className="font-bold text-slate-900 dark:text-white text-lg">מילים שמורות</span>
-                  <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-full">{favorites.size}</span>
+                  <span className="bg-exam-wrong-bg text-exam-wrong text-xs font-bold px-2 py-0.5 rounded-full">{favorites.size}</span>
                 </div>
                 <button onClick={() => setShowFavoritesList(false)} className="text-slate-400 hover:text-slate-600 text-2xl leading-none">×</button>
               </div>
@@ -728,7 +728,7 @@ function VocabularyContent() {
                             onClick={() => removeFavorite(w.id)}
                             aria-label={`הסר את ${w.word} מהמועדפים`}
                             title="הסר מהמועדפים"
-                            className="flex items-center gap-1 px-2 py-1 rounded-lg text-red-500 hover:text-white hover:bg-red-500 border border-red-200 dark:border-red-800 text-xs font-semibold transition-colors"
+                            className="flex items-center gap-1 px-2 py-1 rounded-sm text-exam-wrong hover:text-white hover:bg-exam-wrong border border-exam-wrong/40 text-xs font-semibold transition-colors"
                           >
                             <span className="text-base leading-none">🗑️</span>
                             <span>הסר</span>
@@ -770,12 +770,12 @@ function VocabularyContent() {
               <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => setShowFilterDrawer(true)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-colors ${hasActive ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-blue-300'}`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-sm border text-sm font-semibold transition-colors ${hasActive ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
                 >
                   🔍 סינון{activeCount > 0 ? ` (${activeCount})` : ''}
                 </button>
                 {activePack && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-accent/10 text-exam-accent rounded-full text-xs font-medium">
                     {THEMED_PACKS.find(p => p.id === activePack)?.label}
                     <button onClick={() => setActivePack('')} className="hover:text-blue-900 font-bold leading-none">×</button>
                   </span>
@@ -793,9 +793,9 @@ function VocabularyContent() {
                   </span>
                 )}
                 {search.trim() && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium max-w-[140px]">
+                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-sage-bg text-exam-sage-strong rounded-full text-xs font-medium max-w-[140px]">
                     <span className="truncate">&ldquo;{search}&rdquo;</span>
-                    <button onClick={() => setSearch('')} className="hover:text-green-900 font-bold leading-none flex-shrink-0">×</button>
+                    <button onClick={() => setSearch('')} className="hover:text-exam-sage-strong font-bold leading-none flex-shrink-0">×</button>
                   </span>
                 )}
               </div>
@@ -813,7 +813,7 @@ function VocabularyContent() {
                   {!!(activePack || filterCat || filterDiff || search) && (
                     <button
                       onClick={() => { setActivePack(''); setFilterCat(''); setFilterDiff(0); setSearch(''); }}
-                      className="text-sm text-red-500 font-semibold"
+                      className="text-sm text-exam-wrong font-semibold"
                     >נקה הכל</button>
                   )}
                   <button onClick={() => setShowFilterDrawer(false)} className="text-2xl text-slate-400 leading-none hover:text-slate-600">×</button>
@@ -829,7 +829,7 @@ function VocabularyContent() {
                       <button
                         key={pack.id}
                         onClick={() => setActivePack(activePack === pack.id ? '' : pack.id)}
-                        className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${activePack === pack.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-blue-300'}`}
+                        className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${activePack === pack.id ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
                       >{pack.label}</button>
                     ))}
                   </div>
@@ -864,7 +864,7 @@ function VocabularyContent() {
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     placeholder="חיפוש מילה בעברית / אנגלית..."
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-sm focus:outline-none focus:border-blue-400 text-right dark:text-white"
+                    className="w-full px-4 py-3 rounded-sm border border-exam-border bg-exam-paper-alt text-sm focus:outline-none focus:border-exam-accent text-right text-exam-ink"
                   />
                 </div>
               </div>
@@ -888,11 +888,11 @@ function VocabularyContent() {
               <div className="mb-4">
                 <div className="flex justify-between text-xs text-slate-500 mb-1.5">
                   <span>נותרו <span className="font-bold text-slate-700 dark:text-slate-200">{deck.length}</span> מילים</span>
-                  {progressScopeKnown > 0 && <span>ידעת <span className="font-bold text-green-600">{progressScopeKnown}</span> / {progressScopeTotal} ({Math.round(progressScopeKnown / progressScopeTotal * 100)}%)</span>}
+                  {progressScopeKnown > 0 && <span>ידעת <span className="font-bold text-exam-sage-strong">{progressScopeKnown}</span> / {progressScopeTotal} ({Math.round(progressScopeKnown / progressScopeTotal * 100)}%)</span>}
                 </div>
                 {progressScopeKnown > 0 && (
                   <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
-                    <div className="bg-green-500 h-1.5 rounded-full transition-all" style={{ width: `${Math.round(progressScopeKnown / progressScopeTotal * 100)}%` }} />
+                    <div className="bg-exam-sage-strong h-1.5 rounded-full transition-all" style={{ width: `${Math.round(progressScopeKnown / progressScopeTotal * 100)}%` }} />
                   </div>
                 )}
               </div>
@@ -920,8 +920,8 @@ function VocabularyContent() {
                   onTouchEnd={onDragEnd}
                 >
                   {/* Swipe overlays */}
-                  <div className="absolute inset-0 rounded-3xl bg-green-400 flex items-center justify-center text-white text-2xl font-black pointer-events-none" style={{ opacity: knewOpacity }}>✓ ידעתי!</div>
-                  <div className="absolute inset-0 rounded-3xl bg-red-400 flex items-center justify-center text-white text-2xl font-black pointer-events-none" style={{ opacity: unknownOpacity }}>✗ לא ידעתי</div>
+                  <div className="absolute inset-0 rounded-md bg-exam-sage-strong flex items-center justify-center text-white text-2xl font-black pointer-events-none" style={{ opacity: knewOpacity }}>✓ ידעתי!</div>
+                  <div className="absolute inset-0 rounded-md bg-exam-wrong flex items-center justify-center text-white text-2xl font-black pointer-events-none" style={{ opacity: unknownOpacity }}>✗ לא ידעתי</div>
 
                   {/* Favorite button */}
                   <button
@@ -937,7 +937,7 @@ function VocabularyContent() {
                         {CATEGORY_LABELS[current.category] ?? current.category}
                       </div>
                       <div className="flex items-center justify-center gap-3 mb-2">
-                        <div className="text-5xl font-black text-slate-900 dark:text-white leading-tight">{current.word}</div>
+                        <div className="font-serif text-5xl font-black text-exam-ink leading-tight">{current.word}</div>
                         <button
                           onClick={e => { e.stopPropagation(); speak(current.word); }}
                           className="text-2xl hover:scale-110 transition-transform"
@@ -947,7 +947,7 @@ function VocabularyContent() {
                       <div className="text-amber-500 text-lg mb-4">{'★'.repeat(current.difficulty_level)}{'☆'.repeat(5 - current.difficulty_level)}</div>
 
                       {showHint ? (
-                        <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl text-sm text-amber-900 dark:text-amber-200 italic leading-relaxed text-left">
+                        <div className="font-serif mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt italic leading-relaxed text-left">
                           &quot;{current.example_sentence}&quot;
                         </div>
                       ) : (
@@ -970,10 +970,10 @@ function VocabularyContent() {
                         <span className="text-lg font-bold text-slate-500">{current.word}</span>
                         <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-lg">🔊</button>
                       </div>
-                      <div className="text-3xl font-black text-blue-700 dark:text-blue-400 mb-3">{current.hebrew_translation}</div>
+                      <div className="text-3xl font-black text-exam-accent mb-3">{current.hebrew_translation}</div>
                       <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">{current.definition}</p>
                       {current.example_sentence && (
-                        <div className="p-3 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-xs text-slate-500 dark:text-slate-400 italic leading-relaxed text-left" dir="ltr">
+                        <div className="font-serif p-3 bg-exam-paper-alt border border-exam-border rounded-sm text-xs text-exam-ink-soft italic leading-relaxed text-left" dir="ltr">
                           &quot;{current.example_sentence}&quot;
                         </div>
                       )}
@@ -1012,12 +1012,12 @@ function VocabularyContent() {
                 <button
                   onClick={handleUnknown}
                   disabled={!!animating}
-                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-red-50 dark:bg-red-900/25 border-2 border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 font-bold text-lg hover:bg-red-100 dark:hover:bg-red-900/40 active:scale-95 transition-all disabled:opacity-50"
+                  className="flex-1 max-w-[140px] py-4 rounded-md bg-exam-wrong-bg border-2 border-exam-wrong/40 text-exam-wrong font-bold text-lg hover:opacity-80 active:scale-95 transition-all disabled:opacity-50"
                 >✗<br /><span className="text-sm font-medium">לא ידעתי</span></button>
                 <button
                   onClick={handleKnew}
                   disabled={!!animating}
-                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-green-50 dark:bg-green-900/25 border-2 border-green-200 dark:border-green-800 text-green-600 dark:text-green-300 font-bold text-lg hover:bg-green-100 dark:hover:bg-green-900/40 active:scale-95 transition-all disabled:opacity-50"
+                  className="flex-1 max-w-[140px] py-4 rounded-md bg-exam-sage-bg border-2 border-exam-sage/40 text-exam-sage-strong font-bold text-lg hover:opacity-80 active:scale-95 transition-all disabled:opacity-50"
                 >✓<br /><span className="text-sm font-medium">ידעתי</span></button>
               </div>
             )}
@@ -1032,14 +1032,14 @@ function VocabularyContent() {
               <div className="mt-8 border-t border-slate-200 pt-6">
                 <button
                   onClick={() => setShowKnownList(v => !v)}
-                  className="w-full flex items-center justify-between px-4 py-3 bg-green-50 dark:bg-green-900/25 border border-green-200 dark:border-green-800 rounded-xl text-sm font-medium text-green-800 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-sm font-medium text-exam-sage-strong hover:opacity-80 transition-opacity"
                 >
                   <span>ידעת {knownWords.length} מילים ✓</span>
                   <span>{showKnownList ? '▲ סגור' : '▼ הצג'}</span>
                 </button>
                 {showKnownList && (
                   <div className="mt-3 space-y-2">
-                    <button onClick={handleResetAll} className="text-xs text-red-500 hover:text-red-700 mb-2">אפס הכל ↺</button>
+                    <button onClick={handleResetAll} className="text-xs text-exam-wrong hover:opacity-80 mb-2">אפס הכל ↺</button>
                     {knownWords.map(w => (
                       <div key={w.id} className="flex items-center justify-between px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
                         <div dir="ltr">
@@ -1048,7 +1048,7 @@ function VocabularyContent() {
                         </div>
                         <button
                           onClick={() => handleReturnToKnown(w.id)}
-                          className="text-xs text-blue-500 hover:text-blue-700 font-medium flex-shrink-0 mr-2"
+                          className="text-xs text-exam-accent hover:opacity-80 font-medium flex-shrink-0 mr-2"
                         >החזר לחפיסה ↺</button>
                       </div>
                     ))}
@@ -1088,7 +1088,7 @@ function VocabularyContent() {
                 <div className="text-center mb-5">
                   <div className="text-5xl mb-3">🎯</div>
                   <div className="text-2xl font-black text-slate-900 mb-1">סיימת את החידון!</div>
-                  <div className="text-4xl font-black text-blue-600 mb-1">{quizScore.correct} / {quizScore.total}</div>
+                  <div className="text-4xl font-black text-exam-accent mb-1">{quizScore.correct} / {quizScore.total}</div>
                   <p className="text-slate-500 text-sm">
                     {quizScore.correct === quizScore.total ? '🏆 מושלם!' : quizScore.correct >= quizScore.total * 0.7 ? '👍 כל הכבוד!' : '💪 המשך להתאמן!'}
                   </p>
@@ -1101,7 +1101,7 @@ function VocabularyContent() {
                     </div>
                     <div className="space-y-2">
                       {quizWrongWords.map(w => (
-                        <div key={w.id} className="flex items-center justify-between px-4 py-2.5 bg-red-50 border border-red-200 rounded-xl">
+                        <div key={w.id} className="flex items-center justify-between px-4 py-2.5 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm">
                           <div>
                             <div className="font-semibold text-slate-800 text-sm" dir="ltr">{w.word}</div>
                             <div className="text-slate-500 text-xs">{w.hebrew_translation}</div>
@@ -1138,7 +1138,7 @@ function VocabularyContent() {
                         setQuizWrongWords([]);
                         setQuizOptions(buildQuizOptions(quizWrongWords[0], quizWrongWords.length >= 4 ? quizWrongWords : filteredWords));
                       }}
-                      className="flex-1 py-3 bg-red-50 border border-red-200 text-red-700 rounded-xl font-semibold hover:bg-red-100 transition-colors text-sm"
+                      className="flex-1 py-3 bg-exam-wrong-bg border border-exam-wrong/40 text-exam-wrong rounded-sm font-semibold hover:opacity-80 transition-opacity text-sm"
                     >תרגל שגויות בלבד ✗</button>
                   )}
                 </div>
@@ -1148,9 +1148,9 @@ function VocabularyContent() {
                 {/* Quiz progress */}
                 <div className="flex items-center justify-between mb-4 text-sm text-slate-500">
                   <span>{quizIndex + 1} / {quizDeck.length}</span>
-                  <span className="font-semibold text-green-600">נכון: {quizScore.correct}</span>
+                  <span className="font-semibold text-exam-sage-strong">נכון: {quizScore.correct}</span>
                 </div>
-                <div className="w-full bg-slate-200 rounded-full h-1.5 mb-6">
+                <div className="w-full bg-exam-paper-alt rounded-full h-1.5 mb-6">
                   <div className="bg-blue-500 h-1.5 rounded-full transition-all" style={{ width: `${((quizIndex) / quizDeck.length) * 100}%` }} />
                 </div>
 
@@ -1164,12 +1164,12 @@ function VocabularyContent() {
                       aria-pressed={favorites.has(quizDeck[quizIndex].id)}
                     >{favorites.has(quizDeck[quizIndex].id) ? '❤️' : '🤍'}</button>
                     <div className="flex items-center gap-2" dir="ltr">
-                      <span className="text-3xl font-black text-slate-900">{quizDeck[quizIndex].word}</span>
+                      <span className="font-serif text-3xl font-black text-exam-ink">{quizDeck[quizIndex].word}</span>
                       <button onClick={() => speak(quizDeck[quizIndex].word)} className="text-2xl hover:scale-110 transition-transform">🔊</button>
                     </div>
                   </div>
                   {quizDeck[quizIndex].example_sentence && (
-                    <p className="text-slate-400 text-xs italic text-left" dir="ltr">
+                    <p className="font-serif text-exam-ink-soft text-xs italic text-left" dir="ltr">
                       &quot;{quizDeck[quizIndex].example_sentence}&quot;
                     </p>
                   )}
@@ -1181,13 +1181,13 @@ function VocabularyContent() {
                     const isCorrectOpt = opt === quizDeck[quizIndex].hebrew_translation;
                     let cls = 'w-full px-4 py-3 rounded-xl border-2 text-right font-medium text-sm transition-all ';
                     if (quizSelected === null) {
-                      cls += 'bg-white border-slate-200 hover:border-blue-400 hover:bg-blue-50 text-slate-800';
+                      cls += 'bg-exam-surface border-exam-border hover:border-exam-accent hover:bg-exam-accent/5 text-exam-ink';
                     } else if (isCorrectOpt) {
-                      cls += 'bg-green-50 border-green-500 text-green-800';
+                      cls += 'bg-exam-sage-bg border-exam-sage-strong text-exam-sage-strong';
                     } else if (quizSelected === i) {
-                      cls += 'bg-red-50 border-red-500 text-red-800';
+                      cls += 'bg-exam-wrong-bg border-exam-wrong text-exam-wrong';
                     } else {
-                      cls += 'bg-white border-slate-200 text-slate-400';
+                      cls += 'bg-exam-surface border-exam-border text-exam-ink-soft';
                     }
                     return (
                       <button key={i} onClick={() => handleQuizSelect(i, opt)} className={cls} disabled={quizSelected !== null}>
@@ -1201,7 +1201,7 @@ function VocabularyContent() {
 
                 {quizSelected !== null && (
                   <div className="text-center">
-                    <div className={`text-lg font-bold mb-3 ${quizCorrect ? 'text-green-600' : 'text-red-600'}`}>
+                    <div className={`text-lg font-bold mb-3 ${quizCorrect ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}>
                       {quizCorrect ? '✓ נכון!' : '✗ לא נכון'}
                     </div>
                     {!quizCorrect && (
@@ -1239,7 +1239,7 @@ function VocabularyContent() {
                         <button
                           key={n}
                           onClick={() => setTimedWordCount(n)}
-                          className={`flex-1 py-2.5 rounded-xl border-2 font-bold text-sm transition-all ${timedWordCount === n ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 text-slate-600 hover:border-blue-300'}`}
+                          className={`flex-1 py-2.5 rounded-sm border-2 font-bold text-sm transition-all ${timedWordCount === n ? 'border-exam-accent bg-exam-accent/10 text-exam-accent' : 'border-exam-border text-exam-ink-soft hover:border-exam-border-strong'}`}
                         >{n}</button>
                       ))}
                     </div>
@@ -1251,7 +1251,7 @@ function VocabularyContent() {
                         <button
                           key={t}
                           onClick={() => setTimedTimePerWord(t)}
-                          className={`flex-1 py-2.5 rounded-xl border-2 font-bold text-sm transition-all ${timedTimePerWord === t ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-slate-200 text-slate-600 hover:border-blue-300'}`}
+                          className={`flex-1 py-2.5 rounded-sm border-2 font-bold text-sm transition-all ${timedTimePerWord === t ? 'border-exam-accent bg-exam-accent/10 text-exam-accent' : 'border-exam-border text-exam-ink-soft hover:border-exam-border-strong'}`}
                         >{t}ש׳</button>
                       ))}
                     </div>
@@ -1261,7 +1261,7 @@ function VocabularyContent() {
                     disabled={filteredWords.length < 4}
                     className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
                   >התחל! ▶</button>
-                  {filteredWords.length < 4 && <p className="text-center text-xs text-red-500">צריך לפחות 4 מילים בסט הנוכחי</p>}
+                  {filteredWords.length < 4 && <p className="text-center text-xs text-exam-alt">צריך לפחות 4 מילים בסט הנוכחי</p>}
                 </div>
               </div>
             ) : timedDeck.length < 4 ? (
@@ -1280,7 +1280,7 @@ function VocabularyContent() {
                 <div className="text-center mb-6">
                   <div className="text-5xl mb-3">⏱️</div>
                   <div className="text-2xl font-black text-slate-900 mb-1">המבחן הסתיים!</div>
-                  <div className="text-5xl font-black text-blue-600 mb-1">{timedScore}/{timedDeck.length}</div>
+                  <div className="text-5xl font-black text-exam-accent mb-1">{timedScore}/{timedDeck.length}</div>
                   <p className="text-slate-500 text-sm">
                     {timedScore === timedDeck.length ? '🏆 מושלם!' : timedScore >= timedDeck.length * 0.7 ? '👍 כל הכבוד!' : '💪 המשך להתאמן!'}
                   </p>
@@ -1289,7 +1289,7 @@ function VocabularyContent() {
                 {/* Results list */}
                 <div className="space-y-2 mb-6">
                   {timedResults.map((r, i) => (
-                    <div key={i} className={`flex items-center justify-between px-4 py-3 rounded-xl border-2 ${r.correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                    <div key={i} className={`flex items-center justify-between px-4 py-3 rounded-sm border-2 ${r.correct ? 'bg-exam-sage-bg border-exam-sage/40' : 'bg-exam-wrong-bg border-exam-wrong/40'}`}>
                       <div className="text-left">
                         <div className="font-bold text-slate-800 text-sm" dir="ltr">{r.word.word}</div>
                         <div className="text-xs text-slate-500">{r.word.hebrew_translation}</div>
@@ -1309,7 +1309,7 @@ function VocabularyContent() {
                       <div className="text-xs font-semibold text-slate-400 mb-2">ניסיונות אחרונים:</div>
                       <div className="flex gap-2 flex-wrap">
                         {hist.map((h, i) => (
-                          <div key={i} className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${h.score / h.total >= 0.7 ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'}`}>
+                          <div key={i} className={`px-3 py-1.5 rounded-sm text-xs font-medium border ${h.score / h.total >= 0.7 ? 'bg-exam-sage-bg border-exam-sage/40 text-exam-sage-strong' : 'bg-exam-wrong-bg border-exam-wrong/40 text-exam-wrong'}`}>
                             {h.score}/{h.total} <span className="text-slate-400 font-normal">({h.date})</span>
                           </div>
                         ))}
@@ -1339,11 +1339,11 @@ function VocabularyContent() {
                 {/* Timed progress */}
                 <div className="flex items-center justify-between mb-3 text-sm text-slate-500">
                   <span>{timedIndex + 1} / {timedDeck.length}</span>
-                  <span className="font-semibold text-green-600">נכון: {timedScore}</span>
+                  <span className="font-semibold text-exam-sage-strong">נכון: {timedScore}</span>
                 </div>
 
                 {/* Timer bar */}
-                <div className="w-full bg-slate-200 rounded-full h-3 mb-1 overflow-hidden">
+                <div className="w-full bg-exam-paper-alt rounded-full h-3 mb-1 overflow-hidden">
                   <div
                     className={`h-3 rounded-full transition-all duration-1000 ${timerColor}`}
                     style={{ width: `${(timeLeft / timedTimePerWord) * 100}%` }}
@@ -1361,12 +1361,12 @@ function VocabularyContent() {
                       aria-pressed={favorites.has(timedDeck[timedIndex].id)}
                     >{favorites.has(timedDeck[timedIndex].id) ? '❤️' : '🤍'}</button>
                     <div className="flex items-center gap-2" dir="ltr">
-                      <span className="text-3xl font-black text-slate-900">{timedDeck[timedIndex].word}</span>
+                      <span className="font-serif text-3xl font-black text-exam-ink">{timedDeck[timedIndex].word}</span>
                       <button onClick={() => speak(timedDeck[timedIndex].word)} className="text-2xl hover:scale-110 transition-transform">🔊</button>
                     </div>
                   </div>
                   {timedDeck[timedIndex].example_sentence && (
-                    <p className="text-slate-400 text-xs italic text-left" dir="ltr">
+                    <p className="font-serif text-exam-ink-soft text-xs italic text-left" dir="ltr">
                       &quot;{timedDeck[timedIndex].example_sentence}&quot;
                     </p>
                   )}
@@ -1378,13 +1378,13 @@ function VocabularyContent() {
                     const isCorrectOpt = opt === timedDeck[timedIndex].hebrew_translation;
                     let cls = 'w-full px-4 py-3 rounded-xl border-2 text-right font-medium text-sm transition-all ';
                     if (timedSelected === null) {
-                      cls += 'bg-white border-slate-200 hover:border-blue-400 hover:bg-blue-50 text-slate-800';
+                      cls += 'bg-exam-surface border-exam-border hover:border-exam-accent hover:bg-exam-accent/5 text-exam-ink';
                     } else if (isCorrectOpt) {
-                      cls += 'bg-green-50 border-green-500 text-green-800';
+                      cls += 'bg-exam-sage-bg border-exam-sage-strong text-exam-sage-strong';
                     } else if (timedSelected === i) {
-                      cls += 'bg-red-50 border-red-500 text-red-800';
+                      cls += 'bg-exam-wrong-bg border-exam-wrong text-exam-wrong';
                     } else {
-                      cls += 'bg-white border-slate-200 text-slate-400';
+                      cls += 'bg-exam-surface border-exam-border text-exam-ink-soft';
                     }
                     return (
                       <button key={i} onClick={() => handleTimedSelect(i, opt, Date.now())} className={cls} disabled={timedSelected !== null}>
@@ -1398,7 +1398,7 @@ function VocabularyContent() {
 
                 {timedSelected !== null && (
                   <div className="text-center">
-                    <div className={`text-lg font-bold ${timedCorrect ? 'text-green-600' : 'text-red-600'}`}>
+                    <div className={`text-lg font-bold ${timedCorrect ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}>
                       {timedSelected === -1 ? '⏰ פג הזמן!' : timedCorrect ? '✓ נכון!' : '✗ לא נכון'}
                     </div>
                   </div>

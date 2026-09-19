@@ -259,10 +259,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
-          <div className="text-red-500 text-xl mb-4">{error}</div>
-          <button onClick={loadSession} className="text-blue-600 underline">נסה שוב</button>
+          <div className="text-exam-wrong text-xl mb-4 font-sans">{error}</div>
+          <button onClick={loadSession} className="text-exam-ink underline font-sans">נסה שוב</button>
         </div>
       </div>
     );
@@ -270,8 +270,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   if (!session || currentQuestions.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900" dir="rtl">
-        <div className="text-slate-400 dark:text-slate-500 text-lg">טוען מבחן...</div>
+      <div className="min-h-screen flex items-center justify-center bg-exam-paper" dir="rtl">
+        <div className="text-exam-ink-soft text-lg font-sans">טוען מבחן...</div>
       </div>
     );
   }
@@ -279,27 +279,27 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const question = currentQuestions[currentQuestionIndex];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
+    <div className="min-h-screen bg-exam-paper font-sans" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <button
               onClick={() => setExitConfirm(true)}
               disabled={isSubmitting}
               aria-label="יציאה מהמבחן"
-              className="flex-shrink-0 w-8 h-8 rounded-full border border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200 transition-colors text-sm font-bold disabled:opacity-40"
+              className="flex-shrink-0 w-8 h-8 rounded-sm border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt hover:text-exam-ink transition-colors text-sm font-bold disabled:opacity-40"
             >
               ✕
             </button>
             <div className="flex flex-col flex-1">
-              <span className="text-sm font-bold text-slate-900 dark:text-white">סימולציית פרקי הליבה</span>
-              <span className="text-xs text-slate-500 dark:text-slate-400">
+              <span className="text-sm font-bold text-exam-ink">סימולציית פרקי הליבה</span>
+              <span className="text-xs text-exam-ink-soft">
                 פרק {currentSection} — {currentCfg?.type === 'sentence_completion' ? 'השלמת משפטים' :
                   currentCfg?.type === 'restatement' ? 'ניסוח מחדש' :
                   currentCfg?.type === 'reading_comprehension' ? 'הבנת הנקרא' : 'ESRA'}
                 {currentCfg?.experimental && (
-                  <span className="mr-1 px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 font-semibold">תרגול חלופי</span>
+                  <span className="mr-1 px-1.5 py-0.5 rounded-sm bg-exam-alt-bg text-exam-alt font-semibold">תרגול חלופי</span>
                 )}
               </span>
             </div>
@@ -322,22 +322,22 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       <main className="max-w-2xl mx-auto px-4 py-8">
         {/* Exit confirmation */}
         {exitConfirm && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl" dir="rtl">
-            <p className="text-red-800 dark:text-red-300 text-sm font-semibold mb-3">
+          <div className="mb-6 p-4 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm" dir="rtl">
+            <p className="text-exam-wrong text-sm font-semibold mb-3">
               בטוח שברצונך לצאת? ההתקדמות במבחן הנוכחי לא נשמרת, אז תוכל פשוט להתחיל מבחן חדש כשתהיה מוכן.
             </p>
             <div className="flex gap-2">
               <button
                 onClick={handleConfirmExit}
                 disabled={isSubmitting || isExiting}
-                className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-bold hover:bg-red-600 transition-colors disabled:opacity-50"
+                className="px-4 py-2 rounded-sm bg-exam-wrong text-white text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {isExiting ? 'יוצא...' : 'כן, לצאת מהמבחן'}
               </button>
               <button
                 onClick={() => setExitConfirm(false)}
                 disabled={isExiting}
-                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
+                className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft text-sm hover:bg-exam-paper-alt transition-colors disabled:opacity-50"
               >
                 המשך במבחן
               </button>
@@ -346,13 +346,13 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         )}
 
         {lateNotice && (
-          <div className="mb-6 p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl text-sm text-orange-800 dark:text-orange-300 flex items-center justify-between gap-3" dir="rtl">
+          <div className="mb-6 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt flex items-center justify-between gap-3" dir="rtl">
             <span>הפרק הקודם נשלח אחרי שנגמר הזמן — כמו במבחן האמיתי, הוא נחשב כלא נענה.</span>
             <button onClick={() => setLateNotice(false)} className="text-xs underline flex-shrink-0">הבנתי</button>
           </div>
         )}
         {currentCfg?.experimental && (
-          <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl text-sm text-purple-900 dark:text-purple-200">
+          <div className="mb-6 p-4 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-ink">
             <p>
               <span className="font-bold">תרגול חלופי — לא חלק מהדמיית הליבה.</span> בבחינת אמירנ&quot;ט
               הפרקים האחרונים עשויים להיות שני פרקים ניסיוניים מסוגים חדשים, או מטלת כתיבה אחת.
@@ -363,7 +363,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <button
               onClick={() => session && submitSection(session, answers)}
               disabled={isSubmitting}
-              className="mt-3 px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-700 text-purple-700 dark:text-purple-300 text-sm font-semibold hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors disabled:opacity-60"
+              className="mt-3 px-4 py-2 rounded-sm border border-exam-alt/50 text-exam-alt text-sm font-semibold hover:bg-exam-alt-bg transition-colors disabled:opacity-60"
             >
               דלג על התרגול החלופי וסיים ←
             </button>
@@ -381,17 +381,17 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           />
         </div>
         {isSubmitting && (
-          <div className="flex items-center justify-center gap-2 mt-4 text-sm text-slate-500 dark:text-slate-400" dir="rtl">
-            <span className="w-4 h-4 border-2 border-slate-300 dark:border-slate-600 border-t-blue-500 rounded-full animate-spin" />
+          <div className="flex items-center justify-center gap-2 mt-4 text-sm text-exam-ink-soft" dir="rtl">
+            <span className="w-4 h-4 border-2 border-exam-border border-t-exam-ink rounded-full animate-spin" />
             שולח את הפרק וטוען את הבא — רגע אחד...
           </div>
         )}
 
         {/* Inline submit warning */}
         {submitWarning && (
-          <div className="mt-4 p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl flex items-center justify-between gap-3" dir="rtl">
-            <p className="text-orange-800 dark:text-orange-300 text-sm">{submitWarning}</p>
-            <button onClick={() => setSubmitWarning(null)} className="text-xs px-3 py-1.5 rounded-lg border border-orange-300 dark:border-orange-700 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/40 flex-shrink-0">הבנתי</button>
+          <div className="mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm flex items-center justify-between gap-3" dir="rtl">
+            <p className="text-exam-alt text-sm">{submitWarning}</p>
+            <button onClick={() => setSubmitWarning(null)} className="text-xs px-3 py-1.5 rounded-sm border border-exam-alt/50 text-exam-alt hover:bg-exam-alt-bg flex-shrink-0">הבנתי</button>
           </div>
         )}
 
@@ -400,7 +400,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           <button
             onClick={handlePrev}
             disabled={currentQuestionIndex === 0 || isSubmitting}
-            className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm"
+            className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt transition-colors text-sm"
           >
             קודם &rsaquo;
           </button>
@@ -413,10 +413,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
                 onClick={() => { if (!isSubmitting) setCurrentQuestionIndex(i); }}
                 disabled={isSubmitting}
                 aria-label={`שאלה ${i + 1}${answers[i] === null ? ' — לא נענתה' : ''}`}
-                className={`w-8 h-8 rounded-full text-xs font-bold transition-all disabled:opacity-40 ${
-                  i === currentQuestionIndex ? 'bg-blue-600 text-white scale-110 ring-2 ring-blue-300' :
-                  answers[i] !== null ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' :
-                  'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-slate-400'
+                className={`w-8 h-8 rounded-sm text-xs font-bold transition-colors disabled:opacity-40 border ${
+                  i === currentQuestionIndex ? 'bg-exam-accent border-exam-accent text-exam-accent-ink' :
+                  answers[i] !== null ? 'bg-exam-paper-alt border-exam-border text-exam-ink' :
+                  'bg-exam-surface text-exam-ink-soft border-dashed border-exam-border hover:border-exam-border-strong'
                 }`}
               >
                 {i + 1}
@@ -428,7 +428,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <button
               onClick={handleNext}
               disabled={isSubmitting}
-              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors text-sm font-medium disabled:opacity-50"
+              className="px-4 py-2 rounded-sm bg-exam-accent text-exam-accent-ink hover:opacity-90 transition-opacity text-sm font-medium disabled:opacity-50"
             >
               &lsaquo; הבא
             </button>
@@ -436,7 +436,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <button
               onClick={handleSubmitSection}
               disabled={isSubmitting}
-              className="px-5 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-bold disabled:opacity-60"
+              className="px-5 py-2 rounded-sm bg-exam-sage-strong text-white hover:opacity-90 transition-opacity text-sm font-bold disabled:opacity-60"
             >
               {isSubmitting ? 'שולח...' : currentSection < SECTION_CONFIGS.length ? 'סיים פרק →' : 'סיים מבחן ✓'}
             </button>
@@ -445,7 +445,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
         {/* Official AMIRNET guidance */}
         {!session.is_practice && (
-          <p className="mt-6 text-center text-xs text-slate-400 dark:text-slate-500">
+          <p className="mt-6 text-center text-xs text-exam-ink-soft">
             שאלה ללא מענה נחשבת לתשובה שגויה — אם אינך בטוח, כדאי לנחש. אין קנס על טעות.
           </p>
         )}

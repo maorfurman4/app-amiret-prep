@@ -33,27 +33,27 @@ export function SectionProgress({ currentSection, completedSections }: SectionPr
 
         return (
           <div key={cfg.index} ref={isCurrent ? currentRef : undefined} className="flex items-center gap-1 flex-shrink-0">
-            <div className={`flex flex-col items-center ${isCurrent ? 'scale-105' : ''}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
-                isDone    ? 'bg-green-500 border-green-500 text-white' :
+            <div className="flex flex-col items-center">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold border transition-colors ${
+                isDone    ? 'bg-exam-sage border-exam-sage text-white' :
                 isCurrent ? (cfg.experimental
-                              ? 'bg-purple-600 border-purple-600 text-white shadow-md shadow-purple-200'
-                              : 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-200') :
-                cfg.experimental ? 'bg-white dark:bg-slate-800 border-purple-300 dark:border-purple-700 text-purple-400 border-dashed' :
-                            'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-400 dark:text-slate-500'
+                              ? 'bg-exam-alt border-exam-alt text-white'
+                              : 'bg-exam-accent border-exam-accent text-exam-accent-ink') :
+                cfg.experimental ? 'bg-exam-surface border-exam-alt/50 text-exam-alt border-dashed' :
+                            'bg-exam-surface border-exam-border text-exam-ink-soft'
               }`}>
                 {isDone ? '✓' : cfg.index}
               </div>
               <span className={`mt-1 text-[10px] whitespace-nowrap ${
-                isCurrent ? (cfg.experimental ? 'text-purple-600 font-semibold' : 'text-blue-600 font-semibold') :
-                isDone    ? 'text-green-600' :
-                cfg.experimental ? 'text-purple-400' : 'text-slate-400 dark:text-slate-500'
+                isCurrent ? (cfg.experimental ? 'text-exam-alt font-semibold' : 'text-exam-accent font-semibold') :
+                isDone    ? 'text-exam-sage-strong' :
+                cfg.experimental ? 'text-exam-alt/70' : 'text-exam-ink-soft'
               }`}>
                 {cfg.experimental ? 'תרגול חלופי' : TYPE_LABELS[cfg.type]}
               </span>
             </div>
             {cfg.index < SECTION_CONFIGS.length && (
-              <div className={`w-6 h-0.5 mb-4 transition-all ${isDone ? 'bg-green-400' : 'bg-slate-200 dark:bg-slate-700'}`} />
+              <div className={`w-6 h-px mb-4 transition-colors ${isDone ? 'bg-exam-sage' : 'bg-exam-border'}`} />
             )}
           </div>
         );

@@ -152,7 +152,7 @@ export function UserMenu() {
     return (
       <Link
         href="/auth/login"
-        className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        className="text-sm font-medium text-exam-ink-soft hover:text-exam-ink px-3 py-1.5 rounded-sm hover:bg-exam-paper-alt transition-colors"
       >
         כניסה
       </Link>
@@ -190,43 +190,43 @@ export function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute left-0 mt-2 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg py-1 z-50" dir="rtl" style={{ left: 0, right: 'auto' }}>
+        <div className="absolute left-0 mt-2 w-64 bg-exam-surface border border-exam-border rounded-md py-1 z-50" dir="rtl" style={{ left: 0, right: 'auto' }}>
           {panel === 'menu' && (
             <>
-              <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-700">
-                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">{displayName || 'הגדר שם תצוגה'}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email}</p>
+              <div className="px-3 py-2 border-b border-exam-border">
+                <p className="text-sm font-semibold text-exam-ink truncate">{displayName || 'הגדר שם תצוגה'}</p>
+                <p className="text-xs text-exam-ink-soft truncate">{user.email}</p>
               </div>
               <Link
                 href="/stats"
                 onClick={() => setOpen(false)}
-                className="block w-full text-right px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                className="block w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
               >
                 📊 הסטטיסטיקה שלי
               </Link>
               <button
                 onClick={() => { setAvatarError(null); setPanel('avatar'); }}
-                className="w-full text-right px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                className="w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
               >
                 🖼️ תמונת פרופיל
               </button>
               <button
                 onClick={() => { setNameInput(displayName); setNameError(null); setPanel('name'); }}
-                className="w-full text-right px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                className="w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
               >
                 ✏️ ערוך שם תצוגה
               </button>
               {canChangePassword && (
                 <button
                   onClick={() => { setPwError(null); setPwSuccess(false); setPanel('password'); }}
-                  className="w-full text-right px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                  className="w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
                 >
                   🔒 שנה סיסמה
                 </button>
               )}
               <button
                 onClick={handleSignOut}
-                className="w-full text-right px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors border-t border-slate-100 dark:border-slate-700 mt-1"
+                className="w-full text-right px-3 py-2 text-sm text-exam-wrong hover:bg-exam-paper-alt transition-colors border-t border-exam-border mt-1"
               >
                 יציאה
               </button>
@@ -236,8 +236,8 @@ export function UserMenu() {
           {panel === 'avatar' && (
             <div className="px-3 py-3 space-y-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-bold text-slate-800 dark:text-slate-100">תמונת פרופיל</span>
-                <button onClick={() => setPanel('menu')} className="text-slate-400 hover:text-slate-600 text-lg leading-none">×</button>
+                <span className="text-sm font-bold text-exam-ink">תמונת פרופיל</span>
+                <button onClick={() => setPanel('menu')} className="text-exam-ink-soft hover:text-exam-ink text-lg leading-none">×</button>
               </div>
               <div className="flex items-center justify-center">
                 {avatarUrl ? (
@@ -249,7 +249,7 @@ export function UserMenu() {
                   </div>
                 )}
               </div>
-              {avatarError && <p className="text-xs text-red-500 text-center">{avatarError}</p>}
+              {avatarError && <p className="text-xs text-exam-wrong text-center">{avatarError}</p>}
               <button
                 onClick={handlePickAvatar}
                 disabled={avatarSaving}
@@ -261,20 +261,20 @@ export function UserMenu() {
                 <button
                   onClick={handleRemoveAvatar}
                   disabled={avatarSaving}
-                  className="w-full py-2 text-red-600 dark:text-red-400 rounded-lg text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+                  className="w-full py-2 text-exam-wrong rounded-sm text-sm font-medium hover:bg-exam-wrong-bg transition-colors disabled:opacity-50"
                 >
                   הסר תמונה
                 </button>
               )}
-              <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center">JPG, PNG, WEBP או GIF · עד 3MB</p>
+              <p className="text-[11px] text-exam-ink-soft text-center">JPG, PNG, WEBP או GIF · עד 3MB</p>
             </div>
           )}
 
           {panel === 'name' && (
             <div className="px-3 py-3 space-y-2">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-bold text-slate-800 dark:text-slate-100">שם תצוגה</span>
-                <button onClick={() => setPanel('menu')} className="text-slate-400 hover:text-slate-600 text-lg leading-none">×</button>
+                <span className="text-sm font-bold text-exam-ink">שם תצוגה</span>
+                <button onClick={() => setPanel('menu')} className="text-exam-ink-soft hover:text-exam-ink text-lg leading-none">×</button>
               </div>
               <input
                 type="text"
@@ -282,9 +282,9 @@ export function UserMenu() {
                 onChange={e => setNameInput(e.target.value)}
                 maxLength={40}
                 placeholder="איך שיוצג בלוח המובילים"
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white"
+                className="w-full px-3 py-2 rounded-sm border border-exam-border bg-exam-surface text-sm text-exam-ink"
               />
-              {nameError && <p className="text-xs text-red-500">{nameError}</p>}
+              {nameError && <p className="text-xs text-exam-wrong">{nameError}</p>}
               <button
                 onClick={handleSaveName}
                 disabled={nameSaving}
@@ -298,11 +298,11 @@ export function UserMenu() {
           {panel === 'password' && (
             <div className="px-3 py-3 space-y-2">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-bold text-slate-800 dark:text-slate-100">שינוי סיסמה</span>
-                <button onClick={() => setPanel('menu')} className="text-slate-400 hover:text-slate-600 text-lg leading-none">×</button>
+                <span className="text-sm font-bold text-exam-ink">שינוי סיסמה</span>
+                <button onClick={() => setPanel('menu')} className="text-exam-ink-soft hover:text-exam-ink text-lg leading-none">×</button>
               </div>
               {pwSuccess ? (
-                <p className="text-sm text-green-600 font-medium py-2">הסיסמה עודכנה בהצלחה ✓</p>
+                <p className="text-sm text-exam-sage-strong font-medium py-2">הסיסמה עודכנה בהצלחה ✓</p>
               ) : (
                 <>
                   <input
@@ -311,7 +311,7 @@ export function UserMenu() {
                     onChange={e => setNewPassword(e.target.value)}
                     placeholder="סיסמה חדשה"
                     autoComplete="new-password"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white"
+                    className="w-full px-3 py-2 rounded-sm border border-exam-border bg-exam-surface text-sm text-exam-ink"
                   />
                   <input
                     type="password"
@@ -319,9 +319,9 @@ export function UserMenu() {
                     onChange={e => setConfirmPassword(e.target.value)}
                     placeholder="אימות סיסמה"
                     autoComplete="new-password"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white"
+                    className="w-full px-3 py-2 rounded-sm border border-exam-border bg-exam-surface text-sm text-exam-ink"
                   />
-                  {pwError && <p className="text-xs text-red-500">{pwError}</p>}
+                  {pwError && <p className="text-xs text-exam-wrong">{pwError}</p>}
                   <button
                     onClick={handleChangePassword}
                     disabled={pwSaving}

@@ -31,7 +31,7 @@ interface QuestionCardProps {
   hideHeader?: boolean;
 }
 
-const OPTION_LABELS = ['1', '2', '3', '4'];
+const OPTION_LABELS = ['A', 'B', 'C', 'D'];
 
 export function QuestionCard({
   question,
@@ -54,40 +54,41 @@ export function QuestionCard({
     <div className="w-full max-w-2xl mx-auto">
       {/* Question header — omitted when the parent page already shows question progress */}
       {!hideHeader && (
-        <div className="flex items-center justify-between mb-4" dir="rtl">
-          <span className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+        <div className="flex items-center justify-between mb-5" dir="rtl">
+          <span className="text-sm text-exam-ink-soft font-medium">
             שאלה {questionNumber} מתוך {totalInSection}
           </span>
-          <div className="flex gap-1">
-            {Array.from({ length: totalInSection }).map((_, i) => (
-              <div
-                key={i}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  i < questionNumber - 1 ? 'bg-blue-500' :
-                  i === questionNumber - 1 ? 'bg-blue-700' :
-                  'bg-slate-200 dark:bg-slate-700'
-                }`}
-              />
-            ))}
+          {/* Ultra-thin progress bar — replaces the old dot row */}
+          <div className="w-28 h-[3px] bg-exam-border rounded-full overflow-hidden">
+            <div
+              className="h-full bg-exam-ink transition-all duration-300"
+              style={{ width: `${(questionNumber / totalInSection) * 100}%` }}
+            />
           </div>
         </div>
       )}
 
-      {/* Passage for reading comprehension */}
+      {/* Passage for reading comprehension — paper-like box, serif, LTR */}
       {question.passage && (
-        <div dir="ltr" className="mb-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-medium max-h-56 overflow-y-auto text-left">
-          <div className="text-xs text-slate-400 dark:text-slate-500 mb-2 font-normal">Reading Passage</div>
+        <div
+          dir="ltr"
+          lang="en"
+          className="font-serif mb-6 p-5 bg-exam-paper-alt border border-exam-border rounded-md text-[15px] leading-[1.75] text-exam-ink max-h-56 overflow-y-auto text-left"
+        >
+          <div className="font-sans text-[11px] uppercase tracking-wider text-exam-ink-soft mb-2 not-italic">
+            Reading Passage
+          </div>
           {question.passage.text}
         </div>
       )}
 
-      {/* Restatement — amber banner + original sentence */}
+      {/* Restatement — original sentence to reformulate */}
       {question.type === 'restatement' && (
-        <div className="mb-6 px-4 py-3 bg-amber-50 dark:bg-amber-950/30 border-r-4 border-amber-400 dark:border-amber-600 rounded-xl" dir="rtl">
-          <div className="text-xs text-amber-700 dark:text-amber-400 font-bold mb-2 uppercase tracking-wide">
-            📌 המשפט המקורי — מצא את הניסוח השקול:
+        <div className="mb-6 px-4 py-3 bg-exam-paper-alt border border-exam-border border-r-[3px] border-r-exam-ink rounded-sm" dir="rtl">
+          <div className="text-xs text-exam-ink-soft font-semibold mb-2 uppercase tracking-wide">
+            המשפט המקורי — מצא את הניסוח השקול
           </div>
-          <div className="text-base font-semibold text-amber-900 dark:text-amber-100 leading-relaxed" dir="ltr">
+          <div dir="ltr" lang="en" className="font-serif text-lg text-exam-ink leading-relaxed text-left">
             {question.text}
           </div>
         </div>
@@ -95,13 +96,13 @@ export function QuestionCard({
 
       {/* Question text */}
       {question.type !== 'restatement' && (
-        <div dir="ltr" className="mb-6 text-lg font-semibold text-slate-900 dark:text-white leading-relaxed text-left">
+        <div dir="ltr" lang="en" className="font-serif mb-6 text-lg text-exam-ink leading-relaxed text-left">
           {question.text}
         </div>
       )}
 
-      {/* Options — English answers are always laid out LTR */}
-      <div className="space-y-3" dir="ltr">
+      {/* Options — flat, tactile, English answers laid out LTR */}
+      <div className="space-y-2.5" dir="ltr">
         {question.options.map((option, i) => {
           const isSelected = selectedAnswer === i;
           const isCorrect = question.correct_answer === i;
@@ -113,24 +114,24 @@ export function QuestionCard({
               key={option.id ?? i}
               onClick={() => onSelect(i)}
               disabled={showResult}
-              className={`w-full text-left px-4 py-3 rounded-xl border-2 transition-all flex items-center gap-3 ${
-                showCorrect  ? 'border-green-500 bg-green-50 dark:bg-green-950/40 text-green-800 dark:text-green-300' :
-                isWrong      ? 'border-red-500 bg-red-50 dark:bg-red-950/40 text-red-800 dark:text-red-300' :
-                isSelected   ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-blue-200 font-medium' :
-                               'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:border-blue-300 hover:bg-blue-50/40 dark:hover:bg-slate-700'
+              className={`w-full text-left px-4 py-3 rounded-sm border transition-colors flex items-center gap-3 ${
+                showCorrect  ? 'border-exam-sage bg-exam-sage-bg text-exam-sage-strong' :
+                isWrong      ? 'border-exam-wrong bg-exam-wrong-bg text-exam-wrong' :
+                isSelected   ? 'border-exam-accent bg-exam-paper-alt text-exam-ink font-medium' :
+                               'border-exam-border bg-exam-surface text-exam-ink hover:bg-exam-paper-alt hover:border-exam-border-strong'
               }`}
             >
-              <span className={`flex-shrink-0 w-7 h-7 rounded-full border-2 flex items-center justify-center text-xs font-bold ${
-                showCorrect  ? 'border-green-500 bg-green-500 text-white' :
-                isWrong      ? 'border-red-500 bg-red-500 text-white' :
-                isSelected   ? 'border-blue-500 bg-blue-500 text-white' :
-                               'border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400'
+              <span className={`flex-shrink-0 w-7 h-7 rounded-sm border flex items-center justify-center text-xs font-semibold font-sans ${
+                showCorrect  ? 'border-exam-sage bg-exam-sage text-white' :
+                isWrong      ? 'border-exam-wrong bg-exam-wrong text-white' :
+                isSelected   ? 'border-exam-accent bg-exam-accent text-exam-accent-ink' :
+                               'border-exam-border text-exam-ink-soft'
               }`}>
                 {OPTION_LABELS[i]}
               </span>
-              <span className="flex-1">{option.text}</span>
-              {showResult && isCorrect && <span className="text-green-600 font-bold">✓</span>}
-              {isWrong && <span className="text-red-500 font-bold">✗</span>}
+              <span className="flex-1 font-serif">{option.text}</span>
+              {showResult && isCorrect && <span className="text-exam-sage font-bold font-sans">✓</span>}
+              {isWrong && <span className="text-exam-wrong font-bold font-sans">✗</span>}
             </button>
           );
         })}
@@ -142,18 +143,18 @@ export function QuestionCard({
           {!hintVisible ? (
             <button
               onClick={() => setHintQuestionId(question.id)}
-              className="text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 flex items-center gap-1.5 transition-colors"
+              className="text-sm text-exam-alt hover:opacity-80 flex items-center gap-1.5 transition-opacity"
             >
               <span>💡</span>
               <span>רמז — כיוון לפתרון</span>
             </button>
           ) : (
-            <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl">
+            <div className="p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm">
               <div className="flex items-center gap-1.5 mb-1">
                 <span className="text-base">💡</span>
-                <span className="text-xs font-bold text-amber-700 dark:text-amber-400">רמז — כיוון לפתרון</span>
+                <span className="text-xs font-bold text-exam-alt">רמז — כיוון לפתרון</span>
               </div>
-              <p className="text-sm text-amber-900 dark:text-amber-200 leading-relaxed">{hintStrategy}</p>
+              <p className="text-sm text-exam-ink leading-relaxed">{hintStrategy}</p>
             </div>
           )}
         </div>
@@ -162,33 +163,33 @@ export function QuestionCard({
       {/* Practice explanation — after answer */}
       {isPractice && showResult && explanation && (
         <div className="mt-6 space-y-3" dir="rtl">
-          <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-xl">
+          <div className="p-4 bg-exam-sage-bg border border-exam-sage/40 rounded-sm">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-lg">✅</span>
-              <span className="font-bold text-green-800 dark:text-green-300 text-sm">מדוע התשובה הנכונה נכונה</span>
+              <span className="font-bold text-exam-sage-strong text-sm">מדוע התשובה הנכונה נכונה</span>
             </div>
-            <p className="text-green-900 dark:text-green-200 text-sm leading-relaxed">{explanation.correct_reason}</p>
+            <p className="text-exam-ink text-sm leading-relaxed">{explanation.correct_reason}</p>
           </div>
 
           {explanation.options_analysis.length > 0 && (
-            <div className="p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl">
-              <div className="font-bold text-slate-700 dark:text-slate-200 text-sm mb-3">🔍 שלבי שלילה:</div>
+            <div className="p-4 bg-exam-surface border border-exam-border rounded-sm">
+              <div className="font-bold text-exam-ink text-sm mb-3">🔍 שלבי שלילה:</div>
               <div className="space-y-2">
                 {question.options.map((opt, i) => {
                   const correct = i === question.correct_answer;
                   return (
                     <div
                       key={i}
-                      className={`flex gap-3 text-sm p-2.5 rounded-lg ${correct ? 'bg-green-50 dark:bg-green-950/30' : 'bg-red-50/60 dark:bg-red-950/20'}`}
+                      className={`flex gap-3 text-sm p-2.5 rounded-sm ${correct ? 'bg-exam-sage-bg' : 'bg-exam-wrong-bg'}`}
                     >
-                      <span className={`font-bold text-xs mt-0.5 flex-shrink-0 ${correct ? 'text-green-600' : 'text-red-400'}`}
+                      <span className={`font-bold text-xs mt-0.5 flex-shrink-0 ${correct ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}
                         style={{ minWidth: '4.5rem' }}>
                         {correct ? `✅ שלב ${i+1}: בחר` : `❌ שלב ${i+1}: שלל`}
                       </span>
-                      <div dir="ltr" className="flex-1">
-                        <span className="font-medium text-slate-800 dark:text-slate-100">{opt.text}</span>
+                      <div dir="ltr" lang="en" className="flex-1">
+                        <span className="font-serif font-medium text-exam-ink">{opt.text}</span>
                         {explanation.options_analysis[i] && (
-                          <p className={`mt-1 text-xs leading-relaxed ${correct ? 'text-green-700 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`} dir="rtl">
+                          <p className={`mt-1 text-xs leading-relaxed font-sans ${correct ? 'text-exam-sage-strong' : 'text-exam-wrong'}`} dir="rtl">
                             {explanation.options_analysis[i]}
                           </p>
                         )}
@@ -201,12 +202,12 @@ export function QuestionCard({
           )}
 
           {explanation.strategy && (
-            <div className="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl">
+            <div className="p-4 bg-exam-paper-alt border border-exam-border rounded-sm">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-lg">💡</span>
-                <span className="font-bold text-blue-800 dark:text-blue-300 text-sm">טיפ אסטרטגי</span>
+                <span className="font-bold text-exam-ink text-sm">טיפ אסטרטגי</span>
               </div>
-              <p className="text-blue-900 dark:text-blue-200 text-sm leading-relaxed">{explanation.strategy}</p>
+              <p className="text-exam-ink text-sm leading-relaxed">{explanation.strategy}</p>
             </div>
           )}
         </div>

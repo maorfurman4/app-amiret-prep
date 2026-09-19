@@ -238,24 +238,24 @@ export default function ReviewQueuePage() {
 
   if (step === 'loading') {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center" dir="rtl">
-        <div className="text-slate-400 dark:text-slate-500 text-lg">טוען שאלות לחזרה...</div>
+      <div className="min-h-screen bg-exam-paper flex items-center justify-center" dir="rtl">
+        <div className="text-exam-ink-soft text-lg">טוען שאלות לחזרה...</div>
       </div>
     );
   }
 
   if (step === 'error') {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
+      <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-4">
             <div className="text-5xl">⚠️</div>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-white">שגיאה בטעינה</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">לא ניתן לטעון את השאלות. בדוק חיבור אינטרנט.</p>
+            <h1 className="text-xl font-bold text-exam-ink">שגיאה בטעינה</h1>
+            <p className="text-exam-ink-soft text-sm">לא ניתן לטעון את השאלות. בדוק חיבור אינטרנט.</p>
             <button
               onClick={() => fetchDueQuestions(guestId)}
-              className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+              className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
             >
               נסה שוב
             </button>
@@ -267,16 +267,16 @@ export default function ReviewQueuePage() {
 
   if (step === 'empty') {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
+      <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-6">
             <div className="text-6xl">🎉</div>
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">כל הכבוד!</h1>
-            <p className="text-slate-500 dark:text-slate-400">אין שאלות לחזרה כרגע. בוא שוב מחר 🎉</p>
+            <h1 className="text-2xl font-bold text-exam-ink">כל הכבוד!</h1>
+            <p className="text-exam-ink-soft">אין שאלות לחזרה כרגע. בוא שוב מחר 🎉</p>
             <button
               onClick={() => router.push('/exam')}
-              className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+              className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
             >
               חזרה לתפריט
             </button>
@@ -291,36 +291,36 @@ export default function ReviewQueuePage() {
     const order = sortedCategories(groups);
 
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
+      <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 px-4 py-8">
           <div className="w-full max-w-lg mx-auto space-y-6">
             <div className="text-center">
               <div className="text-4xl mb-2">🔄</div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">חזרה על טעויות</h1>
-              <p className="text-slate-500 dark:text-slate-400 mt-1">{allQuestions.length} שאלות ממתינות, מחולקות לפי קטגוריה</p>
+              <h1 className="text-2xl font-bold text-exam-ink">חזרה על טעויות</h1>
+              <p className="text-exam-ink-soft mt-1">{allQuestions.length} שאלות ממתינות, מחולקות לפי קטגוריה</p>
             </div>
 
             <div className="space-y-3">
               {order.map(type => (
                 <div
                   key={type}
-                  className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700"
+                  className="flex items-center gap-3 p-4 bg-exam-surface rounded-md border border-exam-border"
                 >
                   <div className="text-2xl">{CATEGORY_ICONS[type] ?? '❓'}</div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-bold text-slate-900 dark:text-white">{CATEGORY_LABELS[type] ?? type}</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">{groups[type].length} שאלות</div>
+                    <div className="font-bold text-exam-ink">{CATEGORY_LABELS[type] ?? type}</div>
+                    <div className="text-xs text-exam-ink-soft">{groups[type].length} שאלות</div>
                   </div>
                   <button
                     onClick={() => handleStartReview(type)}
-                    className="px-3 py-2 bg-orange-500 text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition-colors flex-shrink-0"
+                    className="px-3 py-2 bg-exam-alt text-white rounded-sm text-sm font-bold hover:opacity-90 transition-opacity flex-shrink-0"
                   >
                     תרגל ‹
                   </button>
                   <button
                     onClick={() => handleDeleteCategory(type)}
-                    className="w-9 h-9 flex items-center justify-center rounded-xl text-slate-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors text-base flex-shrink-0"
+                    className="w-9 h-9 flex items-center justify-center rounded-sm text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg transition-colors text-base flex-shrink-0"
                     title={`מחק את כל שאלות ${CATEGORY_LABELS[type] ?? type}`}
                   >
                     🗑
@@ -332,13 +332,13 @@ export default function ReviewQueuePage() {
             <div className="space-y-3 pt-2">
               <button
                 onClick={() => handleStartReview()}
-                className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+                className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
               >
                 🎯 התחל חזרה על הכל ({allQuestions.length})
               </button>
               <button
                 onClick={handleClearAll}
-                className="w-full py-3 bg-white dark:bg-slate-800 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 rounded-xl font-medium hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                className="w-full py-3 bg-exam-surface border border-exam-wrong/40 text-exam-wrong rounded-sm font-medium hover:bg-exam-wrong-bg transition-colors"
               >
                 🗑 מחק את כל השאלות
               </button>
@@ -351,17 +351,17 @@ export default function ReviewQueuePage() {
 
   if (step === 'done') {
     const pct = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
-    const color = pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
+    const color = pct >= 80 ? 'text-exam-sage-strong' : pct >= 60 ? 'text-exam-alt' : 'text-exam-wrong';
 
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col items-center justify-center px-4" dir="rtl">
+      <div className="min-h-screen bg-exam-paper flex flex-col items-center justify-center px-4" dir="rtl">
         <div className="w-full max-w-sm text-center space-y-6">
           <div className="text-6xl">{pct >= 80 ? '🎉' : pct >= 60 ? '💪' : '📚'}</div>
           <div>
             <div className={`text-5xl font-black ${color}`}>{correctCount}/{questions.length}</div>
-            <div className="text-slate-500 dark:text-slate-400 mt-1 text-lg">{pct}% נכון בחזרה</div>
+            <div className="text-exam-ink-soft mt-1 text-lg">{pct}% נכון בחזרה</div>
           </div>
-          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-600 dark:text-slate-300">
+          <div className="bg-exam-surface rounded-md border border-exam-border p-4 text-sm text-exam-ink-soft">
             {pct >= 80 && 'מצוין! אתה שולט בשאלות האלה.'}
             {pct >= 60 && pct < 80 && 'טוב! עוד קצת תרגול ותגיע לשלמות.'}
             {pct < 60 && 'הלמידה לוקחת זמן — ממשיכים לחזור!'}
@@ -369,19 +369,19 @@ export default function ReviewQueuePage() {
           <div className="space-y-3">
             <button
               onClick={handleRestartSession}
-              className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+              className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
             >
               חזרה על אותן שאלות מחדש
             </button>
             <button
               onClick={() => fetchDueQuestions(guestId)}
-              className="w-full py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-colors"
+              className="w-full py-3 bg-exam-alt text-white rounded-sm font-bold hover:opacity-90 transition-opacity"
             >
               חזרה לרשימת קטגוריות
             </button>
             <button
               onClick={() => router.push('/exam')}
-              className="w-full py-3 bg-white dark:bg-slate-800 border border-slate-300 text-slate-700 dark:text-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+              className="w-full py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-sm font-medium hover:bg-exam-paper-alt transition-colors"
             >
               חזרה לתפריט
             </button>
@@ -400,35 +400,35 @@ export default function ReviewQueuePage() {
 
   const questionPicker = (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowQuestionPicker(false)}>
-      <div className="bg-white dark:bg-slate-800 rounded-t-3xl w-full max-w-lg max-h-[70vh] flex flex-col" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-          <span className="font-bold text-slate-900 dark:text-white text-lg">בחר שאלה</span>
+      <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[70vh] flex flex-col" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
+          <span className="font-bold text-exam-ink text-lg">בחר שאלה</span>
           <div className="flex items-center gap-3">
             <button
               onClick={handleRestartSession}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-exam-accent/10 text-exam-accent rounded-sm text-sm font-semibold hover:bg-exam-accent/20 transition-colors"
             >
               <span>↺</span> ריסטרט
             </button>
             <button
               onClick={handleClearAll}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-sm font-semibold hover:bg-red-100 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-exam-wrong-bg text-exam-wrong rounded-sm text-sm font-semibold hover:opacity-80 transition-opacity"
             >
               🗑 נקה הכל
             </button>
-            <button onClick={() => setShowQuestionPicker(false)} className="text-slate-400 dark:text-slate-500 hover:text-slate-600 text-2xl leading-none">×</button>
+            <button onClick={() => setShowQuestionPicker(false)} className="text-exam-ink-soft hover:text-exam-ink text-2xl leading-none">×</button>
           </div>
         </div>
         <div className="overflow-y-auto flex-1 px-4 py-3 space-y-4">
           {pickerOrder.map(type => (
             <div key={type}>
               <div className="flex items-center justify-between mb-2 px-1">
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                <span className="text-xs font-bold text-exam-ink-soft">
                   {CATEGORY_LABELS[type] ?? type} · {pickerGroups[type].length}
                 </span>
                 <button
                   onClick={() => handleDeleteCategory(type)}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors"
+                  className="flex items-center gap-1 px-2 py-1 rounded-sm text-xs font-semibold text-exam-wrong hover:bg-exam-wrong-bg transition-colors"
                 >
                   🗑 מחק קטגוריה
                 </button>
@@ -439,26 +439,26 @@ export default function ReviewQueuePage() {
                   const correct = answered && answers[i] === q.correct_answer;
                   const wrong = answered && answers[i] !== q.correct_answer;
                   return (
-                    <div key={q.id} className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${i === currentIndex ? 'border-orange-400 bg-orange-50' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100'}`}>
+                    <div key={q.id} className={`flex items-center gap-3 p-3 rounded-sm border transition-colors ${i === currentIndex ? 'border-exam-alt bg-exam-alt-bg' : 'border-exam-border bg-exam-paper-alt hover:bg-exam-border/20'}`}>
                       <button
                         onClick={() => handleJumpTo(i)}
                         className="flex-1 flex items-center gap-3 text-right"
                       >
                         <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                          i === currentIndex ? 'bg-orange-500 text-white' :
-                          correct ? 'bg-green-500 text-white' :
-                          wrong ? 'bg-red-400 text-white' :
-                          'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                          i === currentIndex ? 'bg-exam-alt text-white' :
+                          correct ? 'bg-exam-sage-strong text-white' :
+                          wrong ? 'bg-exam-wrong text-white' :
+                          'bg-exam-border text-exam-ink-soft'
                         }`}>
                           {correct ? '✓' : wrong ? '✗' : i + 1}
                         </span>
-                        <span className="text-sm text-slate-700 dark:text-slate-200 text-right leading-snug line-clamp-2 flex-1">
+                        <span className="text-sm text-exam-ink text-right leading-snug line-clamp-2 flex-1">
                           {q.text.length > 80 ? q.text.slice(0, 80) + '…' : q.text}
                         </span>
                       </button>
                       <button
                         onClick={() => handleDeleteQuestion(q.id)}
-                        className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 dark:text-slate-500 hover:text-red-500 hover:bg-red-50 transition-colors text-base"
+                        className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-sm text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg transition-colors text-base"
                         title="הסר מהרשימה"
                       >
                         🗑
@@ -479,19 +479,19 @@ export default function ReviewQueuePage() {
   const isLast = currentIndex === questions.length - 1;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
+    <div className="min-h-screen bg-exam-paper" dir="rtl">
       {showQuestionPicker && questionPicker}
 
-      <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-slate-900 dark:text-white">חזרה על טעויות</span>
-              <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-bold rounded-full">
+              <span className="text-sm font-bold text-exam-ink">חזרה על טעויות</span>
+              <span className="px-2 py-0.5 bg-exam-alt-bg text-exam-alt text-xs font-bold rounded-full">
                 {CATEGORY_LABELS[question.type] ?? question.type}
               </span>
             </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">
+            <div className="text-xs text-exam-ink-soft">
               {currentIndex + 1}/{questions.length} שאלות
             </div>
           </div>
@@ -499,7 +499,7 @@ export default function ReviewQueuePage() {
             {/* Clickable dots — tap to open picker */}
             <button
               onClick={() => setShowQuestionPicker(true)}
-              className="flex gap-1 items-center p-1 rounded-lg hover:bg-slate-100 transition-colors"
+              className="flex gap-1 items-center p-1 rounded-sm hover:bg-exam-paper-alt transition-colors"
               title="בחר שאלה"
             >
               {questions.map((_, i) => (
@@ -507,8 +507,8 @@ export default function ReviewQueuePage() {
                   key={i}
                   className={`w-2 h-2 rounded-full transition-colors ${
                     i < currentIndex
-                      ? answers[i] === questions[i].correct_answer ? 'bg-green-500' : 'bg-red-400'
-                      : i === currentIndex ? 'bg-orange-500' : 'bg-slate-200 dark:bg-slate-700'
+                      ? answers[i] === questions[i].correct_answer ? 'bg-exam-sage-strong' : 'bg-exam-wrong'
+                      : i === currentIndex ? 'bg-exam-alt' : 'bg-exam-border'
                   }`}
                 />
               ))}
@@ -516,7 +516,7 @@ export default function ReviewQueuePage() {
             {/* Restart session button */}
             <button
               onClick={handleRestartSession}
-              className="p-1.5 rounded-lg text-slate-400 dark:text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors text-lg"
+              className="p-1.5 rounded-sm text-exam-ink-soft hover:text-exam-accent hover:bg-exam-accent/10 transition-colors text-lg"
               title="ריסטרט — חזרה לשאלה ראשונה"
               aria-label="ריסטרט — חזרה לשאלה ראשונה"
             >
@@ -542,7 +542,7 @@ export default function ReviewQueuePage() {
           {/* Delete current question */}
           <button
             onClick={() => handleDeleteQuestion(question.id)}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors text-sm font-medium"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-sm border border-exam-border text-exam-ink-soft hover:text-exam-wrong hover:border-exam-wrong/40 hover:bg-exam-wrong-bg transition-colors text-sm font-medium"
           >
             🗑 הסר שאלה
           </button>
@@ -550,7 +550,7 @@ export default function ReviewQueuePage() {
           {showResult && (
             <button
               onClick={handleNext}
-              className="px-6 py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-colors"
+              className="px-6 py-3 bg-exam-alt text-white rounded-sm font-bold hover:opacity-90 transition-opacity"
             >
               {isLast ? 'סיום חזרה ✓' : 'שאלה הבאה ‹'}
             </button>

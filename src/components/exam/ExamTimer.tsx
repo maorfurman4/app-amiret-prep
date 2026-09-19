@@ -38,12 +38,12 @@ export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
   }, [expiresAt, isPractice, computeRemaining]);
 
   if (remainingMs === null && !isPractice) {
-    return <div className="w-24 h-10 rounded-xl bg-slate-100 dark:bg-slate-700 animate-pulse" />;
+    return <div className="w-24 h-10 rounded-sm border border-exam-border bg-exam-paper-alt animate-pulse" />;
   }
 
   if (isPractice) {
     return (
-      <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-sm font-medium">
+      <div className="flex items-center gap-2 px-3 py-1 rounded-sm border border-exam-border bg-exam-paper-alt text-exam-ink-soft text-sm font-medium">
         <span className="text-base">⏸</span>
         מוד תרגול
       </div>
@@ -58,17 +58,17 @@ export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
   const isExpired = ms === 0 && remainingMs !== null;
 
   return (
-    <div className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl font-mono transition-all ${
-      isExpired ? 'bg-red-600 text-white animate-pulse' :
-      isWarning  ? 'bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border-2 border-red-500' :
-                   'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
+    <div className={`flex flex-col items-center gap-1 px-4 py-2 rounded-sm border transition-colors ${
+      isExpired ? 'bg-exam-wrong border-exam-wrong text-white' :
+      isWarning  ? 'bg-exam-wrong-bg border-exam-wrong text-exam-wrong' :
+                   'bg-exam-paper-alt border-exam-border text-exam-ink'
     }`}>
       {isWarning && !isExpired && (
-        <div className="text-xs font-bold text-red-600 animate-bounce">
+        <div className="text-xs font-bold text-exam-wrong">
           ⚠ ענה מהר! הזמן עומד לפוג
         </div>
       )}
-      <div className={`text-2xl font-bold tabular-nums ${isWarning ? 'text-red-600' : ''}`}>
+      <div className={`text-2xl font-semibold tabular-nums ${isWarning ? 'text-exam-wrong' : ''}`}>
         {String(minutes).padStart(2, '0')}:{String(secs).padStart(2, '0')}
       </div>
     </div>

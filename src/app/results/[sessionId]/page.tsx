@@ -40,8 +40,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-800/60">
-        <div className="text-slate-400 dark:text-slate-500">טוען תוצאות...</div>
+      <div className="min-h-screen flex items-center justify-center bg-exam-paper">
+        <div className="text-exam-ink-soft">טוען תוצאות...</div>
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
+    <div className="min-h-screen bg-exam-paper" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
       <div className="max-w-2xl mx-auto space-y-8 py-8 px-4">
         {/* Score card */}
@@ -99,12 +99,12 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           const loPct = Math.min(100, Math.max(0, ((lo - 50) / 100) * 100));
           const hiPct = Math.min(100, Math.max(0, ((hi - 50) / 100) * 100));
           const bands = [
-            { min: 134, max: 150, label: 'פטור מלא — אין צורך בקורס אנגלית', color: 'bg-green-500' },
-            { min: 120, max: 133, label: "מתקדמים ב' — קורס מקוצר אחד", color: 'bg-blue-500' },
-            { min: 100, max: 119, label: "מתקדמים א' — קורס אחד", color: 'bg-yellow-500' },
-            { min: 85,  max: 99,  label: 'בסיסי — שני קורסים', color: 'bg-orange-500' },
-            { min: 70,  max: 84,  label: "טרום-בסיסי ב'", color: 'bg-red-500' },
-            { min: 50,  max: 69,  label: "טרום-בסיסי א'", color: 'bg-red-700' },
+            { min: 134, max: 150, label: 'פטור מלא — אין צורך בקורס אנגלית', color: 'bg-exam-sage-strong' },
+            { min: 120, max: 133, label: "מתקדמים ב' — קורס מקוצר אחד", color: 'bg-exam-accent' },
+            { min: 100, max: 119, label: "מתקדמים א' — קורס אחד", color: 'bg-exam-alt' },
+            { min: 85,  max: 99,  label: 'בסיסי — שני קורסים', color: 'bg-exam-alt' },
+            { min: 70,  max: 84,  label: "טרום-בסיסי ב'", color: 'bg-exam-wrong' },
+            { min: 50,  max: 69,  label: "טרום-בסיסי א'", color: 'bg-exam-wrong' },
           ];
           const currentBand = bands.find(b => score >= b.min && score <= b.max);
           return (
@@ -116,21 +116,21 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               {/* Gradient score bar — RTL: low scores (50) on the right */}
               <div className="relative mb-5">
                 <div className="h-5 rounded-full overflow-hidden flex">
-                  <div className="bg-red-700"    style={{ width: '20%' }} />
-                  <div className="bg-red-400"    style={{ width: '15%' }} />
-                  <div className="bg-orange-400" style={{ width: '15%' }} />
-                  <div className="bg-yellow-400" style={{ width: '20%' }} />
-                  <div className="bg-blue-400"   style={{ width: '14%' }} />
-                  <div className="bg-green-500"  style={{ width: '16%' }} />
+                  <div className="bg-exam-wrong"        style={{ width: '20%' }} />
+                  <div className="bg-exam-wrong/70"     style={{ width: '15%' }} />
+                  <div className="bg-exam-alt/70"       style={{ width: '15%' }} />
+                  <div className="bg-exam-alt"          style={{ width: '20%' }} />
+                  <div className="bg-exam-accent/70"    style={{ width: '14%' }} />
+                  <div className="bg-exam-sage-strong"  style={{ width: '16%' }} />
                 </div>
                 {/* Range bracket */}
                 <div
-                  className="absolute top-0 h-5 border-2 border-slate-800 rounded bg-white/30"
+                  className="absolute top-0 h-5 border-2 border-exam-ink rounded-sm bg-exam-surface/40"
                   style={{ right: `${loPct}%`, width: `${Math.max(hiPct - loPct, 2)}%` }}
                 />
                 {/* Current score needle */}
                 <div
-                  className="absolute -top-0.5 w-0.5 h-6 bg-slate-900"
+                  className="absolute -top-0.5 w-0.5 h-6 bg-exam-ink"
                   style={{ right: `calc(${pct}% - 1px)` }}
                 />
                 <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500 mt-1.5">
@@ -139,7 +139,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 </div>
               </div>
               {currentBand && (
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2 p-3 rounded-sm bg-exam-paper-alt border border-exam-border">
                   <div className={`w-3 h-3 rounded-full flex-shrink-0 ${currentBand.color}`} />
                   <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">{currentBand.label}</span>
                 </div>
@@ -155,15 +155,15 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             הסף המדויק לפטור/רמה נקבע בנפרד על ידי כל מוסד לימודים — הטווחים כאן הם הנפוצים ביותר בפועל, לא תקן מחייב אחיד.
           </p>
           {[
-            { range: '134–150', label: 'פטור מלא', color: 'bg-green-500', min: 134, max: 150 },
-            { range: '120–133', label: 'מתקדמים ב\'', color: 'bg-blue-500', min: 120, max: 133 },
-            { range: '100–119', label: 'מתקדמים א\'', color: 'bg-yellow-500', min: 100, max: 119 },
-            { range: '85–99',  label: 'בסיסי', color: 'bg-orange-500', min: 85, max: 99 },
-            { range: '70–84',  label: 'טרום-בסיסי ב\'', color: 'bg-red-500', min: 70, max: 84 },
-            { range: '50–69',  label: 'טרום-בסיסי א\'', color: 'bg-red-700', min: 50, max: 69 },
+            { range: '134–150', label: 'פטור מלא', color: 'bg-exam-sage-strong', min: 134, max: 150 },
+            { range: '120–133', label: 'מתקדמים ב\'', color: 'bg-exam-accent', min: 120, max: 133 },
+            { range: '100–119', label: 'מתקדמים א\'', color: 'bg-exam-alt', min: 100, max: 119 },
+            { range: '85–99',  label: 'בסיסי', color: 'bg-exam-alt', min: 85, max: 99 },
+            { range: '70–84',  label: 'טרום-בסיסי ב\'', color: 'bg-exam-wrong', min: 70, max: 84 },
+            { range: '50–69',  label: 'טרום-בסיסי א\'', color: 'bg-exam-wrong', min: 50, max: 69 },
           ].map(row => (
-            <div key={row.range} className={`flex items-center gap-3 p-3 rounded-xl mb-2 ${
-              score >= row.min && score <= row.max ? 'bg-slate-100 dark:bg-slate-700 ring-2 ring-blue-400' : ''
+            <div key={row.range} className={`flex items-center gap-3 p-3 rounded-sm mb-2 ${
+              score >= row.min && score <= row.max ? 'bg-exam-paper-alt ring-2 ring-exam-accent' : ''
             }`}>
               <div className={`w-3 h-3 rounded-full ${row.color}`} />
               <span className="font-mono text-sm text-slate-600 dark:text-slate-300">{row.range}</span>
@@ -178,11 +178,11 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
             {Object.entries(byType).map(([type, { correct, total }]) => {
               const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
-              const color = pct >= 75 ? 'text-green-600 bg-green-50 border-green-200'
-                : pct >= 50 ? 'text-yellow-600 bg-yellow-50 border-yellow-200'
-                : 'text-red-600 bg-red-50 border-red-200';
+              const color = pct >= 75 ? 'text-exam-sage-strong bg-exam-sage-bg border-exam-sage/40'
+                : pct >= 50 ? 'text-exam-alt bg-exam-alt-bg border-exam-alt/40'
+                : 'text-exam-wrong bg-exam-wrong-bg border-exam-wrong/40';
               return (
-                <div key={type} className={`p-3 rounded-xl border text-center ${color}`}>
+                <div key={type} className={`p-3 rounded-sm border text-center ${color}`}>
                   <div className="text-2xl font-black">{correct}/{total}</div>
                   <div className="text-xs font-semibold mt-1">{TYPE_LABELS[type] ?? type}</div>
                   <div className="text-xs opacity-75">{pct}%</div>
@@ -203,8 +203,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               const isExperimental = cfg?.experimental === true;
               return (
                 <div key={sr.sectionIndex} className="flex items-center gap-3">
-                  <div className={`w-6 h-6 rounded-full text-xs flex items-center justify-center font-bold flex-shrink-0 ${
-                    isExperimental ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+                  <div className={`w-6 h-6 rounded-full text-xs flex items-center justify-center font-bold flex-shrink-0 border ${
+                    isExperimental ? 'bg-exam-alt-bg text-exam-alt border-exam-alt/40' : 'bg-exam-accent/10 text-exam-accent border-exam-accent/30'
                   }`}>
                     {sr.sectionIndex}
                   </div>
@@ -213,24 +213,24 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                       <span className="text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                         {TYPE_LABELS[cfg?.type ?? sr.type]}
                         {isExperimental && (
-                          <span className="px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 text-[10px] font-semibold">תרגול חלופי</span>
+                          <span className="px-1.5 py-0.5 rounded-sm bg-exam-alt-bg text-exam-alt text-[10px] font-semibold">תרגול חלופי</span>
                         )}
                         {difficulty && (
-                          <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-mono">רמה {difficulty}/5</span>
+                          <span className="px-1.5 py-0.5 rounded-sm bg-exam-paper-alt text-exam-ink-soft text-[10px] font-mono">רמה {difficulty}/5</span>
                         )}
                       </span>
                       <span className="text-slate-500 dark:text-slate-400">{sr.correctCount}/{sr.totalCount}</span>
                     </div>
-                    <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div className="h-2 bg-exam-paper-alt rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${
-                          pct >= 75 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+                          pct >= 75 ? 'bg-exam-sage-strong' : pct >= 50 ? 'bg-exam-alt' : 'bg-exam-wrong'
                         }`}
                         style={{ width: `${pct}%` }}
                       />
                     </div>
                   </div>
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 w-10 text-left">{pct}%</span>
+                  <span className="text-sm font-medium text-exam-ink-soft w-10 text-left">{pct}%</span>
                 </div>
               );
             })}
@@ -269,13 +269,13 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                         <span className="text-slate-700 dark:text-slate-200">
                           פרק {sr.sectionIndex} — {TYPE_LABELS[type]}
                         </span>
-                        <span className={`font-mono text-xs ${avg > perQ ? 'text-orange-500' : 'text-slate-500 dark:text-slate-400'}`}>
+                        <span className={`font-mono text-xs ${avg > perQ ? 'text-exam-alt' : 'text-exam-ink-soft'}`}>
                           ממוצע {avg} שנ׳/שאלה
                         </span>
                       </div>
-                      <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <div className="h-2 bg-exam-paper-alt rounded-full overflow-hidden">
                         <div
-                          className={`h-full rounded-full ${pctUsed >= 95 ? 'bg-red-500' : pctUsed >= 75 ? 'bg-yellow-500' : 'bg-green-500'}`}
+                          className={`h-full rounded-full ${pctUsed >= 95 ? 'bg-exam-wrong' : pctUsed >= 75 ? 'bg-exam-alt' : 'bg-exam-sage-strong'}`}
                           style={{ width: `${pctUsed}%` }}
                         />
                       </div>
@@ -287,17 +287,17 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 })}
               </div>
               {overCap.length > 0 ? (
-                <div className="p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-xl">
-                  <div className="text-sm font-semibold text-orange-800 dark:text-orange-300 mb-1">
+                <div className="p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm">
+                  <div className="text-sm font-semibold text-exam-alt mb-1">
                     ⚠️ {overCap.length} שאלות חרגו מ&quot;תקציב התקיעה&quot;
                   </div>
-                  <div className="text-xs text-orange-700 dark:text-orange-400 leading-relaxed">
+                  <div className="text-xs text-exam-alt leading-relaxed">
                     {overCap.slice(0, 4).map(x => `פרק ${x.section} שאלה ${x.q}: ${Math.round(x.t)} שנ׳${x.wrong ? ' (וגם שגויה — נחש ותתקדם!)' : ''}`).join(' · ')}
                     {overCap.length > 4 && ` · ועוד ${overCap.length - 4}`}
                   </div>
                 </div>
               ) : (
-                <div className="p-3 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-xl text-sm text-green-800 dark:text-green-300 font-medium">
+                <div className="p-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-sm text-exam-sage-strong font-medium">
                   ✓ קצב מצוין — אף שאלה לא חרגה מתקציב התקיעה
                 </div>
               )}
@@ -307,13 +307,13 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
         {/* Review all questions */}
         <Link href={`/review/${sessionId}`} className="block">
-          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex items-center gap-4 hover:bg-blue-100 transition-colors cursor-pointer">
+          <div className="bg-exam-surface border border-exam-border rounded-sm p-5 flex items-center gap-4 hover:bg-exam-paper-alt hover:border-exam-border-strong transition-colors cursor-pointer">
             <div className="text-3xl">📖</div>
             <div>
-              <div className="font-bold text-blue-900">עבור על כל השאלות ולמד מהטעויות</div>
-              <div className="text-blue-600 text-sm">ראה הסברים מפורטים לכל שאלה עם שלבי שלילה</div>
+              <div className="font-bold text-exam-ink">עבור על כל השאלות ולמד מהטעויות</div>
+              <div className="text-exam-ink-soft text-sm">ראה הסברים מפורטים לכל שאלה עם שלבי שלילה</div>
             </div>
-            <div className="mr-auto text-blue-400 text-xl">›</div>
+            <div className="mr-auto text-exam-ink-soft text-xl">›</div>
           </div>
         </Link>
 
@@ -321,13 +321,13 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         <div className="flex gap-3">
           <button
             onClick={() => router.push('/exam')}
-            className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+            className="flex-1 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity"
           >
             מבחן חדש
           </button>
           <button
             onClick={() => router.push('/stats')}
-            className="flex-1 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-semibold hover:bg-slate-200 transition-colors"
+            className="flex-1 py-3 bg-exam-paper-alt text-exam-ink rounded-sm font-semibold hover:bg-exam-border/40 transition-colors"
           >
             הסטטיסטיקה שלי
           </button>

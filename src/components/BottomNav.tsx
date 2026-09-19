@@ -44,7 +44,7 @@ function BottomNavContent({ pathname }: { pathname: string }) {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 md:hidden transform-gpu"
+      className="fixed bottom-0 inset-x-0 z-40 bg-exam-surface border-t border-exam-border md:hidden transform-gpu"
       dir="rtl"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)', WebkitTransform: 'translateZ(0)' }}
     >
@@ -85,19 +85,19 @@ function BottomNavContent({ pathname }: { pathname: string }) {
               onClick={handleClick}
               className={`relative flex-1 flex flex-col items-center pt-2.5 pb-2 gap-1 transition-colors ${
                 active
-                  ? 'text-blue-600 dark:text-blue-400'
-                  : 'text-slate-500 dark:text-slate-400 active:text-slate-900 dark:active:text-white'
+                  ? 'text-exam-accent'
+                  : 'text-exam-ink-soft active:text-exam-ink'
               }`}
             >
               {active && (
-                <span className="absolute top-0 inset-x-1 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-b-full" />
+                <span className="absolute top-0 inset-x-1 h-0.5 bg-exam-accent rounded-b-full" />
               )}
               {isPending ? (
-                <span className="text-[10px] font-bold text-orange-500 leading-none whitespace-nowrap">לחץ שוב לצאת</span>
+                <span className="text-[10px] font-bold text-exam-alt leading-none whitespace-nowrap">לחץ שוב לצאת</span>
               ) : (
                 <span className="text-2xl leading-none">{tab.icon}</span>
               )}
-              <span className={`text-[11px] leading-tight ${active ? 'font-bold' : 'font-medium'} ${isPending ? 'text-orange-500' : ''}`}>
+              <span className={`text-[11px] leading-tight ${active ? 'font-bold' : 'font-medium'} ${isPending ? 'text-exam-alt' : ''}`}>
                 {tab.label}
               </span>
             </Link>

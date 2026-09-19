@@ -7,9 +7,30 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: var(--font-heebo), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-heading: var(--font-geist), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: var(--font-heebo), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Serif for English exam content only (passage/question/options) — apply
+     via the `font-serif` utility on those containers, never globally. */
+  --font-serif: var(--font-lora), Georgia, 'Times New Roman', serif;
+  /* Academic-minimal exam palette (flat, paper-toned) — QuestionCard,
+     ExamTimer, SectionProgress and the exam-session shell only. */
+  --color-exam-paper: var(--exam-paper);
+  --color-exam-surface: var(--exam-surface);
+  --color-exam-paper-alt: var(--exam-paper-alt);
+  --color-exam-ink: var(--exam-ink);
+  --color-exam-ink-soft: var(--exam-ink-soft);
+  --color-exam-border: var(--exam-border);
+  --color-exam-border-strong: var(--exam-border-strong);
+  --color-exam-sage: var(--exam-sage);
+  --color-exam-sage-bg: var(--exam-sage-bg);
+  --color-exam-sage-strong: var(--exam-sage-strong);
+  --color-exam-wrong: var(--exam-wrong);
+  --color-exam-wrong-bg: var(--exam-wrong-bg);
+  --color-exam-alt: var(--exam-alt);
+  --color-exam-alt-bg: var(--exam-alt-bg);
+  --color-exam-accent: var(--exam-accent);
+  --color-exam-accent-ink: var(--exam-accent-ink);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -98,6 +119,27 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Academic-minimal exam palette — light */
+  --exam-paper: #F9F9F6;
+  --exam-surface: #FFFFFF;
+  --exam-paper-alt: #F1EFE7;
+  --exam-ink: #21262F;
+  --exam-ink-soft: #646B78;
+  --exam-border: #D9D5C9;
+  --exam-border-strong: #B9B3A2;
+  --exam-sage: #4F7355;
+  --exam-sage-bg: #E7EEE3;
+  --exam-sage-strong: #3C5A40;
+  --exam-wrong: #9C4A3D;
+  --exam-wrong-bg: #F4E7E2;
+  --exam-alt: #8A6A2E;
+  --exam-alt-bg: #F2EAD8;
+  /* Filled/active state (current step, selected option, primary action) —
+     distinct from --exam-ink so it stays a usable fill in dark mode too
+     (ink itself flips light there, which breaks as a badge background). */
+  --exam-accent: #2B3450;
+  --exam-accent-ink: #FFFFFF;
 }
 
 .dark {
@@ -132,6 +174,24 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Academic-minimal exam palette — dark (warm charcoal, not pure black) */
+  --exam-paper: #1C1E22;
+  --exam-surface: #23262B;
+  --exam-paper-alt: #292C32;
+  --exam-ink: #EDEBE3;
+  --exam-ink-soft: #A6A9AE;
+  --exam-border: #3A3D42;
+  --exam-border-strong: #4C4F55;
+  --exam-sage: #8FB393;
+  --exam-sage-bg: #26312A;
+  --exam-sage-strong: #6E9873;
+  --exam-wrong: #D08678;
+  --exam-wrong-bg: #362522;
+  --exam-alt: #C7A65E;
+  --exam-alt-bg: #332C1C;
+  --exam-accent: #5A6D9E;
+  --exam-accent-ink: #FFFFFF;
 }
 
 @layer base {
@@ -146,32 +206,46 @@
   }
 }
 
-/* ── Global dark-mode overrides ──────────────────────────────────────────────
-   Pages use hardcoded Tailwind slate classes without dark: variants.
-   These selectors flip them when .dark is on <html>. */
-.dark .bg-slate-50  { background-color: #0f172a; }
-.dark .bg-white     { background-color: #1e293b; }
-.dark .bg-slate-100 { background-color: #1e293b; }
-.dark .bg-slate-200 { background-color: #334155; }
+/* ── Site-wide academic-minimal retheme ──────────────────────────────────────
+   Most pages were written with hardcoded Tailwind slate/blue classes,
+   pre-dating the --exam-* token system (see QuestionCard/ExamTimer/exam
+   shell for where that language was established). Rather than rewrite every
+   page's className strings, these unlayered rules reassign what those
+   utility classes actually paint, in BOTH themes at once — the --exam-*
+   custom properties already flip per .dark, so one declaration per class
+   here (referencing var(--exam-*)) covers light+dark, no duplication.
+   (Unlayered CSS always outranks Tailwind's own @layer utilities, so this
+   needs no !important and no extra specificity — same mechanism the old
+   dark-only version of this block already relied on.)
+   Explicitly NOT touched: red/green/amber/purple/orange — those carry real
+   status meaning (error, correct, hint, experimental, streak) elsewhere. */
+.bg-slate-50, .bg-slate-100 { background-color: var(--exam-paper); }
+.bg-white { background-color: var(--exam-surface); }
+.bg-slate-200 { background-color: var(--exam-paper-alt); }
+/* Nested opacity variants (dark:bg-slate-700/50 etc.) aren't matched by the
+   plain-class rules above since Tailwind compiles them to a different
+   selector; handled per-page where they appear instead. */
 
-.dark .text-slate-900 { color: #f1f5f9; }
-.dark .text-slate-800 { color: #e2e8f0; }
-.dark .text-slate-700 { color: #cbd5e1; }
-.dark .text-slate-600 { color: #94a3b8; }
-.dark .text-slate-500 { color: #94a3b8; }
-.dark .text-slate-400 { color: #94a3b8; }
+.text-slate-900, .text-slate-800, .text-slate-700 { color: var(--exam-ink); }
+.text-slate-600, .text-slate-500, .text-slate-400 { color: var(--exam-ink-soft); }
 
-.dark .border-slate-200 { border-color: #334155; }
-.dark .border-slate-300 { border-color: #475569; }
-.dark .border-slate-100 { border-color: #1e293b; }
+.border-slate-100, .border-slate-200, .border-slate-300 { border-color: var(--exam-border); }
 
-.dark .shadow-sm  { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5); }
-.dark .shadow-md  { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); }
-.dark .shadow-lg  { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); }
-.dark .shadow-xl  { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.6); }
+/* Primary action / link blue → the same deep-navy accent as the exam screen */
+.text-blue-600, .text-blue-500, .text-blue-400, .text-blue-700 { color: var(--exam-accent); }
+.bg-blue-600, .bg-blue-500, .bg-blue-700 { background-color: var(--exam-accent); }
+.hover\:bg-blue-700:hover, .hover\:bg-blue-600:hover, .hover\:bg-blue-400:hover { background-color: var(--exam-accent); filter: brightness(1.1); }
+.hover\:text-blue-700:hover, .hover\:text-blue-800:hover { color: var(--exam-accent); }
+.focus\:ring-blue-400:focus { --tw-ring-color: var(--exam-accent); }
+
+/* Flat design: no soft drop-shadows anywhere in the app */
+.shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl { box-shadow: none; }
+
+/* Tighter, more academic corner radius than the default Tailwind scale */
+.rounded-xl, .rounded-2xl, .rounded-3xl { border-radius: 0.5rem; }
 
 :where(a, button, input, select, textarea):focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--exam-accent);
   outline-offset: 3px;
 }
 

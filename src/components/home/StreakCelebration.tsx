@@ -57,7 +57,7 @@ export function StreakCelebration() {
       dir="rtl"
     >
       <div
-        className={`bg-white dark:bg-slate-800 rounded-3xl px-8 py-10 max-w-xs w-full text-center shadow-2xl transition-all duration-200 ${closing ? 'scale-90 opacity-0' : 'animate-streak-pop'}`}
+        className={`bg-exam-surface rounded-md border border-exam-border px-8 py-10 max-w-xs w-full text-center transition-all duration-200 ${closing ? 'scale-90 opacity-0' : 'animate-streak-pop'}`}
         onClick={e => e.stopPropagation()}
       >
         <Flame className="w-16 h-16 mx-auto mb-3 text-exam-alt animate-streak-flicker" fill="currentColor" aria-hidden />

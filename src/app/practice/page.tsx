@@ -491,7 +491,7 @@ function PracticeContent() {
     const isLast = currentIndex === questions.length - 1;
 
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
+      <div className="min-h-screen bg-exam-paper" dir="rtl">
         {/* Header */}
         <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
           <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -581,14 +581,14 @@ function PracticeContent() {
             <div className="mt-6 flex items-center justify-between gap-3">
               <button
                 onClick={handlePrevQuestion}
-                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm"
+                className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt transition-colors text-sm"
               >
                 {currentIndex === 0 ? '← לרמת קושי' : 'קודם ›'}
               </button>
               {showResult && (
                 <button
                   onClick={handleNext}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+                  className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-colors"
                 >
                   {isLast ? <span className="inline-flex items-center gap-1.5">ראה תוצאות <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
                 </button>
@@ -602,7 +602,7 @@ function PracticeContent() {
               <button
                 onClick={() => setCurrentIndex(i => Math.max(0, i - 1))}
                 disabled={currentIndex === 0}
-                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm"
+                className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt transition-colors text-sm"
               >
                 קודם ›
               </button>
@@ -629,7 +629,7 @@ function PracticeContent() {
             <div className="mt-6 flex justify-start">
               <button
                 onClick={handleNext}
-                className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+                className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-colors"
               >
                 {isLast ? <span className="inline-flex items-center gap-1.5">סיים בחינה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
               </button>
@@ -670,14 +670,14 @@ function PracticeContent() {
             )}
             <div>
               <div className={`text-5xl font-black ${color}`}>{correctCount}/{questions.length}</div>
-              <div className="text-slate-500 dark:text-slate-400 mt-1 text-lg">{pct}% נכון</div>
+              <div className="text-exam-ink-soft mt-1 text-lg">{pct}% נכון</div>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-600 dark:text-slate-300">
+            <div className="bg-exam-surface rounded-md border border-exam-border p-4 text-sm text-exam-ink-soft">
               {pct >= 80 && 'מצוין! אתה שולט בחומר הזה.'}
               {pct >= 60 && pct < 80 && 'טוב! עוד קצת תרגול ותגיע לשלמות.'}
               {pct < 60 && 'כדאי לחזור על החומר הזה ולתרגל שוב.'}
               {questions.length - correctCount > 0 && (
-                <div className="mt-2 text-slate-400 dark:text-slate-500 text-xs">
+                <div className="mt-2 text-exam-ink-soft text-xs">
                   {questions.length - correctCount} טעויות מתוך {questions.length} שאלות
                 </div>
               )}
@@ -685,26 +685,26 @@ function PracticeContent() {
 
             {/* Level diagnosis — IRT-based, like the real adaptive exam */}
             {diagLevel !== null && diagScore !== null && diagClass !== null && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 text-right">
+              <div className="bg-exam-surface rounded-md border border-exam-border p-5 text-right">
                 <div className="flex items-center gap-2 mb-3">
-                  <Target className="w-5 h-5 text-slate-700 dark:text-slate-200" strokeWidth={1.75} aria-hidden />
-                  <span className="font-bold text-slate-900 dark:text-white">אבחון רמה</span>
+                  <Target className="w-5 h-5 text-exam-ink" strokeWidth={1.75} aria-hidden />
+                  <span className="font-bold text-exam-ink">אבחון רמה</span>
                   {selectedDiff === 'random' && (
                     <span className="text-xs bg-exam-accent/10 text-exam-accent px-2 py-0.5 rounded-sm font-semibold">רמה מעורבת</span>
                   )}
                 </div>
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <div className="text-sm text-slate-500 dark:text-slate-400">הרמה המשוערת שלך</div>
-                    <div className="text-2xl font-black text-slate-900 dark:text-white">רמה {diagLevel}/5</div>
+                    <div className="text-sm text-exam-ink-soft">הרמה המשוערת שלך</div>
+                    <div className="text-2xl font-black text-exam-ink">רמה {diagLevel}/5</div>
                   </div>
                   <div className="text-left">
-                    <div className="text-sm text-slate-500 dark:text-slate-400">אומדן פנימי</div>
+                    <div className="text-sm text-exam-ink-soft">אומדן פנימי</div>
                     <div className={`text-2xl font-black ${diagClass.color}`}>~{diagScore}</div>
                     <div className={`text-xs font-semibold ${diagClass.color}`}>{diagClass.label}</div>
                   </div>
                 </div>
-                <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
+                <p className="mt-3 text-xs text-exam-ink-soft">
                   הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר — מבוססת על {questions.length} שאלות בלבד ואינה ציון רשמי של מאל&quot;ו.
                   {selectedDiff !== 'random' && ' לאומדן רחב יותר, תרגל ברמה מעורבת או בצע את סימולציית פרקי הליבה.'}
                   {' '}סף הפטור/הרמה עצמו נקבע בנפרד בכל מוסד — {diagClass.label} הוא הטווח הנפוץ, לא תקן מחייב אחיד.
@@ -714,13 +714,13 @@ function PracticeContent() {
             <div className="space-y-3">
               <button
                 onClick={handleRestart}
-                className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+                className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-colors"
               >
                 תרגול נוסף
               </button>
               <button
                 onClick={() => router.push('/exam')}
-                className="w-full py-3 bg-white dark:bg-slate-800 border border-slate-300 text-slate-700 dark:text-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+                className="w-full py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-sm font-medium hover:bg-exam-paper-alt transition-colors"
               >
                 חזרה לתפריט
               </button>
@@ -730,7 +730,7 @@ function PracticeContent() {
           {/* Exam mode: full question review with explanations */}
           {(examMode || sectionMode) && (
             <div className="space-y-6">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-700 pb-3">
+              <h2 className="text-xl font-bold text-exam-ink border-b border-exam-border pb-3">
                 סקירת שאלות והסברים
               </h2>
               {questions.map((q, i) => {
@@ -754,7 +754,7 @@ function PracticeContent() {
                         <span className="text-exam-ink-soft font-normal">(לא נענתה — פג הזמן)</span>
                       )}
                     </div>
-                    <div className="bg-white dark:bg-slate-800">
+                    <div className="bg-exam-surface">
                       <QuestionCard
                         question={q}
                         questionNumber={i + 1}
@@ -774,13 +774,13 @@ function PracticeContent() {
               <div className="space-y-3 pt-4">
                 <button
                   onClick={handleRestart}
-                  className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+                  className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-colors"
                 >
                   תרגול נוסף
                 </button>
                 <button
                   onClick={() => router.push('/exam')}
-                  className="w-full py-3 bg-white dark:bg-slate-800 border border-slate-300 text-slate-700 dark:text-slate-200 rounded-xl font-medium hover:bg-slate-50 transition-colors"
+                  className="w-full py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-sm font-medium hover:bg-exam-paper-alt transition-colors"
                 >
                   חזרה לתפריט
                 </button>

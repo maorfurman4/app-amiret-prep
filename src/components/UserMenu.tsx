@@ -177,14 +177,14 @@ export function UserMenu() {
       />
       <button
         onClick={() => { setOpen(!open); setPanel('menu'); }}
-        className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-exam-accent/40"
         aria-label="תפריט משתמש"
       >
         {avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={avatarUrl} alt={initial} className="w-8 h-8 rounded-full object-cover" referrerPolicy="no-referrer" />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold select-none">
+          <div className="w-8 h-8 rounded-full bg-exam-accent text-exam-accent-ink flex items-center justify-center text-sm font-bold select-none">
             {initial}
           </div>
         )}
@@ -245,7 +245,7 @@ export function UserMenu() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={avatarUrl} alt={initial} className="w-16 h-16 rounded-full object-cover" referrerPolicy="no-referrer" />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold select-none">
+                  <div className="w-16 h-16 rounded-full bg-exam-accent text-exam-accent-ink flex items-center justify-center text-2xl font-bold select-none">
                     {initial}
                   </div>
                 )}
@@ -254,7 +254,7 @@ export function UserMenu() {
               <button
                 onClick={handlePickAvatar}
                 disabled={avatarSaving}
-                className="w-full py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+                className="w-full py-2 bg-exam-accent text-exam-accent-ink rounded-sm text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {avatarSaving ? 'מעלה...' : 'בחר תמונה מהגלריה'}
               </button>
@@ -289,7 +289,7 @@ export function UserMenu() {
               <button
                 onClick={handleSaveName}
                 disabled={nameSaving}
-                className="w-full py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+                className="w-full py-2 bg-exam-accent text-exam-accent-ink rounded-sm text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {nameSaving ? 'שומר...' : 'שמור'}
               </button>
@@ -326,7 +326,7 @@ export function UserMenu() {
                   <button
                     onClick={handleChangePassword}
                     disabled={pwSaving}
-                    className="w-full py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+                    className="w-full py-2 bg-exam-accent text-exam-accent-ink rounded-sm text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
                     {pwSaving ? 'מעדכן...' : 'עדכן סיסמה'}
                   </button>

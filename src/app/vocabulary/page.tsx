@@ -10,7 +10,7 @@ import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
   RotateCcw, Trophy, ThumbsUp, Flame, Settings, Check, X, Target, Clock,
   TrendingDown, Zap, Link2, GraduationCap, Palette, Package, CheckCircle2,
-  AlertTriangle,
+  AlertTriangle, ChevronUp, ChevronDown, Play,
 } from 'lucide-react';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
@@ -682,14 +682,14 @@ function VocabularyContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center" dir="rtl">
-        <div className="text-slate-400 text-lg">טוען מילים...</div>
+      <div className="min-h-screen bg-exam-paper flex items-center justify-center" dir="rtl">
+        <div className="text-exam-ink-soft text-lg">טוען מילים...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
+    <div className="min-h-screen bg-exam-paper" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
 
       <div className="max-w-lg mx-auto px-4 pt-4 pb-32">
@@ -803,7 +803,7 @@ function VocabularyContent() {
         )}
 
         {/* ── Mode Switcher ─────────────────────────────────────────────────── */}
-        <div className="flex rounded-xl bg-slate-200 dark:bg-slate-800 p-1 mb-5 gap-1">
+        <div className="flex rounded-sm bg-exam-paper-alt p-1 mb-5 gap-1">
           {([
             { id: 'flashcard', label: 'כרטיסיות' },
             { id: 'quiz',      label: 'חידון' },
@@ -812,13 +812,13 @@ function VocabularyContent() {
             <button
               key={m.id}
               onClick={() => changeMode(m.id)}
-              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${mode === m.id ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
+              className={`flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${mode === m.id ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft hover:text-exam-ink'}`}
             >{m.label}</button>
           ))}
         </div>
 
         {mode === 'quiz' && quizDeck.length > 0 && !quizDone && (
-          <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">שינויי סינון יחולו בחידון הבא. החידון הנוכחי נשמר.</p>
+          <p className="text-sm text-exam-ink-soft mb-3">שינויי סינון יחולו בחידון הבא. החידון הנוכחי נשמר.</p>
         )}
         {/* ── Filter button + active chips ──────────────────────────────────── */}
         {(() => {
@@ -959,11 +959,11 @@ function VocabularyContent() {
 
             {current ? (
               <div className="relative select-none">
-                {deck[2] && <div className="absolute inset-0 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm" style={{ transform: 'scale(0.92) translateY(18px)', zIndex: 0 }} />}
-                {deck[1] && <div className="absolute inset-0 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm" style={{ transform: 'scale(0.96) translateY(9px)', zIndex: 1 }} />}
+                {deck[2] && <div className="absolute inset-0 bg-exam-surface rounded-md border border-exam-border" style={{ transform: 'scale(0.92) translateY(18px)', zIndex: 0 }} />}
+                {deck[1] && <div className="absolute inset-0 bg-exam-surface rounded-md border border-exam-border" style={{ transform: 'scale(0.96) translateY(9px)', zIndex: 1 }} />}
 
                 <div
-                  className="relative bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-lg p-8 min-h-[320px] flex flex-col justify-center cursor-grab active:cursor-grabbing"
+                  className="relative bg-exam-surface rounded-md border border-exam-border-strong p-8 min-h-[320px] flex flex-col justify-center cursor-grab active:cursor-grabbing"
                   style={{
                     zIndex: 2,
                     transform: `translateX(${tx}px) rotate(${rotate}deg)`,
@@ -1019,7 +1019,7 @@ function VocabularyContent() {
 
                       <button
                         onClick={e => { e.stopPropagation(); setFlipped(true); }}
-                        className="mt-6 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-sm font-medium text-slate-700 dark:text-slate-200 transition-colors"
+                        className="mt-6 w-full py-2.5 rounded-sm bg-exam-paper-alt hover:bg-exam-border/40 text-sm font-medium text-exam-ink transition-colors"
                         dir="rtl"
                       >הצג תרגום ←</button>
                     </div>
@@ -1030,7 +1030,7 @@ function VocabularyContent() {
                         <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>
                       </div>
                       <div className="text-3xl font-black text-exam-accent mb-3">{current.hebrew_translation}</div>
-                      <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">{current.definition}</p>
+                      <p className="text-exam-ink-soft text-sm leading-relaxed mb-4">{current.definition}</p>
                       {current.example_sentence && (
                         <div className="font-serif p-3 bg-exam-paper-alt border border-exam-border rounded-sm text-xs text-exam-ink-soft italic leading-relaxed text-left" dir="ltr">
                           &quot;{current.example_sentence}&quot;
@@ -1038,7 +1038,7 @@ function VocabularyContent() {
                       )}
                       <button
                         onClick={e => { e.stopPropagation(); setFlipped(false); setShowHint(false); }}
-                        className="mt-4 text-xs text-slate-400 hover:text-slate-600"
+                        className="mt-4 text-xs text-exam-ink-soft hover:text-exam-ink"
                       >← חזור לצד הקדמי</button>
                     </div>
                   )}
@@ -1094,21 +1094,21 @@ function VocabularyContent() {
                   className="w-full flex items-center justify-between px-4 py-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-sm font-medium text-exam-sage-strong hover:opacity-80 transition-opacity"
                 >
                   <span className="inline-flex items-center gap-1">ידעת {knownWords.length} מילים <Check className="inline w-3.5 h-3.5" strokeWidth={3} aria-hidden /></span>
-                  <span>{showKnownList ? '▲ סגור' : '▼ הצג'}</span>
+                  <span className="inline-flex items-center gap-1">{showKnownList ? <><ChevronUp className="w-3.5 h-3.5" aria-hidden />סגור</> : <><ChevronDown className="w-3.5 h-3.5" aria-hidden />הצג</>}</span>
                 </button>
                 {showKnownList && (
                   <div className="mt-3 space-y-2">
-                    <button onClick={handleResetAll} className="text-xs text-exam-wrong hover:opacity-80 mb-2">אפס הכל ↺</button>
+                    <button onClick={handleResetAll} className="text-xs text-exam-wrong hover:opacity-80 mb-2 inline-flex items-center gap-1"><RotateCcw className="w-3 h-3" aria-hidden />אפס הכל</button>
                     {knownWords.map(w => (
                       <div key={w.id} className="flex items-center justify-between px-4 py-2.5 bg-exam-surface border border-exam-border rounded-sm">
                         <div dir="ltr">
-                          <span className="font-semibold text-slate-800 text-sm">{w.word}</span>
-                          <span className="text-slate-400 text-xs mr-2"> — {w.hebrew_translation}</span>
+                          <span className="font-semibold text-exam-ink text-sm">{w.word}</span>
+                          <span className="text-exam-ink-soft text-xs mr-2"> — {w.hebrew_translation}</span>
                         </div>
                         <button
                           onClick={() => handleReturnToKnown(w.id)}
                           className="text-xs text-exam-accent hover:opacity-80 font-medium flex-shrink-0 mr-2"
-                        >החזר לחפיסה ↺</button>
+                        ><RotateCcw className="inline w-3 h-3 ml-1" aria-hidden />החזר לחפיסה</button>
                       </div>
                     ))}
                   </div>
@@ -1116,7 +1116,7 @@ function VocabularyContent() {
               </div>
             )}
 
-            <div className="mt-6 text-center text-xs text-slate-300 hidden sm:block">
+            <div className="mt-6 text-center text-xs text-exam-ink-soft hidden sm:block">
               מקלדת: ← לא ידעתי &nbsp;|&nbsp; → ידעתי &nbsp;|&nbsp; Space להפוך &nbsp;|&nbsp; H לדוגמה
             </div>
           </>
@@ -1290,14 +1290,14 @@ function VocabularyContent() {
         {mode === 'timed' && (
           <>
             {showTimedConfig ? (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+              <div className="bg-exam-surface rounded-md border border-exam-border p-6">
                 <div className="text-center mb-6">
-                  <div className="text-3xl mb-2">⏱️</div>
-                  <div className="text-xl font-bold text-slate-900">הגדרות מבחן מהיר</div>
+                  <Clock className="w-8 h-8 mx-auto mb-2 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+                  <div className="text-xl font-bold text-exam-ink">הגדרות מבחן מהיר</div>
                 </div>
                 <div className="space-y-5">
                   <div>
-                    <div className="text-sm font-semibold text-slate-600 mb-2">מספר מילים</div>
+                    <div className="text-sm font-semibold text-exam-ink-soft mb-2">מספר מילים</div>
                     <div className="flex gap-2">
                       {([5, 10, 20] as const).map(n => (
                         <button
@@ -1309,7 +1309,7 @@ function VocabularyContent() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-slate-600 mb-2">זמן לכל מילה</div>
+                    <div className="text-sm font-semibold text-exam-ink-soft mb-2">זמן לכל מילה</div>
                     <div className="flex gap-2">
                       {([10, 15, 20, 30] as const).map(t => (
                         <button
@@ -1323,8 +1323,8 @@ function VocabularyContent() {
                   <button
                     onClick={() => startTimed(timedWordCount, timedTimePerWord)}
                     disabled={filteredWords.length < 4}
-                    className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-                  >התחל! ▶</button>
+                    className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  ><Play className="w-4 h-4" fill="currentColor" aria-hidden />התחל!</button>
                   {filteredWords.length < 4 && <p className="text-center text-xs text-exam-alt">צריך לפחות 4 מילים בסט הנוכחי</p>}
                 </div>
               </div>
@@ -1407,7 +1407,7 @@ function VocabularyContent() {
             ) : (
               <>
                 {/* Timed progress */}
-                <div className="flex items-center justify-between mb-3 text-sm text-slate-500">
+                <div className="flex items-center justify-between mb-3 text-sm text-exam-ink-soft">
                   <span>{timedIndex + 1} / {timedDeck.length}</span>
                   <span className="font-semibold text-exam-sage-strong">נכון: {timedScore}</span>
                 </div>

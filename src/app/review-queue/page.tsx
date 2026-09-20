@@ -409,7 +409,7 @@ export default function ReviewQueuePage() {
               onClick={handleRestartSession}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-exam-accent/10 text-exam-accent rounded-sm text-sm font-semibold hover:bg-exam-accent/20 transition-colors"
             >
-              <span>↺</span> ריסטרט
+              <RotateCcw className="w-3.5 h-3.5" aria-hidden /> ריסטרט
             </button>
             <button
               onClick={handleClearAll}
@@ -521,7 +521,7 @@ export default function ReviewQueuePage() {
               title="ריסטרט — חזרה לשאלה ראשונה"
               aria-label="ריסטרט — חזרה לשאלה ראשונה"
             >
-              ↺
+              <RotateCcw className="w-4 h-4 mx-auto" aria-hidden />
             </button>
           </div>
         </div>

@@ -16,10 +16,10 @@ export function StreakBadge() {
   if (streak < 1) return null;
 
   return (
-    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/40 border border-orange-200 dark:border-orange-700">
+    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-exam-alt-bg border border-exam-alt/40">
       <Flame className="w-4 h-4 text-exam-alt animate-streak-flicker motion-reduce:animate-none" fill="currentColor" aria-hidden />
-      <span className="text-sm font-bold text-orange-700 dark:text-orange-300 tabular-nums">{streak}</span>
-      <span className="text-xs text-orange-600 dark:text-orange-400">{streak === 1 ? 'יום רצוף' : 'ימים רצופים'}</span>
+      <span className="text-sm font-bold text-exam-alt tabular-nums">{streak}</span>
+      <span className="text-xs text-exam-alt">{streak === 1 ? 'יום רצוף' : 'ימים רצופים'}</span>
     </div>
   );
 }

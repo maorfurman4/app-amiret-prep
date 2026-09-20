@@ -33,7 +33,11 @@ export default async function LeaderboardPage() {
         </h1>
 
         {entries.length === 0 ? (
-          <div className="text-center text-exam-ink-soft py-20">עדיין אין נתונים בלוח</div>
+          <div className="text-center py-20">
+            <Trophy className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+            <div className="text-exam-ink-soft">עדיין אין נתונים בלוח</div>
+            <div className="text-exam-ink-soft text-sm mt-1">סיימו מבחן ראשון כדי להופיע כאן</div>
+          </div>
         ) : (
           <div className="space-y-3">
             {entries.map((entry, i) => {

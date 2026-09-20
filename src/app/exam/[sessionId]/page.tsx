@@ -159,18 +159,32 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     setIsSubmitting(true);
 
     try {
-      const res = await authFetch('/api/exam/answer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: sess.id,
-          sectionIndex: sess.current_section_index,
-          answers: sectionAnswers,
-          timings: sectionAnswers.map((_, i) => Math.round(
-            (timingsRef.current[i] ?? 0) + (i === prevIndexRef.current ? (Date.now() - lastTickRef.current) / 1000 : 0)
-          )),
-        }),
+      const requestBody = JSON.stringify({
+        sessionId: sess.id,
+        sectionIndex: sess.current_section_index,
+        answers: sectionAnswers,
+        timings: sectionAnswers.map((_, i) => Math.round(
+          (timingsRef.current[i] ?? 0) + (i === prevIndexRef.current ? (Date.now() - lastTickRef.current) / 1000 : 0)
+        )),
       });
+
+      // A shared-IP rate limit (school computer lab, office) shouldn't be
+      // allowed to strand someone mid-section while the server-side timer
+      // keeps counting toward the late-submission grace window — retry a
+      // couple of times with a short backoff before giving up and showing
+      // the dead-end error.
+      let res: Response;
+      let attempt = 0;
+      while (true) {
+        res = await authFetch('/api/exam/answer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: requestBody,
+        });
+        if (res.status !== 429 || attempt >= 2) break;
+        attempt++;
+        await new Promise(r => setTimeout(r, 1500 * attempt));
+      }
 
       if (res.status === 429) {
         setError('יותר מדי בקשות בזמן קצר — התשובות שלך לא נשלחו. חכה כדקה ולחץ "נסה שוב".');

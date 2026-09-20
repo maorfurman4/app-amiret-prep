@@ -65,7 +65,13 @@ export default function DiagnosticPage() {
     try {
       const guestId = localStorage.getItem('amiret_guest_id') ?? '';
       const gidParam = guestId ? `&guestId=${encodeURIComponent(guestId)}` : '';
-      const res = await authFetch(`/api/practice/questions?type=${STAGES[idx].type}&difficulty=${level}&count=10${gidParam}`);
+      // deferSeen=1: we over-fetch 10 candidates to survive same-run overlap
+      // filtering below but only ever show 3 of them — marking all 10 "seen"
+      // would burn 7 questions the user never actually saw from the shared
+      // pool every stage. We tell the server which 3 were really used right
+      // after picking them (fire-and-forget; losing this call only means
+      // those 3 might resurface a little sooner, never a broken session).
+      const res = await authFetch(`/api/practice/questions?type=${STAGES[idx].type}&difficulty=${level}&count=10&deferSeen=1${gidParam}`);
       if (!res.ok) throw new Error();
       const data = await res.json() as { questions: Question[] };
       const seenIds = new Set(allQs.map(q => q.id));
@@ -77,6 +83,11 @@ export default function DiagnosticPage() {
       // short stage (this caused diagnostic sessions to end at 11/12 instead
       // of 12/12, with a wrong "X מתוך Y" count on the final stage).
       if (fresh.length < PER_STAGE) throw new Error();
+      authFetch('/api/practice/questions/mark-seen', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: fresh.map(q => q.id) }),
+      }).catch(() => {});
       setQuestions(fresh);
       setLevelsSeen(prev => [...prev, level]);
       setQIdx(0);

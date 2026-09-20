@@ -73,6 +73,13 @@ function PracticeContent() {
   const [sectionMode, setSectionMode] = useState(false);
   const [sectionTimeLeft, setSectionTimeLeft] = useState(0);
   const sectionTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Wall-clock deadline (epoch ms) for section mode, not just a tick counter —
+  // a plain per-second decrement drifts (or effectively pauses) when the tab
+  // is backgrounded, since browsers throttle setInterval there. Recomputing
+  // from this on every tick — and immediately on tab refocus — keeps the
+  // countdown accurate even after the tab was hidden for a while, matching
+  // how the real exam's server-authoritative ExamTimer behaves.
+  const sectionExpiresAtRef = useRef<number | null>(null);
 
   const [loading, setLoading]         = useState(false);
   const [error, setError]             = useState<string | null>(null);
@@ -140,6 +147,7 @@ function PracticeContent() {
       setShowResult(false);
       if (selectedType) {
         setSectionTimeLeft(SECTION_FORMAT[selectedType].seconds);
+        sectionExpiresAtRef.current = Date.now() + SECTION_FORMAT[selectedType].seconds * 1000;
         setTimeLeft(EXAM_TIMER_SECONDS[selectedType]);
       }
       setStep('practicing');
@@ -213,16 +221,24 @@ function PracticeContent() {
   // Section mode: one hard countdown for the whole section, like the real exam
   useEffect(() => {
     if (step !== 'practicing' || !sectionMode || !selectedType) return;
-    sectionTimerRef.current = setInterval(() => {
-      setSectionTimeLeft(prev => {
-        if (prev <= 1) {
-          if (sectionTimerRef.current) { clearInterval(sectionTimerRef.current); sectionTimerRef.current = null; }
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => { if (sectionTimerRef.current) { clearInterval(sectionTimerRef.current); sectionTimerRef.current = null; } };
+
+    const tick = () => {
+      const deadline = sectionExpiresAtRef.current;
+      const remaining = deadline === null ? 0 : Math.max(0, Math.round((deadline - Date.now()) / 1000));
+      setSectionTimeLeft(remaining);
+      if (remaining <= 0 && sectionTimerRef.current) {
+        clearInterval(sectionTimerRef.current);
+        sectionTimerRef.current = null;
+      }
+    };
+    const onVisible = () => { if (document.visibilityState === 'visible') tick(); };
+
+    sectionTimerRef.current = setInterval(tick, 1000);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      if (sectionTimerRef.current) { clearInterval(sectionTimerRef.current); sectionTimerRef.current = null; }
+      document.removeEventListener('visibilitychange', onVisible);
+    };
 
   }, [step, sectionMode, selectedType]);
 

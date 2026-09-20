@@ -39,22 +39,25 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
   const [fetchError, setFetchError] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [filter, setFilter] = useState<Filter>('all');
+  const [loadToken, setLoadToken] = useState(0);
   const questionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let cancelled = false;
     const guestId = localStorage.getItem('amiret_guest_id') ?? '';
     authFetch(`/api/exam/review?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId)}`)
       .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
-      .then((d: ReviewData) => setData(d))
-      .catch(() => setFetchError(true));
-  }, [sessionId]);
+      .then((d: ReviewData) => { if (!cancelled) setData(d); })
+      .catch(() => { if (!cancelled) setFetchError(true); });
+    return () => { cancelled = true; };
+  }, [sessionId, loadToken]);
 
   if (fetchError) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
           <div className="text-exam-wrong text-xl mb-3">שגיאה בטעינת השאלות</div>
-          <button onClick={() => { setFetchError(false); window.location.reload(); }} className="text-exam-accent underline text-sm">נסה שוב</button>
+          <button onClick={() => { setFetchError(false); setLoadToken(t => t + 1); }} className="text-exam-accent underline text-sm">נסה שוב</button>
         </div>
       </div>
     );

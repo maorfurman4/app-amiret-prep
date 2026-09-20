@@ -41,9 +41,13 @@ export default function StatsPage() {
   const [rawRows, setRawRows] = useState<{ score: number; completed_at: string; section_results: unknown }[]>([]);
   const [weakness, setWeakness] = useState<WeaknessData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [loadToken, setLoadToken] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
     supabase.auth.getUser().then(({ data: { user } }) => {
+      if (cancelled) return;
       // Works for both logged-in users and guests — stats are computed
       // directly from completed exam sessions, keyed by the same user_id
       // the exam APIs write (auth id or the localStorage guest UUID).
@@ -54,8 +58,9 @@ export default function StatsPage() {
       }
 
       authFetch(`/api/stats?guestId=${encodeURIComponent(localStorage.getItem('amiret_guest_id') ?? '')}`)
-        .then(r => (r.ok ? r.json() : { sessions: [] }))
+        .then(r => { if (!r.ok) throw new Error(`stats fetch failed: ${r.status}`); return r.json(); })
         .then((d: { sessions: { score: number; completed_at: string; section_results: unknown }[] }) => {
+          if (cancelled) return;
           const rows = d.sessions ?? [];
 
           if (rows.length === 0) {
@@ -112,9 +117,33 @@ export default function StatsPage() {
           });
           setWeakness({ byType, byDifficulty });
           setLoading(false);
+        })
+        .catch(() => {
+          if (cancelled) return;
+          setError(true);
+          setLoading(false);
         });
     });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => { cancelled = true; };
+  }, [loadToken]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-exam-paper" dir="rtl">
+        <BackNav backHref="/exam" backLabel="מבחן" />
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-3rem)] text-center px-4">
+          <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-exam-wrong" strokeWidth={1.5} aria-hidden />
+          <p className="text-exam-ink-soft mb-6">לא הצלחנו לטעון את הסטטיסטיקה. בדוק את החיבור ונסה שוב.</p>
+          <button
+            onClick={() => { setError(false); setLoading(true); setLoadToken(t => t + 1); }}
+            className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity"
+          >
+            נסה שוב
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

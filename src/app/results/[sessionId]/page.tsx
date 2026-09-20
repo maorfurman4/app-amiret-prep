@@ -25,19 +25,43 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   const router = useRouter();
 
   const [session, setSession] = useState<SessionData | null>(null);
+  const [error, setError] = useState(false);
+  const [loadToken, setLoadToken] = useState(0);
 
   useEffect(() => {
+    let cancelled = false;
     const guestId = localStorage.getItem('amiret_guest_id') ?? '';
     authFetch(`/api/exam/results?sessionId=${sessionId}&guestId=${encodeURIComponent(guestId)}`)
       .then(r => {
         // Not finished yet — the API refuses (403); send them back into the exam.
         if (r.status === 403) { router.replace(`/exam/${sessionId}`); return null; }
-        return r.ok ? r.json() : null;
+        if (!r.ok) throw new Error(`results fetch failed: ${r.status}`);
+        return r.json();
       })
       .then((d: { session: SessionData } | null) => {
+        if (cancelled) return;
         if (d?.session) setSession(d.session);
-      });
-  }, [sessionId]); // eslint-disable-line react-hooks/exhaustive-deps
+      })
+      .catch(() => { if (!cancelled) setError(true); });
+    return () => { cancelled = true; };
+  }, [sessionId, loadToken]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-exam-paper px-4" dir="rtl">
+        <div className="text-center space-y-4 max-w-sm">
+          <AlertTriangle className="w-10 h-10 mx-auto text-exam-wrong" strokeWidth={1.5} aria-hidden />
+          <p className="text-exam-ink-soft text-sm">לא הצלחנו לטעון את התוצאות. בדוק את החיבור ונסה שוב.</p>
+          <button
+            onClick={() => { setError(false); setLoadToken(t => t + 1); }}
+            className="px-6 py-2.5 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity"
+          >
+            נסה שוב
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!session) {
     return (

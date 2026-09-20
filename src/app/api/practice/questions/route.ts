@@ -27,6 +27,11 @@ function fisherYates<T>(arr: T[]): T[] {
  *   difficulty — 1-5 | "random"
  *   count    — 5 | 10 (ignored for reading_comprehension, always returns 5)
  *   guestId  — localStorage guest UUID, used when there is no authenticated user
+ *   deferSeen — "1" to skip marking the returned questions as seen here.
+ *     For callers (like the diagnostic) that intentionally over-fetch more
+ *     candidates than they'll actually show, so the unused candidates don't
+ *     get burned from the pool — the caller must then POST the subset it
+ *     actually used to /api/practice/questions/mark-seen itself.
  */
 export async function GET(req: NextRequest) {
   const { supabase, user, guestId } = await getServerClients();
@@ -35,6 +40,7 @@ export async function GET(req: NextRequest) {
   const type = searchParams.get('type') as QuestionType | null;
   const diffParam = searchParams.get('difficulty') ?? 'random';
   const countParam = parseInt(searchParams.get('count') ?? '5', 10);
+  const deferSeen = searchParams.get('deferSeen') === '1';
   const userKey = user?.id ?? guestId ?? null;
 
   if (!type || !['sentence_completion', 'restatement', 'reading_comprehension'].includes(type)) {
@@ -54,7 +60,7 @@ export async function GET(req: NextRequest) {
     if (!questions.length) {
       return NextResponse.json({ error: 'No passages found for this difficulty' }, { status: 404 });
     }
-    if (userKey) await recordSeenPassage(supabase, userKey, questions[0].passage_id!);
+    if (userKey && !deferSeen) await recordSeenPassage(supabase, userKey, questions[0].passage_id!);
     return NextResponse.json({ questions, difficulty: questions[0].passage?.difficulty_level ?? difficulty });
   }
 
@@ -73,7 +79,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'No questions found' }, { status: 404 });
     }
     const questions = fisherYates(pool).slice(0, count);
-    if (userKey) await recordSeenQuestions(supabase, userKey, questions.map(q => q.id));
+    if (userKey && !deferSeen) await recordSeenQuestions(supabase, userKey, questions.map(q => q.id));
     return NextResponse.json({ questions, difficulty: 'random' });
   }
 
@@ -84,7 +90,7 @@ export async function GET(req: NextRequest) {
   if (!questions.length) {
     return NextResponse.json({ error: 'No questions found for this difficulty' }, { status: 404 });
   }
-  if (userKey) await recordSeenQuestions(supabase, userKey, questions.map(q => q.id));
+  if (userKey && !deferSeen) await recordSeenQuestions(supabase, userKey, questions.map(q => q.id));
 
   return NextResponse.json({ questions, difficulty });
 }

@@ -80,6 +80,22 @@ export async function DELETE(req: NextRequest) {
   const owner = user?.id ?? guestId;
   if (!owner) return NextResponse.json({ error: 'auth required' }, { status: 401 });
 
+  // The current (not-yet-submitted) section's questions were already marked
+  // "seen" the moment they were fetched (either by /api/exam/start for
+  // section 1, or by the previous section's commit for every section after
+  // that) — but the user is about to discard the exam without ever actually
+  // answering or being scored on them. Read them now so they can be rolled
+  // back out of the shared question pool after the session row is gone,
+  // instead of being permanently unavailable for a session the user never
+  // completed.
+  const { data: session } = await supabase
+    .from('exam_sessions')
+    .select('current_section_index, questions_by_section')
+    .eq('id', sessionId)
+    .eq('user_id', owner)
+    .is('completed_at', null)
+    .maybeSingle();
+
   const { error } = await supabase
     .from('exam_sessions')
     .delete()
@@ -88,6 +104,20 @@ export async function DELETE(req: NextRequest) {
     .is('completed_at', null); // never delete a finished exam
 
   if (error) return NextResponse.json({ error: 'Could not discard exam' }, { status: 503 });
+
+  if (session) {
+    const bySection = (session.questions_by_section ?? {}) as Record<string, { id: string; passage_id?: string | null }[]>;
+    const currentQuestions = bySection[String(session.current_section_index)] ?? [];
+    const questionIds = currentQuestions.map(q => q.id);
+    const passageIds = [...new Set(currentQuestions.map(q => q.passage_id).filter((id): id is string => !!id))];
+
+    if (questionIds.length > 0) {
+      await supabase.from('user_question_history').delete().eq('user_key', owner).in('question_id', questionIds);
+    }
+    if (passageIds.length > 0) {
+      await supabase.from('user_passage_history').delete().eq('user_key', owner).in('passage_id', passageIds);
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }

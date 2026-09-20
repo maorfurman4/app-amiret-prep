@@ -6,7 +6,7 @@ import { Stethoscope, PenLine, RotateCcw, Timer, BarChart3, Check, Lightbulb } f
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
-import { classifyScore, type Question, type QuestionType } from '@/types/exam';
+import { classifyScore, isCorrectAnswer, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
 import { authFetch } from '@/lib/auth-fetch';
 
@@ -45,6 +45,20 @@ export default function DiagnosticPage() {
   }, []);
 
   const [phase, setPhase] = useState<Phase>('intro');
+
+  // Warn before leaving mid-diagnostic — unlike the real exam, this has no
+  // server session or localStorage draft, so a refresh or accidental
+  // navigation loses the whole ~10-minute run with no way to resume it.
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (phase === 'loading' || phase === 'answering') {
+        e.preventDefault();
+        e.returnValue = 'אם תצא עכשיו, האבחון לא יישמר ותצטרך להתחיל מחדש. לצאת בכל זאת?';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [phase]);
   const [stageIdx, setStageIdx] = useState(0);
   const [questions, setQuestions] = useState<Question[]>([]);      // current stage
   const [qIdx, setQIdx] = useState(0);
@@ -56,7 +70,7 @@ export default function DiagnosticPage() {
   const thetaOf = (qs: Question[], ans: number[]) =>
     qs.length === 0 ? 0 : estimateThetaEAP(
       qs.map(q => ({ a: q.a, b: q.b, c: q.c })),
-      qs.map((q, i) => (ans[i] === q.correct_answer ? 1 : 0)),
+      qs.map((q, i) => (isCorrectAnswer(q, ans[i]) ? 1 : 0)),
     );
 
   const loadStage = async (idx: number, allQs: Question[], allAns: number[]) => {
@@ -123,7 +137,7 @@ export default function DiagnosticPage() {
         authFetch('/api/review-queue', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ guestId, questionId: q.id, wasCorrect: newDoneAns[i] === q.correct_answer }),
+          body: JSON.stringify({ guestId, questionId: q.id, wasCorrect: isCorrectAnswer(q, newDoneAns[i]) }),
         }).catch(() => {});
       });
     }
@@ -193,13 +207,13 @@ export default function DiagnosticPage() {
       const t = q.type;
       if (!byType[t]) byType[t] = { correct: 0, total: 0 };
       byType[t].total++;
-      if (doneAnswers[i] === q.correct_answer) byType[t].correct++;
+      if (isCorrectAnswer(q, doneAnswers[i])) byType[t].correct++;
     });
     const TYPE_LABELS: Record<string, string> = { sentence_completion: 'השלמת משפטים', restatement: 'ניסוח מחדש' };
     const weakest = Object.entries(byType).sort((a, b) => (a[1].correct / a[1].total) - (b[1].correct / b[1].total))[0];
     const weakLabel = weakest ? TYPE_LABELS[weakest[0]] : '';
     const weakTipHref = weakest?.[0] === 'restatement' ? '/tips/restatement' : '/tips/sentence-completion';
-    const totalCorrect = doneAnswers.filter((a, i) => a === doneQuestions[i].correct_answer).length;
+    const totalCorrect = doneAnswers.filter((a, i) => isCorrectAnswer(doneQuestions[i], a)).length;
 
     return (
       <div className="min-h-screen bg-exam-paper px-4 py-8" dir="rtl">

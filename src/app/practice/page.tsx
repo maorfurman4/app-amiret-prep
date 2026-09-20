@@ -1,14 +1,15 @@
 'use client';
 
-import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { QuestionCard } from '@/components/exam/QuestionCard';
-import { classifyScore, type Question, type QuestionType } from '@/types/exam';
+import { classifyScore, isCorrectAnswer, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 import { useActivityGuard } from '@/lib/activity-guard';
+import { useCountdown } from '@/lib/use-countdown';
 import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, type LucideIcon } from 'lucide-react';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
@@ -71,15 +72,11 @@ function PracticeContent() {
   const [selectedCount, setCount]     = useState<5 | 10>(5);
   const [examMode, setExamMode]       = useState(false);
   const [sectionMode, setSectionMode] = useState(false);
-  const [sectionTimeLeft, setSectionTimeLeft] = useState(0);
-  const sectionTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  // Wall-clock deadline (epoch ms) for section mode, not just a tick counter —
-  // a plain per-second decrement drifts (or effectively pauses) when the tab
-  // is backgrounded, since browsers throttle setInterval there. Recomputing
-  // from this on every tick — and immediately on tab refocus — keeps the
-  // countdown accurate even after the tab was hidden for a while, matching
-  // how the real exam's server-authoritative ExamTimer behaves.
-  const sectionExpiresAtRef = useRef<number | null>(null);
+  // Wall-clock deadline (epoch ms) for section mode — fed through the same
+  // useCountdown hook the real exam's timer uses, so this "true exam
+  // conditions" mode actually behaves like the real one (accurate across a
+  // backgrounded tab) instead of a naive per-second decrement.
+  const [sectionExpiresAt, setSectionExpiresAt] = useState<number | null>(null);
 
   const [loading, setLoading]         = useState(false);
   const [error, setError]             = useState<string | null>(null);
@@ -114,10 +111,26 @@ function PracticeContent() {
     return () => setInProgress(false);
   }, [step, setInProgress]);
 
+  // Warn before an actual tab close/refresh/external navigation during a
+  // timed section run — the in-app nav confirmation above (setInProgress)
+  // only catches switching categories inside the app, not this. Section
+  // mode has no server session or draft to resume from, so losing the tab
+  // mid-section loses the whole run with no warning otherwise.
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (sectionMode && step === 'practicing') {
+        e.preventDefault();
+        e.returnValue = 'אם תצא עכשיו, ההתקדמות במקבץ לא תישמר. לצאת בכל זאת?';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [sectionMode, step]);
+
   // Exam mode timer
-  const [timeLeft, setTimeLeft]       = useState<number>(0);
-  const timerRef                      = useRef<ReturnType<typeof setInterval> | null>(null);
-  const timerStartedRef               = useRef(false);
+  // Wall-clock deadline (epoch ms) for the current question in exam mode —
+  // reset to a fresh deadline every time the question changes.
+  const [questionExpiresAt, setQuestionExpiresAt] = useState<number | null>(null);
 
   const fetchQuestions = async (overrideDiff?: Difficulty) => {
     setLoading(true);
@@ -141,14 +154,21 @@ function PracticeContent() {
       const qs = sectionMode && selectedType
         ? data.questions.slice(0, SECTION_FORMAT[selectedType].count)
         : data.questions;
+      if (qs.length === 0) {
+        // The request itself succeeded (200), but this exact type/difficulty
+        // combination has no unseen questions left right now — a real,
+        // recoverable state, not the generic "unexpected error" fallback.
+        setError('לא נמצאו שאלות מתאימות. נסה רמת קושי או סוג שאלה אחרים.');
+        setLoading(false);
+        return;
+      }
       setQuestions(qs);
       setAnswers(Array(qs.length).fill(null));
       setCurrentIndex(0);
       setShowResult(false);
       if (selectedType) {
-        setSectionTimeLeft(SECTION_FORMAT[selectedType].seconds);
-        sectionExpiresAtRef.current = Date.now() + SECTION_FORMAT[selectedType].seconds * 1000;
-        setTimeLeft(EXAM_TIMER_SECONDS[selectedType]);
+        setSectionExpiresAt(Date.now() + SECTION_FORMAT[selectedType].seconds * 1000);
+        setQuestionExpiresAt(Date.now() + EXAM_TIMER_SECONDS[selectedType] * 1000);
       }
       setStep('practicing');
     } catch {
@@ -189,7 +209,7 @@ function PracticeContent() {
       setShowResult(true);
     }
     // Track answers for spaced repetition (fire-and-forget)
-    const isCorrect = optionIndex === questions[currentIndex]?.correct_answer;
+    const isCorrect = questions[currentIndex] ? isCorrectAnswer(questions[currentIndex], optionIndex) : false;
     const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
     authFetch('/api/review-queue', {
       method: 'POST',
@@ -200,13 +220,12 @@ function PracticeContent() {
 
   // Section mode: submit the whole section (manually or on timeout)
   const finishSection = useCallback(() => {
-    if (sectionTimerRef.current) { clearInterval(sectionTimerRef.current); sectionTimerRef.current = null; }
     const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
     questions.forEach((q, i) => {
       authFetch('/api/review-queue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guestId, questionId: q.id, wasCorrect: answers[i] === q.correct_answer }),
+        body: JSON.stringify({ guestId, questionId: q.id, wasCorrect: isCorrectAnswer(q, answers[i]) }),
       }).catch(() => {});
     });
     setStep('done');
@@ -218,37 +237,14 @@ function PracticeContent() {
 
   }, [questions, answers]);
 
-  // Section mode: one hard countdown for the whole section, like the real exam
-  useEffect(() => {
-    if (step !== 'practicing' || !sectionMode || !selectedType) return;
-
-    const tick = () => {
-      const deadline = sectionExpiresAtRef.current;
-      const remaining = deadline === null ? 0 : Math.max(0, Math.round((deadline - Date.now()) / 1000));
-      setSectionTimeLeft(remaining);
-      if (remaining <= 0 && sectionTimerRef.current) {
-        clearInterval(sectionTimerRef.current);
-        sectionTimerRef.current = null;
-      }
-    };
-    const onVisible = () => { if (document.visibilityState === 'visible') tick(); };
-
-    sectionTimerRef.current = setInterval(tick, 1000);
-    document.addEventListener('visibilitychange', onVisible);
-    return () => {
-      if (sectionTimerRef.current) { clearInterval(sectionTimerRef.current); sectionTimerRef.current = null; }
-      document.removeEventListener('visibilitychange', onVisible);
-    };
-
-  }, [step, sectionMode, selectedType]);
-
-  // Auto-submit when the section timer hits zero
-  useEffect(() => {
-    if (sectionMode && step === 'practicing' && sectionTimeLeft === 0 && sectionTimerRef.current === null && questions.length > 0) {
-      finishSection();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sectionTimeLeft, sectionMode, step]);
+  // Section mode: one hard countdown for the whole section, like the real
+  // exam — auto-submits via onExpire once, the same wall-clock-accurate
+  // hook the real exam's ExamTimer uses.
+  const sectionRemainingMs = useCountdown({
+    expiresAt: step === 'practicing' && sectionMode && selectedType ? sectionExpiresAt : null,
+    onExpire: finishSection,
+  });
+  const sectionTimeLeft = sectionRemainingMs === null ? (selectedType ? SECTION_FORMAT[selectedType].seconds : 0) : Math.round(sectionRemainingMs / 1000);
 
   const handleRestart = () => {
     setStep('pick-type');
@@ -262,7 +258,7 @@ function PracticeContent() {
     setSectionMode(false);
   };
 
-  const correctCount = answers.filter((a, i) => a === questions[i]?.correct_answer).length;
+  const correctCount = answers.filter((a, i) => questions[i] && isCorrectAnswer(questions[i], a)).length;
 
   // Keyboard shortcuts: 1-4 = select option, Space/Enter = next question
   const handleNext = useCallback(() => {
@@ -273,7 +269,7 @@ function PracticeContent() {
       // letting a re-picked answer overwrite the original and double-post to
       // the review queue.
       const nextIndex = currentIndex + 1;
-      if (examMode && selectedType) setTimeLeft(EXAM_TIMER_SECONDS[selectedType]);
+      if (examMode && selectedType) setQuestionExpiresAt(Date.now() + EXAM_TIMER_SECONDS[selectedType] * 1000);
       setCurrentIndex(nextIndex);
       setShowResult(answers[nextIndex] !== null);
     } else {
@@ -287,47 +283,17 @@ function PracticeContent() {
     }
   }, [currentIndex, questions.length, answers, examMode, selectedType]);
 
-  // Exam mode: reset timer when question changes
-  useEffect(() => {
-    if (step !== 'practicing' || !examMode || sectionMode || !selectedType) return;
-
-    // Clear any existing interval
-    if (timerRef.current) clearInterval(timerRef.current);
-
-    timerStartedRef.current = false;
-
-    timerRef.current = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current!);
-          timerRef.current = null;
-          timerStartedRef.current = true;
-          return 0;
-        }
-        timerStartedRef.current = true;
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, examMode, selectedType, currentIndex]);
-
-  // Auto-advance when timeLeft hits 0 in exam mode (only after timer actually started)
-  useEffect(() => {
-    if (!examMode || step !== 'practicing' || timeLeft !== 0 || !timerStartedRef.current) return;
-    handleNext();
-  }, [timeLeft, examMode, step, handleNext]);
-
-  // Stop timer when leaving practicing step
-  useEffect(() => {
-    if (step !== 'practicing' && timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  }, [step]);
+  // Exam mode: per-question countdown, reset to a fresh deadline whenever
+  // the question changes (questionExpiresAt is set both on first load and
+  // by handleNext above). Auto-advances via onExpire — the hook's effect
+  // naturally tears down the previous interval whenever expiresAt changes
+  // (new question, or leaving the practicing step entirely), so no separate
+  // "stop timer" effect is needed.
+  const questionRemainingMs = useCountdown({
+    expiresAt: step === 'practicing' && examMode && !sectionMode && selectedType ? questionExpiresAt : null,
+    onExpire: handleNext,
+  });
+  const timeLeft = questionRemainingMs === null ? (selectedType ? EXAM_TIMER_SECONDS[selectedType] : 0) : Math.ceil(questionRemainingMs / 1000);
 
   useEffect(() => {
     if (step !== 'practicing') return;
@@ -589,7 +555,7 @@ function PracticeContent() {
                     key={i}
                     className={`w-2 h-2 rounded-full transition-colors ${
                       i < currentIndex
-                        ? answers[i] === questions[i].correct_answer ? 'bg-exam-sage-strong' : 'bg-exam-wrong'
+                        ? isCorrectAnswer(questions[i], answers[i]) ? 'bg-exam-sage-strong' : 'bg-exam-wrong'
                         : i === currentIndex ? 'bg-exam-accent' : 'bg-exam-border'
                     }`}
                   />
@@ -686,7 +652,7 @@ function PracticeContent() {
     const diagTheta = hasIrtParams
       ? estimateThetaEAP(
           questions.map(q => ({ a: q.a, b: q.b, c: q.c })),
-          questions.map((q, i) => (answers[i] === q.correct_answer ? 1 : 0)),
+          questions.map((q, i) => (isCorrectAnswer(q, answers[i]) ? 1 : 0)),
         )
       : null;
     const diagScore = diagTheta !== null ? thetaToScore(diagTheta) : null;
@@ -770,7 +736,7 @@ function PracticeContent() {
                 סקירת שאלות והסברים
               </h2>
               {questions.map((q, i) => {
-                const isCorrect = answers[i] === q.correct_answer;
+                const isCorrect = isCorrectAnswer(q, answers[i]);
                 return (
                   <div
                     key={q.id ?? i}

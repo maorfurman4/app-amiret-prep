@@ -9,6 +9,7 @@ import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
   RotateCcw, Trophy, ThumbsUp, Flame, Settings, Check, X, Target, Clock,
   TrendingDown, Zap, Link2, GraduationCap, Palette, Package, CheckCircle2,
+  AlertTriangle,
 } from 'lucide-react';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
@@ -89,6 +90,27 @@ function saveSet(key: string, s: Set<string>) {
   localStorage.setItem(key, JSON.stringify([...s]));
 }
 
+/**
+ * Retries a Supabase write a few times with backoff before giving up.
+ * These known/favorite writes are otherwise fire-and-forget with nothing
+ * else that ever re-syncs a single failed one — a transient blip would
+ * silently leave that device's local state diverged from the account
+ * forever. Returns whether it ultimately succeeded, so the caller can
+ * surface a "your last change may not have saved" notice.
+ */
+async function writeWithRetry(fn: () => PromiseLike<{ error: unknown }>, attempts = 3): Promise<boolean> {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const { error } = await fn();
+      if (!error) return true;
+    } catch {
+      // fall through to retry
+    }
+    if (i < attempts - 1) await new Promise(r => setTimeout(r, 500 * 2 ** i));
+  }
+  return false;
+}
+
 let _speakTimer: ReturnType<typeof setTimeout> | null = null;
 function speak(word: string) {
   if (typeof window === 'undefined') return;
@@ -157,6 +179,10 @@ function VocabularyContent() {
   const [loading, setLoading] = useState(true);
   const [known, setKnown] = useState<Set<string>>(new Set());
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  // Set when a known/favorite write to the account still failed after
+  // retrying — informational only (the local change stays applied either
+  // way), so the user isn't left thinking it silently worked everywhere.
+  const [syncFailed, setSyncFailed] = useState(false);
   const [mode, setMode] = useState<Mode>('flashcard');
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -534,12 +560,11 @@ function VocabularyContent() {
     setFavorites(next);
     saveSet(FAV_KEY, next);
     if (userId) {
-      if (removing) {
-        supabase.from('user_vocab_favorites').delete().eq('user_id', userId).eq('word_id', id).then();
-      } else {
+      const write = removing
+        ? () => supabase.from('user_vocab_favorites').delete().eq('user_id', userId).eq('word_id', id)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (supabase.from('user_vocab_favorites') as any).upsert({ user_id: userId, word_id: id }).then();
-      }
+        : () => (supabase.from('user_vocab_favorites') as any).upsert({ user_id: userId, word_id: id });
+      writeWithRetry(write).then(ok => { if (!ok) setSyncFailed(true); });
     }
   };
 
@@ -549,7 +574,8 @@ function VocabularyContent() {
     setFavorites(next);
     saveSet(FAV_KEY, next);
     if (userId) {
-      supabase.from('user_vocab_favorites').delete().eq('user_id', userId).eq('word_id', id).then();
+      writeWithRetry(() => supabase.from('user_vocab_favorites').delete().eq('user_id', userId).eq('word_id', id))
+        .then(ok => { if (!ok) setSyncFailed(true); });
     }
   };
 
@@ -557,7 +583,8 @@ function VocabularyContent() {
     setFavorites(new Set());
     saveSet(FAV_KEY, new Set());
     if (userId) {
-      supabase.from('user_vocab_favorites').delete().eq('user_id', userId).then();
+      writeWithRetry(() => supabase.from('user_vocab_favorites').delete().eq('user_id', userId))
+        .then(ok => { if (!ok) setSyncFailed(true); });
     }
   };
 
@@ -580,7 +607,8 @@ function VocabularyContent() {
       setAnimating(null);
       if (userId) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (supabase.from('user_vocab_known') as any).upsert({ user_id: userId, word_id: wordId }).then();
+        writeWithRetry(() => (supabase.from('user_vocab_known') as any).upsert({ user_id: userId, word_id: wordId }))
+          .then(ok => { if (!ok) setSyncFailed(true); });
       }
     }, 280);
   }, [current, known, userId, animating]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -603,7 +631,8 @@ function VocabularyContent() {
     setKnown(next);
     saveSet(STORAGE_KEY, next);
     if (userId) {
-      supabase.from('user_vocab_known').delete().eq('user_id', userId).eq('word_id', wordId).then();
+      writeWithRetry(() => supabase.from('user_vocab_known').delete().eq('user_id', userId).eq('word_id', wordId))
+        .then(ok => { if (!ok) setSyncFailed(true); });
     }
   };
 
@@ -612,7 +641,8 @@ function VocabularyContent() {
     saveSet(STORAGE_KEY, new Set());
     setShowKnownList(false);
     if (userId) {
-      supabase.from('user_vocab_known').delete().eq('user_id', userId).then();
+      writeWithRetry(() => supabase.from('user_vocab_known').delete().eq('user_id', userId))
+        .then(ok => { if (!ok) setSyncFailed(true); });
     }
   };
 
@@ -666,6 +696,15 @@ function VocabularyContent() {
       <BackNav backHref="/" backLabel="דף הבית" />
 
       <div className="max-w-lg mx-auto px-4 pt-4 pb-32">
+        {syncFailed && (
+          <div className="mb-4 flex items-center gap-2 px-3 py-2.5 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
+            <span className="flex-1">שינוי אחרון לא נשמר לחשבון (השינוי עצמו נשמר במכשיר הזה). בדוק חיבור אינטרנט.</span>
+            <button onClick={() => setSyncFailed(false)} className="flex-shrink-0 hover:opacity-70" aria-label="סגור">
+              <X className="w-4 h-4" aria-hidden />
+            </button>
+          </div>
+        )}
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold text-exam-ink flex items-center gap-2"><BookOpen className="w-6 h-6" strokeWidth={1.5} aria-hidden />אוצר מילים</h1>
           <button

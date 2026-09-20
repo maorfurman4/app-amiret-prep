@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
 import { AlertTriangle } from 'lucide-react';
+import { useCountdown } from '@/lib/use-countdown';
 
 interface ExamTimerProps {
   expiresAt: string | null;      // ISO string from server
@@ -10,33 +10,14 @@ interface ExamTimerProps {
 }
 
 export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
-  const [remainingMs, setRemainingMs] = useState<number | null>(null);
-  const onExpireRef = useRef(onExpire);
-  useEffect(() => { onExpireRef.current = onExpire; }, [onExpire]);
-
   const WARN_THRESHOLD = 10_000; // 10 seconds
 
-  const computeRemaining = useCallback(() => {
-    if (!expiresAt) return Infinity;
-    return Math.max(0, new Date(expiresAt).getTime() - Date.now());
-  }, [expiresAt]);
-
-  useEffect(() => {
-    if (isPractice || !expiresAt) return;
-
-    const tick = () => {
-      const ms = computeRemaining();
-      setRemainingMs(ms);
-      if (ms <= 0) {
-        clearInterval(interval);
-        onExpireRef.current();
-      }
-    };
-    const interval = setInterval(tick, 500);
-    const initialTick = setTimeout(tick, 0);
-
-    return () => { clearInterval(interval); clearTimeout(initialTick); };
-  }, [expiresAt, isPractice, computeRemaining]);
+  const deadline = expiresAt ? new Date(expiresAt).getTime() : null;
+  const remainingMs = useCountdown({
+    expiresAt: isPractice ? null : deadline,
+    onExpire,
+    intervalMs: 500,
+  });
 
   if (remainingMs === null && !isPractice) {
     return <div className="w-24 h-10 rounded-sm border border-exam-border bg-exam-paper-alt animate-pulse" />;

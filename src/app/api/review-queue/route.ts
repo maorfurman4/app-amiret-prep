@@ -165,13 +165,18 @@ export async function POST(req: NextRequest) {
   if (!existing) return NextResponse.json({ ok: true, action: 'not_in_queue' });
 
   const { interval_days } = existing as { interval_days: number };
-  const newInterval = nextInterval(interval_days);
 
-  if (newInterval >= 30) {
+  // Graduate only once the word has actually survived a review AT the
+  // 30-day cap, not the review that first reaches it — otherwise a word
+  // never really gets a 30-day-spaced review, it just gets deleted the
+  // moment doubling would exceed the cap (previously: 5 correct answers
+  // in a row and it's gone, regardless of how long those were spaced).
+  if (interval_days >= 30) {
     await supabase.from('review_queue').delete().eq(ownCol, ownVal).eq('question_id', questionId);
     return NextResponse.json({ ok: true, action: 'graduated' });
   }
 
+  const newInterval = nextInterval(interval_days);
   const nextReview = new Date(now);
   nextReview.setDate(nextReview.getDate() + newInterval);
 

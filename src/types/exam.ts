@@ -59,6 +59,11 @@ export function isExperimentalSection(sectionIndex: number): boolean {
   return SECTION_CONFIGS[sectionIndex - 1]?.experimental === true;
 }
 
+/** A blank (null) answer is always wrong — never treated as a pass. */
+export function isCorrectAnswer(question: Question, answer: number | null): boolean {
+  return answer !== null && answer === question.correct_answer;
+}
+
 export interface SectionResult {
   sectionIndex: number;
   type: QuestionType;

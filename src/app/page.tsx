@@ -9,6 +9,7 @@ import { DiagnosticBanner } from '@/components/home/DiagnosticBanner';
 import { ReviewQueueCard } from '@/components/home/ReviewQueueCard';
 import { StatsCard } from '@/components/home/StatsCard';
 import { StreakCelebration } from '@/components/home/StreakCelebration';
+import { TodaySessionCta } from '@/components/home/TodaySessionCta';
 
 const LEARN_LINKS_BEFORE = [
   { href: '/practice',   icon: PenLine,  title: 'תרגול ממוקד', sub: 'לפי סוג שאלה' },
@@ -46,6 +47,9 @@ export default function HomePage() {
             <Target className="w-5 h-5" aria-hidden />
             התחל מבחן
           </Link>
+
+          {/* Today's session — spaced-repetition vocab + due review + weak-area practice, one CTA */}
+          <TodaySessionCta />
 
           {/* Quick diagnostic */}
           <DiagnosticBanner />

@@ -11,15 +11,19 @@ import { authFetch } from '@/lib/auth-fetch';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { useActivityGuard } from '@/lib/activity-guard';
 import { useCountdown } from '@/lib/use-countdown';
-import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, type LucideIcon } from 'lucide-react';
+import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon } from 'lucide-react';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
 type Difficulty = 1 | 2 | 3 | 4 | 5 | 'random';
+// A real question type, or the UI-only "mixed" option that interleaves all
+// of them in one session (see /api/practice/questions' `mixed` branch).
+type PracticeType = QuestionType | 'mixed';
 
-const TYPE_OPTIONS: { type: QuestionType; label: string; desc: string; icon: LucideIcon }[] = [
+const TYPE_OPTIONS: { type: PracticeType; label: string; desc: string; icon: LucideIcon }[] = [
   { type: 'sentence_completion', label: 'השלמת משפטים', desc: 'בחר את המילה החסרה במשפט', icon: PenLine },
   { type: 'restatement',        label: 'ניסוח מחדש',   desc: 'זהה את המשמעות הזהה במשפט', icon: RotateCcw },
   { type: 'reading_comprehension', label: 'הבנת הנקרא', desc: 'קרא קטע וענה על שאלות הבנה', icon: BookOpen },
+  { type: 'mixed', label: 'מעורב סוגים', desc: 'שילוב של כל סוגי השאלות באותו תרגול — הכי קרוב לאיך שהמבחן עובד', icon: Shuffle },
 ];
 
 const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; sublabel: string; range: string }[] = [
@@ -31,19 +35,24 @@ const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; sublabel: string; 
   { value: 'random', label: '', sublabel: 'מעורב', range: 'מכל הרמות' },
 ];
 
-// Authentic AMIRNET section format: question count + hard section timer
-const SECTION_FORMAT: Record<QuestionType, { count: number; seconds: number }> = {
+// Authentic AMIRNET section format: question count + hard section timer.
+// "מקבץ בתנאי אמת" (section mode) is disabled for mixed type in the UI —
+// a real exam section is always one question type — so the `mixed` entry
+// here only exists to satisfy the Record type; it's never actually read.
+const SECTION_FORMAT: Record<PracticeType, { count: number; seconds: number }> = {
   sentence_completion: { count: 4, seconds: 240 },
   restatement: { count: 3, seconds: 360 },
   reading_comprehension: { count: 5, seconds: 900 },
   esra: { count: 4, seconds: 240 },
+  mixed: { count: 8, seconds: 480 },
 };
 
-const EXAM_TIMER_SECONDS: Record<QuestionType, number> = {
+const EXAM_TIMER_SECONDS: Record<PracticeType, number> = {
   sentence_completion: 45,
   restatement: 50,
   reading_comprehension: 90,
   esra: 45,
+  mixed: 55,
 };
 
 function formatTime(seconds: number): string {
@@ -59,7 +68,7 @@ export default function PracticePage() {
 function PracticeContent() {
   const params = useSearchParams();
   const requestedType = params.get('type');
-  const initialType = TYPE_OPTIONS.some(option => option.type === requestedType) ? requestedType as QuestionType : null;
+  const initialType = TYPE_OPTIONS.some(option => option.type === requestedType) ? requestedType as PracticeType : null;
   const requestedDiff = params.get('difficulty');
   const initialDiff: Difficulty | null = initialType && requestedDiff
     ? requestedDiff === 'random' ? 'random' : Math.max(1, Math.min(5, parseInt(requestedDiff, 10) || 3)) as Difficulty
@@ -68,7 +77,7 @@ function PracticeContent() {
   const { setInProgress } = useActivityGuard();
 
   const [step, setStep]               = useState<Step>(initialType ? initialDiff ? 'pick-count' : 'pick-difficulty' : 'pick-type');
-  const [selectedType, setType]       = useState<QuestionType | null>(initialType);
+  const [selectedType, setType]       = useState<PracticeType | null>(initialType);
   const [selectedDiff, setDiff]       = useState<Difficulty | null>(initialDiff);
   const [selectedCount, setCount]     = useState<5 | 10>(5);
   const [examMode, setExamMode]       = useState(false);
@@ -457,7 +466,10 @@ function PracticeContent() {
             {[
               { id: 'learn', title: 'למידה', desc: 'הסבר מיידי אחרי כל תשובה — בקצב שלך', active: !examMode && !sectionMode, on: () => { setExamMode(false); setSectionMode(false); } },
               { id: 'perQ', title: 'אימון מהירות', desc: 'טיימר לכל שאלה בנפרד, הסברים בסוף', active: examMode && !sectionMode, on: () => { setExamMode(true); setSectionMode(false); } },
-              { id: 'section', title: 'מקבץ בתנאי אמת', desc: selectedType ? `בדיוק כמו במבחן: ${SECTION_FORMAT[selectedType].count} שאלות ב-${SECTION_FORMAT[selectedType].seconds / 60} דקות, ניווט חופשי, הסברים בסוף` : '', active: sectionMode, on: () => { setExamMode(false); setSectionMode(true); } },
+              // A real exam section is always a single question type, so
+              // "true exam conditions" mode doesn't map onto a mixed-type
+              // session — filtered out below rather than shown disabled.
+              ...(selectedType !== 'mixed' ? [{ id: 'section', title: 'מקבץ בתנאי אמת', desc: selectedType ? `בדיוק כמו במבחן: ${SECTION_FORMAT[selectedType].count} שאלות ב-${SECTION_FORMAT[selectedType].seconds / 60} דקות, ניווט חופשי, הסברים בסוף` : '', active: sectionMode, on: () => { setExamMode(false); setSectionMode(true); } }] : []),
             ].map(m => (
               <button
                 key={m.id}

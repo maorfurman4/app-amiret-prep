@@ -23,7 +23,12 @@ function fisherYates<T>(arr: T[]): T[] {
  * exhausted, at which point history resets and questions cycle again.
  *
  * Query params:
- *   type     — sentence_completion | restatement | reading_comprehension
+ *   type     — sentence_completion | restatement | reading_comprehension | mixed
+ *     "mixed" interleaves sentence_completion + restatement (split evenly),
+ *     folding in one full reading_comprehension passage as well once the
+ *     session is long enough (count >= 8) to hold it without dominating the
+ *     mix — real interleaved practice across question types, not just
+ *     difficulty levels within one type.
  *   difficulty — 1-5 | "random"
  *   count    — 5 | 10 (ignored for reading_comprehension, always returns 5)
  *   guestId  — localStorage guest UUID, used when there is no authenticated user
@@ -37,13 +42,13 @@ export async function GET(req: NextRequest) {
   const { supabase, user, guestId } = await getServerClients();
 
   const { searchParams } = req.nextUrl;
-  const type = searchParams.get('type') as QuestionType | null;
+  const type = searchParams.get('type') as QuestionType | 'mixed' | null;
   const diffParam = searchParams.get('difficulty') ?? 'random';
   const countParam = parseInt(searchParams.get('count') ?? '5', 10);
   const deferSeen = searchParams.get('deferSeen') === '1';
   const userKey = user?.id ?? guestId ?? null;
 
-  if (!type || !['sentence_completion', 'restatement', 'reading_comprehension'].includes(type)) {
+  if (!type || !['sentence_completion', 'restatement', 'reading_comprehension', 'mixed'].includes(type)) {
     return NextResponse.json({ error: 'Invalid type' }, { status: 400 });
   }
 
@@ -52,6 +57,35 @@ export async function GET(req: NextRequest) {
   const difficulty: DifficultyLevel = diffParam === 'random'
     ? (Math.ceil(Math.random() * 5) as DifficultyLevel)
     : (Math.max(1, Math.min(5, parseInt(diffParam, 10))) as DifficultyLevel);
+
+  if (type === 'mixed') {
+    const INTERLEAVE_TYPES: QuestionType[] = ['sentence_completion', 'restatement'];
+    const includeRC = count >= 8;
+    const simpleBudget = includeRC ? Math.max(1, count - 5) : count;
+    const perType = Math.ceil(simpleBudget / INTERLEAVE_TYPES.length);
+
+    const simpleFetches = await Promise.all(
+      INTERLEAVE_TYPES.map(t => userKey
+        ? fetchUnseenQuestions({ supabase, userKey, type: t, difficultyLevel: difficulty, needed: perType })
+        : fetchRandomQuestionsNoHistory(supabase, t, difficulty, perType))
+    );
+    const simpleShuffled = fisherYates(simpleFetches.flat()).slice(0, simpleBudget);
+
+    let rcBlock: Question[] = [];
+    if (includeRC) {
+      rcBlock = await fetchUnseenRCQuestions({ supabase, userKey, difficultyLevel: difficulty, usedPIds: [] });
+    }
+
+    const questions = fisherYates([...simpleShuffled, ...rcBlock]);
+    if (!questions.length) {
+      return NextResponse.json({ error: 'No questions found' }, { status: 404 });
+    }
+    if (userKey && !deferSeen) {
+      if (simpleShuffled.length > 0) await recordSeenQuestions(supabase, userKey, simpleShuffled.map(q => q.id));
+      if (rcBlock.length > 0) await recordSeenPassage(supabase, userKey, rcBlock[0].passage_id!);
+    }
+    return NextResponse.json({ questions, difficulty });
+  }
 
   if (type === 'reading_comprehension') {
     // `difficulty` already resolves a concrete 1-5 level even in random mode (see above).

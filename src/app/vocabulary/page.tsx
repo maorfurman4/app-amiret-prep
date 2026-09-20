@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 import { ensureGuestIdentity } from '@/lib/guest';
+import { nextInterval, addDays, isDue } from '@/lib/spaced-repetition';
 import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
   RotateCcw, Trophy, ThumbsUp, Flame, Settings, Check, X, Target, Clock,
@@ -66,7 +67,15 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 const STORAGE_KEY = 'vocab_known_ids';
 const FAV_KEY = 'vocab_favorites';
+const SCHEDULE_KEY = 'vocab_known_schedule';
 const TIMED_HISTORY_KEY = 'vocab_timed_history';
+// A known word isn't hidden forever — it comes back for review on an
+// expanding interval (Anki-style), capped here so even a word known for
+// months still gets refreshed occasionally instead of aging out silently.
+const VOCAB_MAX_INTERVAL_DAYS = 60;
+
+interface KnownSchedule { interval_days: number; next_review_at: string; }
+type ScheduleMap = Record<string, KnownSchedule>;
 
 interface TimedHistoryEntry { date: string; score: number; total: number; pack: string; }
 
@@ -89,6 +98,26 @@ function loadSet(key: string): Set<string> {
 
 function saveSet(key: string, s: Set<string>) {
   localStorage.setItem(key, JSON.stringify([...s]));
+}
+
+function loadSchedule(): ScheduleMap {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = localStorage.getItem(SCHEDULE_KEY);
+    return raw ? (JSON.parse(raw) as ScheduleMap) : {};
+  } catch { return {}; }
+}
+
+function saveSchedule(schedule: ScheduleMap) {
+  localStorage.setItem(SCHEDULE_KEY, JSON.stringify(schedule));
+}
+
+function dueLabel(nextReviewAt: string | undefined): string {
+  if (!nextReviewAt) return '';
+  const days = Math.ceil((new Date(nextReviewAt).getTime() - Date.now()) / 86_400_000);
+  if (days <= 0) return 'לחזרה היום';
+  if (days === 1) return 'לחזרה מחר';
+  return `לחזרה בעוד ${days} ימים`;
 }
 
 /**
@@ -180,6 +209,11 @@ function VocabularyContent() {
   const [loading, setLoading] = useState(true);
   const [known, setKnown] = useState<Set<string>>(new Set());
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  // Per-word spaced-repetition state for "known" words — when each one is
+  // next due to resurface for review, Anki-style. Not reactive-deck-driving
+  // on its own (see the deck-rebuild effect below) so marking a word known
+  // again doesn't reshuffle the whole deck.
+  const [knownSchedule, setKnownSchedule] = useState<ScheduleMap>({});
   // Set when a known/favorite write to the account still failed after
   // retrying — informational only (the local change stays applied either
   // way), so the user isn't left thinking it silently worked everywhere.
@@ -261,13 +295,20 @@ function VocabularyContent() {
   useEffect(() => {
     if (!userId) return;
     Promise.all([
-      supabase.from('user_vocab_known').select('word_id').eq('user_id', userId),
+      supabase.from('user_vocab_known').select('word_id, interval_days, next_review_at').eq('user_id', userId),
       supabase.from('user_vocab_favorites').select('word_id').eq('user_id', userId),
     ]).then(([knownRes, favRes]) => {
       if (knownRes.data) {
-        const s = new Set(knownRes.data.map((r: { word_id: string }) => r.word_id));
+        type KnownRow = { word_id: string; interval_days: number; next_review_at: string };
+        const rows = knownRes.data as KnownRow[];
+        const s = new Set(rows.map(r => r.word_id));
         setKnown(s);
         saveSet(STORAGE_KEY, s);
+        const schedule: ScheduleMap = Object.fromEntries(
+          rows.map(r => [r.word_id, { interval_days: r.interval_days, next_review_at: r.next_review_at }])
+        );
+        setKnownSchedule(schedule);
+        saveSchedule(schedule);
       }
       if (favRes.data) {
         const s = new Set(favRes.data.map((r: { word_id: string }) => r.word_id));
@@ -324,6 +365,7 @@ function VocabularyContent() {
     void Promise.resolve().then(() => {
       setKnown(loadSet(STORAGE_KEY));
       setFavorites(loadSet(FAV_KEY));
+      setKnownSchedule(loadSchedule());
       return fetchAll();
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -384,13 +426,20 @@ function VocabularyContent() {
   // `setDeck(prev => prev.slice(1))`), so re-running this effect on every known-set
   // change reshuffled the entire remaining deck and threw away the deferred
   // ordering handleUnknown relies on to push "לא ידעתי" cards toward the end. The
-  // `known.has()` filter below still applies correctly on every genuine rebuild
-  // (filter/pack change) — it just doesn't need to re-trigger the rebuild itself.
+  // `known.has()`/due-check below still applies correctly on every genuine
+  // rebuild (filter/pack change) — it just doesn't need to re-trigger the
+  // rebuild itself. A known word only re-enters the deck once its spaced-
+  // repetition interval says it's due again — otherwise it stays hidden,
+  // same as before.
   const favoritesSignature = activePack === 'favorites' ? Array.from(favorites).sort().join(',') : '';
   useEffect(() => {
     if (!allWords.length) return;
     // Always shuffle from scratch so deck order is never derived from allWords order
-    const active = shuffle(filteredWords).filter(w => !known.has(w.id));
+    const active = shuffle(filteredWords).filter(w => {
+      if (!known.has(w.id)) return true;
+      const sched = knownSchedule[w.id];
+      return !sched || isDue(sched.next_review_at);
+    });
     const frame = requestAnimationFrame(() => {
       setDeck(active);
       setFlipped(false);
@@ -591,27 +640,44 @@ function VocabularyContent() {
   const handleKnew = useCallback(() => {
     if (!current || animating) return;
     const wordId = current.id;
+    // Anki-style: first time known → due again in 1 day; each time it
+    // resurfaces (already due) and gets confirmed known again → the
+    // interval doubles, capped so it never stops coming back entirely.
+    const prevSched = knownSchedule[wordId];
+    const newInterval = prevSched ? nextInterval(prevSched.interval_days, VOCAB_MAX_INTERVAL_DAYS) : 1;
+    const nextReviewAt = addDays(new Date(), newInterval).toISOString();
     setAnimating('right');
     setTimeout(() => {
       const next = new Set(known);
       next.add(wordId);
       setKnown(next);
       saveSet(STORAGE_KEY, next);
+      const nextSchedule = { ...knownSchedule, [wordId]: { interval_days: newInterval, next_review_at: nextReviewAt } };
+      setKnownSchedule(nextSchedule);
+      saveSchedule(nextSchedule);
       setDeck(prev => prev.slice(1));
       setFlipped(false);
       setShowHint(false);
       setDragX(0);
       setAnimating(null);
       if (userId) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        writeWithRetry(() => (supabase.from('user_vocab_known') as any).upsert({ user_id: userId, word_id: wordId }))
+        writeWithRetry(() => supabase.from('user_vocab_known')
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .upsert({ user_id: userId, word_id: wordId, interval_days: newInterval, next_review_at: nextReviewAt } as any))
           .then(ok => { if (!ok) setSyncFailed(true); });
       }
     }, 280);
-  }, [current, known, userId, animating]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [current, known, knownSchedule, userId, animating]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleUnknown = useCallback(() => {
     if (!current || animating) return;
+    const wordId = current.id;
+    // A lapse: this card only reappeared because it was a "known" word due
+    // for review, and the student didn't actually recall it — reset its
+    // interval back to 1 day instead of leaving the old (now clearly wrong)
+    // long interval in place, same reset-on-failure the review queue uses.
+    const isLapse = known.has(wordId);
+    const nextReviewAt = addDays(new Date(), 1).toISOString();
     setAnimating('left');
     setTimeout(() => {
       setDeck(prev => [...prev.slice(1), prev[0]]);
@@ -619,14 +685,31 @@ function VocabularyContent() {
       setShowHint(false);
       setDragX(0);
       setAnimating(null);
+      if (isLapse) {
+        const nextSchedule = { ...knownSchedule, [wordId]: { interval_days: 1, next_review_at: nextReviewAt } };
+        setKnownSchedule(nextSchedule);
+        saveSchedule(nextSchedule);
+        if (userId) {
+          writeWithRetry(() => supabase.from('user_vocab_known')
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .upsert({ user_id: userId, word_id: wordId, interval_days: 1, next_review_at: nextReviewAt } as any))
+            .then(ok => { if (!ok) setSyncFailed(true); });
+        }
+      }
     }, 280);
-  }, [current, animating]);
+  }, [current, known, knownSchedule, userId, animating]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleReturnToKnown = (wordId: string) => {
     const next = new Set(known);
     next.delete(wordId);
     setKnown(next);
     saveSet(STORAGE_KEY, next);
+    setKnownSchedule(prev => {
+      const rest = { ...prev };
+      delete rest[wordId];
+      saveSchedule(rest);
+      return rest;
+    });
     if (userId) {
       writeWithRetry(() => supabase.from('user_vocab_known').delete().eq('user_id', userId).eq('word_id', wordId))
         .then(ok => { if (!ok) setSyncFailed(true); });
@@ -636,6 +719,8 @@ function VocabularyContent() {
   const handleResetAll = () => {
     setKnown(new Set());
     saveSet(STORAGE_KEY, new Set());
+    setKnownSchedule({});
+    saveSchedule({});
     setShowKnownList(false);
     if (userId) {
       writeWithRetry(() => supabase.from('user_vocab_known').delete().eq('user_id', userId))
@@ -992,8 +1077,15 @@ function VocabularyContent() {
 
                   {!flipped ? (
                     <div className="text-center" dir="ltr">
-                      <div className={`inline-block px-3 py-1 rounded-sm text-xs font-medium mb-4 ${CATEGORY_COLORS[current.category] ?? 'bg-exam-paper-alt text-exam-ink-soft'}`}>
-                        {CATEGORY_LABELS[current.category] ?? current.category}
+                      <div className="flex items-center justify-center gap-1.5 mb-4">
+                        <div className={`inline-block px-3 py-1 rounded-sm text-xs font-medium ${CATEGORY_COLORS[current.category] ?? 'bg-exam-paper-alt text-exam-ink-soft'}`}>
+                          {CATEGORY_LABELS[current.category] ?? current.category}
+                        </div>
+                        {known.has(current.id) && (
+                          <div dir="rtl" className="inline-flex items-center gap-1 px-2 py-1 rounded-sm text-[10px] font-semibold bg-exam-accent/10 text-exam-accent">
+                            <RotateCcw className="w-2.5 h-2.5" aria-hidden />לחזרה
+                          </div>
+                        )}
                       </div>
                       <div className="flex items-center justify-center gap-3 mb-2">
                         <div className="font-serif text-5xl font-black text-exam-ink leading-tight">{current.word}</div>
@@ -1104,6 +1196,9 @@ function VocabularyContent() {
                         <div dir="ltr">
                           <span className="font-semibold text-exam-ink text-sm">{w.word}</span>
                           <span className="text-exam-ink-soft text-xs mr-2"> — {w.hebrew_translation}</span>
+                          {knownSchedule[w.id] && (
+                            <span dir="rtl" className="text-exam-ink-soft text-[11px] block mt-0.5">{dueLabel(knownSchedule[w.id].next_review_at)}</span>
+                          )}
                         </div>
                         <button
                           onClick={() => handleReturnToKnown(w.id)}

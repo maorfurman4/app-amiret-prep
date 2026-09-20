@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import type { Question } from '@/types/exam';
 import { recordWrongAnswers } from '@/lib/review-queue';
+import { nextInterval } from '@/lib/spaced-repetition';
 
-function nextInterval(currentDays: number): number {
-  const doubled = Math.max(currentDays, 1) * 2;
-  return Math.min(doubled, 30);
-}
+const MAX_INTERVAL_DAYS = 30;
 
 /**
  * GET /api/review-queue?guestId=xxx
@@ -171,12 +169,12 @@ export async function POST(req: NextRequest) {
   // never really gets a 30-day-spaced review, it just gets deleted the
   // moment doubling would exceed the cap (previously: 5 correct answers
   // in a row and it's gone, regardless of how long those were spaced).
-  if (interval_days >= 30) {
+  if (interval_days >= MAX_INTERVAL_DAYS) {
     await supabase.from('review_queue').delete().eq(ownCol, ownVal).eq('question_id', questionId);
     return NextResponse.json({ ok: true, action: 'graduated' });
   }
 
-  const newInterval = nextInterval(interval_days);
+  const newInterval = nextInterval(interval_days, MAX_INTERVAL_DAYS);
   const nextReview = new Date(now);
   nextReview.setDate(nextReview.getDate() + newInterval);
 

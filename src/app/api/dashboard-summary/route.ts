@@ -7,9 +7,10 @@ export interface DashboardSummary {
   lastScore: number | null;
   examCount: number;
   reviewDueCount: number;
+  todayDueCount: number;
 }
 
-const EMPTY: DashboardSummary = { streak: 0, lastScore: null, examCount: 0, reviewDueCount: 0 };
+const EMPTY: DashboardSummary = { streak: 0, lastScore: null, examCount: 0, reviewDueCount: 0, todayDueCount: 0 };
 
 /**
  * GET /api/dashboard-summary?guestId=xxx
@@ -35,7 +36,17 @@ export async function GET() {
     .lte('next_review_at', now);
   reviewQuery = user ? reviewQuery.eq('user_id', user.id) : reviewQuery.eq('guest_id', guestId!);
 
-  const [streak, lastScoreRes, examCountRes, reviewCountRes] = await Promise.all([
+  // Vocab spaced-repetition only exists for signed-in users (user_vocab_known
+  // has no guest_id column — guest known/favorites are localStorage-only).
+  const vocabDueQuery = user
+    ? supabase
+        .from('user_vocab_known')
+        .select('word_id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .lte('next_review_at', now)
+    : null;
+
+  const [streak, lastScoreRes, examCountRes, reviewCountRes, vocabDueRes] = await Promise.all([
     computeStreak(supabase, owner),
     supabase
       .from('exam_sessions')
@@ -55,12 +66,17 @@ export async function GET() {
       .not('completed_at', 'is', null)
       .not('score', 'is', null),
     reviewQuery,
+    vocabDueQuery,
   ]);
+
+  const reviewDueCount = reviewCountRes.count ?? 0;
+  const vocabDueCount = vocabDueRes?.count ?? 0;
 
   return NextResponse.json({
     streak,
     lastScore: lastScoreRes.data?.score ?? null,
     examCount: examCountRes.count ?? 0,
-    reviewDueCount: reviewCountRes.count ?? 0,
+    reviewDueCount,
+    todayDueCount: reviewDueCount + vocabDueCount,
   } satisfies DashboardSummary);
 }

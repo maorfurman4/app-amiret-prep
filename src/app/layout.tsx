@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import { Heebo, Lora } from 'next/font/google';
 import './globals.css';
 import { BottomNav } from '@/components/BottomNav';
-import { PwaUpdater } from '@/components/PwaUpdater';
 import { ActivityGuardProvider } from '@/lib/activity-guard';
 
 // UI font (Hebrew + Latin) — used everywhere via --font-sans in globals.css.
@@ -61,7 +60,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ActivityGuardProvider>
           {children}
           <BottomNav />
-          <PwaUpdater />
         </ActivityGuardProvider>
       </body>
     </html>

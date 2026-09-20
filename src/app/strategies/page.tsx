@@ -2,6 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import {
+  Shuffle, DoorClosed, Timer, Dices, PenLine, RotateCcw, BookOpen,
+  Zap, Plus, KeyRound, Route, FlaskConical, Link2, Gem, CheckCircle2,
+  Compass, LifeBuoy, NotebookPen, Lightbulb, Brain, Target, Check, type LucideIcon,
+} from 'lucide-react';
 import { BackNav } from '@/components/BackNav';
 
 /* ─── חוקי המשחק ──────────────────────────────────────────────────────────── */
@@ -12,7 +17,7 @@ const RULES_INTRO =
 
 const GAME_RULES = [
   {
-    icon: '🔀',
+    icon: Shuffle,
     title: 'המבחן אדפטיבי — קושי עולה = סימן טוב',
     body:
       'המבחן לא שואל את כל הנבחנים את אותן שאלות. אחרי כל פרק, אלגוריתם סטטיסטי (IRT — אותו מודל שמניע גם את האבחון והתרגול המעורב באתר הזה) מעריך מחדש את הרמה שלך על סמך מה שענית, ובוחר את רמת הקושי של הפרק הבא בהתאם. ' +
@@ -20,7 +25,7 @@ const GAME_RULES = [
       'נבחן שנבהל מקושי עולה ומתחיל לפעול פחות בביטחון, פוגע בעצמו פעמיים — גם בציון וגם באיכות הריכוז. הציונים הגבוהים ביותר (120+) מגיעים אך ורק דרך פרקים קשים; אם המבחן שלך נשאר קל מתחילתו ועד סופו, זה הרף העליון שאתה יכול להגיע אליו באותה הרצה.',
   },
   {
-    icon: '🚪',
+    icon: DoorClosed,
     title: 'אין חזרה אחורה בין פרקים',
     body:
       'ברגע שפרק נסגר — בלחיצה מכוונת או כשהטיימר מגיע לאפס — אי אפשר לחזור אליו, בשום שלב, גם לא בסוף המבחן. זה שונה ממבחנים "רגילים" שבהם מותר לדפדף אחורה חופשי עד הסוף. ' +
@@ -28,14 +33,14 @@ const GAME_RULES = [
       'המסקנה המעשית: לפני שאתה עוזב פרק — בין אם בלחיצה או כי הזמן עומד להיגמר — עשה סבב אחרון מהיר לוודא שלכל שאלה יש תשובה כלשהי מסומנת, גם אם היא ניחוש.',
   },
   {
-    icon: '⏱️',
+    icon: Timer,
     title: 'טיימר קשיח לכל פרק — וזמן לא עובר הלאה',
     body:
       'לכל פרק הקצאת זמן נפרדת ומוחלטת (4 / 6 / 15 דקות בהתאם לסוג), והיא לא מצטברת: אם סיימת פרק מוקדם, שארית הזמן נעלמת — היא לא עוברת לפרק הבא. ' +
       'זו הסיבה שאסור "לחסוך" זמן במודע כדי "להעביר" אותו קדימה — זו אשליה. הדרך הנכונה לנצל זמן שנותר היא לחזור באותו רגע לשאלות שסימנת כלא-בטוחות בפרק הנוכחי, ולבדוק אותן שוב, כי ברגע שנסגר הפרק — הן הלכו.',
   },
   {
-    icon: '🎲',
+    icon: Dices,
     title: 'אין קנס על טעות — מנחשים תמיד',
     body:
       'בניגוד למבחנים שיש בהם ניקוד שלילי על טעות (שם ניחוש עיוור מסוכן), באמירנ"ט שאלה ריקה ושאלה שגויה שוות בדיוק אותו דבר: אפס נקודות. אבל שאלה עם ניחוש עיוור מקנה 25% סיכוי סטטיסטי לצדק — ואם הצלחת לפסול מסיח אחד לפני שניחשת, הסיכוי קופץ ל-33%, ושניים פסולים מביאים אותך ל-50%. ' +
@@ -84,7 +89,7 @@ const TIME_BUDGET = [
 
 interface QuestionGuide {
   id: string;
-  icon: string;
+  icon: LucideIcon;
   color: 'blue' | 'purple' | 'green';
   titleHe: string;
   titleEn: string;
@@ -103,7 +108,7 @@ interface QuestionGuide {
 const QUESTION_GUIDES: QuestionGuide[] = [
   {
     id: 'sentence-completion',
-    icon: '✏️',
+    icon: PenLine,
     color: 'blue',
     titleHe: 'השלמת משפטים',
     titleEn: 'Sentence Completion',
@@ -138,7 +143,7 @@ const QUESTION_GUIDES: QuestionGuide[] = [
   },
   {
     id: 'restatement',
-    icon: '🔄',
+    icon: RotateCcw,
     color: 'purple',
     titleHe: 'ניסוח מחדש',
     titleEn: 'Restatement',
@@ -179,7 +184,7 @@ const QUESTION_GUIDES: QuestionGuide[] = [
   },
   {
     id: 'reading-comprehension',
-    icon: '📚',
+    icon: BookOpen,
     color: 'green',
     titleHe: 'הבנת הנקרא',
     titleEn: 'Reading Comprehension',
@@ -233,7 +238,7 @@ interface ConnectorWord {
 interface ConnectorCategory {
   id: string;
   title: string;
-  icon: string;
+  icon: LucideIcon;
   color: string;
   intro: string;
   words: ConnectorWord[];
@@ -253,7 +258,7 @@ const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
   {
     id: 'contrast',
     title: 'ניגוד',
-    icon: '⚡',
+    icon: Zap,
     color: 'red',
     intro:
       'קבוצת הניגוד היא הכי נפוצה במבחן, כי היא יוצרת בדיוק את סוג המתח שהופך משפט לשאלה מעניינת: משהו אחד נכון, אבל קורה למרות זאת משהו הפוך או בלתי-צפוי. ' +
@@ -309,7 +314,7 @@ const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
   {
     id: 'cause-effect',
     title: 'סיבה-תוצאה',
-    icon: '🔁',
+    icon: RotateCcw,
     color: 'blue',
     intro:
       'קבוצה זו מתפצלת לשני תפקידים שחשוב להבדיל ביניהם: מילים שמסמנות את הסיבה (מה שגרם), ומילים שמסמנות את התוצאה (מה שקרה בעקבות זאת). ' +
@@ -339,7 +344,7 @@ const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
   {
     id: 'addition',
     title: 'תוספת',
-    icon: '➕',
+    icon: Plus,
     color: 'green',
     intro:
       'מילות תוספת הן הכי "בטוחות" מבחינה לוגית — הן פשוט ממשיכות באותו כיוון שכבר התחיל. הכלל הזהב: אם המשפט הראשון היה שלילי, המשך עם "moreover" יהיה גם הוא שלילי (לא הפוך). ' +
@@ -357,7 +362,7 @@ const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
   {
     id: 'condition',
     title: 'תנאי',
-    icon: '🔑',
+    icon: KeyRound,
     color: 'amber',
     intro:
       'מילות תנאי מציבות דרישה: משהו יקרה, אבל רק אם (או רק אם לא) תנאי מסוים מתקיים. ההבדל הקריטי בקבוצה הזו הוא בין תנאי חיובי לתנאי שלילי — ו-"unless" הוא המועד הראשון להתבלבל בו, ' +
@@ -384,17 +389,17 @@ const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
 ];
 
 const CATEGORY_COLOR: Record<string, string> = {
-  red: 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300',
-  blue: 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
-  green: 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300',
-  amber: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+  red: 'bg-exam-wrong-bg text-exam-wrong',
+  blue: 'bg-exam-accent/10 text-exam-accent',
+  green: 'bg-exam-sage-bg text-exam-sage-strong',
+  amber: 'bg-exam-alt-bg text-exam-alt',
 };
 
 const CATEGORY_BORDER: Record<string, string> = {
-  red: 'border-red-200 dark:border-red-800',
-  blue: 'border-blue-200 dark:border-blue-800',
-  green: 'border-green-200 dark:border-green-800',
-  amber: 'border-amber-200 dark:border-amber-800',
+  red: 'border-exam-wrong/40',
+  blue: 'border-exam-accent/30',
+  green: 'border-exam-sage/40',
+  amber: 'border-exam-alt/40',
 };
 
 /* ─── איפה כן שווה להשקיע ─────────────────────────────────────────────────── */
@@ -405,7 +410,7 @@ const INVEST_INTRO =
 
 const INVEST_POINTS = [
   {
-    icon: '1️⃣',
+    icon: Route,
     title: 'הפרק הראשון קובע את המסלול',
     body:
       'זה נובע ישירות ממנגנון האדפטיביות (נושא "חוקי המשחק"): האלגוריתם מנתב אותך לרמת הפרק הבא על סמך הביצוע שלך ברגע הזה, ולא מאוחר יותר. ' +
@@ -413,14 +418,14 @@ const INVEST_POINTS = [
       'המשמעות: הפרק הראשון דורש את הריכוז הגבוה ביותר במבחן כולו, בדיוק בזמן שהוא הכי "מפתה" להירגע כי הוא בדרך כלל הקל ביותר.',
   },
   {
-    icon: '📖',
+    icon: BookOpen,
     title: 'הבנת הנקרא היא בור הזמן הבטוח',
     body:
       '15 דקות זה משמעותית יותר זמן ביחס למספר השאלות מכל פרק אחר (ראה נושא "תקציב זמן"). אם יש שאלה אחת בכל המבחן ששווה לך "להיתקע" עליה 3 דקות שלמות — היא כאן, ולא בהשלמת משפטים שבה אותן 3 דקות היו עולות לך שלוש שאלות אחרות. ' +
       'אבל התנאי קריטי: זה תקף רק אחרי שכל שאר השאלות בפרק כבר קיבלו תשובה. תקיעה מוקדמת על שאלה אחת עדיין מסכנת את היתר.',
   },
   {
-    icon: '🧪',
+    icon: FlaskConical,
     title: 'הפרקים הניסיוניים והתרגול החלופי באתר',
     body:
       'בבחינת אמירנ"ט עשויים להופיע בסוף שני פרקים ניסיוניים מסוגים חדשים, או מטלת כתיבה אחת. טעות בפרקים הניסיוניים אינה מורידה את הציון, ותשובות נכונות יכולות להעלות אותו בנקודה או שתיים. ' +
@@ -460,25 +465,25 @@ const MARKET_METHODS = [
 
 const COLOR_MAP: Record<string, { bg: string; border: string; badge: string; heading: string; step: string }> = {
   blue: {
-    bg: 'bg-blue-50 dark:bg-blue-950/30',
-    border: 'border-blue-200 dark:border-blue-800',
-    badge: 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300',
-    heading: 'text-blue-800 dark:text-blue-300',
-    step: 'bg-blue-500',
+    bg: 'bg-exam-accent/5',
+    border: 'border-exam-accent/30',
+    badge: 'bg-exam-accent/10 text-exam-accent',
+    heading: 'text-exam-accent',
+    step: 'bg-exam-accent',
   },
   purple: {
-    bg: 'bg-purple-50 dark:bg-purple-950/30',
-    border: 'border-purple-200 dark:border-purple-800',
-    badge: 'bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300',
-    heading: 'text-purple-800 dark:text-purple-300',
-    step: 'bg-purple-500',
+    bg: 'bg-exam-alt-bg',
+    border: 'border-exam-alt/40',
+    badge: 'bg-exam-alt-bg text-exam-alt',
+    heading: 'text-exam-alt',
+    step: 'bg-exam-alt',
   },
   green: {
-    bg: 'bg-emerald-50 dark:bg-emerald-950/30',
-    border: 'border-emerald-200 dark:border-emerald-800',
-    badge: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300',
-    heading: 'text-emerald-800 dark:text-emerald-300',
-    step: 'bg-emerald-500',
+    bg: 'bg-exam-sage-bg',
+    border: 'border-exam-sage/40',
+    badge: 'bg-exam-sage-bg text-exam-sage-strong',
+    heading: 'text-exam-sage-strong',
+    step: 'bg-exam-sage-strong',
   },
 };
 
@@ -488,16 +493,16 @@ type TopicId =
   | 'rules' | 'time' | 'sentence-completion' | 'restatement' | 'reading-comprehension'
   | 'connectors' | 'invest' | 'methods' | 'habits';
 
-const TOPICS: { id: TopicId; icon: string; title: string; desc: string; color: string }[] = [
-  { id: 'rules', icon: '🔀', title: 'חוקי המשחק', desc: 'איך המבחן עובד — אדפטיביות, טיימר, ניקוד', color: 'bg-slate-100 dark:bg-slate-700' },
-  { id: 'time', icon: '⏱️', title: 'תקציב זמן', desc: 'כמה זמן לכל שאלה, ומתי לוותר ולנחש', color: 'bg-slate-100 dark:bg-slate-700' },
-  { id: 'sentence-completion', icon: '✏️', title: 'השלמת משפטים', desc: 'שיטת עבודה + דוגמה פתורה', color: 'bg-blue-50 dark:bg-blue-950/30' },
-  { id: 'restatement', icon: '🔄', title: 'ניסוח מחדש', desc: 'שיטת עבודה + דוגמה פתורה', color: 'bg-purple-50 dark:bg-purple-950/30' },
-  { id: 'reading-comprehension', icon: '📚', title: 'הבנת הנקרא', desc: 'שיטת עבודה + דוגמה פתורה', color: 'bg-emerald-50 dark:bg-emerald-950/30' },
-  { id: 'connectors', icon: '🔗', title: 'מילות קישור', desc: '10 המילים שקובעות כמעט כל שאלה', color: 'bg-amber-50 dark:bg-amber-950/30' },
-  { id: 'invest', icon: '💎', title: 'איפה שווה להשקיע', desc: 'לא כל הדקות שוות באותה מידה', color: 'bg-slate-100 dark:bg-slate-700' },
-  { id: 'methods', icon: '📖', title: 'שיטות קריאה', desc: 'מה מכוני ההכנה ממליצים — ולמה', color: 'bg-slate-100 dark:bg-slate-700' },
-  { id: 'habits', icon: '✅', title: 'הרגלי הכנה', desc: 'מה עובד באמת, לפי כל המכונים', color: 'bg-slate-100 dark:bg-slate-700' },
+const TOPICS: { id: TopicId; icon: LucideIcon; title: string; desc: string }[] = [
+  { id: 'rules', icon: Shuffle, title: 'חוקי המשחק', desc: 'איך המבחן עובד — אדפטיביות, טיימר, ניקוד' },
+  { id: 'time', icon: Timer, title: 'תקציב זמן', desc: 'כמה זמן לכל שאלה, ומתי לוותר ולנחש' },
+  { id: 'sentence-completion', icon: PenLine, title: 'השלמת משפטים', desc: 'שיטת עבודה + דוגמה פתורה' },
+  { id: 'restatement', icon: RotateCcw, title: 'ניסוח מחדש', desc: 'שיטת עבודה + דוגמה פתורה' },
+  { id: 'reading-comprehension', icon: BookOpen, title: 'הבנת הנקרא', desc: 'שיטת עבודה + דוגמה פתורה' },
+  { id: 'connectors', icon: Link2, title: 'מילות קישור', desc: '10 המילים שקובעות כמעט כל שאלה' },
+  { id: 'invest', icon: Gem, title: 'איפה שווה להשקיע', desc: 'לא כל הדקות שוות באותה מידה' },
+  { id: 'methods', icon: BookOpen, title: 'שיטות קריאה', desc: 'מה מכוני ההכנה ממליצים — ולמה' },
+  { id: 'habits', icon: CheckCircle2, title: 'הרגלי הכנה', desc: 'מה עובד באמת, לפי כל המכונים' },
 ];
 
 /* ─── תצוגת טקסט קריאה — מפרק פסקאות ארוכות למשפטים נפרדים, ומדגיש את
@@ -516,9 +521,9 @@ function splitIntoSentences(text: string): string[] {
 }
 
 const TONE_CLASS: Record<'intro' | 'body' | 'muted', string> = {
-  intro: 'text-sm text-slate-700 dark:text-slate-200 leading-relaxed',
-  body: 'text-sm text-slate-600 dark:text-slate-300 leading-relaxed',
-  muted: 'text-xs text-slate-500 dark:text-slate-400 leading-relaxed',
+  intro: 'text-sm text-exam-ink leading-relaxed',
+  body: 'text-sm text-exam-ink-soft leading-relaxed',
+  muted: 'text-xs text-exam-ink-soft leading-relaxed',
 };
 
 function TextBlock({ text, tone = 'body' }: { text: string; tone?: 'intro' | 'body' | 'muted' }) {
@@ -538,9 +543,9 @@ function TextBlock({ text, tone = 'body' }: { text: string; tone?: 'intro' | 'bo
         <p key={i} className={`${pClass} ${i < leadSentences.length - 1 ? 'mb-1.5' : ''}`}>{s}</p>
       ))}
       {takeaway && (
-        <div className="mt-2 flex items-start gap-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl px-3 py-2">
-          <span className="text-sm flex-shrink-0 mt-0.5">💡</span>
-          <p className="text-slate-800 dark:text-slate-100 text-sm leading-relaxed font-medium">{takeaway}</p>
+        <div className="mt-2 flex items-start gap-2 bg-exam-alt-bg border border-exam-alt/40 rounded-sm px-3 py-2">
+          <Lightbulb className="w-3.5 h-3.5 text-exam-alt flex-shrink-0 mt-0.5" aria-hidden />
+          <p className="text-exam-ink text-sm leading-relaxed font-medium">{takeaway}</p>
         </div>
       )}
     </div>
@@ -552,70 +557,70 @@ function QuestionGuideDetail({ guide }: { guide: QuestionGuide }) {
   return (
     <div>
       <div className="flex items-center gap-3 mb-4">
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${colors.badge}`}>{guide.icon}</div>
+        <div className={`w-12 h-12 rounded-md flex items-center justify-center ${colors.badge}`}><guide.icon className="w-6 h-6" strokeWidth={1.75} aria-hidden /></div>
         <div>
-          <h1 className="text-xl font-black text-slate-900 dark:text-white leading-tight">{guide.titleHe}</h1>
-          <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">{guide.titleEn}</span>
+          <h1 className="text-xl font-black text-exam-ink leading-tight">{guide.titleHe}</h1>
+          <span className="text-xs text-exam-ink-soft font-medium">{guide.titleEn}</span>
         </div>
       </div>
 
-      <div className="mb-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+      <div className="mb-4 bg-exam-surface rounded-md border border-exam-border p-4">
         <TextBlock text={guide.intro} tone="intro" />
       </div>
 
-      <div className={`rounded-2xl border ${colors.bg} ${colors.border} p-4 mb-3`}>
-        <h4 className={`font-bold text-sm mb-3 ${colors.heading}`}>🧭 כך ניגשים לשאלה:</h4>
+      <div className={`rounded-md border ${colors.bg} ${colors.border} p-4 mb-3`}>
+        <h4 className={`font-bold text-sm mb-3 flex items-center gap-1.5 ${colors.heading}`}><Compass className="w-4 h-4" aria-hidden />כך ניגשים לשאלה:</h4>
         <ol className="space-y-3">
           {guide.approach.map((s, i) => (
             <li key={i} className="flex items-start gap-2.5">
               <span className={`w-5 h-5 rounded-full ${colors.step} text-white text-[11px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5`}>{i + 1}</span>
               <div>
-                <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{s.step}</span>
-                <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed mt-0.5">{s.detail}</p>
+                <span className="font-semibold text-exam-ink text-sm">{s.step}</span>
+                <p className="text-exam-ink-soft text-xs leading-relaxed mt-0.5">{s.detail}</p>
               </div>
             </li>
           ))}
         </ol>
       </div>
 
-      <div className="rounded-2xl border border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/30 p-4 mb-3">
-        <h4 className="font-bold text-sm mb-3 text-orange-800 dark:text-orange-300">🆘 נתקעת? פרוטוקול החילוץ:</h4>
+      <div className="rounded-md border border-exam-alt/40 bg-exam-alt-bg p-4 mb-3">
+        <h4 className="font-bold text-sm mb-3 text-exam-alt flex items-center gap-1.5"><LifeBuoy className="w-4 h-4" aria-hidden />נתקעת? פרוטוקול החילוץ:</h4>
         <div className="space-y-3">
           {guide.stuck.map((s, i) => (
             <div key={i} className="flex items-start gap-2.5">
-              <span className="text-orange-400 flex-shrink-0 mt-0.5 text-sm">◄</span>
+              <span className="text-exam-alt flex-shrink-0 mt-0.5 text-sm">◄</span>
               <div>
-                <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{s.step}</span>
-                <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed mt-0.5">{s.detail}</p>
+                <span className="font-semibold text-exam-ink text-sm">{s.step}</span>
+                <p className="text-exam-ink-soft text-xs leading-relaxed mt-0.5">{s.detail}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 mb-3">
-        <h4 className="font-bold text-sm mb-3 text-slate-800 dark:text-slate-100">📝 דוגמה מלאה עם פתרון צעד-אחר-צעד:</h4>
-        <p dir="ltr" className="text-sm text-slate-800 dark:text-slate-100 leading-relaxed mb-3 font-medium">
+      <div className="rounded-md border border-exam-border bg-exam-surface p-4 mb-3">
+        <h4 className="font-bold text-sm mb-3 text-exam-ink flex items-center gap-1.5"><NotebookPen className="w-4 h-4" aria-hidden />דוגמה מלאה עם פתרון צעד-אחר-צעד:</h4>
+        <p dir="ltr" className="font-serif text-sm text-exam-ink leading-relaxed mb-3 font-medium">
           {guide.workedExample.prompt}
         </p>
         <div dir="ltr" className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
           {guide.workedExample.options.map((opt, i) => (
             <div
               key={i}
-              className={`px-3 py-2 rounded-lg text-sm border ${
+              className={`font-serif px-3 py-2 rounded-sm text-sm border ${
                 i === guide.workedExample.correctIndex
-                  ? 'border-green-400 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300 font-semibold'
-                  : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400'
+                  ? 'border-exam-sage bg-exam-sage-bg text-exam-sage-strong font-semibold'
+                  : 'border-exam-border text-exam-ink-soft'
               }`}
             >
-              {i + 1}. {opt} {i === guide.workedExample.correctIndex && '✓'}
+              {i + 1}. {opt} {i === guide.workedExample.correctIndex && <Check className="inline w-3.5 h-3.5" strokeWidth={3} aria-hidden />}
             </div>
           ))}
         </div>
         <ol className="space-y-2">
           {guide.workedExample.walkthrough.map((line, i) => (
-            <li key={i} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              <span className="text-slate-300 dark:text-slate-600 flex-shrink-0 font-mono">{i + 1}.</span>
+            <li key={i} className="flex items-start gap-2 text-xs text-exam-ink-soft leading-relaxed">
+              <span className="text-exam-ink-soft flex-shrink-0 font-mono">{i + 1}.</span>
               <span>{line}</span>
             </li>
           ))}
@@ -633,13 +638,13 @@ export default function StrategiesPage() {
   const [topic, setTopic] = useState<TopicId | null>(null);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-24" dir="rtl">
+    <div className="min-h-screen bg-exam-paper pb-24" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
 
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-4 py-5">
-        <h1 className="text-2xl font-black text-slate-900 dark:text-white">🧠 המדריך המלא לפתרון האמירנ&quot;ט</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+      <div className="bg-exam-surface border-b border-exam-border px-4 py-5">
+        <h1 className="text-2xl font-black text-exam-ink flex items-center gap-2"><Brain className="w-6 h-6" aria-hidden />המדריך המלא לפתרון האמירנ&quot;ט</h1>
+        <p className="text-sm text-exam-ink-soft mt-1">
           בחר נושא — כל נושא ממוקד ומהיר לגלילה
         </p>
       </div>
@@ -652,11 +657,11 @@ export default function StrategiesPage() {
               <button
                 key={t.id}
                 onClick={() => setTopic(t.id)}
-                className={`${t.color} rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-right hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col gap-1.5`}
+                className="bg-exam-surface rounded-md border border-exam-border p-4 text-right hover:bg-exam-paper-alt hover:border-exam-border-strong transition-colors flex flex-col gap-1.5"
               >
-                <span className="text-2xl">{t.icon}</span>
-                <span className="font-bold text-slate-900 dark:text-white text-sm leading-tight">{t.title}</span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">{t.desc}</span>
+                <t.icon className="w-6 h-6 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+                <span className="font-bold text-exam-ink text-sm leading-tight">{t.title}</span>
+                <span className="text-[11px] text-exam-ink-soft leading-snug">{t.desc}</span>
               </button>
             ))}
           </div>
@@ -665,23 +670,23 @@ export default function StrategiesPage() {
           <div>
             <button
               onClick={() => setTopic(null)}
-              className="text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 mb-5 flex items-center gap-1"
+              className="text-sm text-exam-ink-soft hover:text-exam-ink mb-5 flex items-center gap-1"
             >
               ← כל הנושאים
             </button>
 
             {topic === 'rules' && (
               <section>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">חוקי המשחק</h2>
-                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <h2 className="text-lg font-black text-exam-ink mb-3">חוקי המשחק</h2>
+                <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={RULES_INTRO} tone="intro" />
                 </div>
                 <div className="space-y-4">
                   {GAME_RULES.map(rule => (
-                    <div key={rule.title} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
-                      <span className="text-2xl flex-shrink-0">{rule.icon}</span>
+                    <div key={rule.title} className="bg-exam-surface rounded-md border border-exam-border p-4 flex items-start gap-3">
+                      <rule.icon className="w-6 h-6 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-1.5">{rule.title}</h3>
+                        <h3 className="font-bold text-exam-ink text-sm mb-1.5">{rule.title}</h3>
                         <TextBlock text={rule.body} tone="body" />
                       </div>
                     </div>
@@ -692,25 +697,25 @@ export default function StrategiesPage() {
 
             {topic === 'time' && (
               <section>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">תקציב הזמן שלך — כולל &quot;תקציב תקיעה&quot;</h2>
-                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <h2 className="text-lg font-black text-exam-ink mb-3">תקציב הזמן שלך — כולל &quot;תקציב תקיעה&quot;</h2>
+                <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={TIME_INTRO} tone="intro" />
                 </div>
                 <div className="space-y-3">
                   {TIME_BUDGET.map(row => (
-                    <div key={row.section} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                    <div key={row.section} className="bg-exam-surface rounded-md border border-exam-border p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-bold text-slate-900 dark:text-white text-sm">{row.section}</h3>
-                        <span className="text-xs font-mono bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-1 rounded-lg">{row.total}</span>
+                        <h3 className="font-bold text-exam-ink text-sm">{row.section}</h3>
+                        <span className="text-xs font-mono bg-exam-paper-alt text-exam-ink-soft px-2 py-1 rounded-sm">{row.total}</span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 mb-2">
-                        <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl px-3 py-2">
-                          <div className="text-[11px] text-slate-400 dark:text-slate-500">זמן לשאלה</div>
-                          <div className="text-sm font-bold text-slate-800 dark:text-slate-100">{row.perQ}</div>
+                        <div className="bg-exam-paper-alt rounded-sm px-3 py-2">
+                          <div className="text-[11px] text-exam-ink-soft">זמן לשאלה</div>
+                          <div className="text-sm font-bold text-exam-ink">{row.perQ}</div>
                         </div>
-                        <div className="bg-orange-50 dark:bg-orange-950/30 rounded-xl px-3 py-2">
-                          <div className="text-[11px] text-orange-400">מקסימום תקיעה</div>
-                          <div className="text-sm font-bold text-orange-700 dark:text-orange-300">{row.stuckCap}</div>
+                        <div className="bg-exam-alt-bg rounded-sm px-3 py-2">
+                          <div className="text-[11px] text-exam-alt">מקסימום תקיעה</div>
+                          <div className="text-sm font-bold text-exam-alt">{row.stuckCap}</div>
                         </div>
                       </div>
                       <TextBlock text={row.note} tone="muted" />
@@ -726,9 +731,9 @@ export default function StrategiesPage() {
 
             {topic === 'connectors' && (
               <section>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">מילות הקישור שקובעות הכל</h2>
+                <h2 className="text-lg font-black text-exam-ink mb-3">מילות הקישור שקובעות הכל</h2>
 
-                <div className="mb-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <div className="mb-6 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={CONNECTORS_INTRO} tone="intro" />
                 </div>
 
@@ -736,8 +741,8 @@ export default function StrategiesPage() {
                   {CONNECTOR_CATEGORIES.map(cat => (
                     <div key={cat.id}>
                       <div className="flex items-center gap-2.5 mb-2">
-                        <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg ${CATEGORY_COLOR[cat.color]}`}>{cat.icon}</span>
-                        <h3 className="font-black text-slate-900 dark:text-white text-base">{cat.title}</h3>
+                        <span className={`w-9 h-9 rounded-md flex items-center justify-center ${CATEGORY_COLOR[cat.color]}`}><cat.icon className="w-4 h-4" strokeWidth={1.75} aria-hidden /></span>
+                        <h3 className="font-black text-exam-ink text-base">{cat.title}</h3>
                       </div>
                       <div className="mb-3">
                         <TextBlock text={cat.intro} tone="body" />
@@ -747,13 +752,13 @@ export default function StrategiesPage() {
                         {cat.words.map(w => (
                           <div key={w.word}>
                             <div className="flex items-baseline gap-2 flex-wrap mb-1">
-                              <span dir="ltr" className="font-bold text-slate-900 dark:text-white text-sm">{w.word}</span>
-                              <span className="text-slate-400 dark:text-slate-500 text-xs">— {w.meaning}</span>
+                              <span dir="ltr" className="font-serif font-bold text-exam-ink text-sm">{w.word}</span>
+                              <span className="text-exam-ink-soft text-xs">— {w.meaning}</span>
                             </div>
                             <div className="mb-2">
                               <TextBlock text={w.grammar} tone="body" />
                             </div>
-                            <p dir="ltr" className="text-sm text-slate-800 dark:text-slate-100 italic bg-slate-50 dark:bg-slate-700/50 rounded-lg px-3 py-1.5 mb-1.5">
+                            <p dir="ltr" className="font-serif text-sm text-exam-ink italic bg-exam-paper-alt rounded-sm px-3 py-1.5 mb-1.5">
                               {w.example}
                             </p>
                             <TextBlock text={w.exampleExplain} tone="muted" />
@@ -764,7 +769,7 @@ export default function StrategiesPage() {
                   ))}
                 </div>
 
-                <div className="mt-6 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-2xl p-4">
+                <div className="mt-6 bg-exam-accent/10 border border-exam-accent/30 rounded-md p-4">
                   <TextBlock text={CONNECTORS_OUTRO} tone="intro" />
                 </div>
               </section>
@@ -772,16 +777,16 @@ export default function StrategiesPage() {
 
             {topic === 'invest' && (
               <section>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">איפה כן שווה &quot;להיתקע&quot;</h2>
-                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <h2 className="text-lg font-black text-exam-ink mb-3">איפה כן שווה &quot;להיתקע&quot;</h2>
+                <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={INVEST_INTRO} tone="intro" />
                 </div>
                 <div className="space-y-3">
                   {INVEST_POINTS.map(p => (
-                    <div key={p.title} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 flex items-start gap-3">
-                      <span className="text-xl flex-shrink-0">{p.icon}</span>
+                    <div key={p.title} className="bg-exam-surface rounded-md border border-exam-border p-4 flex items-start gap-3">
+                      <p.icon className="w-5 h-5 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-1">{p.title}</h3>
+                        <h3 className="font-bold text-exam-ink text-sm mb-1">{p.title}</h3>
                         <TextBlock text={p.body} tone="body" />
                       </div>
                     </div>
@@ -792,29 +797,29 @@ export default function StrategiesPage() {
 
             {topic === 'methods' && (
               <section>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
-                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <h2 className="text-lg font-black text-exam-ink mb-3">שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
+                <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={METHODS_INTRO} tone="intro" />
                 </div>
                 <div className="space-y-3">
                   {MARKET_METHODS.map(m => (
                     <div
                       key={m.title}
-                      className={`rounded-2xl border p-4 ${
+                      className={`rounded-md border p-4 ${
                         m.recommended
-                          ? 'bg-green-50 dark:bg-green-950/30 border-green-300 dark:border-green-700 ring-1 ring-green-300 dark:ring-green-700'
-                          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'
+                          ? 'bg-exam-sage-bg border-exam-sage ring-1 ring-exam-sage/50'
+                          : 'bg-exam-surface border-exam-border'
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-bold text-slate-900 dark:text-white text-sm">{m.title}</h3>
+                        <h3 className="font-bold text-exam-ink text-sm">{m.title}</h3>
                         {m.recommended && (
-                          <span className="text-[10px] font-bold bg-green-500 text-white px-2 py-0.5 rounded-full">מומלץ</span>
+                          <span className="text-[10px] font-bold bg-exam-sage-strong text-white px-2 py-0.5 rounded-sm">מומלץ</span>
                         )}
                       </div>
-                      <div className="text-xs text-slate-400 dark:text-slate-500 mb-2">{m.who}</div>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-1">{m.fit}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{m.tradeoff}</p>
+                      <div className="text-xs text-exam-ink-soft mb-2">{m.who}</div>
+                      <p className="text-sm text-exam-ink-soft leading-relaxed mb-1">{m.fit}</p>
+                      <p className="text-xs text-exam-ink-soft leading-relaxed">{m.tradeoff}</p>
                     </div>
                   ))}
                 </div>
@@ -823,26 +828,26 @@ export default function StrategiesPage() {
 
             {topic === 'habits' && (
               <section>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white mb-3">ההכנה שעובדת (לפי כל המכונים)</h2>
-                <div className="mb-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <h2 className="text-lg font-black text-exam-ink mb-3">ההכנה שעובדת (לפי כל המכונים)</h2>
+                <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock
                     text='כל השיטות שראית עד כה (מילות קישור, שיטות עבודה לפי סוג, תזמון) הן מיומנויות — ומיומנות לא נקבעת בפעם אחת, היא נבנית בחזרות. ארבעת ההרגלים הבאים לא מחליפים את הידע האסטרטגי, אלא הופכים אותו לאוטומטי, כך שביום המבחן אתה לא צריך "לחשוב" על השיטה — אתה פשוט מיישם אותה.'
                     tone="intro"
                   />
                 </div>
-                <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
+                <div className="bg-exam-surface rounded-md border border-exam-border divide-y divide-exam-border">
                   {[
-                    { icon: '📚', text: '20 דקות קריאה באנגלית כל יום — טקסט לא קל מדי ולא קשה מדי. זו ההמלצה המשותפת לכל המכונים, כי היא בונה זיהוי דפוסי משפט (כולל מילות קישור) באופן טבעי, בלי לשנן בכוח.' },
-                    { icon: '🔗', text: 'שינון מילות קישור — הן מופיעות בכל שלושת סוגי השאלות, ולכן הן ה"מכפיל כוח" היחיד שמשפר בבת אחת גם השלמת משפטים, גם ניסוח מחדש, וגם הבנת הנקרא. תרגל את חבילת 208 המחברים באוצר המילים.', href: '/vocabulary?pack=connectors', cta: 'לתרגול המחברים ←' },
-                    { icon: '⏱️', text: 'סימולציית פרקי הליבה עם טיימר — תרגול תחת מגבלות הזמן ונעילת הפרקים של ששת פרקי הליבה. סוגי הפרקים הניסיוניים והכתיבה עדיין אינם מדומים באתר.', href: '/exam', cta: 'לסימולציית הליבה ←' },
-                    { icon: '🔁', text: 'חזרה על טעויות — כל שאלה שטעית בה נכנסת אצלנו לתור החזרה החכמה, ומופיעה שוב בדיוק כשאתה עומד לשכוח אותה. 10 דקות של חזרה כאלה שוות יותר מ-50 שאלות חדשות, כי הן תוקפות פער ספציפי שכבר זוהה.', href: '/review-queue', cta: 'לתור החזרה ←' },
+                    { icon: BookOpen, text: '20 דקות קריאה באנגלית כל יום — טקסט לא קל מדי ולא קשה מדי. זו ההמלצה המשותפת לכל המכונים, כי היא בונה זיהוי דפוסי משפט (כולל מילות קישור) באופן טבעי, בלי לשנן בכוח.' },
+                    { icon: Link2, text: 'שינון מילות קישור — הן מופיעות בכל שלושת סוגי השאלות, ולכן הן ה"מכפיל כוח" היחיד שמשפר בבת אחת גם השלמת משפטים, גם ניסוח מחדש, וגם הבנת הנקרא. תרגל את חבילת 208 המחברים באוצר המילים.', href: '/vocabulary?pack=connectors', cta: 'לתרגול המחברים ←' },
+                    { icon: Timer, text: 'סימולציית פרקי הליבה עם טיימר — תרגול תחת מגבלות הזמן ונעילת הפרקים של ששת פרקי הליבה. סוגי הפרקים הניסיוניים והכתיבה עדיין אינם מדומים באתר.', href: '/exam', cta: 'לסימולציית הליבה ←' },
+                    { icon: RotateCcw, text: 'חזרה על טעויות — כל שאלה שטעית בה נכנסת אצלנו לתור החזרה החכמה, ומופיעה שוב במרווחים הולכים וגדלים. חזרה ממוקדת כזו לרוב יעילה יותר משאלות חדשות, כי היא תוקפת פער ספציפי שכבר זוהה.', href: '/review-queue', cta: 'לתור החזרה ←' },
                   ].map((h, i) => (
                     <div key={i} className="flex items-start gap-3 p-4">
-                      <span className="text-xl flex-shrink-0">{h.icon}</span>
+                      <h.icon className="w-5 h-5 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
                       <div>
-                        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{h.text}</p>
+                        <p className="text-sm text-exam-ink-soft leading-relaxed">{h.text}</p>
                         {h.href && (
-                          <Link href={h.href} className="inline-block mt-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                          <Link href={h.href} className="inline-block mt-1.5 text-xs font-bold text-exam-accent hover:underline">
                             {h.cta}
                           </Link>
                         )}
@@ -854,14 +859,14 @@ export default function StrategiesPage() {
             )}
 
             {/* CTA */}
-            <div className="bg-blue-600 rounded-2xl p-5 text-center mt-8">
-              <p className="text-white font-bold mb-3">התיאוריה ברורה? עכשיו מיישמים.</p>
+            <div className="bg-exam-accent rounded-md p-5 text-center mt-8">
+              <p className="text-exam-accent-ink font-bold mb-3">התיאוריה ברורה? עכשיו מיישמים.</p>
               <div className="flex gap-3 justify-center">
-                <Link href="/exam" className="px-5 py-2.5 bg-white text-blue-700 rounded-xl text-sm font-bold hover:bg-blue-50 transition-colors">
-                  🎯 סימולציית הליבה
+                <Link href="/exam" className="px-5 py-2.5 bg-exam-accent-ink text-exam-accent rounded-sm text-sm font-bold hover:opacity-90 transition-opacity inline-flex items-center gap-1.5">
+                  <Target className="w-4 h-4" aria-hidden />סימולציית הליבה
                 </Link>
-                <Link href="/practice" className="px-5 py-2.5 bg-blue-500 text-white rounded-xl text-sm font-bold hover:bg-blue-400 transition-colors">
-                  ✏️ תרגול ממוקד
+                <Link href="/practice" className="px-5 py-2.5 bg-exam-accent-ink/20 text-exam-accent-ink rounded-sm text-sm font-bold hover:bg-exam-accent-ink/30 transition-colors inline-flex items-center gap-1.5">
+                  <PenLine className="w-4 h-4" aria-hidden />תרגול ממוקד
                 </Link>
               </div>
             </div>

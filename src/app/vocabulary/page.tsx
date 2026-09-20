@@ -5,6 +5,22 @@ import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
+import {
+  BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
+  RotateCcw, Trophy, ThumbsUp, Flame, Settings, Check, X, Target, Clock,
+  TrendingDown, Zap, Link2, GraduationCap, Palette, Package, CheckCircle2,
+} from 'lucide-react';
+
+/** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
+function StarRow({ n, size = 14 }: { n: number; size?: number }) {
+  return (
+    <span className="inline-flex items-center gap-0.5" aria-label={`רמה ${n} מתוך 5`}>
+      {Array.from({ length: 5 }, (_, i) => (
+        <Star key={i} width={size} height={size} className={i < n ? 'fill-current text-exam-alt' : 'text-exam-border'} aria-hidden />
+      ))}
+    </span>
+  );
+}
 
 interface VocabWord {
   id: string;
@@ -291,15 +307,15 @@ function VocabularyContent() {
 
   // ─── Themed packs definition ───────────────────────────────────────────────
   const THEMED_PACKS = [
-    ...(myWords.length > 0 ? [{ id: 'my-mistakes', label: `🔻 המילים שהפילו אותי (${myWords.length})`, filter: (w: VocabWord) => w.category === 'my-mistakes' }] : []),
-    { id: 'verbs',      label: '⚡ פעלים חזקים',    filter: (w: VocabWord) => w.category === 'verbs' },
-    { id: 'connectors', label: '🔗 מחברים ומעברים', filter: (w: VocabWord) => w.category === 'connectors' },
-    { id: 'academic',   label: '🎓 אקדמי',           filter: (w: VocabWord) => w.category === 'academic' },
-    { id: 'advanced',   label: '🔥 מתקדם',           filter: (w: VocabWord) => w.difficulty_level >= 4 },
-    { id: 'easy',       label: '✅ קל להתחלה',       filter: (w: VocabWord) => w.difficulty_level <= 2 },
-    { id: 'adjectives', label: '🎨 תיאורים',         filter: (w: VocabWord) => w.category === 'adjectives' || w.category === 'descriptive' },
-    { id: 'nouns',      label: '📦 שמות עצם',        filter: (w: VocabWord) => w.category === 'nouns' },
-    { id: 'favorites',  label: '❤️ מועדפים',         filter: (w: VocabWord) => favorites.has(w.id) },
+    ...(myWords.length > 0 ? [{ id: 'my-mistakes', icon: TrendingDown, label: `המילים שהפילו אותי (${myWords.length})`, filter: (w: VocabWord) => w.category === 'my-mistakes' }] : []),
+    { id: 'verbs',      icon: Zap,            label: 'פעלים חזקים',    filter: (w: VocabWord) => w.category === 'verbs' },
+    { id: 'connectors', icon: Link2,          label: 'מחברים ומעברים', filter: (w: VocabWord) => w.category === 'connectors' },
+    { id: 'academic',   icon: GraduationCap,  label: 'אקדמי',           filter: (w: VocabWord) => w.category === 'academic' },
+    { id: 'advanced',   icon: Flame,          label: 'מתקדם',           filter: (w: VocabWord) => w.difficulty_level >= 4 },
+    { id: 'easy',       icon: CheckCircle2,   label: 'קל להתחלה',       filter: (w: VocabWord) => w.difficulty_level <= 2 },
+    { id: 'adjectives', icon: Palette,        label: 'תיאורים',         filter: (w: VocabWord) => w.category === 'adjectives' || w.category === 'descriptive' },
+    { id: 'nouns',      icon: Package,        label: 'שמות עצם',        filter: (w: VocabWord) => w.category === 'nouns' },
+    { id: 'favorites',  icon: Heart,          label: 'מועדפים',         filter: (w: VocabWord) => favorites.has(w.id) },
   ];
 
   // ─── Compute filtered words ────────────────────────────────────────────────
@@ -651,12 +667,12 @@ function VocabularyContent() {
 
       <div className="max-w-lg mx-auto px-4 pt-4 pb-32">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">📖 אוצר מילים</h1>
+          <h1 className="text-2xl font-bold text-exam-ink flex items-center gap-2"><BookOpen className="w-6 h-6" strokeWidth={1.5} aria-hidden />אוצר מילים</h1>
           <button
             onClick={() => setShowFavoritesList(true)}
             className="flex items-center gap-1.5 px-3 py-2 rounded-sm bg-exam-wrong-bg border border-exam-wrong/40 text-exam-wrong font-semibold text-sm hover:opacity-80 transition-opacity"
           >
-            <span>❤️</span>
+            <Heart className="w-4 h-4" aria-hidden />
             <span>מועדפים</span>
             {favorites.size > 0 && (
               <span className="bg-exam-wrong text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
@@ -670,35 +686,35 @@ function VocabularyContent() {
         {showFavoritesList && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowFavoritesList(false)}>
             <div
-              className="bg-white dark:bg-slate-800 rounded-t-3xl w-full max-w-lg max-h-[80vh] flex flex-col"
+              className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[80vh] flex flex-col"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">❤️</span>
-                  <span className="font-bold text-slate-900 dark:text-white text-lg">מילים שמורות</span>
-                  <span className="bg-exam-wrong-bg text-exam-wrong text-xs font-bold px-2 py-0.5 rounded-full">{favorites.size}</span>
+                  <Heart className="w-5 h-5 text-exam-wrong" fill="currentColor" aria-hidden />
+                  <span className="font-bold text-exam-ink text-lg">מילים שמורות</span>
+                  <span className="bg-exam-wrong-bg text-exam-wrong text-xs font-bold px-2 py-0.5 rounded-sm">{favorites.size}</span>
                 </div>
-                <button onClick={() => setShowFavoritesList(false)} className="text-slate-400 hover:text-slate-600 text-2xl leading-none">×</button>
+                <button onClick={() => setShowFavoritesList(false)} className="text-exam-ink-soft hover:text-exam-ink text-2xl leading-none">×</button>
               </div>
 
               {/* Actions */}
               {favorites.size > 0 && (
-                <div className="px-5 py-3 flex gap-2 border-b border-slate-100">
+                <div className="px-5 py-3 flex gap-2 border-b border-exam-border">
                   <button
                     onClick={() => {
                       setActivePack('favorites');
                       setShowFavoritesList(false);
                     }}
-                    className="flex-1 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors"
+                    className="flex-1 py-2 bg-exam-accent text-exam-accent-ink rounded-sm text-sm font-semibold hover:opacity-90 transition-opacity"
                   >תרגל מועדפים בלבד ←</button>
                   <button
                     onClick={() => {
                       if (!window.confirm(`למחוק את כל ${favorites.size} המועדפים?`)) return;
                       clearAllFavorites();
                     }}
-                    className="px-3 py-2 bg-slate-100 text-slate-500 rounded-xl text-sm hover:bg-slate-200 transition-colors"
+                    className="px-3 py-2 bg-exam-paper-alt text-exam-ink-soft rounded-sm text-sm hover:bg-exam-border/30 transition-colors"
                   >נקה הכל</button>
                 </div>
               )}
@@ -707,30 +723,30 @@ function VocabularyContent() {
               <div className="overflow-y-auto flex-1 px-5 py-3">
                 {favorites.size === 0 ? (
                   <div className="text-center py-12">
-                    <div className="text-4xl mb-3">🤍</div>
-                    <p className="text-slate-500 text-sm">עדיין לא שמרת מילים.</p>
-                    <p className="text-slate-400 text-xs mt-1">לחץ ❤️ על כרטיסייה כדי לשמור אותה כאן.</p>
+                    <Heart className="w-10 h-10 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+                    <p className="text-exam-ink-soft text-sm">עדיין לא שמרת מילים.</p>
+                    <p className="text-exam-ink-soft text-xs mt-1 flex items-center justify-center gap-1">לחץ <Heart className="inline w-3.5 h-3.5" aria-hidden /> על כרטיסייה כדי לשמור אותה כאן.</p>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     {allWords.filter(w => favorites.has(w.id)).map(w => (
-                      <div key={w.id} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200 dark:border-slate-600">
+                      <div key={w.id} className="flex items-center justify-between p-3 bg-exam-paper-alt rounded-sm border border-exam-border">
                         <div dir="ltr" className="flex-1 min-w-0">
-                          <div className="font-bold text-slate-900 dark:text-white text-sm">{w.word}</div>
-                          <div className="text-slate-500 text-xs mt-0.5">{w.hebrew_translation}</div>
+                          <div className="font-serif font-bold text-exam-ink text-sm">{w.word}</div>
+                          <div className="text-exam-ink-soft text-xs mt-0.5">{w.hebrew_translation}</div>
                           {w.example_sentence && (
-                            <div className="text-slate-400 text-xs mt-0.5 italic truncate">{w.example_sentence}</div>
+                            <div className="font-serif text-exam-ink-soft text-xs mt-0.5 italic truncate">{w.example_sentence}</div>
                           )}
                         </div>
                         <div className="flex items-center gap-2 mr-3 flex-shrink-0">
-                          <button onClick={() => speak(w.word)} className="text-lg hover:scale-110 transition-transform">🔊</button>
+                          <button onClick={() => speak(w.word)} className="hover:scale-110 transition-transform text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>
                           <button
                             onClick={() => removeFavorite(w.id)}
                             aria-label={`הסר את ${w.word} מהמועדפים`}
                             title="הסר מהמועדפים"
                             className="flex items-center gap-1 px-2 py-1 rounded-sm text-exam-wrong hover:text-white hover:bg-exam-wrong border border-exam-wrong/40 text-xs font-semibold transition-colors"
                           >
-                            <span className="text-base leading-none">🗑️</span>
+                            <Trash2 className="w-3.5 h-3.5" aria-hidden />
                             <span>הסר</span>
                           </button>
                         </div>
@@ -772,28 +788,28 @@ function VocabularyContent() {
                   onClick={() => setShowFilterDrawer(true)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-sm border text-sm font-semibold transition-colors ${hasActive ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
                 >
-                  🔍 סינון{activeCount > 0 ? ` (${activeCount})` : ''}
+                  <Search className="inline w-4 h-4 ml-1" strokeWidth={1.75} aria-hidden />סינון{activeCount > 0 ? ` (${activeCount})` : ''}
                 </button>
                 {activePack && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-accent/10 text-exam-accent rounded-full text-xs font-medium">
+                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-accent/10 text-exam-accent rounded-sm text-xs font-medium">
                     {THEMED_PACKS.find(p => p.id === activePack)?.label}
-                    <button onClick={() => setActivePack('')} className="hover:text-blue-900 font-bold leading-none">×</button>
+                    <button onClick={() => setActivePack('')} className="hover:opacity-70 font-bold leading-none">×</button>
                   </span>
                 )}
                 {filterCat && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium">
+                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-paper-alt text-exam-ink-soft rounded-sm text-xs font-medium">
                     {CATEGORY_LABELS[filterCat] ?? filterCat}
-                    <button onClick={() => setFilterCat('')} className="hover:text-slate-900 font-bold leading-none">×</button>
+                    <button onClick={() => setFilterCat('')} className="hover:text-exam-ink font-bold leading-none">×</button>
                   </span>
                 )}
                 {filterDiff > 0 && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
-                    {'★'.repeat(filterDiff)}
-                    <button onClick={() => setFilterDiff(0)} className="hover:text-amber-900 font-bold leading-none">×</button>
+                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-alt-bg text-exam-alt rounded-sm text-xs font-medium">
+                    <StarRow n={filterDiff} />
+                    <button onClick={() => setFilterDiff(0)} className="hover:opacity-70 font-bold leading-none">×</button>
                   </span>
                 )}
                 {search.trim() && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-sage-bg text-exam-sage-strong rounded-full text-xs font-medium max-w-[140px]">
+                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-sage-bg text-exam-sage-strong rounded-sm text-xs font-medium max-w-[140px]">
                     <span className="truncate">&ldquo;{search}&rdquo;</span>
                     <button onClick={() => setSearch('')} className="hover:text-exam-sage-strong font-bold leading-none flex-shrink-0">×</button>
                   </span>
@@ -806,9 +822,9 @@ function VocabularyContent() {
         {/* ── Filter drawer ─────────────────────────────────────────────────── */}
         {showFilterDrawer && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowFilterDrawer(false)}>
-            <div className="bg-white dark:bg-slate-800 rounded-t-3xl w-full max-w-lg max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
-              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-                <span className="font-bold text-slate-900 dark:text-white text-lg">סינון מילים</span>
+            <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
+              <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
+                <span className="font-bold text-exam-ink text-lg">סינון מילים</span>
                 <div className="flex items-center gap-4">
                   {!!(activePack || filterCat || filterDiff || search) && (
                     <button
@@ -816,49 +832,49 @@ function VocabularyContent() {
                       className="text-sm text-exam-wrong font-semibold"
                     >נקה הכל</button>
                   )}
-                  <button onClick={() => setShowFilterDrawer(false)} className="text-2xl text-slate-400 leading-none hover:text-slate-600">×</button>
+                  <button onClick={() => setShowFilterDrawer(false)} className="text-2xl text-exam-ink-soft leading-none hover:text-exam-ink">×</button>
                 </div>
               </div>
 
               <div className="overflow-y-auto px-5 py-5 space-y-6">
                 {/* Themed packs */}
                 <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">סטים נושאיים</div>
+                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">סטים נושאיים</div>
                   <div className="flex flex-wrap gap-2">
                     {THEMED_PACKS.map(pack => (
                       <button
                         key={pack.id}
                         onClick={() => setActivePack(activePack === pack.id ? '' : pack.id)}
-                        className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${activePack === pack.id ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
-                      >{pack.label}</button>
+                        className={`px-3 py-1.5 rounded-sm text-sm font-medium border transition-colors flex items-center gap-1.5 ${activePack === pack.id ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
+                      ><pack.icon className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />{pack.label}</button>
                     ))}
                   </div>
                 </div>
 
                 {/* Categories */}
                 <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">קטגוריה</div>
+                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">קטגוריה</div>
                   <div className="flex flex-wrap gap-2">
-                    <button onClick={() => setFilterCat('')} className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${!filterCat ? 'bg-slate-800 text-white border-slate-800' : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-slate-400'}`}>הכל</button>
+                    <button onClick={() => setFilterCat('')} className={`px-3 py-1.5 rounded-sm text-sm font-medium border transition-colors ${!filterCat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>הכל</button>
                     {categories.map(cat => (
-                      <button key={cat} onClick={() => setFilterCat(cat === filterCat ? '' : cat)} className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${filterCat === cat ? 'bg-slate-800 text-white border-slate-800' : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-slate-400'}`}>{CATEGORY_LABELS[cat] ?? cat}</button>
+                      <button key={cat} onClick={() => setFilterCat(cat === filterCat ? '' : cat)} className={`px-3 py-1.5 rounded-sm text-sm font-medium border transition-colors ${filterCat === cat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{CATEGORY_LABELS[cat] ?? cat}</button>
                     ))}
                   </div>
                 </div>
 
                 {/* Difficulty */}
                 <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">רמה</div>
+                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">רמה</div>
                   <div className="flex gap-2 flex-wrap">
                     {[0, 1, 2, 3, 4, 5].map(d => (
-                      <button key={d} onClick={() => setFilterDiff(d === filterDiff ? 0 : d)} className={`w-10 h-10 rounded-xl text-xs font-bold border transition-colors ${filterDiff === d && d !== 0 ? 'bg-slate-800 text-white border-slate-800' : d === 0 ? 'bg-white dark:bg-slate-700 text-slate-500 dark:text-slate-300 border-slate-200 dark:border-slate-600 text-[10px]' : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:border-slate-400'}`}>{d === 0 ? 'הכל' : '★'.repeat(d)}</button>
+                      <button key={d} onClick={() => setFilterDiff(d === filterDiff ? 0 : d)} className={`w-10 h-10 rounded-sm text-xs font-bold border transition-colors flex items-center justify-center ${filterDiff === d && d !== 0 ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : d === 0 ? 'bg-exam-surface text-exam-ink-soft border-exam-border text-[10px]' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{d === 0 ? 'הכל' : <StarRow n={d} size={10} />}</button>
                     ))}
                   </div>
                 </div>
 
                 {/* Search */}
                 <div>
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-3">חיפוש</div>
+                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">חיפוש</div>
                   <input
                     type="text"
                     value={search}
@@ -869,10 +885,10 @@ function VocabularyContent() {
                 </div>
               </div>
 
-              <div className="px-5 py-4 border-t border-slate-100 dark:border-slate-700">
+              <div className="px-5 py-4 border-t border-exam-border">
                 <button
                   onClick={() => setShowFilterDrawer(false)}
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm transition-colors"
+                  className="w-full py-3 bg-exam-accent hover:opacity-90 text-exam-accent-ink rounded-sm font-bold text-sm transition-opacity"
                 >הצג {filteredWords.length} מילים</button>
               </div>
             </div>
@@ -886,12 +902,12 @@ function VocabularyContent() {
           <>
             {deck.length > 0 && (
               <div className="mb-4">
-                <div className="flex justify-between text-xs text-slate-500 mb-1.5">
-                  <span>נותרו <span className="font-bold text-slate-700 dark:text-slate-200">{deck.length}</span> מילים</span>
+                <div className="flex justify-between text-xs text-exam-ink-soft mb-1.5">
+                  <span>נותרו <span className="font-bold text-exam-ink">{deck.length}</span> מילים</span>
                   {progressScopeKnown > 0 && <span>ידעת <span className="font-bold text-exam-sage-strong">{progressScopeKnown}</span> / {progressScopeTotal} ({Math.round(progressScopeKnown / progressScopeTotal * 100)}%)</span>}
                 </div>
                 {progressScopeKnown > 0 && (
-                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
+                  <div className="w-full bg-exam-paper-alt rounded-full h-1.5">
                     <div className="bg-exam-sage-strong h-1.5 rounded-full transition-all" style={{ width: `${Math.round(progressScopeKnown / progressScopeTotal * 100)}%` }} />
                   </div>
                 )}
@@ -920,31 +936,31 @@ function VocabularyContent() {
                   onTouchEnd={onDragEnd}
                 >
                   {/* Swipe overlays */}
-                  <div className="absolute inset-0 rounded-md bg-exam-sage-strong flex items-center justify-center text-white text-2xl font-black pointer-events-none" style={{ opacity: knewOpacity }}>✓ ידעתי!</div>
-                  <div className="absolute inset-0 rounded-md bg-exam-wrong flex items-center justify-center text-white text-2xl font-black pointer-events-none" style={{ opacity: unknownOpacity }}>✗ לא ידעתי</div>
+                  <div className="absolute inset-0 rounded-md bg-exam-sage-strong flex items-center justify-center gap-2 text-white text-2xl font-black pointer-events-none" style={{ opacity: knewOpacity }}><Check strokeWidth={3} aria-hidden />ידעתי!</div>
+                  <div className="absolute inset-0 rounded-md bg-exam-wrong flex items-center justify-center gap-2 text-white text-2xl font-black pointer-events-none" style={{ opacity: unknownOpacity }}><X strokeWidth={3} aria-hidden />לא ידעתי</div>
 
                   {/* Favorite button */}
                   <button
                     onClick={e => toggleFavorite(current.id, e)}
-                    className="absolute top-4 right-4 text-xl z-10"
+                    className="absolute top-4 right-4 z-10 text-exam-wrong"
                     aria-label={favorites.has(current.id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
                     aria-pressed={favorites.has(current.id)}
-                  >{favorites.has(current.id) ? '❤️' : '🤍'}</button>
+                  ><Heart className="w-5 h-5" fill={favorites.has(current.id) ? 'currentColor' : 'none'} aria-hidden /></button>
 
                   {!flipped ? (
                     <div className="text-center" dir="ltr">
-                      <div className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-4 ${CATEGORY_COLORS[current.category] ?? 'bg-slate-100 text-slate-600'}`}>
+                      <div className={`inline-block px-3 py-1 rounded-sm text-xs font-medium mb-4 ${CATEGORY_COLORS[current.category] ?? 'bg-exam-paper-alt text-exam-ink-soft'}`}>
                         {CATEGORY_LABELS[current.category] ?? current.category}
                       </div>
                       <div className="flex items-center justify-center gap-3 mb-2">
                         <div className="font-serif text-5xl font-black text-exam-ink leading-tight">{current.word}</div>
                         <button
                           onClick={e => { e.stopPropagation(); speak(current.word); }}
-                          className="text-2xl hover:scale-110 transition-transform"
+                          className="hover:scale-110 transition-transform text-exam-ink-soft"
                           title="הגייה"
-                        >🔊</button>
+                        ><Volume2 className="w-6 h-6" aria-hidden /></button>
                       </div>
-                      <div className="text-amber-500 text-lg mb-4">{'★'.repeat(current.difficulty_level)}{'☆'.repeat(5 - current.difficulty_level)}</div>
+                      <div className="mb-4 flex justify-center"><StarRow n={current.difficulty_level} size={18} /></div>
 
                       {showHint ? (
                         <div className="font-serif mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt italic leading-relaxed text-left">
@@ -953,9 +969,9 @@ function VocabularyContent() {
                       ) : (
                         <button
                           onClick={e => { e.stopPropagation(); setShowHint(true); }}
-                          className="text-xs text-amber-600 hover:text-amber-700 mt-2"
+                          className="text-xs text-exam-alt hover:opacity-80 mt-2 inline-flex items-center gap-1"
                           dir="rtl"
-                        >💡 הצג משפט לדוגמה</button>
+                        ><Lightbulb className="w-3.5 h-3.5" aria-hidden />הצג משפט לדוגמה</button>
                       )}
 
                       <button
@@ -967,8 +983,8 @@ function VocabularyContent() {
                   ) : (
                     <div className="text-center" dir="rtl">
                       <div className="flex items-center justify-center gap-2 mb-1" dir="ltr">
-                        <span className="text-lg font-bold text-slate-500">{current.word}</span>
-                        <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-lg">🔊</button>
+                        <span className="font-serif text-lg font-bold text-exam-ink-soft">{current.word}</span>
+                        <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>
                       </div>
                       <div className="text-3xl font-black text-exam-accent mb-3">{current.hebrew_translation}</div>
                       <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">{current.definition}</p>
@@ -989,19 +1005,19 @@ function VocabularyContent() {
               <div className="text-center py-16">
                 {filteredWords.length > 0 && known.size > 0 ? (
                   <>
-                    <div className="text-5xl mb-4">🎉</div>
-                    <div className="text-xl font-bold text-slate-800 dark:text-white mb-2">
+                    <PartyPopper className="w-12 h-12 mx-auto mb-4 text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
+                    <div className="text-xl font-bold text-exam-ink mb-2">
                       {!filterCat && !filterDiff && !search && !activePack ? 'כל הכבוד! סיימת את כל הכרטיסיות' : 'כל הכבוד! סיימת את הסט הזה'}
                     </div>
-                    <p className="text-slate-500 text-sm mb-6">ידעת {progressScopeKnown} מילים</p>
-                    <button onClick={handleResetAll} className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors">
-                      התחל מחדש 🔄
+                    <p className="text-exam-ink-soft text-sm mb-6">ידעת {progressScopeKnown} מילים</p>
+                    <button onClick={handleResetAll} className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-medium hover:opacity-90 transition-opacity inline-flex items-center gap-2">
+                      <RotateCcw className="w-4 h-4" aria-hidden />התחל מחדש
                     </button>
                   </>
                 ) : (
                   <>
-                    <div className="text-4xl mb-3">🔍</div>
-                    <div className="text-slate-500">אין מילים תואמות לחיפוש</div>
+                    <Search className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+                    <div className="text-exam-ink-soft">אין מילים תואמות לחיפוש</div>
                   </>
                 )}
               </div>
@@ -1013,35 +1029,35 @@ function VocabularyContent() {
                   onClick={handleUnknown}
                   disabled={!!animating}
                   className="flex-1 max-w-[140px] py-4 rounded-md bg-exam-wrong-bg border-2 border-exam-wrong/40 text-exam-wrong font-bold text-lg hover:opacity-80 active:scale-95 transition-all disabled:opacity-50"
-                >✗<br /><span className="text-sm font-medium">לא ידעתי</span></button>
+                ><X className="mx-auto" strokeWidth={3} aria-hidden /><br /><span className="text-sm font-medium">לא ידעתי</span></button>
                 <button
                   onClick={handleKnew}
                   disabled={!!animating}
                   className="flex-1 max-w-[140px] py-4 rounded-md bg-exam-sage-bg border-2 border-exam-sage/40 text-exam-sage-strong font-bold text-lg hover:opacity-80 active:scale-95 transition-all disabled:opacity-50"
-                >✓<br /><span className="text-sm font-medium">ידעתי</span></button>
+                ><Check className="mx-auto" strokeWidth={3} aria-hidden /><br /><span className="text-sm font-medium">ידעתי</span></button>
               </div>
             )}
 
             {current && (
-              <p className="text-slate-400 dark:text-slate-500 text-[11px] text-center mt-3">
+              <p className="text-exam-ink-soft text-[11px] text-center mt-3">
                 אפשר גם להחליק את הכרטיס: ימינה = ידעתי ✓ | שמאלה = לא ידעתי ✗
               </p>
             )}
 
             {knownWords.length > 0 && (
-              <div className="mt-8 border-t border-slate-200 pt-6">
+              <div className="mt-8 border-t border-exam-border pt-6">
                 <button
                   onClick={() => setShowKnownList(v => !v)}
                   className="w-full flex items-center justify-between px-4 py-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-sm font-medium text-exam-sage-strong hover:opacity-80 transition-opacity"
                 >
-                  <span>ידעת {knownWords.length} מילים ✓</span>
+                  <span className="inline-flex items-center gap-1">ידעת {knownWords.length} מילים <Check className="inline w-3.5 h-3.5" strokeWidth={3} aria-hidden /></span>
                   <span>{showKnownList ? '▲ סגור' : '▼ הצג'}</span>
                 </button>
                 {showKnownList && (
                   <div className="mt-3 space-y-2">
                     <button onClick={handleResetAll} className="text-xs text-exam-wrong hover:opacity-80 mb-2">אפס הכל ↺</button>
                     {knownWords.map(w => (
-                      <div key={w.id} className="flex items-center justify-between px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
+                      <div key={w.id} className="flex items-center justify-between px-4 py-2.5 bg-exam-surface border border-exam-border rounded-sm">
                         <div dir="ltr">
                           <span className="font-semibold text-slate-800 text-sm">{w.word}</span>
                           <span className="text-slate-400 text-xs mr-2"> — {w.hebrew_translation}</span>
@@ -1070,8 +1086,8 @@ function VocabularyContent() {
           <>
             {quizDeck.length === 0 ? (
               <div className="text-center py-16">
-                <div className="text-4xl mb-3">🔍</div>
-                <div className="text-slate-500">אין מילים תואמות לחיפוש</div>
+                <Search className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+                <div className="text-exam-ink-soft">אין מילים תואמות לחיפוש</div>
               </div>
             ) : quizDeck.length < 4 ? (
               /* Checks the deck actually in play, not the live filteredWords —
@@ -1079,41 +1095,46 @@ function VocabularyContent() {
                  "start a new quiz?" confirm) must not hide an otherwise-valid
                  running quiz behind this error screen. */
               <div className="text-center py-16">
-                <div className="text-4xl mb-3">🔍</div>
-                <div className="text-slate-500">צריך לפחות 4 מילים בסט הנוכחי לחידון</div>
+                <Search className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+                <div className="text-exam-ink-soft">צריך לפחות 4 מילים בסט הנוכחי לחידון</div>
               </div>
             ) : quizDone ? (
               /* Quiz done screen */
               <div className="py-6">
                 <div className="text-center mb-5">
-                  <div className="text-5xl mb-3">🎯</div>
-                  <div className="text-2xl font-black text-slate-900 mb-1">סיימת את החידון!</div>
+                  <Target className="w-10 h-10 mx-auto mb-3 text-exam-accent" strokeWidth={1.5} aria-hidden />
+                  <div className="text-2xl font-black text-exam-ink mb-1">סיימת את החידון!</div>
                   <div className="text-4xl font-black text-exam-accent mb-1">{quizScore.correct} / {quizScore.total}</div>
-                  <p className="text-slate-500 text-sm">
-                    {quizScore.correct === quizScore.total ? '🏆 מושלם!' : quizScore.correct >= quizScore.total * 0.7 ? '👍 כל הכבוד!' : '💪 המשך להתאמן!'}
+                  <p className="text-exam-ink-soft text-sm flex items-center justify-center gap-1.5">
+                    {quizScore.correct === quizScore.total
+                      ? <><Trophy className="w-4 h-4" aria-hidden />מושלם!</>
+                      : quizScore.correct >= quizScore.total * 0.7
+                      ? <><ThumbsUp className="w-4 h-4" aria-hidden />כל הכבוד!</>
+                      : <><BookOpen className="w-4 h-4" aria-hidden />המשך להתאמן!</>}
                   </p>
                 </div>
 
                 {quizWrongWords.length > 0 && (
                   <div className="mb-5">
-                    <div className="text-xs font-semibold text-slate-400 mb-2 px-1">
-                      ✗ {quizWrongWords.length} מילים לחזרה:
+                    <div className="text-xs font-semibold text-exam-ink-soft mb-2 px-1 flex items-center gap-1">
+                      <X className="w-3.5 h-3.5 text-exam-wrong" strokeWidth={3} aria-hidden />
+                      {quizWrongWords.length} מילים לחזרה:
                     </div>
                     <div className="space-y-2">
                       {quizWrongWords.map(w => (
                         <div key={w.id} className="flex items-center justify-between px-4 py-2.5 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm">
                           <div>
-                            <div className="font-semibold text-slate-800 text-sm" dir="ltr">{w.word}</div>
-                            <div className="text-slate-500 text-xs">{w.hebrew_translation}</div>
+                            <div className="font-semibold text-exam-ink text-sm" dir="ltr">{w.word}</div>
+                            <div className="text-exam-ink-soft text-xs">{w.hebrew_translation}</div>
                           </div>
                           <div className="flex items-center gap-2 mr-2">
-                            <button onClick={() => speak(w.word)} className="text-base hover:scale-110 transition-transform" aria-label={`השמע הגייה של ${w.word}`}>🔊</button>
+                            <button onClick={() => speak(w.word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors" aria-label={`השמע הגייה של ${w.word}`}><Volume2 className="w-4 h-4" aria-hidden /></button>
                             <button
                               onClick={e => toggleFavorite(w.id, e)}
-                              className="text-base"
+                              className={favorites.has(w.id) ? 'text-exam-wrong' : 'text-exam-ink-soft'}
                               aria-label={favorites.has(w.id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
                               aria-pressed={favorites.has(w.id)}
-                            >{favorites.has(w.id) ? '❤️' : '🤍'}</button>
+                            ><Heart className="w-4 h-4" fill={favorites.has(w.id) ? 'currentColor' : 'none'} aria-hidden /></button>
                           </div>
                         </div>
                       ))}
@@ -1124,8 +1145,8 @@ function VocabularyContent() {
                 <div className="flex gap-3">
                   <button
                     onClick={startQuiz}
-                    className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
-                  >התחל מחדש 🔄</button>
+                    className="flex-1 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5"
+                  ><RotateCcw className="w-4 h-4" aria-hidden />התחל מחדש</button>
                   {quizWrongWords.length > 0 && (
                     <button
                       onClick={() => {
@@ -1138,34 +1159,34 @@ function VocabularyContent() {
                         setQuizWrongWords([]);
                         setQuizOptions(buildQuizOptions(quizWrongWords[0], quizWrongWords.length >= 4 ? quizWrongWords : filteredWords));
                       }}
-                      className="flex-1 py-3 bg-exam-wrong-bg border border-exam-wrong/40 text-exam-wrong rounded-sm font-semibold hover:opacity-80 transition-opacity text-sm"
-                    >תרגל שגויות בלבד ✗</button>
+                      className="flex-1 py-3 bg-exam-wrong-bg border border-exam-wrong/40 text-exam-wrong rounded-sm font-semibold hover:opacity-80 transition-opacity text-sm flex items-center justify-center gap-1.5"
+                    ><X className="w-4 h-4" strokeWidth={3} aria-hidden />תרגל שגויות בלבד</button>
                   )}
                 </div>
               </div>
             ) : (
               <>
                 {/* Quiz progress */}
-                <div className="flex items-center justify-between mb-4 text-sm text-slate-500">
+                <div className="flex items-center justify-between mb-4 text-sm text-exam-ink-soft">
                   <span>{quizIndex + 1} / {quizDeck.length}</span>
                   <span className="font-semibold text-exam-sage-strong">נכון: {quizScore.correct}</span>
                 </div>
-                <div className="w-full bg-exam-paper-alt rounded-full h-1.5 mb-6">
-                  <div className="bg-blue-500 h-1.5 rounded-full transition-all" style={{ width: `${((quizIndex) / quizDeck.length) * 100}%` }} />
+                <div className="w-full bg-exam-paper-alt rounded-sm h-1.5 mb-6 overflow-hidden">
+                  <div className="bg-exam-accent h-1.5 transition-all" style={{ width: `${((quizIndex) / quizDeck.length) * 100}%` }} />
                 </div>
 
                 {/* Quiz card */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-4">
+                <div className="bg-exam-surface rounded-md border border-exam-border p-6 mb-4">
                   <div className="flex items-start justify-between mb-3">
                     <button
                       onClick={e => toggleFavorite(quizDeck[quizIndex].id, e)}
-                      className="text-xl"
+                      className={favorites.has(quizDeck[quizIndex].id) ? 'text-exam-wrong' : 'text-exam-ink-soft'}
                       aria-label={favorites.has(quizDeck[quizIndex].id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
                       aria-pressed={favorites.has(quizDeck[quizIndex].id)}
-                    >{favorites.has(quizDeck[quizIndex].id) ? '❤️' : '🤍'}</button>
+                    ><Heart className="w-5 h-5" fill={favorites.has(quizDeck[quizIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>
                     <div className="flex items-center gap-2" dir="ltr">
                       <span className="font-serif text-3xl font-black text-exam-ink">{quizDeck[quizIndex].word}</span>
-                      <button onClick={() => speak(quizDeck[quizIndex].word)} className="text-2xl hover:scale-110 transition-transform">🔊</button>
+                      <button onClick={() => speak(quizDeck[quizIndex].word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
                     </div>
                   </div>
                   {quizDeck[quizIndex].example_sentence && (
@@ -1179,7 +1200,7 @@ function VocabularyContent() {
                 <div className="space-y-3 mb-4">
                   {quizOptions.map((opt, i) => {
                     const isCorrectOpt = opt === quizDeck[quizIndex].hebrew_translation;
-                    let cls = 'w-full px-4 py-3 rounded-xl border-2 text-right font-medium text-sm transition-all ';
+                    let cls = 'w-full px-4 py-3 rounded-sm border text-right font-medium text-sm transition-all ';
                     if (quizSelected === null) {
                       cls += 'bg-exam-surface border-exam-border hover:border-exam-accent hover:bg-exam-accent/5 text-exam-ink';
                     } else if (isCorrectOpt) {
@@ -1192,8 +1213,8 @@ function VocabularyContent() {
                     return (
                       <button key={i} onClick={() => handleQuizSelect(i, opt)} className={cls} disabled={quizSelected !== null}>
                         {opt}
-                        {quizSelected !== null && isCorrectOpt && ' ✓'}
-                        {quizSelected === i && !isCorrectOpt && ' ✗'}
+                        {quizSelected !== null && isCorrectOpt && <Check className="inline w-3.5 h-3.5 mr-1" strokeWidth={3} aria-hidden />}
+                        {quizSelected === i && !isCorrectOpt && <X className="inline w-3.5 h-3.5 mr-1" strokeWidth={3} aria-hidden />}
                       </button>
                     );
                   })}
@@ -1201,18 +1222,18 @@ function VocabularyContent() {
 
                 {quizSelected !== null && (
                   <div className="text-center">
-                    <div className={`text-lg font-bold mb-3 ${quizCorrect ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}>
-                      {quizCorrect ? '✓ נכון!' : '✗ לא נכון'}
+                    <div className={`text-lg font-bold mb-3 flex items-center justify-center gap-1.5 ${quizCorrect ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}>
+                      {quizCorrect ? <><Check className="w-4 h-4" strokeWidth={3} aria-hidden />נכון!</> : <><X className="w-4 h-4" strokeWidth={3} aria-hidden />לא נכון</>}
                     </div>
                     {!quizCorrect && (
-                      <div className="text-sm text-slate-500 mb-3">
-                        התשובה הנכונה: <span className="font-bold text-slate-800">{quizDeck[quizIndex].hebrew_translation}</span>
+                      <div className="text-sm text-exam-ink-soft mb-3">
+                        התשובה הנכונה: <span className="font-bold text-exam-ink">{quizDeck[quizIndex].hebrew_translation}</span>
                       </div>
                     )}
                     <button
                       onClick={handleQuizNext}
-                      className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
-                    >{quizIndex + 1 >= quizDeck.length ? 'סיום ✓' : 'הבא ←'}</button>
+                      className="px-8 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-1.5 mx-auto"
+                    >{quizIndex + 1 >= quizDeck.length ? <><Check className="w-4 h-4" strokeWidth={3} aria-hidden />סיום</> : 'הבא ←'}</button>
                   </div>
                 )}
               </>
@@ -1271,31 +1292,37 @@ function VocabularyContent() {
                  the countdown timer keeps ticking (and auto-scoring wrong
                  answers) invisibly in the background. */
               <div className="text-center py-16">
-                <div className="text-4xl mb-3">🔍</div>
-                <div className="text-slate-500">צריך לפחות 4 מילים למבחן מהיר</div>
+                <Search className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+                <div className="text-exam-ink-soft">צריך לפחות 4 מילים למבחן מהיר</div>
               </div>
             ) : timedDone ? (
               /* Timed done screen */
               <div className="py-6">
                 <div className="text-center mb-6">
-                  <div className="text-5xl mb-3">⏱️</div>
-                  <div className="text-2xl font-black text-slate-900 mb-1">המבחן הסתיים!</div>
+                  <Clock className="w-10 h-10 mx-auto mb-3 text-exam-accent" strokeWidth={1.5} aria-hidden />
+                  <div className="text-2xl font-black text-exam-ink mb-1">המבחן הסתיים!</div>
                   <div className="text-5xl font-black text-exam-accent mb-1">{timedScore}/{timedDeck.length}</div>
-                  <p className="text-slate-500 text-sm">
-                    {timedScore === timedDeck.length ? '🏆 מושלם!' : timedScore >= timedDeck.length * 0.7 ? '👍 כל הכבוד!' : '💪 המשך להתאמן!'}
+                  <p className="text-exam-ink-soft text-sm flex items-center justify-center gap-1.5">
+                    {timedScore === timedDeck.length
+                      ? <><Trophy className="w-4 h-4" aria-hidden />מושלם!</>
+                      : timedScore >= timedDeck.length * 0.7
+                      ? <><ThumbsUp className="w-4 h-4" aria-hidden />כל הכבוד!</>
+                      : <><BookOpen className="w-4 h-4" aria-hidden />המשך להתאמן!</>}
                   </p>
                 </div>
 
                 {/* Results list */}
                 <div className="space-y-2 mb-6">
                   {timedResults.map((r, i) => (
-                    <div key={i} className={`flex items-center justify-between px-4 py-3 rounded-sm border-2 ${r.correct ? 'bg-exam-sage-bg border-exam-sage/40' : 'bg-exam-wrong-bg border-exam-wrong/40'}`}>
+                    <div key={i} className={`flex items-center justify-between px-4 py-3 rounded-sm border ${r.correct ? 'bg-exam-sage-bg border-exam-sage/40' : 'bg-exam-wrong-bg border-exam-wrong/40'}`}>
                       <div className="text-left">
-                        <div className="font-bold text-slate-800 text-sm" dir="ltr">{r.word.word}</div>
-                        <div className="text-xs text-slate-500">{r.word.hebrew_translation}</div>
-                        <div className="text-xs text-slate-400">{r.timeTaken.toFixed(1)}ש׳</div>
+                        <div className="font-bold text-exam-ink text-sm" dir="ltr">{r.word.word}</div>
+                        <div className="text-xs text-exam-ink-soft">{r.word.hebrew_translation}</div>
+                        <div className="text-xs text-exam-ink-soft">{r.timeTaken.toFixed(1)}ש׳</div>
                       </div>
-                      <span className="text-xl">{r.correct ? '✓' : '✗'}</span>
+                      {r.correct
+                        ? <Check className="w-5 h-5 text-exam-sage-strong flex-shrink-0" strokeWidth={3} aria-hidden />
+                        : <X className="w-5 h-5 text-exam-wrong flex-shrink-0" strokeWidth={3} aria-hidden />}
                     </div>
                   ))}
                 </div>
@@ -1306,11 +1333,11 @@ function VocabularyContent() {
                   if (hist.length < 2) return null;
                   return (
                     <div className="mb-4">
-                      <div className="text-xs font-semibold text-slate-400 mb-2">ניסיונות אחרונים:</div>
+                      <div className="text-xs font-semibold text-exam-ink-soft mb-2">ניסיונות אחרונים:</div>
                       <div className="flex gap-2 flex-wrap">
                         {hist.map((h, i) => (
                           <div key={i} className={`px-3 py-1.5 rounded-sm text-xs font-medium border ${h.score / h.total >= 0.7 ? 'bg-exam-sage-bg border-exam-sage/40 text-exam-sage-strong' : 'bg-exam-wrong-bg border-exam-wrong/40 text-exam-wrong'}`}>
-                            {h.score}/{h.total} <span className="text-slate-400 font-normal">({h.date})</span>
+                            {h.score}/{h.total} <span className="text-exam-ink-soft font-normal">({h.date})</span>
                           </div>
                         ))}
                       </div>
@@ -1321,18 +1348,18 @@ function VocabularyContent() {
                 <div className="flex gap-3">
                   <button
                     onClick={() => startTimed(timedWordCount, timedTimePerWord)}
-                    className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors text-sm"
-                  >שחק שוב 🔄</button>
+                    className="flex-1 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity text-sm flex items-center justify-center gap-1.5"
+                  ><RotateCcw className="w-4 h-4" aria-hidden />שחק שוב</button>
                   <button
                     onClick={() => { setTimedDone(false); setTimedDeck([]); setShowTimedConfig(true); }}
-                    className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-semibold hover:bg-slate-200 transition-colors text-sm"
-                  >הגדרות ⚙️</button>
+                    className="flex-1 py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-sm font-semibold hover:bg-exam-paper-alt transition-colors text-sm flex items-center justify-center gap-1.5"
+                  ><Settings className="w-4 h-4" aria-hidden />הגדרות</button>
                 </div>
               </div>
             ) : timedDeck.length === 0 ? (
               <div className="text-center py-16">
-                <div className="text-4xl mb-3">⏱️</div>
-                <div className="text-slate-500">טוען מבחן...</div>
+                <Clock className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+                <div className="text-exam-ink-soft">טוען מבחן...</div>
               </div>
             ) : (
               <>
@@ -1349,20 +1376,20 @@ function VocabularyContent() {
                     style={{ width: `${(timeLeft / timedTimePerWord) * 100}%` }}
                   />
                 </div>
-                <div className="text-center text-sm font-bold text-slate-600 mb-5">{timeLeft}ש׳</div>
+                <div className="text-center text-sm font-bold text-exam-ink-soft mb-5">{timeLeft}ש׳</div>
 
                 {/* Timed card */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-4">
+                <div className="bg-exam-surface rounded-md border border-exam-border p-6 mb-4">
                   <div className="flex items-start justify-between mb-3">
                     <button
                       onClick={e => toggleFavorite(timedDeck[timedIndex].id, e)}
-                      className="text-xl"
+                      className={favorites.has(timedDeck[timedIndex].id) ? 'text-exam-wrong' : 'text-exam-ink-soft'}
                       aria-label={favorites.has(timedDeck[timedIndex].id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
                       aria-pressed={favorites.has(timedDeck[timedIndex].id)}
-                    >{favorites.has(timedDeck[timedIndex].id) ? '❤️' : '🤍'}</button>
+                    ><Heart className="w-5 h-5" fill={favorites.has(timedDeck[timedIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>
                     <div className="flex items-center gap-2" dir="ltr">
                       <span className="font-serif text-3xl font-black text-exam-ink">{timedDeck[timedIndex].word}</span>
-                      <button onClick={() => speak(timedDeck[timedIndex].word)} className="text-2xl hover:scale-110 transition-transform">🔊</button>
+                      <button onClick={() => speak(timedDeck[timedIndex].word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
                     </div>
                   </div>
                   {timedDeck[timedIndex].example_sentence && (
@@ -1376,7 +1403,7 @@ function VocabularyContent() {
                 <div className="space-y-3 mb-4">
                   {timedOptions.map((opt, i) => {
                     const isCorrectOpt = opt === timedDeck[timedIndex].hebrew_translation;
-                    let cls = 'w-full px-4 py-3 rounded-xl border-2 text-right font-medium text-sm transition-all ';
+                    let cls = 'w-full px-4 py-3 rounded-sm border text-right font-medium text-sm transition-all ';
                     if (timedSelected === null) {
                       cls += 'bg-exam-surface border-exam-border hover:border-exam-accent hover:bg-exam-accent/5 text-exam-ink';
                     } else if (isCorrectOpt) {
@@ -1389,8 +1416,8 @@ function VocabularyContent() {
                     return (
                       <button key={i} onClick={() => handleTimedSelect(i, opt, Date.now())} className={cls} disabled={timedSelected !== null}>
                         {opt}
-                        {timedSelected !== null && isCorrectOpt && ' ✓'}
-                        {timedSelected === i && !isCorrectOpt && ' ✗'}
+                        {timedSelected !== null && isCorrectOpt && <Check className="inline w-3.5 h-3.5 mr-1" strokeWidth={3} aria-hidden />}
+                        {timedSelected === i && !isCorrectOpt && <X className="inline w-3.5 h-3.5 mr-1" strokeWidth={3} aria-hidden />}
                       </button>
                     );
                   })}
@@ -1398,8 +1425,12 @@ function VocabularyContent() {
 
                 {timedSelected !== null && (
                   <div className="text-center">
-                    <div className={`text-lg font-bold ${timedCorrect ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}>
-                      {timedSelected === -1 ? '⏰ פג הזמן!' : timedCorrect ? '✓ נכון!' : '✗ לא נכון'}
+                    <div className={`text-lg font-bold flex items-center justify-center gap-1.5 ${timedCorrect ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}>
+                      {timedSelected === -1
+                        ? <><Clock className="w-4 h-4" aria-hidden />פג הזמן!</>
+                        : timedCorrect
+                        ? <><Check className="w-4 h-4" strokeWidth={3} aria-hidden />נכון!</>
+                        : <><X className="w-4 h-4" strokeWidth={3} aria-hidden />לא נכון</>}
                     </div>
                   </div>
                 )}

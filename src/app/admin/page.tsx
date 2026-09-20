@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authFetch } from '@/lib/auth-fetch';
+import { Settings, Sparkles, Rocket, CheckCircle2 } from 'lucide-react';
 import type { QuestionType, DifficultyLevel } from '@/types/exam';
 
 const QUESTION_TYPES: { value: QuestionType; label: string }[] = [
@@ -70,8 +71,8 @@ export default function AdminPage() {
 
       setResult(
         data.passageId
-          ? `✅ נוצר קטע (${data.passageId}) עם ${data.inserted} שאלות`
-          : `✅ נוצרו ${data.inserted} שאלות`
+          ? `נוצר קטע (${data.passageId}) עם ${data.inserted} שאלות`
+          : `נוצרו ${data.inserted} שאלות`
       );
     } catch {
       setError('שגיאת רשת');
@@ -86,7 +87,7 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-exam-paper py-10 px-4" dir="rtl">
       <div className="max-w-xl mx-auto space-y-6">
-        <h1 className="text-2xl font-black text-exam-ink">⚙️ פאנל אדמין</h1>
+        <h1 className="text-2xl font-black text-exam-ink flex items-center gap-2"><Settings className="w-6 h-6" aria-hidden />פאנל אדמין</h1>
         <p className="text-exam-ink-soft text-sm">
           שימוש ב-GPT-4o ליצירת שאלות ושמירה ישירה ל-Supabase.
           <strong> לא ישמש במהלך מבחן פעיל.</strong>
@@ -149,11 +150,11 @@ export default function AdminPage() {
             disabled={loading}
             className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
           >
-            {loading ? '⏳ מייצר שאלות עם GPT-4o...' : '✨ צור שאלות'}
+            {loading ? 'מייצר שאלות עם GPT-4o...' : <span className="inline-flex items-center gap-2"><Sparkles className="w-4 h-4" aria-hidden />צור שאלות</span>}
           </button>
 
           {result && (
-            <div className="p-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-exam-sage-strong text-sm">{result}</div>
+            <div className="p-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-exam-sage-strong text-sm flex items-center gap-2"><CheckCircle2 className="w-4 h-4 flex-shrink-0" aria-hidden />{result}</div>
           )}
           {error && (
             <div className="p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm">{error}</div>
@@ -202,7 +203,7 @@ function BulkGenerateButton() {
       });
     }
 
-    setProgress('✅ הושלם!');
+    setProgress('הושלם!');
     setRunning(false);
   };
 
@@ -213,7 +214,7 @@ function BulkGenerateButton() {
         disabled={running}
         className="w-full py-3 bg-exam-sage-strong text-white rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
       >
-        {running ? '⏳ מייצר...' : '🚀 צור מאגר מלא'}
+        {running ? 'מייצר...' : <span className="inline-flex items-center gap-2"><Rocket className="w-4 h-4" aria-hidden />צור מאגר מלא</span>}
       </button>
       {progress && <div className="mt-3 text-sm text-exam-ink-soft">{progress}</div>}
     </div>

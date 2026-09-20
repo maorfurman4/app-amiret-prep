@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Check, X, Lightbulb, CheckCircle2, XCircle, ListChecks } from 'lucide-react';
 import type { Question } from '@/types/exam';
 
 interface ExplanationData {
@@ -130,8 +131,8 @@ export function QuestionCard({
                 {OPTION_LABELS[i]}
               </span>
               <span className="flex-1 font-serif">{option.text}</span>
-              {showResult && isCorrect && <span className="text-exam-sage font-bold font-sans">✓</span>}
-              {isWrong && <span className="text-exam-wrong font-bold font-sans">✗</span>}
+              {showResult && isCorrect && <Check className="w-4 h-4 text-exam-sage flex-shrink-0" strokeWidth={3} aria-hidden />}
+              {isWrong && <X className="w-4 h-4 text-exam-wrong flex-shrink-0" strokeWidth={3} aria-hidden />}
             </button>
           );
         })}
@@ -145,13 +146,13 @@ export function QuestionCard({
               onClick={() => setHintQuestionId(question.id)}
               className="text-sm text-exam-alt hover:opacity-80 flex items-center gap-1.5 transition-opacity"
             >
-              <span>💡</span>
+              <Lightbulb className="w-4 h-4" aria-hidden />
               <span>רמז — כיוון לפתרון</span>
             </button>
           ) : (
             <div className="p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm">
               <div className="flex items-center gap-1.5 mb-1">
-                <span className="text-base">💡</span>
+                <Lightbulb className="w-4 h-4 text-exam-alt" aria-hidden />
                 <span className="text-xs font-bold text-exam-alt">רמז — כיוון לפתרון</span>
               </div>
               <p className="text-sm text-exam-ink leading-relaxed">{hintStrategy}</p>
@@ -165,7 +166,7 @@ export function QuestionCard({
         <div className="mt-6 space-y-3" dir="rtl">
           <div className="p-4 bg-exam-sage-bg border border-exam-sage/40 rounded-sm">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-lg">✅</span>
+              <CheckCircle2 className="w-4 h-4 text-exam-sage-strong" aria-hidden />
               <span className="font-bold text-exam-sage-strong text-sm">מדוע התשובה הנכונה נכונה</span>
             </div>
             <p className="text-exam-ink text-sm leading-relaxed">{explanation.correct_reason}</p>
@@ -173,7 +174,10 @@ export function QuestionCard({
 
           {explanation.options_analysis.length > 0 && (
             <div className="p-4 bg-exam-surface border border-exam-border rounded-sm">
-              <div className="font-bold text-exam-ink text-sm mb-3">🔍 שלבי שלילה:</div>
+              <div className="font-bold text-exam-ink text-sm mb-3 flex items-center gap-1.5">
+                <ListChecks className="w-4 h-4" aria-hidden />
+                שלבי שלילה:
+              </div>
               <div className="space-y-2">
                 {question.options.map((opt, i) => {
                   const correct = i === question.correct_answer;
@@ -182,9 +186,11 @@ export function QuestionCard({
                       key={i}
                       className={`flex gap-3 text-sm p-2.5 rounded-sm ${correct ? 'bg-exam-sage-bg' : 'bg-exam-wrong-bg'}`}
                     >
-                      <span className={`font-bold text-xs mt-0.5 flex-shrink-0 ${correct ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}
+                      <span className={`font-bold text-xs mt-0.5 flex-shrink-0 flex items-center gap-1 ${correct ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}
                         style={{ minWidth: '4.5rem' }}>
-                        {correct ? `✅ שלב ${i+1}: בחר` : `❌ שלב ${i+1}: שלל`}
+                        {correct
+                          ? <><CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" aria-hidden />{`שלב ${i+1}: בחר`}</>
+                          : <><XCircle className="w-3.5 h-3.5 flex-shrink-0" aria-hidden />{`שלב ${i+1}: שלל`}</>}
                       </span>
                       <div dir="ltr" lang="en" className="flex-1">
                         <span className="font-serif font-medium text-exam-ink">{opt.text}</span>
@@ -204,7 +210,7 @@ export function QuestionCard({
           {explanation.strategy && (
             <div className="p-4 bg-exam-paper-alt border border-exam-border rounded-sm">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-lg">💡</span>
+                <Lightbulb className="w-4 h-4 text-exam-ink" aria-hidden />
                 <span className="font-bold text-exam-ink text-sm">טיפ אסטרטגי</span>
               </div>
               <p className="text-exam-ink text-sm leading-relaxed">{explanation.strategy}</p>

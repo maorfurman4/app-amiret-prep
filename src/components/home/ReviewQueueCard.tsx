@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { RotateCcw } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
 const CARD_CLASSES = 'relative flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-md text-center transition-colors';
@@ -21,7 +22,7 @@ export function ReviewQueueCard() {
           {due > 99 ? '99+' : due}
         </span>
       )}
-      <span className="text-3xl">🔄</span>
+      <RotateCcw className="w-7 h-7 text-exam-ink-soft" strokeWidth={1.75} aria-hidden />
       <span className="font-semibold text-sm">חזרה חכמה</span>
       <span className="text-exam-ink-soft text-xs">שאלות שטעית בהן</span>
     </Link>

@@ -3,16 +3,17 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { Home, Target, PenLine, BookOpen, BarChart3 } from 'lucide-react';
 import { useActivityGuard } from '@/lib/activity-guard';
 
 // 5 tabs max — thumb-friendly on narrow screens.
 // חזרה חכמה, אסטרטגיות, טיפים ולוח מובילים נגישים מדף הבית.
 const TABS = [
-  { href: '/',            icon: '🏠', label: 'בית'       },
-  { href: '/exam',        icon: '🎯', label: 'מבחן'      },
-  { href: '/practice',    icon: '✏️', label: 'תרגול'    },
-  { href: '/vocabulary',  icon: '📖', label: 'מילים'     },
-  { href: '/stats',       icon: '📊', label: 'סטטיסטיקה' },
+  { href: '/',            icon: Home,      label: 'בית'       },
+  { href: '/exam',        icon: Target,    label: 'מבחן'      },
+  { href: '/practice',    icon: PenLine,   label: 'תרגול'    },
+  { href: '/vocabulary',  icon: BookOpen,  label: 'מילים'     },
+  { href: '/stats',       icon: BarChart3, label: 'סטטיסטיקה' },
 ];
 
 const CONFIRM_WINDOW_MS = 2500;
@@ -55,6 +56,7 @@ function BottomNavContent({ pathname }: { pathname: string }) {
               ? pathname === '/'
               : pathname === tab.href || pathname.startsWith(tab.href + '/');
           const isPending = pendingHref === tab.href;
+          const Icon = tab.icon;
 
           const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
             // Mid-activity (answering a practice question, mid vocab deck):
@@ -95,7 +97,7 @@ function BottomNavContent({ pathname }: { pathname: string }) {
               {isPending ? (
                 <span className="text-[10px] font-bold text-exam-alt leading-none whitespace-nowrap">לחץ שוב לצאת</span>
               ) : (
-                <span className="text-2xl leading-none">{tab.icon}</span>
+                <Icon className="w-6 h-6" strokeWidth={active ? 2.25 : 1.75} aria-hidden />
               )}
               <span className={`text-[11px] leading-tight ${active ? 'font-bold' : 'font-medium'} ${isPending ? 'text-exam-alt' : ''}`}>
                 {tab.label}

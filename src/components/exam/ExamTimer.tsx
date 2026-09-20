@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { AlertTriangle } from 'lucide-react';
 
 interface ExamTimerProps {
   expiresAt: string | null;      // ISO string from server
@@ -64,8 +65,9 @@ export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
                    'bg-exam-paper-alt border-exam-border text-exam-ink'
     }`}>
       {isWarning && !isExpired && (
-        <div className="text-xs font-bold text-exam-wrong">
-          ⚠ ענה מהר! הזמן עומד לפוג
+        <div className="text-xs font-bold text-exam-wrong flex items-center gap-1">
+          <AlertTriangle className="w-3.5 h-3.5" aria-hidden />
+          ענה מהר! הזמן עומד לפוג
         </div>
       )}
       <div className={`text-2xl font-semibold tabular-nums ${isWarning ? 'text-exam-wrong' : ''}`}>

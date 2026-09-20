@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import type { Question } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
+import { PenLine, RotateCcw, BookOpen, Languages, HelpCircle, AlertTriangle, PartyPopper, Trash2, Target, ThumbsUp, Check, X, type LucideIcon } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
 
 type Step = 'loading' | 'empty' | 'error' | 'overview' | 'reviewing' | 'done';
@@ -16,11 +17,11 @@ const CATEGORY_LABELS: Record<string, string> = {
   esra: 'אנגלית ESRA',
 };
 
-const CATEGORY_ICONS: Record<string, string> = {
-  sentence_completion: '✏️',
-  restatement: '🔄',
-  reading_comprehension: '📖',
-  esra: '🇬🇧',
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  sentence_completion: PenLine,
+  restatement: RotateCcw,
+  reading_comprehension: BookOpen,
+  esra: Languages,
 };
 
 function groupByCategory(list: Question[]): Record<string, Question[]> {
@@ -250,7 +251,7 @@ export default function ReviewQueuePage() {
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-4">
-            <div className="text-5xl">⚠️</div>
+            <AlertTriangle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
             <h1 className="text-xl font-bold text-exam-ink">שגיאה בטעינה</h1>
             <p className="text-exam-ink-soft text-sm">לא ניתן לטעון את השאלות. בדוק חיבור אינטרנט.</p>
             <button
@@ -271,9 +272,9 @@ export default function ReviewQueuePage() {
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-6">
-            <div className="text-6xl">🎉</div>
+            <PartyPopper className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
             <h1 className="text-2xl font-bold text-exam-ink">כל הכבוד!</h1>
-            <p className="text-exam-ink-soft">אין שאלות לחזרה כרגע. בוא שוב מחר 🎉</p>
+            <p className="text-exam-ink-soft">אין שאלות לחזרה כרגע. בוא שוב מחר</p>
             <button
               onClick={() => router.push('/exam')}
               className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
@@ -296,7 +297,7 @@ export default function ReviewQueuePage() {
         <div className="flex-1 px-4 py-8">
           <div className="w-full max-w-lg mx-auto space-y-6">
             <div className="text-center">
-              <div className="text-4xl mb-2">🔄</div>
+              <RotateCcw className="w-9 h-9 mx-auto mb-2 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
               <h1 className="text-2xl font-bold text-exam-ink">חזרה על טעויות</h1>
               <p className="text-exam-ink-soft mt-1">{allQuestions.length} שאלות ממתינות, מחולקות לפי קטגוריה</p>
             </div>
@@ -307,7 +308,7 @@ export default function ReviewQueuePage() {
                   key={type}
                   className="flex items-center gap-3 p-4 bg-exam-surface rounded-md border border-exam-border"
                 >
-                  <div className="text-2xl">{CATEGORY_ICONS[type] ?? '❓'}</div>
+                  {(() => { const Icon = CATEGORY_ICONS[type] ?? HelpCircle; return <Icon className="w-6 h-6 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />; })()}
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-exam-ink">{CATEGORY_LABELS[type] ?? type}</div>
                     <div className="text-xs text-exam-ink-soft">{groups[type].length} שאלות</div>
@@ -323,7 +324,7 @@ export default function ReviewQueuePage() {
                     className="w-9 h-9 flex items-center justify-center rounded-sm text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg transition-colors text-base flex-shrink-0"
                     title={`מחק את כל שאלות ${CATEGORY_LABELS[type] ?? type}`}
                   >
-                    🗑
+                    <Trash2 className="w-4 h-4 mx-auto" aria-hidden />
                   </button>
                 </div>
               ))}
@@ -334,13 +335,13 @@ export default function ReviewQueuePage() {
                 onClick={() => handleStartReview()}
                 className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
               >
-                🎯 התחל חזרה על הכל ({allQuestions.length})
+                <span className="inline-flex items-center gap-2"><Target className="w-4 h-4" aria-hidden />התחל חזרה על הכל ({allQuestions.length})</span>
               </button>
               <button
                 onClick={handleClearAll}
                 className="w-full py-3 bg-exam-surface border border-exam-wrong/40 text-exam-wrong rounded-sm font-medium hover:bg-exam-wrong-bg transition-colors"
               >
-                🗑 מחק את כל השאלות
+                <span className="inline-flex items-center gap-2"><Trash2 className="w-4 h-4" aria-hidden />מחק את כל השאלות</span>
               </button>
             </div>
           </div>
@@ -356,7 +357,7 @@ export default function ReviewQueuePage() {
     return (
       <div className="min-h-screen bg-exam-paper flex flex-col items-center justify-center px-4" dir="rtl">
         <div className="w-full max-w-sm text-center space-y-6">
-          <div className="text-6xl">{pct >= 80 ? '🎉' : pct >= 60 ? '💪' : '📚'}</div>
+          {pct >= 80 ? <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden /> : pct >= 60 ? <ThumbsUp className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden /> : <BookOpen className="w-14 h-14 mx-auto text-exam-ink-soft" strokeWidth={1.5} aria-hidden />}
           <div>
             <div className={`text-5xl font-black ${color}`}>{correctCount}/{questions.length}</div>
             <div className="text-exam-ink-soft mt-1 text-lg">{pct}% נכון בחזרה</div>
@@ -414,7 +415,7 @@ export default function ReviewQueuePage() {
               onClick={handleClearAll}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-exam-wrong-bg text-exam-wrong rounded-sm text-sm font-semibold hover:opacity-80 transition-opacity"
             >
-              🗑 נקה הכל
+              <span className="inline-flex items-center gap-1.5"><Trash2 className="w-3.5 h-3.5" aria-hidden />נקה הכל</span>
             </button>
             <button onClick={() => setShowQuestionPicker(false)} className="text-exam-ink-soft hover:text-exam-ink text-2xl leading-none">×</button>
           </div>
@@ -430,7 +431,7 @@ export default function ReviewQueuePage() {
                   onClick={() => handleDeleteCategory(type)}
                   className="flex items-center gap-1 px-2 py-1 rounded-sm text-xs font-semibold text-exam-wrong hover:bg-exam-wrong-bg transition-colors"
                 >
-                  🗑 מחק קטגוריה
+                  <span className="inline-flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" aria-hidden />מחק קטגוריה</span>
                 </button>
               </div>
               <div className="space-y-2">
@@ -450,7 +451,7 @@ export default function ReviewQueuePage() {
                           wrong ? 'bg-exam-wrong text-white' :
                           'bg-exam-border text-exam-ink-soft'
                         }`}>
-                          {correct ? '✓' : wrong ? '✗' : i + 1}
+                          {correct ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : wrong ? <X className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : i + 1}
                         </span>
                         <span className="text-sm text-exam-ink text-right leading-snug line-clamp-2 flex-1">
                           {q.text.length > 80 ? q.text.slice(0, 80) + '…' : q.text}
@@ -461,7 +462,7 @@ export default function ReviewQueuePage() {
                         className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-sm text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg transition-colors text-base"
                         title="הסר מהרשימה"
                       >
-                        🗑
+                        <Trash2 className="w-4 h-4 mx-auto" aria-hidden />
                       </button>
                     </div>
                   );
@@ -544,7 +545,7 @@ export default function ReviewQueuePage() {
             onClick={() => handleDeleteQuestion(question.id)}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-sm border border-exam-border text-exam-ink-soft hover:text-exam-wrong hover:border-exam-wrong/40 hover:bg-exam-wrong-bg transition-colors text-sm font-medium"
           >
-            🗑 הסר שאלה
+            <span className="inline-flex items-center gap-1.5"><Trash2 className="w-4 h-4" aria-hidden />הסר שאלה</span>
           </button>
 
           {showResult && (
@@ -552,7 +553,7 @@ export default function ReviewQueuePage() {
               onClick={handleNext}
               className="px-6 py-3 bg-exam-alt text-white rounded-sm font-bold hover:opacity-90 transition-opacity"
             >
-              {isLast ? 'סיום חזרה ✓' : 'שאלה הבאה ‹'}
+              {isLast ? <span className="inline-flex items-center gap-1.5">סיום חזרה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
             </button>
           )}
         </div>

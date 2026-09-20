@@ -3,29 +3,30 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Target, BookOpen, Search, Stethoscope, Sparkles, type LucideIcon } from 'lucide-react';
 import type { ExamMode } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 
-const MODES: { mode: ExamMode; title: string; desc: string; icon: string; isPractice?: boolean }[] = [
+const MODES: { mode: ExamMode; title: string; desc: string; icon: LucideIcon; isPractice?: boolean }[] = [
   {
     mode: 'full',
     title: 'סימולציית פרקי הליבה',
     desc: '6 פרקי הליבה בזמנים הרשמיים ובמבנה אדפטיבי, ולאחריהם תרגול חלופי. אינו מדמה עדיין את סוגי הפרקים הניסיוניים או הכתיבה',
-    icon: '🎯',
+    icon: Target,
   },
   {
     mode: 'practice',
     title: 'מוד תרגול',
     desc: 'ללא טיימר, ניתן לראות הסברים מיד — לתרגול נינוח ובקצב שלך',
-    icon: '📚',
+    icon: BookOpen,
     isPractice: true,
   },
   {
     mode: 'section',
     title: 'תרגול סעיף',
     desc: 'בחר סוג שאלות ספציפי לתרגול ממוקד',
-    icon: '🔍',
+    icon: Search,
   },
 ];
 
@@ -80,17 +81,17 @@ export default function ExamModePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
+    <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-2xl">
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">בחר מצב</h1>
-          <p className="text-slate-500 dark:text-slate-400">בחר איך תרצה להתאמן היום</p>
+          <h1 className="text-3xl font-bold text-exam-ink mb-2">בחר מצב</h1>
+          <p className="text-exam-ink-soft">בחר איך תרצה להתאמן היום</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm text-center">
+          <div className="mb-6 p-4 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm text-center">
             {error}
           </div>
         )}
@@ -101,11 +102,11 @@ export default function ExamModePage() {
               key={m.mode}
               onClick={() => startExam(m.mode, m.isPractice)}
               disabled={loading}
-              className="group text-right p-6 bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all disabled:opacity-60"
+              className="text-right p-6 bg-exam-surface rounded-md border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong transition-colors disabled:opacity-60"
             >
-              <div className="text-3xl mb-3">{m.icon}</div>
-              <div className="text-lg font-bold text-slate-900 dark:text-white mb-1">{m.title}</div>
-              <div className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{m.desc}</div>
+              <m.icon className="w-8 h-8 mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+              <div className="text-lg font-bold text-exam-ink mb-1">{m.title}</div>
+              <div className="text-sm text-exam-ink-soft leading-relaxed">{m.desc}</div>
             </button>
           ))}
         </div>
@@ -114,13 +115,13 @@ export default function ExamModePage() {
         <div className="mt-4">
           <Link
             href="/diagnostic"
-            className="block w-full text-right p-6 bg-teal-50 dark:bg-teal-900/20 rounded-2xl border-2 border-teal-200 dark:border-teal-700 hover:border-teal-400 hover:shadow-md transition-all"
+            className="block w-full text-right p-6 bg-exam-surface rounded-md border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong transition-colors"
           >
             <div className="flex items-center gap-4">
-              <span className="text-3xl">🩺</span>
+              <Stethoscope className="w-8 h-8 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
               <div>
-                <div className="text-lg font-bold text-teal-900 dark:text-teal-200">אבחון רמה מהיר</div>
-                <div className="text-sm text-teal-700 dark:text-teal-400 leading-relaxed">12 שאלות אדפטיביות בכ-10 דקות — גלה את הרמה שלך ומאיפה להתחיל</div>
+                <div className="text-lg font-bold text-exam-ink">אבחון רמה מהיר</div>
+                <div className="text-sm text-exam-ink-soft leading-relaxed">12 שאלות אדפטיביות בכ-10 דקות — גלה את הרמה שלך ומאיפה להתחיל</div>
               </div>
             </div>
           </Link>
@@ -130,9 +131,9 @@ export default function ExamModePage() {
         <div className="mt-4 text-center">
           <Link
             href="/tips"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:shadow-sm transition-all text-sm text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-exam-surface rounded-sm border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong transition-colors text-sm text-exam-ink-soft hover:text-exam-ink"
           >
-            <span>✨</span>
+            <Sparkles className="w-4 h-4" strokeWidth={1.75} aria-hidden />
             <span>אסטרטגיות לפי סוג שאלה</span>
           </Link>
         </div>

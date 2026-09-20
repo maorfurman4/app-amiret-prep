@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Stethoscope, ChevronLeft } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
 const BANNER_CLASSES = 'flex items-center gap-3 p-4 -mt-3 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-md transition-colors';
@@ -24,12 +25,12 @@ export function DiagnosticBanner() {
 
   return (
     <Link href="/diagnostic" className={BANNER_CLASSES}>
-      <span className="text-2xl">🩺</span>
+      <Stethoscope className="w-6 h-6 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />
       <div className="flex-1 text-right">
         <div className="font-semibold text-sm">{title}</div>
         <div className="text-exam-ink-soft text-xs">{sub}</div>
       </div>
-      <span className="text-exam-ink-soft">‹</span>
+      <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
     </Link>
   );
 }

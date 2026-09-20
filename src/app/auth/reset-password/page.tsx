@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Clock, CheckCircle2, KeyRound } from 'lucide-react';
 import { createClient } from '@/lib/supabase';
 import {
   classifyPasswordUpdateError,
@@ -103,8 +104,8 @@ export default function ResetPasswordPage() {
     if (phase === 'checking') {
       return (
         <div className="text-center py-8 space-y-3">
-          <div className="w-8 h-8 border-2 border-slate-300 border-t-blue-600 rounded-full animate-spin mx-auto" />
-          <p className="text-slate-400 text-sm">מאמת את הקישור...</p>
+          <div className="w-8 h-8 border-2 border-exam-border border-t-exam-accent rounded-full animate-spin mx-auto" />
+          <p className="text-exam-ink-soft text-sm">מאמת את הקישור...</p>
         </div>
       );
     }
@@ -112,15 +113,15 @@ export default function ResetPasswordPage() {
     if (phase === 'invalid') {
       return (
         <div className="text-center space-y-4">
-          <div className="text-5xl">⏳</div>
-          <h2 className="text-xl font-bold text-slate-900">הקישור אינו תקף</h2>
-          <p className="text-slate-500 text-sm">
+          <Clock className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
+          <h2 className="text-xl font-bold text-exam-ink">הקישור אינו תקף</h2>
+          <p className="text-exam-ink-soft text-sm">
             קישור האיפוס פג תוקף או שכבר נעשה בו שימוש.<br />
             אפשר לבקש קישור חדש ממסך הכניסה.
           </p>
           <button
             onClick={() => router.push('/auth/login')}
-            className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+            className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
           >
             למסך הכניסה
           </button>
@@ -131,14 +132,14 @@ export default function ResetPasswordPage() {
     if (phase === 'done') {
       return (
         <div className="text-center space-y-4">
-          <div className="text-5xl">✅</div>
-          <h2 className="text-xl font-bold text-slate-900">הסיסמה עודכנה</h2>
-          <p className="text-slate-500 text-sm">
+          <CheckCircle2 className="w-12 h-12 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
+          <h2 className="text-xl font-bold text-exam-ink">הסיסמה עודכנה</h2>
+          <p className="text-exam-ink-soft text-sm">
             מעכשיו נכנסים עם הסיסמה החדשה. אתה כבר מחובר.
           </p>
           <button
             onClick={() => router.push('/')}
-            className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+            className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
           >
             לדף הבית
           </button>
@@ -149,32 +150,32 @@ export default function ResetPasswordPage() {
     return (
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 mb-1">בחירת סיסמה חדשה</h2>
-          <p className="text-slate-500 text-sm">הזן סיסמה חדשה לחשבון שלך</p>
+          <h2 className="text-lg font-bold text-exam-ink mb-1">בחירת סיסמה חדשה</h2>
+          <p className="text-exam-ink-soft text-sm">הזן סיסמה חדשה לחשבון שלך</p>
         </div>
         <div className="space-y-1">
-          <label htmlFor="new-password" className="block text-sm font-medium text-slate-700">סיסמה חדשה</label>
+          <label htmlFor="new-password" className="block text-sm font-medium text-exam-ink">סיסמה חדשה</label>
           <input
             id="new-password"
             type="password" value={password} onChange={e => setPassword(e.target.value)}
             required minLength={MIN_PASSWORD_LENGTH} dir="ltr" placeholder="••••••••" autoComplete="new-password"
-            className="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-left"
+            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
           />
-          <p className="text-xs text-slate-400">לפחות {MIN_PASSWORD_LENGTH} תווים</p>
+          <p className="text-xs text-exam-ink-soft">לפחות {MIN_PASSWORD_LENGTH} תווים</p>
         </div>
         <div className="space-y-1">
-          <label htmlFor="confirm-password" className="block text-sm font-medium text-slate-700">אימות סיסמה</label>
+          <label htmlFor="confirm-password" className="block text-sm font-medium text-exam-ink">אימות סיסמה</label>
           <input
             id="confirm-password"
             type="password" value={confirm} onChange={e => setConfirm(e.target.value)}
             required minLength={MIN_PASSWORD_LENGTH} dir="ltr" placeholder="••••••••" autoComplete="new-password"
-            className="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-left"
+            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
           />
         </div>
-        {error && <p className="text-red-600 text-sm" role="alert">{error}</p>}
+        {error && <p className="text-exam-wrong text-sm" role="alert">{error}</p>}
         <button
           type="submit" disabled={saving}
-          className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-60 transition-colors"
+          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
         >
           {saving ? 'מעדכן...' : 'עדכן סיסמה'}
         </button>
@@ -183,16 +184,16 @@ export default function ResetPasswordPage() {
   })();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center px-4 py-12" dir="rtl">
+    <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="text-5xl mb-3">🔑</div>
-          <h1 className="text-4xl font-black text-white tracking-tight" dir="ltr">
-            134<span className="text-blue-400">+</span>
+          <KeyRound className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
+          <h1 className="text-4xl font-black text-exam-ink tracking-tight" dir="ltr">
+            134<span className="text-exam-accent">+</span>
           </h1>
-          <p className="text-slate-400 text-sm mt-2">איפוס סיסמה</p>
+          <p className="text-exam-ink-soft text-sm mt-2">איפוס סיסמה</p>
         </div>
-        <div className="bg-white rounded-3xl p-7 shadow-xl">{card}</div>
+        <div className="bg-exam-surface border border-exam-border rounded-md p-7">{card}</div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Sparkles } from 'lucide-react';
 
 /**
  * Keeps the installed PWA fresh:
@@ -59,12 +60,12 @@ export function PwaUpdater() {
       style={{ WebkitTransform: 'translateZ(0)' }}
       dir="rtl"
     >
-      <div className="flex items-center gap-3 bg-slate-900 dark:bg-slate-700 text-white rounded-2xl shadow-lg px-4 py-3 max-w-sm w-full">
-        <span className="text-xl">✨</span>
+      <div className="flex items-center gap-3 bg-exam-ink text-exam-paper rounded-md px-4 py-3 max-w-sm w-full">
+        <Sparkles className="w-5 h-5 flex-shrink-0" aria-hidden />
         <span className="text-sm flex-1">גרסה חדשה של האתר זמינה</span>
         <button
           onClick={() => window.location.reload()}
-          className="px-3 py-1.5 bg-blue-500 hover:bg-blue-400 rounded-lg text-sm font-bold transition-colors"
+          className="px-3 py-1.5 bg-exam-accent hover:opacity-90 rounded-sm text-sm font-bold transition-opacity text-exam-accent-ink"
         >
           רענן
         </button>

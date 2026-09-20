@@ -16,9 +16,9 @@ export function HeroTagline() {
   let text = DEFAULT_TAGLINE;
   if (score != null) {
     text = score >= 134
-      ? `🎉 האומדן הפנימי האחרון שלך: ${score} — מעל 134`
+      ? `האומדן הפנימי האחרון שלך: ${score} — מעל 134`
       : `הציון האחרון שלך: ${score} · עוד ${134 - score} נק׳ ל-134+`;
   }
 
-  return <p className="text-slate-600 dark:text-slate-300">{text}</p>;
+  return <p className="text-exam-ink-soft">{text}</p>;
 }

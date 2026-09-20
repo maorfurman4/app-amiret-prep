@@ -7,6 +7,7 @@ import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult } from '@/types/exam';
 import { routeNextDifficulty } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
+import { BarChart3, Target, Check, Trophy, AlertTriangle, PartyPopper } from 'lucide-react';
 
 interface Stats {
   total_exams: number;
@@ -129,7 +130,7 @@ export default function StatsPage() {
       <div className="min-h-screen bg-exam-paper" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex flex-col items-center justify-center h-[calc(100vh-3rem)] text-center px-4">
-          <div className="text-5xl mb-4">📊</div>
+          <BarChart3 className="w-14 h-14 mx-auto mb-4 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
           <h1 className="text-2xl font-bold text-exam-ink mb-2">אין עדיין נתונים</h1>
           <p className="text-exam-ink-soft mb-6">סיים לפחות מבחן אחד כדי לראות סטטיסטיקות</p>
           <Link href="/exam" className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity">
@@ -187,21 +188,21 @@ export default function StatsPage() {
           if (timedQ > 0) reasons.push({ ok: overCap / timedQ <= 0.15, text: overCap === 0 ? 'קצב מצוין — אפס חריגות תקציב' : `${overCap} שאלות חרגו מתקציב הזמן` });
           const okCount = reasons.filter(r => r.ok).length;
           const verdict = okCount === reasons.length && rawRows.length >= 3 && avg3 >= 134
-            ? { label: 'מוכנות גבוהה לפי מדדי האתר 🎉', cls: 'bg-exam-sage-strong', desc: 'הביצועים יציבים והאומדן הפנימי מעל 134. זו אינה תחזית ציון רשמית.' }
+            ? { label: 'מוכנות גבוהה לפי מדדי האתר', cls: 'bg-exam-sage-strong', desc: 'הביצועים יציבים והאומדן הפנימי מעל 134. זו אינה תחזית ציון רשמית.' }
             : avg3 >= 120 && rawRows.length >= 3
-            ? { label: 'כמעט שם 💪', cls: 'bg-exam-alt', desc: 'הבסיס חזק — סגור את הפערים שמסומנים למטה.' }
-            : { label: 'עוד לא — ממשיכים לעבוד 📚', cls: 'bg-exam-ink-soft', desc: 'תוכנית: סימולציית פרקי הליבה + תרגול חולשה ממוקד כל יום.' };
+            ? { label: 'כמעט שם', cls: 'bg-exam-alt', desc: 'הבסיס חזק — סגור את הפערים שמסומנים למטה.' }
+            : { label: 'עוד לא — ממשיכים לעבוד', cls: 'bg-exam-ink-soft', desc: 'תוכנית: סימולציית פרקי הליבה + תרגול חולשה ממוקד כל יום.' };
           return (
             <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
               <div className="flex items-center gap-3 mb-1">
-                <span className={`px-3 py-1 rounded-full text-white text-sm font-bold ${verdict.cls}`}>{verdict.label}</span>
+                <span className={`px-3 py-1 rounded-sm text-white text-sm font-bold ${verdict.cls}`}>{verdict.label}</span>
                 <h2 className="font-bold text-exam-ink text-sm">מדד מוכנות פנימי</h2>
               </div>
               <p className="text-xs text-exam-ink-soft mb-3">{verdict.desc}</p>
               <div className="space-y-1.5">
                 {reasons.map((r, i) => (
                   <div key={i} className="flex items-start gap-2 text-sm">
-                    <span className={r.ok ? 'text-exam-sage-strong' : 'text-exam-alt'}>{r.ok ? '✓' : '•'}</span>
+                    <span className={r.ok ? 'text-exam-sage-strong' : 'text-exam-alt'}>{r.ok ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : '•'}</span>
                     <span className="text-exam-ink-soft">{r.text}</span>
                   </div>
                 ))}
@@ -261,8 +262,8 @@ export default function StatsPage() {
           return (
             <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
               <div className="flex items-center justify-between mb-1">
-                <h2 className="font-bold text-exam-ink">🎯 הדרך ל-134+</h2>
-                {reached && <span className="text-xs font-bold bg-exam-sage-strong text-white px-2 py-0.5 rounded-full">האומדן הגיע ל-134+ 🎉</span>}
+                <h2 className="font-bold text-exam-ink flex items-center gap-2"><Target className="w-4 h-4" aria-hidden />הדרך ל-134+</h2>
+                {reached && <span className="text-xs font-bold bg-exam-sage-strong text-white px-2 py-0.5 rounded-sm inline-flex items-center gap-1"><PartyPopper className="w-3 h-3" aria-hidden />האומדן הגיע ל-134+</span>}
               </div>
               <p className="text-xs text-exam-ink-soft mb-4">134 הוא סף פטור נפוץ; הנתונים כאן הם אומדן פנימי ולא ציון רשמי</p>
               {/* Progress to goal */}
@@ -276,13 +277,13 @@ export default function StatsPage() {
               </div>
               <div className="grid grid-cols-2 gap-3 text-center">
                 <div className="bg-exam-paper-alt rounded-sm p-3">
-                  <div className="text-2xl font-black text-exam-ink">{reached ? '✓' : gap}</div>
+                  <div className="text-2xl font-black text-exam-ink">{reached ? <Check className="w-6 h-6 mx-auto" strokeWidth={3} aria-hidden /> : gap}</div>
                   <div className="text-xs text-exam-ink-soft mt-0.5">{reached ? 'עברת את היעד' : 'נקודות עד היעד'}</div>
                 </div>
                 <div className="bg-exam-paper-alt rounded-sm p-3">
                   {reached ? (
                     <>
-                      <div className="text-2xl font-black text-exam-sage-strong">🏆</div>
+                      <Trophy className="w-7 h-7 mx-auto text-exam-sage-strong" aria-hidden />
                       <div className="text-xs text-exam-ink-soft mt-0.5">שמור על הכושר עם תרגול</div>
                     </>
                   ) : examsToGo !== null ? (
@@ -374,7 +375,7 @@ export default function StatsPage() {
                   className="flex items-center justify-between gap-3 mb-4 p-4 bg-exam-accent hover:opacity-90 rounded-sm transition-opacity"
                 >
                   <div>
-                    <div className="text-exam-accent-ink font-bold text-sm">🎯 תרגל את החולשה שלך עכשיו</div>
+                    <div className="text-exam-accent-ink font-bold text-sm flex items-center gap-1.5"><Target className="w-4 h-4" aria-hidden />תרגל את החולשה שלך עכשיו</div>
                     <div className="text-exam-accent-ink/80 text-xs mt-0.5">
                       {TYPE_LABELS[weakestType.type] ?? weakestType.type} ברמה {level} — נבחר אוטומטית לפי הביצועים שלך
                     </div>
@@ -401,7 +402,7 @@ export default function StatsPage() {
                           {TYPE_LABELS[type] ?? type}
                         </span>
                         {isWeakest && (
-                          <span className="text-xs text-exam-wrong font-semibold">⚠️ כאן כדאי להתמרכז</span>
+                          <span className="text-xs text-exam-wrong font-semibold inline-flex items-center gap-1"><AlertTriangle className="w-3 h-3" aria-hidden />כאן כדאי להתמרכז</span>
                         )}
                       </div>
                       <span className={`text-sm font-bold ${pct >= 80 ? 'text-exam-sage-strong' : pct >= 60 ? 'text-exam-alt' : 'text-exam-wrong'}`}>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import { authFetch } from '@/lib/auth-fetch';
+import { BarChart3, ImageIcon, PenLine, Lock } from 'lucide-react';
 
 type Panel = 'menu' | 'name' | 'password' | 'avatar';
 
@@ -202,26 +203,26 @@ export function UserMenu() {
                 onClick={() => setOpen(false)}
                 className="block w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
               >
-                📊 הסטטיסטיקה שלי
+                <span className="inline-flex items-center gap-2"><BarChart3 className="w-4 h-4" aria-hidden />הסטטיסטיקה שלי</span>
               </Link>
               <button
                 onClick={() => { setAvatarError(null); setPanel('avatar'); }}
                 className="w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
               >
-                🖼️ תמונת פרופיל
+                <span className="inline-flex items-center gap-2"><ImageIcon className="w-4 h-4" aria-hidden />תמונת פרופיל</span>
               </button>
               <button
                 onClick={() => { setNameInput(displayName); setNameError(null); setPanel('name'); }}
                 className="w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
               >
-                ✏️ ערוך שם תצוגה
+                <span className="inline-flex items-center gap-2"><PenLine className="w-4 h-4" aria-hidden />ערוך שם תצוגה</span>
               </button>
               {canChangePassword && (
                 <button
                   onClick={() => { setPwError(null); setPwSuccess(false); setPanel('password'); }}
                   className="w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
                 >
-                  🔒 שנה סיסמה
+                  <span className="inline-flex items-center gap-2"><Lock className="w-4 h-4" aria-hidden />שנה סיסמה</span>
                 </button>
               )}
               <button
@@ -302,7 +303,7 @@ export function UserMenu() {
                 <button onClick={() => setPanel('menu')} className="text-exam-ink-soft hover:text-exam-ink text-lg leading-none">×</button>
               </div>
               {pwSuccess ? (
-                <p className="text-sm text-exam-sage-strong font-medium py-2">הסיסמה עודכנה בהצלחה ✓</p>
+                <p className="text-sm text-exam-sage-strong font-medium py-2">הסיסמה עודכנה בהצלחה</p>
               ) : (
                 <>
                   <input

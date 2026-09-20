@@ -1,5 +1,6 @@
 'use client';
 
+import { Flame } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
 /**
@@ -16,7 +17,7 @@ export function StreakBadge() {
 
   return (
     <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/40 border border-orange-200 dark:border-orange-700">
-      <span className="text-base animate-streak-flicker motion-reduce:animate-none">🔥</span>
+      <Flame className="w-4 h-4 text-exam-alt animate-streak-flicker motion-reduce:animate-none" fill="currentColor" aria-hidden />
       <span className="text-sm font-bold text-orange-700 dark:text-orange-300 tabular-nums">{streak}</span>
       <span className="text-xs text-orange-600 dark:text-orange-400">{streak === 1 ? 'יום רצוף' : 'ימים רצופים'}</span>
     </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase';
+import { Save } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 
 interface AuthCTAProps {
@@ -34,15 +35,15 @@ export function AuthCTA({ message }: AuthCTAProps) {
   const next = encodeURIComponent(pathname);
 
   return (
-    <div className="bg-gradient-to-l from-blue-600 to-blue-700 rounded-2xl p-5 shadow-sm text-white" dir="rtl">
+    <div className="bg-exam-accent rounded-md p-5 text-exam-accent-ink" dir="rtl">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <div className="font-bold mb-0.5">💾 שמור את ההתקדמות שלך</div>
-          <div className="text-sm text-blue-100">{message}</div>
+          <div className="font-bold mb-0.5 flex items-center gap-2"><Save className="w-4 h-4" aria-hidden />שמור את ההתקדמות שלך</div>
+          <div className="text-sm text-exam-accent-ink/85">{message}</div>
         </div>
         <Link
           href={`/auth/login?next=${next}`}
-          className="flex-shrink-0 px-5 py-2.5 bg-white text-blue-700 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors"
+          className="flex-shrink-0 px-5 py-2.5 bg-exam-accent-ink text-exam-accent rounded-sm font-bold text-sm hover:opacity-90 transition-opacity"
         >
           התחבר / הרשמה ‹
         </Link>

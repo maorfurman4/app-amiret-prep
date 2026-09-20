@@ -2,6 +2,7 @@
 
 import { use, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { PenLine, RotateCcw, BookOpen, FileText, PartyPopper, ClipboardList } from 'lucide-react';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import type { Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
@@ -25,6 +26,12 @@ interface ReviewData {
   sectionBreaks: SectionBreak[];
 }
 
+const TYPE_ICONS: Record<string, typeof PenLine> = {
+  sentence_completion: PenLine,
+  restatement: RotateCcw,
+  reading_comprehension: BookOpen,
+};
+
 export default function ReviewPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = use(params);
   const router = useRouter();
@@ -44,10 +51,10 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
 
   if (fetchError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-800/60" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
-          <div className="text-red-500 text-xl mb-3">שגיאה בטעינת השאלות</div>
-          <button onClick={() => { setFetchError(false); window.location.reload(); }} className="text-blue-600 underline text-sm">נסה שוב</button>
+          <div className="text-exam-wrong text-xl mb-3">שגיאה בטעינת השאלות</div>
+          <button onClick={() => { setFetchError(false); window.location.reload(); }} className="text-exam-accent underline text-sm">נסה שוב</button>
         </div>
       </div>
     );
@@ -55,8 +62,8 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
 
   if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-800/60">
-        <div className="text-slate-400 dark:text-slate-500">טוען שאלות...</div>
+      <div className="min-h-screen flex items-center justify-center bg-exam-paper">
+        <div className="text-exam-ink-soft">טוען שאלות...</div>
       </div>
     );
   }
@@ -83,28 +90,24 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
     questionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const TYPE_ICONS: Record<string, string> = {
-    sentence_completion: '✏️',
-    restatement: '🔄',
-    reading_comprehension: '📖',
-  };
+  const SectionIcon = TYPE_ICONS[question.sectionType] ?? FileText;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
+    <div className="min-h-screen bg-exam-paper" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <div className="text-sm font-bold text-slate-900 dark:text-white">סקירת מבחן</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400">
+              <div className="text-sm font-bold text-exam-ink">סקירת מבחן</div>
+              <div className="text-xs text-exam-ink-soft">
                 {filteredIndices.length} שאלות
                 {filter === 'wrong' ? ' שגויות' : filter === 'correct' ? ' נכונות' : ''}
               </div>
             </div>
             <button
               onClick={() => router.push(`/results/${sessionId}`)}
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-exam-accent hover:underline"
             >
               ← חזרה לתוצאות
             </button>
@@ -114,16 +117,16 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
           <div className="flex gap-2 mt-3">
             {([
               { value: 'all', label: `הכל (${questions.length})` },
-              { value: 'wrong', label: `❌ טעויות (${wrongCount})` },
-              { value: 'correct', label: `✅ נכון (${correctCount})` },
+              { value: 'wrong', label: `טעויות (${wrongCount})` },
+              { value: 'correct', label: `נכון (${correctCount})` },
             ] as { value: Filter; label: string }[]).map(opt => (
               <button
                 key={opt.value}
                 onClick={() => { setFilter(opt.value); setCurrentIndex(0); }}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-sm text-sm font-medium transition-colors border ${
                   filter === opt.value
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                    ? 'bg-exam-accent text-exam-accent-ink border-exam-accent'
+                    : 'bg-exam-paper-alt text-exam-ink-soft border-exam-border hover:bg-exam-border/30'
                 }`}
               >
                 {opt.label}
@@ -144,12 +147,12 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                   key={flatIdx}
                   onClick={() => goTo(pos)}
                   aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ' — נכונה' : ' — שגויה'}`}
-                  className={`w-full py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  className={`w-full py-1.5 rounded-sm text-xs font-bold transition-all border ${
                     pos === currentIndex
-                      ? 'bg-blue-600 text-white scale-105'
+                      ? 'bg-exam-accent text-exam-accent-ink border-exam-accent scale-105'
                       : isCorrect
-                      ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                      : 'bg-red-100 text-red-600 hover:bg-red-200'
+                      ? 'bg-exam-sage-bg text-exam-sage-strong border-transparent hover:border-exam-sage/40'
+                      : 'bg-exam-wrong-bg text-exam-wrong border-transparent hover:border-exam-wrong/40'
                   }`}
                 >
                   {flatIdx + 1}
@@ -162,15 +165,17 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
         {/* Main question area */}
         <main className="flex-1 min-w-0">
           {filteredIndices.length === 0 ? (
-            <div className="text-center py-20 text-slate-400 dark:text-slate-500">
-              <div className="text-4xl mb-3">{filter === 'wrong' ? '🎉' : '📋'}</div>
+            <div className="text-center py-20 text-exam-ink-soft">
+              {filter === 'wrong'
+                ? <PartyPopper className="w-10 h-10 mx-auto mb-3" strokeWidth={1.5} aria-hidden />
+                : <ClipboardList className="w-10 h-10 mx-auto mb-3" strokeWidth={1.5} aria-hidden />}
               <div>{filter === 'wrong' ? 'אין טעויות! ענית נכון על הכל' : 'לא נמצאו שאלות'}</div>
             </div>
           ) : (
             <>
               <div ref={questionRef}>
-                <div className="text-xs text-slate-400 dark:text-slate-500 mb-3 flex items-center gap-2">
-                  <span>{TYPE_ICONS[question.sectionType] ?? '📝'}</span>
+                <div className="text-xs text-exam-ink-soft mb-3 flex items-center gap-2">
+                  <SectionIcon className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
                   <span>פרק {question.sectionIndex}</span>
                   <span>·</span>
                   <span>שאלה {currentFlatIndex + 1} מתוך {questions.length}</span>
@@ -192,7 +197,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                 <button
                   onClick={() => goTo(Math.max(0, currentIndex - 1))}
                   disabled={currentIndex === 0}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-100 text-sm"
+                  className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt text-sm"
                 >
                   קודם &rsaquo;
                 </button>
@@ -206,12 +211,12 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                         key={flatIdx}
                         onClick={() => goTo(pos)}
                         aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ' — נכונה' : ' — שגויה'}`}
-                        className={`w-7 h-7 rounded-full text-xs font-bold transition-all ${
+                        className={`w-7 h-7 rounded-sm text-xs font-bold transition-all border ${
                           pos === currentIndex
-                            ? 'bg-blue-600 text-white scale-110'
+                            ? 'bg-exam-accent text-exam-accent-ink border-exam-accent scale-110'
                             : isCorrect
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-600'
+                            ? 'bg-exam-sage-bg text-exam-sage-strong border-transparent'
+                            : 'bg-exam-wrong-bg text-exam-wrong border-transparent'
                         }`}
                       >
                         {flatIdx + 1}
@@ -223,7 +228,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                 <button
                   onClick={() => goTo(Math.min(filteredIndices.length - 1, currentIndex + 1))}
                   disabled={currentIndex === filteredIndices.length - 1}
-                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-100 text-sm"
+                  className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt text-sm"
                 >
                   &lsaquo; הבא
                 </button>

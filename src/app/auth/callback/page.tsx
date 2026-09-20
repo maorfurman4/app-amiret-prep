@@ -82,10 +82,10 @@ function CallbackHandler() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center">
-      <div className="text-white text-center space-y-4">
-        <div className="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
-        <p className="text-slate-300">מתחבר...</p>
+    <div className="min-h-screen bg-exam-paper flex items-center justify-center">
+      <div className="text-exam-ink text-center space-y-4">
+        <div className="w-10 h-10 border-2 border-exam-border border-t-exam-accent rounded-full animate-spin mx-auto" />
+        <p className="text-exam-ink-soft">מתחבר...</p>
       </div>
     </div>
   );
@@ -94,8 +94,8 @@ function CallbackHandler() {
 export default function CallbackPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white">טוען...</div>
+      <div className="min-h-screen bg-exam-paper flex items-center justify-center">
+        <div className="text-exam-ink">טוען...</div>
       </div>
     }>
       <CallbackHandler />

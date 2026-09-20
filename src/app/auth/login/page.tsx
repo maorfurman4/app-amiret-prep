@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
+import { UserCircle, Mail, AlertCircle, GraduationCap } from 'lucide-react';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 
 function LoginForm() {
@@ -111,21 +112,21 @@ function LoginForm() {
   if (currentUser) {
     return (
       <div className="text-center space-y-4">
-        <div className="text-5xl">👤</div>
-        <h2 className="text-xl font-bold text-slate-900">כבר מחובר</h2>
-        <p className="text-slate-500 text-sm">
+        <UserCircle className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
+        <h2 className="text-xl font-bold text-exam-ink">כבר מחובר</h2>
+        <p className="text-exam-ink-soft text-sm">
           מחובר בתור<br />
-          <span className="font-semibold text-slate-700">{currentUser.email}</span>
+          <span className="font-semibold text-exam-ink">{currentUser.email}</span>
         </p>
         <button
           onClick={() => router.push('/')}
-          className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
+          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
         >
           חזרה לדף הבית
         </button>
         <button
           onClick={handleSignOut}
-          className="w-full py-2.5 border border-slate-300 text-slate-600 rounded-xl text-sm hover:bg-slate-50 transition-colors"
+          className="w-full py-2.5 border border-exam-border text-exam-ink-soft rounded-sm text-sm hover:bg-exam-paper-alt transition-colors"
         >
           יציאה מהחשבון
         </button>
@@ -135,25 +136,25 @@ function LoginForm() {
 
   // Still loading auth state
   if (currentUser === undefined) {
-    return <div className="text-center text-slate-400 py-8">טוען...</div>;
+    return <div className="text-center text-exam-ink-soft py-8">טוען...</div>;
   }
 
   // ── Sign-up success ────────────────────────────────────────────────────────
   if (signUpDone) {
     return (
       <div className="text-center space-y-4">
-        <div className="text-5xl">📬</div>
-        <h2 className="text-xl font-bold text-slate-900">בדוק את תיבת המייל שלך</h2>
-        <p className="text-slate-500 text-sm leading-relaxed">
+        <Mail className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
+        <h2 className="text-xl font-bold text-exam-ink">בדוק את תיבת המייל שלך</h2>
+        <p className="text-exam-ink-soft text-sm leading-relaxed">
           שלחנו לך קישור אישור לכתובת<br />
-          <span className="font-semibold text-slate-700">{email}</span>
+          <span className="font-semibold text-exam-ink">{email}</span>
         </p>
-        <p className="text-slate-400 text-xs">
+        <p className="text-exam-ink-soft text-xs">
           לחץ על הקישור במייל כדי לאמת את החשבון ולהתחיל
         </p>
         <button
           onClick={() => { setSignUpDone(false); setTab('login'); }}
-          className="text-sm text-blue-600 hover:underline"
+          className="text-sm text-exam-accent hover:underline"
         >
           חזרה לכניסה
         </button>
@@ -165,15 +166,15 @@ function LoginForm() {
   if (forgotSent) {
     return (
       <div className="text-center space-y-4">
-        <div className="text-5xl">✉️</div>
-        <h2 className="text-xl font-bold text-slate-900">מייל איפוס נשלח</h2>
-        <p className="text-slate-500 text-sm">
+        <Mail className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
+        <h2 className="text-xl font-bold text-exam-ink">מייל איפוס נשלח</h2>
+        <p className="text-exam-ink-soft text-sm">
           שלחנו לך קישור לאיפוס הסיסמה לכתובת<br />
-          <span className="font-semibold text-slate-700">{email}</span>
+          <span className="font-semibold text-exam-ink">{email}</span>
         </p>
         <button
           onClick={() => { setForgotSent(false); setShowForgot(false); }}
-          className="text-sm text-blue-600 hover:underline"
+          className="text-sm text-exam-accent hover:underline"
         >
           חזרה לכניסה
         </button>
@@ -186,27 +187,27 @@ function LoginForm() {
     return (
       <form onSubmit={handleForgot} className="space-y-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 mb-1">שכחת סיסמה?</h2>
-          <p className="text-slate-500 text-sm">
+          <h2 className="text-lg font-bold text-exam-ink mb-1">שכחת סיסמה?</h2>
+          <p className="text-exam-ink-soft text-sm">
             הכנס את האימייל שלך ונשלח לך קישור לאיפוס
           </p>
         </div>
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-slate-700">אימייל</label>
+          <label className="block text-sm font-medium text-exam-ink">אימייל</label>
           <input
             type="email" value={email} onChange={e => setEmail(e.target.value)}
             required dir="ltr" placeholder="your@email.com"
-            className="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-left"
+            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
           />
         </div>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {error && <p className="text-exam-wrong text-sm">{error}</p>}
         <button
           type="submit" disabled={loading}
-          className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-60 transition-colors"
+          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
         >
           {loading ? 'שולח...' : 'שלח קישור איפוס'}
         </button>
-        <button type="button" onClick={() => setShowForgot(false)} className="w-full text-center text-sm text-slate-500 hover:text-slate-700">
+        <button type="button" onClick={() => setShowForgot(false)} className="w-full text-center text-sm text-exam-ink-soft hover:text-exam-ink">
           ← חזרה לכניסה
         </button>
       </form>
@@ -220,10 +221,10 @@ function LoginForm() {
       <button
         onClick={handleGoogle}
         disabled={googleLoading}
-        className="w-full py-3 bg-white border-2 border-slate-200 rounded-xl font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-60 transition-all flex items-center justify-center gap-3 shadow-sm"
+        className="w-full py-3 bg-exam-surface border border-exam-border rounded-sm font-semibold text-exam-ink hover:bg-exam-paper-alt hover:border-exam-border-strong disabled:opacity-60 transition-colors flex items-center justify-center gap-3"
       >
         {googleLoading ? (
-          <span className="w-5 h-5 border-2 border-slate-300 border-t-blue-500 rounded-full animate-spin" />
+          <span className="w-5 h-5 border-2 border-exam-border border-t-exam-accent rounded-full animate-spin" />
         ) : (
           <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -237,22 +238,22 @@ function LoginForm() {
 
       {/* Divider */}
       <div className="flex items-center gap-3">
-        <div className="flex-1 h-px bg-slate-200" />
-        <span className="text-xs text-slate-400">או עם אימייל</span>
-        <div className="flex-1 h-px bg-slate-200" />
+        <div className="flex-1 h-px bg-exam-border" />
+        <span className="text-xs text-exam-ink-soft">או עם אימייל</span>
+        <div className="flex-1 h-px bg-exam-border" />
       </div>
 
       {/* Tabs */}
-      <div className="flex rounded-xl bg-slate-100 p-1 gap-1">
+      <div className="flex rounded-sm bg-exam-paper-alt p-1 gap-1">
         <button
           onClick={() => { setTab('login'); setError(null); }}
-          className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'login' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}`}
+          className={`flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'login' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
         >
           כניסה
         </button>
         <button
           onClick={() => { setTab('signup'); setError(null); }}
-          className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${tab === 'signup' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}`}
+          className={`flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'signup' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
         >
           הרשמה
         </button>
@@ -261,21 +262,21 @@ function LoginForm() {
       {/* Email/password form */}
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-slate-700">אימייל</label>
+          <label className="block text-sm font-medium text-exam-ink">אימייל</label>
           <input
             type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}
             required dir="ltr" placeholder="your@email.com" autoComplete="email"
-            className="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none text-left placeholder:text-slate-400"
+            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left placeholder:text-exam-ink-soft"
           />
         </div>
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-sm font-medium text-exam-ink">
             סיסמה
             {tab === 'login' && (
               <button
                 type="button"
                 onClick={() => { setShowForgot(true); setError(null); }}
-                className="float-left text-xs text-blue-600 hover:underline font-normal"
+                className="float-left text-xs text-exam-accent hover:underline font-normal"
               >
                 שכחת סיסמה?
               </button>
@@ -284,23 +285,23 @@ function LoginForm() {
           <input
             type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}
             required minLength={6} dir="ltr" placeholder="••••••••" autoComplete={tab === 'signup' ? 'new-password' : 'current-password'}
-            className="w-full border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none"
           />
           {tab === 'signup' && (
-            <p className="text-xs text-slate-400">לפחות 6 תווים</p>
+            <p className="text-xs text-exam-ink-soft">לפחות 6 תווים</p>
           )}
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl">
-            <span className="text-red-500 flex-shrink-0">⚠️</span>
-            <p className="text-red-700 text-sm">{error}</p>
+          <div className="flex items-center gap-2 p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm">
+            <AlertCircle className="w-4 h-4 text-exam-wrong flex-shrink-0" aria-hidden />
+            <p className="text-exam-wrong text-sm">{error}</p>
           </div>
         )}
 
         <button
           type="submit" disabled={loading}
-          className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
+          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity flex items-center justify-center gap-2"
         >
           {loading && <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />}
           {loading ? (tab === 'signup' ? 'נרשם...' : 'מתחבר...') : (tab === 'signup' ? 'הרשמה' : 'כניסה')}
@@ -312,27 +313,27 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center px-4 py-12" dir="rtl">
+    <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
       <div className="w-full max-w-sm">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="text-5xl mb-3">🎓</div>
-          <h1 className="text-4xl font-black text-white tracking-tight" dir="ltr">
-            134<span className="text-blue-400">+</span>
+          <GraduationCap className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
+          <h1 className="text-4xl font-black text-exam-ink tracking-tight" dir="ltr">
+            134<span className="text-exam-accent">+</span>
           </h1>
-          <p className="text-slate-400 text-sm mt-2">הכנה ממוקדת לאמירנ&quot;ט</p>
+          <p className="text-exam-ink-soft text-sm mt-2">הכנה ממוקדת לאמירנ&quot;ט</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-3xl p-7 shadow-xl">
-          <Suspense fallback={<div className="text-center text-slate-400 py-8">טוען...</div>}>
+        <div className="bg-exam-surface border border-exam-border rounded-md p-7">
+          <Suspense fallback={<div className="text-center text-exam-ink-soft py-8">טוען...</div>}>
             <LoginForm />
           </Suspense>
         </div>
 
-        <p className="text-center text-slate-500 text-xs mt-6">
+        <p className="text-center text-exam-ink-soft text-xs mt-6">
           ניתן להמשיך{' '}
-          <Link href="/" className="text-slate-300 hover:text-white underline">ללא חשבון</Link>
+          <Link href="/" className="text-exam-ink-soft hover:text-exam-ink underline">ללא חשבון</Link>
           {' '}— ההתקדמות זמינה בדפדפן זה. מחיקת נתוני האתר עלולה לאבד את הגישה אליה
         </p>
       </div>

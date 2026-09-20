@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
+import { X, Check } from 'lucide-react';
 import { ExamTimer } from '@/components/exam/ExamTimer';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { SectionProgress } from '@/components/exam/SectionProgress';
@@ -288,9 +289,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               onClick={() => setExitConfirm(true)}
               disabled={isSubmitting}
               aria-label="יציאה מהמבחן"
-              className="flex-shrink-0 w-8 h-8 rounded-sm border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt hover:text-exam-ink transition-colors text-sm font-bold disabled:opacity-40"
+              className="flex-shrink-0 w-8 h-8 rounded-sm border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt hover:text-exam-ink transition-colors flex items-center justify-center disabled:opacity-40"
             >
-              ✕
+              <X className="w-4 h-4" aria-hidden />
             </button>
             <div className="flex flex-col flex-1">
               <span className="text-sm font-bold text-exam-ink">סימולציית פרקי הליבה</span>
@@ -438,7 +439,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               disabled={isSubmitting}
               className="px-5 py-2 rounded-sm bg-exam-sage-strong text-white hover:opacity-90 transition-opacity text-sm font-bold disabled:opacity-60"
             >
-              {isSubmitting ? 'שולח...' : currentSection < SECTION_CONFIGS.length ? 'סיים פרק →' : 'סיים מבחן ✓'}
+              {isSubmitting ? 'שולח...' : currentSection < SECTION_CONFIGS.length ? 'סיים פרק →' : (
+              <span className="inline-flex items-center gap-1.5">סיים מבחן <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span>
+            )}
             </button>
           )}
         </div>

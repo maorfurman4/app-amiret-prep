@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
+import { AlertTriangle, CheckCircle2, BookOpen } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
@@ -288,8 +289,9 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               </div>
               {overCap.length > 0 ? (
                 <div className="p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm">
-                  <div className="text-sm font-semibold text-exam-alt mb-1">
-                    ⚠️ {overCap.length} שאלות חרגו מ&quot;תקציב התקיעה&quot;
+                  <div className="text-sm font-semibold text-exam-alt mb-1 flex items-center gap-1.5">
+                    <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
+                    {overCap.length} שאלות חרגו מ&quot;תקציב התקיעה&quot;
                   </div>
                   <div className="text-xs text-exam-alt leading-relaxed">
                     {overCap.slice(0, 4).map(x => `פרק ${x.section} שאלה ${x.q}: ${Math.round(x.t)} שנ׳${x.wrong ? ' (וגם שגויה — נחש ותתקדם!)' : ''}`).join(' · ')}
@@ -297,8 +299,9 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                   </div>
                 </div>
               ) : (
-                <div className="p-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-sm text-exam-sage-strong font-medium">
-                  ✓ קצב מצוין — אף שאלה לא חרגה מתקציב התקיעה
+                <div className="p-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-sm text-exam-sage-strong font-medium flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" aria-hidden />
+                  קצב מצוין — אף שאלה לא חרגה מתקציב התקיעה
                 </div>
               )}
             </div>
@@ -308,7 +311,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         {/* Review all questions */}
         <Link href={`/review/${sessionId}`} className="block">
           <div className="bg-exam-surface border border-exam-border rounded-sm p-5 flex items-center gap-4 hover:bg-exam-paper-alt hover:border-exam-border-strong transition-colors cursor-pointer">
-            <div className="text-3xl">📖</div>
+            <BookOpen className="w-8 h-8 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
             <div>
               <div className="font-bold text-exam-ink">עבור על כל השאלות ולמד מהטעויות</div>
               <div className="text-exam-ink-soft text-sm">ראה הסברים מפורטים לכל שאלה עם שלבי שלילה</div>

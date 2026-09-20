@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Flame } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
 /** Same "today" definition as the server-side streak calc (lib/streak-server.ts). */
@@ -59,11 +60,11 @@ export function StreakCelebration() {
         className={`bg-white dark:bg-slate-800 rounded-3xl px-8 py-10 max-w-xs w-full text-center shadow-2xl transition-all duration-200 ${closing ? 'scale-90 opacity-0' : 'animate-streak-pop'}`}
         onClick={e => e.stopPropagation()}
       >
-        <div className="text-7xl mb-3 animate-streak-flicker">🔥</div>
+        <Flame className="w-16 h-16 mx-auto mb-3 text-exam-alt animate-streak-flicker" fill="currentColor" aria-hidden />
         <div className="text-3xl font-black text-orange-600 dark:text-orange-400 mb-1 tabular-nums">
           {streak} {streak === 1 ? 'יום רצוף' : 'ימים רצופים'}
         </div>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">כל הכבוד! ממשיכים ככה 💪</p>
+        <p className="text-exam-ink-soft text-sm mb-6">כל הכבוד! ממשיכים ככה</p>
         <button
           onClick={dismiss}
           className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold transition-colors"

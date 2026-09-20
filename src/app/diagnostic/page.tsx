@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Stethoscope, PenLine, RotateCcw, Timer, BarChart3, Check, Lightbulb } from 'lucide-react';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
@@ -123,24 +124,24 @@ export default function DiagnosticPage() {
   /* ── Intro ── */
   if (phase === 'intro') {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col" dir="rtl">
+      <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/" backLabel="דף הבית" />
         <div className="flex-1 flex items-center justify-center px-4 py-10">
           <div className="w-full max-w-lg text-center space-y-6">
-            <div className="text-5xl">🩺</div>
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white">אבחון רמה מהיר</h1>
-            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+            <Stethoscope className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
+            <h1 className="text-3xl font-black text-exam-ink">אבחון רמה מהיר</h1>
+            <p className="text-exam-ink-soft leading-relaxed">
               12 שאלות אדפטיביות בכ-10 דקות. השאלות מתאימות את עצמן לרמה שלך תוך כדי,
               ובסוף תקבל הערכת רמה פנימית והמלצה מאיפה להתחיל. זהו אבחון קצר, לא סימולציה של הבחינה.
             </p>
-            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-500 dark:text-slate-400 text-right space-y-1.5">
-              <div>✏️ 6 שאלות השלמת משפטים + 🔄 6 ניסוח מחדש</div>
-              <div>⏱️ ללא טיימר — אבל נסה לענות בקצב טבעי</div>
-              <div>📊 האבחון משתמש במודל ה-IRT הפנימי של האתר</div>
+            <div className="bg-exam-surface rounded-md border border-exam-border p-4 text-sm text-exam-ink-soft text-right space-y-1.5">
+              <div className="flex items-center gap-2"><PenLine className="w-4 h-4 flex-shrink-0" aria-hidden />6 שאלות השלמת משפטים <RotateCcw className="w-4 h-4 flex-shrink-0" aria-hidden />6 ניסוח מחדש</div>
+              <div className="flex items-center gap-2"><Timer className="w-4 h-4 flex-shrink-0" aria-hidden />ללא טיימר — אבל נסה לענות בקצב טבעי</div>
+              <div className="flex items-center gap-2"><BarChart3 className="w-4 h-4 flex-shrink-0" aria-hidden />האבחון משתמש במודל ה-IRT הפנימי של האתר</div>
             </div>
             <button
               onClick={() => loadStage(0, [], [])}
-              className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-lg font-bold transition-colors"
+              className="w-full py-4 bg-exam-accent hover:opacity-90 text-exam-accent-ink rounded-md text-lg font-bold transition-opacity"
             >
               התחל אבחון
             </button>
@@ -152,18 +153,18 @@ export default function DiagnosticPage() {
 
   if (phase === 'loading') {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center" dir="rtl">
-        <div className="text-slate-400 dark:text-slate-500">מתאים את השאלות הבאות לרמה שלך...</div>
+      <div className="min-h-screen bg-exam-paper flex items-center justify-center" dir="rtl">
+        <div className="text-exam-ink-soft">מתאים את השאלות הבאות לרמה שלך...</div>
       </div>
     );
   }
 
   if (phase === 'error') {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center" dir="rtl">
+      <div className="min-h-screen bg-exam-paper flex items-center justify-center" dir="rtl">
         <div className="text-center space-y-3">
-          <div className="text-red-500">שגיאה בטעינת שאלות</div>
-          <button onClick={() => loadStage(stageIdx, doneQuestions, doneAnswers)} className="text-blue-600 underline text-sm">נסה שוב</button>
+          <div className="text-exam-wrong">שגיאה בטעינת שאלות</div>
+          <button onClick={() => loadStage(stageIdx, doneQuestions, doneAnswers)} className="text-exam-accent underline text-sm">נסה שוב</button>
         </div>
       </div>
     );
@@ -190,21 +191,21 @@ export default function DiagnosticPage() {
     const totalCorrect = doneAnswers.filter((a, i) => a === doneQuestions[i].correct_answer).length;
 
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 px-4 py-8" dir="rtl">
+      <div className="min-h-screen bg-exam-paper px-4 py-8" dir="rtl">
         <div className="max-w-lg mx-auto space-y-5">
           <div className="text-center">
-            <div className="text-4xl mb-2">🩺</div>
-            <h1 className="text-2xl font-black text-slate-900 dark:text-white">תוצאות האבחון</h1>
+            <Stethoscope className="w-10 h-10 mx-auto mb-2 text-exam-ink" strokeWidth={1.5} aria-hidden />
+            <h1 className="text-2xl font-black text-exam-ink">תוצאות האבחון</h1>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700 text-center">
-            <div className="text-sm text-slate-500 dark:text-slate-400 mb-1">הרמה המאובחנת שלך</div>
-            <div className="text-5xl font-black text-slate-900 dark:text-white mb-2">רמה {level}/5</div>
+          <div className="bg-exam-surface rounded-md p-6 border border-exam-border text-center">
+            <div className="text-sm text-exam-ink-soft mb-1">הרמה המאובחנת שלך</div>
+            <div className="text-5xl font-black text-exam-ink mb-2">רמה {level}/5</div>
             <div className={`text-lg font-bold ${band.color}`}>אומדן פנימי: ~{score} — {band.label}</div>
-            <div className="text-xs text-slate-400 dark:text-slate-500 mt-2">
+            <div className="text-xs text-exam-ink-soft mt-2">
               {totalCorrect}/{totalAnswered} נכונות · נותבת דרך רמות {levelsSeen.join(' ← ')}
             </div>
-            <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-2">
+            <div className="text-[11px] text-exam-ink-soft mt-2">
               סף הפטור/הרמה נקבע בנפרד בכל מוסד — {band.label} הוא הטווח הנפוץ, לא תקן מחייב אחיד
             </div>
           </div>
@@ -212,8 +213,8 @@ export default function DiagnosticPage() {
           <AuthCTA message="התחבר כדי לשמור את האבחון הזה ולעקוב אחרי ההתקדמות שלך לאורך זמן." />
 
           {/* Per-type breakdown */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-200 dark:border-slate-700">
-            <h2 className="font-bold text-slate-900 dark:text-white text-sm mb-3">פירוט לפי סוג שאלה</h2>
+          <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
+            <h2 className="font-bold text-exam-ink text-sm mb-3">פירוט לפי סוג שאלה</h2>
             <div className="space-y-3">
               {Object.entries(byType).map(([t, d]) => {
                 const pct = Math.round((d.correct / d.total) * 100);
@@ -221,14 +222,14 @@ export default function DiagnosticPage() {
                 return (
                   <div key={t}>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-slate-700 dark:text-slate-200">{TYPE_LABELS[t]}</span>
-                      <span className="text-slate-500 dark:text-slate-400">{d.correct}/{d.total}</span>
+                      <span className="text-exam-ink">{TYPE_LABELS[t]}</span>
+                      <span className="text-exam-ink-soft">{d.correct}/{d.total}</span>
                     </div>
-                    <div className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                      <div className={`h-full rounded-full ${pct >= 75 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${pct}%` }} />
+                    <div className="h-2 bg-exam-paper-alt rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full ${pct >= 75 ? 'bg-exam-sage-strong' : pct >= 50 ? 'bg-exam-alt' : 'bg-exam-wrong'}`} style={{ width: `${pct}%` }} />
                     </div>
                     {lowSample && (
-                      <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
+                      <div className="text-[11px] text-exam-ink-soft mt-1">
                         עוד מעט נתונים — {d.total} שאלות בלבד, האחוז עוד לא מדויק מספיק להסתמך עליו
                       </div>
                     )}
@@ -239,21 +240,21 @@ export default function DiagnosticPage() {
           </div>
 
           {/* Recommendation */}
-          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-2xl p-5">
-            <h2 className="font-bold text-blue-900 dark:text-blue-300 text-sm mb-2">💡 מאיפה להתחיל</h2>
-            <ul className="text-sm text-blue-900 dark:text-blue-200 space-y-1.5 leading-relaxed">
+          <div className="bg-exam-alt-bg border border-exam-alt/40 rounded-md p-5">
+            <h2 className="font-bold text-exam-ink text-sm mb-2 flex items-center gap-2"><Lightbulb className="w-4 h-4" aria-hidden />מאיפה להתחיל</h2>
+            <ul className="text-sm text-exam-ink space-y-1.5 leading-relaxed">
               {weakest && weakest[1].correct / weakest[1].total < 0.75 && (
-                <li>• הנקודה החלשה שלך: <span className="font-bold">{weakLabel}</span> — קרא את <Link href={weakTipHref} className="underline font-semibold">מדריך הטכניקה</Link> ו<Link href={`/practice?type=${weakest[0]}&difficulty=${level}`} className="underline font-semibold">תרגל אותה ממוקד ברמה {level}</Link>.</li>
+                <li>• הנקודה החלשה שלך: <span className="font-bold">{weakLabel}</span> — קרא את <Link href={weakTipHref} className="underline font-semibold text-exam-accent">מדריך הטכניקה</Link> ו<Link href={`/practice?type=${weakest[0]}&difficulty=${level}`} className="underline font-semibold text-exam-accent">תרגל אותה ממוקד ברמה {level}</Link>.</li>
               )}
-              <li>• תרגל ב<Link href={`/practice?type=sentence_completion&difficulty=${level}`} className="underline font-semibold">תרגול ממוקד</Link> ברמה {level}{level < 5 ? ` ואז עלה ל-${level + 1}` : ''}.</li>
-              <li>• כשאתה מרגיש מוכן — <Link href="/exam" className="underline font-semibold">סימולציית פרקי הליבה</Link> תיתן אומדן רחב יותר שכולל גם הבנת הנקרא.</li>
-              {score < 100 && <li>• חזק את הבסיס עם <Link href="/vocabulary" className="underline font-semibold">אוצר המילים</Link> — 10 דקות ביום.</li>}
+              <li>• תרגל ב<Link href={`/practice?type=sentence_completion&difficulty=${level}`} className="underline font-semibold text-exam-accent">תרגול ממוקד</Link> ברמה {level}{level < 5 ? ` ואז עלה ל-${level + 1}` : ''}.</li>
+              <li>• כשאתה מרגיש מוכן — <Link href="/exam" className="underline font-semibold text-exam-accent">סימולציית פרקי הליבה</Link> תיתן אומדן רחב יותר שכולל גם הבנת הנקרא.</li>
+              {score < 100 && <li>• חזק את הבסיס עם <Link href="/vocabulary" className="underline font-semibold text-exam-accent">אוצר המילים</Link> — 10 דקות ביום.</li>}
             </ul>
           </div>
 
           <div className="flex gap-3">
-            <Link href="/exam" className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-center transition-colors">לסימולציית הליבה</Link>
-            <Link href="/practice" className="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-xl font-semibold text-center transition-colors hover:bg-slate-50 dark:hover:bg-slate-700">לתרגול ממוקד</Link>
+            <Link href="/exam" className="flex-1 py-3 bg-exam-accent hover:opacity-90 text-exam-accent-ink rounded-sm font-bold text-center transition-opacity">לסימולציית הליבה</Link>
+            <Link href="/practice" className="flex-1 py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-sm font-semibold text-center transition-colors hover:bg-exam-paper-alt">לתרגול ממוקד</Link>
           </div>
         </div>
       </div>
@@ -263,18 +264,19 @@ export default function DiagnosticPage() {
   /* ── Answering ── */
   const q = questions[qIdx];
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900" dir="rtl">
-      <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+    <div className="min-h-screen bg-exam-paper" dir="rtl">
+      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-2xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-2">
-            <div>
-              <span className="text-sm font-bold text-slate-900 dark:text-white">🩺 אבחון מהיר</span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 mr-2">{STAGES[stageIdx].label}</span>
+            <div className="flex items-center gap-2">
+              <Stethoscope className="w-4 h-4 text-exam-ink" aria-hidden />
+              <span className="text-sm font-bold text-exam-ink">אבחון מהיר</span>
+              <span className="text-xs text-exam-ink-soft">{STAGES[stageIdx].label}</span>
             </div>
-            <span className="text-xs font-mono text-slate-500 dark:text-slate-400">{totalAnswered + 1}/{totalPlanned}</span>
+            <span className="text-xs font-mono text-exam-ink-soft">{totalAnswered + 1}/{totalPlanned}</span>
           </div>
-          <div className="h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div className="h-full bg-blue-500 rounded-full transition-all" style={{ width: `${(totalAnswered / totalPlanned) * 100}%` }} />
+          <div className="h-1.5 bg-exam-paper-alt rounded-full overflow-hidden">
+            <div className="h-full bg-exam-accent rounded-full transition-all" style={{ width: `${(totalAnswered / totalPlanned) * 100}%` }} />
           </div>
         </div>
       </header>
@@ -291,12 +293,14 @@ export default function DiagnosticPage() {
           <button
             onClick={handleNext}
             disabled={selected === null}
-            className="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors disabled:opacity-40"
+            className="px-8 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-40"
           >
-            {totalAnswered + 1 === totalPlanned ? 'סיים וקבל אבחון ✓' : 'הבא ‹'}
+            {totalAnswered + 1 === totalPlanned
+              ? <span className="inline-flex items-center gap-1.5">סיים וקבל אבחון <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span>
+              : 'הבא ‹'}
           </button>
         </div>
-        <p className="mt-6 text-center text-xs text-slate-400 dark:text-slate-500">
+        <p className="mt-6 text-center text-xs text-exam-ink-soft">
           אין כאן נכון/לא נכון מיידי — ענה לפי תחושת הבטן, בדיוק כמו במבחן.
         </p>
       </main>

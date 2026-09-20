@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { Check } from 'lucide-react';
 import { SECTION_CONFIGS } from '@/types/exam';
 
 interface SectionProgressProps {
@@ -42,7 +43,7 @@ export function SectionProgress({ currentSection, completedSections }: SectionPr
                 cfg.experimental ? 'bg-exam-surface border-exam-alt/50 text-exam-alt border-dashed' :
                             'bg-exam-surface border-exam-border text-exam-ink-soft'
               }`}>
-                {isDone ? '✓' : cfg.index}
+                {isDone ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : cfg.index}
               </div>
               <span className={`mt-1 text-[10px] whitespace-nowrap ${
                 isCurrent ? (cfg.experimental ? 'text-exam-alt font-semibold' : 'text-exam-accent font-semibold') :

@@ -9,14 +9,15 @@ import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adapt
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 import { useActivityGuard } from '@/lib/activity-guard';
+import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, type LucideIcon } from 'lucide-react';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
 type Difficulty = 1 | 2 | 3 | 4 | 5 | 'random';
 
-const TYPE_OPTIONS: { type: QuestionType; label: string; desc: string; icon: string }[] = [
-  { type: 'sentence_completion', label: 'השלמת משפטים', desc: 'בחר את המילה החסרה במשפט', icon: '✏️' },
-  { type: 'restatement',        label: 'ניסוח מחדש',   desc: 'זהה את המשמעות הזהה במשפט', icon: '🔄' },
-  { type: 'reading_comprehension', label: 'הבנת הנקרא', desc: 'קרא קטע וענה על שאלות הבנה', icon: '📖' },
+const TYPE_OPTIONS: { type: QuestionType; label: string; desc: string; icon: LucideIcon }[] = [
+  { type: 'sentence_completion', label: 'השלמת משפטים', desc: 'בחר את המילה החסרה במשפט', icon: PenLine },
+  { type: 'restatement',        label: 'ניסוח מחדש',   desc: 'זהה את המשמעות הזהה במשפט', icon: RotateCcw },
+  { type: 'reading_comprehension', label: 'הבנת הנקרא', desc: 'קרא קטע וענה על שאלות הבנה', icon: BookOpen },
 ];
 
 const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; sublabel: string; range: string }[] = [
@@ -25,7 +26,7 @@ const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; sublabel: string; 
   { value: 3, label: '3', sublabel: 'בינוני',     range: '100–119' },
   { value: 4, label: '4', sublabel: 'קשה',         range: '120–133' },
   { value: 5, label: '5', sublabel: 'קשה מאוד',  range: '134–150' },
-  { value: 'random', label: '🎲', sublabel: 'מעורב', range: 'מכל הרמות' },
+  { value: 'random', label: '', sublabel: 'מעורב', range: 'מכל הרמות' },
 ];
 
 // Authentic AMIRNET section format: question count + hard section timer
@@ -364,7 +365,7 @@ function PracticeContent() {
                   selectedType === opt.type ? 'border-blue-500 ring-2 ring-blue-100 dark:ring-blue-900/40' : 'border-slate-200 dark:border-slate-700 hover:border-blue-400'
                 }`}
               >
-                <span className="text-3xl">{opt.icon}</span>
+                <opt.icon className="w-8 h-8 text-slate-700 dark:text-slate-200 flex-shrink-0" strokeWidth={1.75} aria-hidden />
                 <div>
                   <div className="font-bold text-slate-900 dark:text-white text-lg">{opt.label}</div>
                   <div className="text-slate-500 dark:text-slate-400 text-sm">{opt.desc}</div>
@@ -379,12 +380,12 @@ function PracticeContent() {
               onClick={() => router.push('/review-queue')}
               className="w-full text-right p-6 bg-orange-50 dark:bg-orange-900/20 rounded-2xl border-2 border-orange-200 dark:border-orange-700 hover:border-orange-400 hover:shadow-md transition-all flex items-center gap-4"
             >
-              <span className="text-3xl">🔁</span>
+              <RotateCcw className="w-7 h-7 text-orange-500 dark:text-orange-400 flex-shrink-0" strokeWidth={1.75} aria-hidden />
               <div>
                 <div className="flex items-center gap-2">
                   <div className="text-lg font-bold text-orange-900 dark:text-orange-200">חזרה על טעויות</div>
                   {reviewCount !== null && (
-                    <span className="px-2 py-0.5 bg-orange-500 text-white text-xs font-bold rounded-full">{reviewCount}</span>
+                    <span className="px-2 py-0.5 bg-orange-500 text-white text-xs font-bold rounded-sm">{reviewCount}</span>
                   )}
                 </div>
                 <div className="text-sm text-orange-700 dark:text-orange-400 leading-relaxed">חזור על שאלות שטעית בהן — מערכת חזרה מרווחת</div>
@@ -398,7 +399,7 @@ function PracticeContent() {
               href="/vocabulary"
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:shadow-sm transition-all text-sm text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-blue-400"
             >
-              <span>📖</span>
+              <BookOpen className="w-4 h-4" strokeWidth={1.75} aria-hidden />
               <span>אוצר מילים — כרטיסיות לימוד</span>
             </Link>
           </div>
@@ -429,7 +430,9 @@ function PracticeContent() {
                   selectedDiff === opt.value ? 'border-blue-500 ring-2 ring-blue-100 dark:ring-blue-900/40' : 'border-slate-200 dark:border-slate-700 hover:border-blue-400'
                 }`}
               >
-                <div className="text-2xl font-black text-slate-900 dark:text-white">{opt.label}</div>
+                <div className="text-2xl font-black text-slate-900 dark:text-white">
+                  {opt.value === 'random' ? <Dices className="w-6 h-6 mx-auto" aria-hidden /> : opt.label}
+                </div>
                 <div className="text-xs font-semibold text-slate-700 dark:text-slate-200 mt-1">{opt.sublabel}</div>
                 <div className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{opt.range}</div>
               </button>
@@ -474,7 +477,7 @@ function PracticeContent() {
             {[
               { id: 'learn', title: 'למידה', desc: 'הסבר מיידי אחרי כל תשובה — בקצב שלך', active: !examMode && !sectionMode, on: () => { setExamMode(false); setSectionMode(false); } },
               { id: 'perQ', title: 'אימון מהירות', desc: 'טיימר לכל שאלה בנפרד, הסברים בסוף', active: examMode && !sectionMode, on: () => { setExamMode(true); setSectionMode(false); } },
-              { id: 'section', title: 'מקבץ בתנאי אמת 🎯', desc: selectedType ? `בדיוק כמו במבחן: ${SECTION_FORMAT[selectedType].count} שאלות ב-${SECTION_FORMAT[selectedType].seconds / 60} דקות, ניווט חופשי, הסברים בסוף` : '', active: sectionMode, on: () => { setExamMode(false); setSectionMode(true); } },
+              { id: 'section', title: 'מקבץ בתנאי אמת', desc: selectedType ? `בדיוק כמו במבחן: ${SECTION_FORMAT[selectedType].count} שאלות ב-${SECTION_FORMAT[selectedType].seconds / 60} דקות, ניווט חופשי, הסברים בסוף` : '', active: sectionMode, on: () => { setExamMode(false); setSectionMode(true); } },
             ].map(m => (
               <button
                 key={m.id}
@@ -516,12 +519,12 @@ function PracticeContent() {
               <div className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
                 <span className="whitespace-nowrap">{TYPE_OPTIONS.find(t => t.type === selectedType)?.label}</span>
                 {examMode && (
-                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold whitespace-nowrap flex-shrink-0">
+                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-sm font-semibold whitespace-nowrap flex-shrink-0">
                     מצב בחינה
                   </span>
                 )}
                 {sectionMode && (
-                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold whitespace-nowrap flex-shrink-0">
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-sm font-semibold whitespace-nowrap flex-shrink-0">
                     מקבץ בתנאי אמת
                   </span>
                 )}
@@ -607,7 +610,7 @@ function PracticeContent() {
                   onClick={handleNext}
                   className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
                 >
-                  {isLast ? 'ראה תוצאות ✓' : 'שאלה הבאה ‹'}
+                  {isLast ? <span className="inline-flex items-center gap-1.5">ראה תוצאות <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
                 </button>
               )}
             </div>
@@ -635,7 +638,7 @@ function PracticeContent() {
                   onClick={finishSection}
                   className="px-5 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-bold"
                 >
-                  סיים מקבץ ✓
+                  <span className="inline-flex items-center gap-1.5">סיים מקבץ <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span>
                 </button>
               )}
             </div>
@@ -648,7 +651,7 @@ function PracticeContent() {
                 onClick={handleNext}
                 className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors"
               >
-                {isLast ? 'סיים בחינה ✓' : 'שאלה הבאה ‹'}
+                {isLast ? <span className="inline-flex items-center gap-1.5">סיים בחינה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
               </button>
             </div>
           )}
@@ -679,9 +682,9 @@ function PracticeContent() {
         <div className="max-w-2xl mx-auto">
           {/* Score summary */}
           <div className="text-center space-y-4 mb-10">
-            <div className="text-6xl">{pct >= 80 ? '🎉' : pct >= 60 ? '💪' : '📚'}</div>
+            {pct >= 80 ? <PartyPopper className="w-14 h-14 mx-auto text-green-600 dark:text-green-400" strokeWidth={1.5} aria-hidden /> : pct >= 60 ? <ThumbsUp className="w-14 h-14 mx-auto text-amber-500" strokeWidth={1.5} aria-hidden /> : <BookOpen className="w-14 h-14 mx-auto text-slate-400" strokeWidth={1.5} aria-hidden />}
             {(examMode || sectionMode) && (
-              <div className="inline-block bg-amber-100 text-amber-700 text-sm font-bold px-3 py-1 rounded-full">
+              <div className="inline-block bg-amber-100 text-amber-700 text-sm font-bold px-3 py-1 rounded-sm">
                 {sectionMode ? 'תוצאת מקבץ בתנאי אמת' : 'תוצאת מצב בחינה'}
               </div>
             )}
@@ -704,10 +707,10 @@ function PracticeContent() {
             {diagLevel !== null && diagScore !== null && diagClass !== null && (
               <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 text-right">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xl">🎯</span>
+                  <Target className="w-5 h-5 text-slate-700 dark:text-slate-200" strokeWidth={1.75} aria-hidden />
                   <span className="font-bold text-slate-900 dark:text-white">אבחון רמה</span>
                   {selectedDiff === 'random' && (
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">רמה מעורבת</span>
+                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-sm font-semibold">רמה מעורבת</span>
                   )}
                 </div>
                 <div className="flex items-center justify-between gap-3">
@@ -765,7 +768,7 @@ function PracticeContent() {
                         ? 'bg-green-50 text-green-700'
                         : 'bg-red-50 text-red-700'
                     }`}>
-                      <span>{isCorrect ? '✓' : '✗'}</span>
+                      {isCorrect ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : <X className="w-3.5 h-3.5" strokeWidth={3} aria-hidden />}
                       <span>שאלה {i + 1}</span>
                       {answers[i] === null && (
                         <span className="text-slate-500 dark:text-slate-400 font-normal">(לא נענתה — פג הזמן)</span>

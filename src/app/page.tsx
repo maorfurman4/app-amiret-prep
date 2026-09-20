@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { GraduationCap, Target, PenLine, BookOpen, Brain, Trophy, Lightbulb, Ruler, ChevronLeft } from 'lucide-react';
 import { UserMenu } from '@/components/UserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { DashboardSummaryProvider } from '@/lib/dashboard-context';
@@ -10,11 +11,11 @@ import { StatsCard } from '@/components/home/StatsCard';
 import { StreakCelebration } from '@/components/home/StreakCelebration';
 
 const LEARN_LINKS_BEFORE = [
-  { href: '/practice',   icon: '✏️', title: 'תרגול ממוקד', sub: 'לפי סוג שאלה' },
-  { href: '/vocabulary', icon: '📖', title: 'אוצר מילים',   sub: 'מעל 1,000 מילים' },
+  { href: '/practice',   icon: PenLine,  title: 'תרגול ממוקד', sub: 'לפי סוג שאלה' },
+  { href: '/vocabulary', icon: BookOpen, title: 'אוצר מילים',   sub: 'מעל 1,000 מילים' },
 ];
 const LEARN_LINKS_AFTER = [
-  { href: '/strategies', icon: '🧠', title: 'אסטרטגיות', sub: 'איך לגשת למבחן' },
+  { href: '/strategies', icon: Brain, title: 'אסטרטגיות', sub: 'איך לגשת למבחן' },
 ];
 
 const CARD_CLASSES = 'flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-md text-center transition-colors';
@@ -33,7 +34,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center">
-            <div className="text-5xl mb-3">🎓</div>
+            <GraduationCap className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
             <h1 className="text-5xl font-black mb-2 tracking-tight" dir="ltr">
               134<span className="text-exam-accent">+</span>
             </h1>
@@ -41,8 +42,9 @@ export default function HomePage() {
           </div>
 
           {/* Primary action */}
-          <Link href="/exam" className="block w-full py-4 bg-exam-accent hover:opacity-90 rounded-md text-xl font-bold text-center text-exam-accent-ink transition-opacity">
-            🎯 התחל מבחן
+          <Link href="/exam" className="w-full py-4 bg-exam-accent hover:opacity-90 rounded-md text-xl font-bold text-center text-exam-accent-ink transition-opacity flex items-center justify-center gap-2">
+            <Target className="w-5 h-5" aria-hidden />
+            התחל מבחן
           </Link>
 
           {/* Quick diagnostic */}
@@ -54,7 +56,7 @@ export default function HomePage() {
             <div className="grid grid-cols-2 gap-3">
               {LEARN_LINKS_BEFORE.map(l => (
                 <Link key={l.href} href={l.href} className={CARD_CLASSES}>
-                  <span className="text-3xl">{l.icon}</span>
+                  <l.icon className="w-7 h-7 text-exam-ink-soft" strokeWidth={1.75} aria-hidden />
                   <span className="font-semibold text-sm">{l.title}</span>
                   <span className="text-exam-ink-soft text-xs">{l.sub}</span>
                 </Link>
@@ -62,7 +64,7 @@ export default function HomePage() {
               <ReviewQueueCard />
               {LEARN_LINKS_AFTER.map(l => (
                 <Link key={l.href} href={l.href} className={CARD_CLASSES}>
-                  <span className="text-3xl">{l.icon}</span>
+                  <l.icon className="w-7 h-7 text-exam-ink-soft" strokeWidth={1.75} aria-hidden />
                   <span className="font-semibold text-sm">{l.title}</span>
                   <span className="text-exam-ink-soft text-xs">{l.sub}</span>
                 </Link>
@@ -76,7 +78,7 @@ export default function HomePage() {
             <div className="grid grid-cols-2 gap-3">
               <StatsCard />
               <Link href="/leaderboard" className={CARD_CLASSES}>
-                <span className="text-3xl">🏆</span>
+                <Trophy className="w-7 h-7 text-exam-ink-soft" strokeWidth={1.75} aria-hidden />
                 <span className="font-semibold text-sm">לוח מובילים</span>
                 <span className="text-exam-ink-soft text-xs">איפה אתה ביחס לכולם</span>
               </Link>
@@ -85,19 +87,22 @@ export default function HomePage() {
 
           {/* Tips — full-width row */}
           <Link href="/tips" className="flex items-center gap-3 p-4 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-md transition-colors">
-            <span className="text-2xl">💡</span>
+            <Lightbulb className="w-6 h-6 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />
             <div className="flex-1 text-right">
               <div className="font-semibold text-sm">טיפים אסטרטגיים לבחינה</div>
               <div className="text-exam-ink-soft text-xs">לפי סוג שאלה: השלמת משפטים, ניסוח מחדש, הבנת הנקרא</div>
             </div>
-            <span className="text-exam-ink-soft">‹</span>
+            <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
           </Link>
 
           {/* Score scale — collapsed by default to keep the page short on mobile */}
           <details className="bg-exam-surface border border-exam-border rounded-md group">
             <summary className="p-4 text-sm font-semibold text-exam-ink-soft cursor-pointer select-none list-none flex items-center justify-between">
-              <span>📏 סקאלת הציונים (50–150)</span>
-              <span className="text-exam-ink-soft transition-transform group-open:rotate-90">‹</span>
+              <span className="flex items-center gap-2">
+                <Ruler className="w-4 h-4" aria-hidden />
+                סקאלת הציונים (50–150)
+              </span>
+              <ChevronLeft className="w-4 h-4 text-exam-ink-soft transition-transform group-open:-rotate-90" aria-hidden />
             </summary>
             <div className="px-5 pb-5 space-y-1.5 text-sm">
               {[

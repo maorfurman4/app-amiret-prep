@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
+import { ensureGuestIdentity } from '@/lib/guest';
 import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
   RotateCcw, Trophy, ThumbsUp, Flame, Settings, Check, X, Target, Clock,
@@ -230,20 +231,16 @@ function VocabularyContent() {
   const [showTimedConfig, setShowTimedConfig] = useState(false);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
 
-  // Ensure guestId exists on first visit — other pages (exam, review-queue)
-  // already do this, but a guest landing directly on /vocabulary never had
-  // one generated, silently breaking the "my mistakes" pack for them.
-  useEffect(() => {
-    if (!localStorage.getItem('amiret_guest_id')) {
-      localStorage.setItem('amiret_guest_id', crypto.randomUUID());
-    }
-  }, []);
+  // Guest identity is a signed, HttpOnly cookie the server issues — this
+  // just makes sure it exists before the first request on a page a guest
+  // might land on directly (the server never trusts a client-supplied
+  // guestId, so nothing here needs to read it back — see src/lib/guest.ts).
+  useEffect(() => { ensureGuestIdentity().catch(() => {}); }, []);
 
   // ─── Personal pack: words from the user's own SC mistakes ─────────────────
   const [myWords, setMyWords] = useState<VocabWord[]>([]);
   useEffect(() => {
-    const guestId = localStorage.getItem('amiret_guest_id') ?? '';
-    authFetch(`/api/my-words?guestId=${encodeURIComponent(guestId)}`)
+    authFetch('/api/my-words')
       .then(r => (r.ok ? r.json() : { words: [] }))
       .then((d: { words: VocabWord[] }) => setMyWords(d.words ?? []))
       .catch(() => {});
@@ -771,7 +768,14 @@ function VocabularyContent() {
                     {allWords.filter(w => favorites.has(w.id)).map(w => (
                       <div key={w.id} className="flex items-center justify-between p-3 bg-exam-paper-alt rounded-sm border border-exam-border">
                         <div dir="ltr" className="flex-1 min-w-0">
-                          <div className="font-serif font-bold text-exam-ink text-sm">{w.word}</div>
+                          <div className="flex items-center gap-1.5">
+                            <div className="font-serif font-bold text-exam-ink text-sm">{w.word}</div>
+                            {known.has(w.id) && (
+                              <span dir="rtl" className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-sm bg-exam-sage-bg text-exam-sage-strong text-[10px] font-semibold">
+                                <Check className="w-2.5 h-2.5" strokeWidth={3} aria-hidden />ידוע
+                              </span>
+                            )}
+                          </div>
                           <div className="text-exam-ink-soft text-xs mt-0.5">{w.hebrew_translation}</div>
                           {w.example_sentence && (
                             <div className="font-serif text-exam-ink-soft text-xs mt-0.5 italic truncate">{w.example_sentence}</div>

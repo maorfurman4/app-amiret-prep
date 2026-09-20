@@ -3,9 +3,11 @@ import { getServerClients } from '@/lib/supabase-server';
 
 /**
  * GET /api/exam/state?sessionId=xxx
- * Returns current session state for F5-recovery.
- * Enforces server timer: if current_section_expires_at has passed,
- * auto-advances the section (caller should handle this).
+ * Returns current session state for F5-recovery. The client derives its own
+ * remaining-time and auto-advance behavior from session.current_section_expires_at
+ * (ExamTimer compares it to Date.now() itself, firing immediately if already
+ * past due), so this endpoint just needs to return that timestamp as part of
+ * the session — it doesn't need to precompute a countdown value itself.
  */
 export async function GET(req: NextRequest) {
   const { supabase, user, guestId } = await getServerClients();
@@ -24,17 +26,6 @@ export async function GET(req: NextRequest) {
     .single();
 
   if (!session) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-
-  // Calculate remaining time from server clock
-  const now = Date.now();
-  let remainingMs: number | null = null;
-  let timerExpired = false;
-
-  if (session.current_section_expires_at && !session.is_practice && !session.completed_at) {
-    const expiresAt = new Date(session.current_section_expires_at).getTime();
-    remainingMs = Math.max(0, expiresAt - now);
-    timerExpired = remainingMs === 0;
-  }
 
   // Real exam: strip correct_answer AND explanation (its options_analysis marks
   // the right option) so the client cannot cheat mid-exam.
@@ -56,12 +47,7 @@ export async function GET(req: NextRequest) {
     ),
   };
 
-  return NextResponse.json({
-    session: safeSession,
-    remainingMs,
-    timerExpired,
-    serverNow: now,
-  });
+  return NextResponse.json({ session: safeSession });
 }
 
 /**

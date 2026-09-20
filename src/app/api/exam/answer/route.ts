@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, isExperimentalSection, type Question, type SectionResult } from '@/types/exam';
 import { updateThetaAfterSection, routeNextDifficulty, thetaToScore, correctCount } from '@/lib/adaptive';
@@ -17,15 +18,30 @@ import {
  *
  * Uses user_question_history / user_passage_history for cross-session deduplication.
  */
+const bodySchema = z.object({
+  sessionId: z.string().min(1),
+  sectionIndex: z.int().min(1),
+  answers: z.array(z.union([z.null(), z.int().min(0).max(3)])),
+  // Soft field: invalid/mismatched timings are dropped, not rejected (see
+  // the cross-check against currentQuestions.length further down) — kept
+  // loose here, just enough to guarantee the array-of-numbers shape.
+  timings: z.array(z.number()).optional(),
+});
+
 export async function POST(req: NextRequest) {
   const { supabase, user, guestId } = await getServerClients();
 
-  let body: { sessionId: string; sectionIndex: number; answers: (number | null)[]; guestId?: string; timings?: number[] };
+  let rawBody: unknown;
   try {
-    body = await req.json() as typeof body;
+    rawBody = await req.json();
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
+  const parsed = bodySchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+  const body = parsed.data;
 
   const userKey = user?.id ?? guestId ?? null;
   if (!userKey) return NextResponse.json({ error: 'auth required' }, { status: 401 });
@@ -46,7 +62,10 @@ export async function POST(req: NextRequest) {
   }
 
   const sectionIndex = body.sectionIndex;
-  if (!Number.isInteger(sectionIndex) || sectionIndex < 1 || sectionIndex > SECTION_CONFIGS.length) {
+  // Shape/range of sectionIndex and answers is already guaranteed by
+  // bodySchema above; what's left is checking it against THIS session's
+  // actual state, which no static schema can know in advance.
+  if (sectionIndex > SECTION_CONFIGS.length) {
     return NextResponse.json({ error: 'Invalid sectionIndex' }, { status: 400 });
   }
 
@@ -57,12 +76,8 @@ export async function POST(req: NextRequest) {
   const questionsBySection = session.questions_by_section as Record<number, Question[]>;
   const currentQuestions = questionsBySection[body.sectionIndex] ?? [];
 
-  // Validate answers: must be same length as questions, each null or 0-3
-  if (!Array.isArray(body.answers) || body.answers.length !== currentQuestions.length) {
+  if (body.answers.length !== currentQuestions.length) {
     return NextResponse.json({ error: 'Invalid answers length' }, { status: 400 });
-  }
-  if (!body.answers.every(a => a === null || (Number.isInteger(a) && a >= 0 && a <= 3))) {
-    return NextResponse.json({ error: 'Invalid answer value' }, { status: 400 });
   }
   const cfg = SECTION_CONFIGS[body.sectionIndex - 1];
 

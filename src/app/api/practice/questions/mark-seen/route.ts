@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { getServerClients } from '@/lib/supabase-server';
 import { recordSeenQuestions } from '@/lib/question-history';
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const MAX_IDS = 50;
+const bodySchema = z.object({
+  ids: z.array(z.uuid()).max(MAX_IDS),
+});
 
 /**
  * POST /api/practice/questions/mark-seen  { ids: string[] }
@@ -18,11 +21,12 @@ export async function POST(req: Request) {
   const userKey = user?.id ?? guestId ?? null;
   if (!userKey) return NextResponse.json({ error: 'No identity' }, { status: 401 });
 
-  const body = await req.json().catch(() => ({})) as { ids?: unknown };
-  if (!Array.isArray(body.ids)) {
-    return NextResponse.json({ error: 'ids must be an array' }, { status: 400 });
+  const rawBody = await req.json().catch(() => null);
+  const parsed = bodySchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
-  const ids = [...new Set(body.ids.filter((id): id is string => typeof id === 'string' && UUID_RE.test(id)))].slice(0, MAX_IDS);
+  const ids = [...new Set(parsed.data.ids)];
 
   await recordSeenQuestions(supabase, userKey, ids);
   return NextResponse.json({ ok: true, marked: ids.length });

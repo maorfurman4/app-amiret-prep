@@ -9,6 +9,7 @@ import { AuthCTA } from '@/components/AuthCTA';
 import { classifyScore, isCorrectAnswer, type Question, type QuestionType } from '@/types/exam';
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
 import { authFetch } from '@/lib/auth-fetch';
+import { ensureGuestIdentity } from '@/lib/guest';
 
 /**
  * Quick adaptive diagnostic: 4 stages × 3 questions (~10 minutes),
@@ -36,13 +37,10 @@ const LOW_SAMPLE_THRESHOLD = 5;
 type Phase = 'intro' | 'loading' | 'answering' | 'done' | 'error';
 
 export default function DiagnosticPage() {
-  // A guest landing directly on /diagnostic never had an id generated,
-  // silently breaking cross-session question deduplication for them.
-  useEffect(() => {
-    if (!localStorage.getItem('amiret_guest_id')) {
-      localStorage.setItem('amiret_guest_id', crypto.randomUUID());
-    }
-  }, []);
+  // Guest identity is a signed, HttpOnly cookie the server issues — this
+  // just makes sure it exists before the first request on a page a guest
+  // might land on directly (see src/lib/guest.ts).
+  useEffect(() => { ensureGuestIdentity().catch(() => {}); }, []);
 
   const [phase, setPhase] = useState<Phase>('intro');
 

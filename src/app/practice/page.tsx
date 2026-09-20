@@ -8,6 +8,7 @@ import { classifyScore, isCorrectAnswer, type Question, type QuestionType } from
 import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
+import { ensureGuestIdentity } from '@/lib/guest';
 import { useActivityGuard } from '@/lib/activity-guard';
 import { useCountdown } from '@/lib/use-countdown';
 import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, type LucideIcon } from 'lucide-react';
@@ -86,19 +87,16 @@ function PracticeContent() {
   const [showResult, setShowResult]   = useState(false);
   const [reviewCount, setReviewCount] = useState<number | null>(null);
 
-  // A guest landing directly on /practice (not via /exam, /review-queue or
-  // /vocabulary, which already generate one) never had an id generated,
-  // silently breaking cross-session question deduplication for them.
-  useEffect(() => {
-    if (!localStorage.getItem('amiret_guest_id')) {
-      localStorage.setItem('amiret_guest_id', crypto.randomUUID());
-    }
-  }, []);
+  // Guest identity is a signed, HttpOnly cookie the server issues — this
+  // just makes sure it exists before the very first request on a page a
+  // guest might land on directly, rather than racing authFetch's own
+  // internal ensureGuestIdentity() call on the first fetch below. (The
+  // server never trusts a client-supplied guestId, so there's no query
+  // param to pass here — see src/lib/guest.ts.)
+  useEffect(() => { ensureGuestIdentity().catch(() => {}); }, []);
 
   useEffect(() => {
-    const guestId = localStorage.getItem('amiret_guest_id') ?? '';
-    if (!guestId) return;
-    authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`)
+    authFetch('/api/review-queue')
       .then(r => r.ok ? r.json() : null)
       .then((d: { count: number } | null) => { if (d?.count) setReviewCount(d.count); })
       .catch(() => {});

@@ -62,7 +62,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const loadSession = useCallback(() => authFetch(`/api/exam/state?sessionId=${sessionId}`).then(async res => {
     if (res.status === 429) { setError('יותר מדי בקשות בזמן קצר — חכה כדקה ולחץ "נסה שוב".'); return; }
     if (!res.ok) { setError('לא ניתן לטעון את המבחן'); return; }
-    const data = await res.json() as { session: SessionState; remainingMs: number; timerExpired: boolean };
+    const data = await res.json() as { session: SessionState };
 
     if (data.session.completed_at) {
       router.replace(`/results/${sessionId}`);

@@ -2,17 +2,37 @@ import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// Generous but bounded — a real guest's local vocab lists are at most a
+// few thousand words; this just stops a malformed/huge body from turning
+// into an unbounded query.
+const MAX_VOCAB_IDS = 5000;
+
+function sanitizeIds(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  const ids = raw.filter((id): id is string => typeof id === 'string' && UUID_RE.test(id));
+  return [...new Set(ids)].slice(0, MAX_VOCAB_IDS);
+}
 
 /**
- * POST /api/auth/merge-guest  { guestId }
+ * POST /api/auth/merge-guest  { vocabKnown?: string[], vocabFavorites?: string[] }
  * Called once after login: moves everything the user accumulated as a guest
- * (exam sessions, review queue, seen-question/passage history) onto their
- * account, then recomputes user_stats + leaderboard from the merged history.
- * Idempotent — a second call finds nothing left to move.
+ * (exam sessions, review queue, seen-question/passage history, activity/streak
+ * log) onto their account, then recomputes user_stats + leaderboard from the
+ * merged history. Also unions in the guest's locally-known/favorited vocab
+ * word ids passed in the body — those tables have a hard FK to auth.users,
+ * so a guest (who has no auth.users row) can never write them directly; the
+ * only copy of that progress lives in the guest's own localStorage, and this
+ * is the one moment it can be handed to the server. Idempotent — a second
+ * call finds nothing left to move (and re-sending the same vocab ids is a
+ * harmless no-op via ON CONFLICT).
  */
-export async function POST() {
+export async function POST(req: Request) {
   const { supabase, user, guestId } = await getServerClients();
   if (!user) return NextResponse.json({ error: 'auth required' }, { status: 401 });
+
+  const body = (await req.json().catch(() => ({}))) as { vocabKnown?: unknown; vocabFavorites?: unknown };
+  const vocabKnownIds = sanitizeIds(body.vocabKnown);
+  const vocabFavoriteIds = sanitizeIds(body.vocabFavorites);
 
   // Only the signed server cookie proves ownership, never the request body.
   if (typeof guestId !== 'string' || !UUID_RE.test(guestId) || guestId === user.id) {
@@ -59,7 +79,47 @@ export async function POST() {
   }
   await supabase.from('user_passage_history').update({ user_key: user.id }).eq('user_key', guestId);
 
-  // 4. Recompute user_stats + leaderboard from the merged exam history
+  // 4. Activity log (drives the streak) — same dedupe-then-move pattern as
+  //    review_queue above: a day the account already has activity for wins,
+  //    any other guest-only day is carried over so the streak reflects the
+  //    full merged history, not just what happened after signup.
+  const { data: myDays } = await supabase.from('activity_log').select('activity_date').eq('user_id', user.id);
+  const myDayStrs = (myDays ?? []).map(r => r.activity_date as string);
+  if (myDayStrs.length > 0) {
+    await supabase.from('activity_log').delete().eq('user_id', guestId).in('activity_date', myDayStrs);
+  }
+  await supabase.from('activity_log').update({ user_id: user.id }).eq('user_id', guestId);
+
+  // 5. Vocabulary "known" / "favorite" progress. user_vocab_known/favorites
+  //    both have a FOREIGN KEY on user_id -> auth.users, so a guest row can
+  //    never exist there — the guest's only copy of this progress is the
+  //    id lists the client read from its own localStorage and sent above.
+  //    This is additive (ON CONFLICT DO NOTHING): it only ever adds words
+  //    the account doesn't already have, never removes or overwrites one
+  //    the account already marked known/favorited itself.
+  let mergedVocabKnown = 0;
+  let mergedVocabFavorites = 0;
+  const candidateIds = [...new Set([...vocabKnownIds, ...vocabFavoriteIds])];
+  if (candidateIds.length > 0) {
+    const { data: validWords } = await supabase.from('vocabulary').select('id').in('id', candidateIds);
+    const validIds = new Set((validWords ?? []).map(w => w.id as string));
+
+    const knownRows = vocabKnownIds.filter(id => validIds.has(id)).map(word_id => ({ user_id: user.id, word_id }));
+    if (knownRows.length > 0) {
+      const { error } = await supabase.from('user_vocab_known')
+        .upsert(knownRows, { onConflict: 'user_id,word_id', ignoreDuplicates: true });
+      if (!error) mergedVocabKnown = knownRows.length;
+    }
+
+    const favRows = vocabFavoriteIds.filter(id => validIds.has(id)).map(word_id => ({ user_id: user.id, word_id }));
+    if (favRows.length > 0) {
+      const { error } = await supabase.from('user_vocab_favorites')
+        .upsert(favRows, { onConflict: 'user_id,word_id', ignoreDuplicates: true });
+      if (!error) mergedVocabFavorites = favRows.length;
+    }
+  }
+
+  // 6. Recompute user_stats + leaderboard from the merged exam history
   //    (the completion trigger never saw the guest exams)
   const { data: sessions } = await supabase
     .from('exam_sessions')
@@ -105,5 +165,5 @@ export async function POST() {
     }, { onConflict: 'user_id' });
   }
 
-  return NextResponse.json({ ok: true, mergedExams: rows.length });
+  return NextResponse.json({ ok: true, mergedExams: rows.length, mergedVocabKnown, mergedVocabFavorites });
 }

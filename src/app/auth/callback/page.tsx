@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { recoveryLinkIsInvalid } from '@/lib/password-recovery';
 import { safeRedirectPath } from '@/lib/safe-redirect';
+import { mergeGuestProgress } from '@/lib/merge-guest-client';
+import { RotateCcw, AlertCircle } from 'lucide-react';
 
 function CallbackHandler() {
   const router = useRouter();
@@ -14,11 +16,15 @@ function CallbackHandler() {
   // the tokens, so by the time an effect runs it may already be gone.
   const [initialHash] = useState(() => (typeof window !== 'undefined' ? window.location.hash : ''));
   const supabase = createClient();
+  // Set only if the post-login guest-data merge fails after its retries —
+  // holds what's needed to retry just the merge without re-running OAuth.
+  const [mergeFailed, setMergeFailed] = useState<{ token: string; destination: string } | null>(null);
 
   useEffect(() => {
     const safeNext = safeRedirectPath(searchParams.get('next'));
     const isRecovery = new URLSearchParams(initialHash.replace(/^#/, '')).get('type') === 'recovery';
     let navigated = false;
+    let cancelled = false;
     const navigate = (destination: string) => {
       if (navigated) return;
       navigated = true;
@@ -36,14 +42,23 @@ function CallbackHandler() {
 
     // With flowType: 'implicit', Supabase puts the session in the URL hash.
     // detectSessionInUrl: true auto-processes it and fires SIGNED_IN.
-    // Move any guest-mode history onto the account (fire-and-forget, idempotent)
-    const mergeGuest = (accessToken: string) => {
-      fetch('/api/auth/merge-guest', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-        body: JSON.stringify({}),
-        keepalive: true,
-      }).catch(() => {});
+    // Move any guest-mode history onto the account before continuing —
+    // awaited and retried, because a silently-lost merge here means real
+    // study progress (a streak, known/favorited vocab words) never makes it
+    // onto the account. Only blocks navigation if it still fails after
+    // retrying, so the user can choose to continue without it.
+    const finishAuth = async (accessToken: string, destination: string) => {
+      const result = await mergeGuestProgress(accessToken);
+      if (cancelled) return;
+      if (!result.ok) {
+        // Stop the 6s fallback from yanking the user past this — they
+        // should get to choose retry vs. continue, not have it decided for
+        // them by a timer that has nothing to do with the merge itself.
+        clearTimeout(timer);
+        setMergeFailed({ token: accessToken, destination });
+        return;
+      }
+      navigate(destination);
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -54,16 +69,14 @@ function CallbackHandler() {
         return;
       }
       if (event === 'SIGNED_IN' && session) {
-        mergeGuest(session.access_token);
-        navigate(isRecovery ? '/auth/reset-password' : safeNext);
+        void finishAuth(session.access_token, isRecovery ? '/auth/reset-password' : safeNext);
       }
     });
 
     // Fallback: if already signed in or no hash event fires
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        mergeGuest(session.access_token);
-        navigate(isRecovery ? '/auth/reset-password' : safeNext);
+        void finishAuth(session.access_token, isRecovery ? '/auth/reset-password' : safeNext);
       }
     });
 
@@ -75,11 +88,51 @@ function CallbackHandler() {
 
     return () => {
       navigated = true;
+      cancelled = true;
       subscription.unsubscribe();
       clearTimeout(timer);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const retryMerge = async () => {
+    if (!mergeFailed) return;
+    const { token, destination } = mergeFailed;
+    const result = await mergeGuestProgress(token);
+    if (result.ok) {
+      setMergeFailed(null);
+      router.replace(destination);
+    } else {
+      setMergeFailed({ token, destination });
+    }
+  };
+
+  if (mergeFailed) {
+    return (
+      <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4" dir="rtl">
+        <div className="text-center space-y-4 max-w-sm">
+          <AlertCircle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
+          <h2 className="text-xl font-bold text-exam-ink">ההתחברות הצליחה</h2>
+          <p className="text-exam-ink-soft text-sm leading-relaxed">
+            אבל לא הצלחנו לאשר שההתקדמות שצברת כאורח/ת (רצף ימים, מילים שסימנת) הועברה לחשבון.
+            הנתונים עדיין נשמרים במכשיר הזה — כדאי לנסות שוב.
+          </p>
+          <button
+            onClick={retryMerge}
+            className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+          >
+            <RotateCcw className="w-4 h-4" aria-hidden />נסה שוב
+          </button>
+          <button
+            onClick={() => router.replace(mergeFailed.destination)}
+            className="w-full py-2.5 border border-exam-border text-exam-ink-soft rounded-sm text-sm hover:bg-exam-paper-alt transition-colors"
+          >
+            המשך בלי לשמור כרגע
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-exam-paper flex items-center justify-center">

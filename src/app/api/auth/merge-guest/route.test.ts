@@ -18,6 +18,14 @@ function createSupabase(lookupResult: { data: unknown; error: unknown }) {
   };
 }
 
+function mergeRequest(body: unknown = {}) {
+  return new Request('http://localhost/api/auth/merge-guest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
 describe('POST /api/auth/merge-guest', () => {
   beforeEach(() => vi.clearAllMocks());
 
@@ -25,7 +33,7 @@ describe('POST /api/auth/merge-guest', () => {
     const db = createSupabase({ data: null, error: null });
     mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null });
 
-    const response = await POST();
+    const response = await POST(mergeRequest());
 
     expect(response.status).toBe(401);
     expect(db.spies.getUserById).not.toHaveBeenCalled();
@@ -39,10 +47,25 @@ describe('POST /api/auth/merge-guest', () => {
     const db = createSupabase({ data: null, error: null });
     mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: accountId }, guestId: candidate });
 
-    const response = await POST();
+    const response = await POST(mergeRequest());
 
     expect(response.status).toBe(400);
     expect(db.spies.getUserById).not.toHaveBeenCalled();
+    expect(db.spies.from).not.toHaveBeenCalled();
+  });
+
+  it('rejects before querying anything even with a malformed JSON body', async () => {
+    const db = createSupabase({ data: null, error: null });
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: accountId }, guestId: 'not-a-uuid' });
+
+    const badBodyRequest = new Request('http://localhost/api/auth/merge-guest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{not valid json',
+    });
+    const response = await POST(badBodyRequest);
+
+    expect(response.status).toBe(400);
     expect(db.spies.from).not.toHaveBeenCalled();
   });
 
@@ -50,7 +73,7 @@ describe('POST /api/auth/merge-guest', () => {
     const db = createSupabase({ data: { user: { id: guestId } }, error: null });
     mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: accountId }, guestId });
 
-    const response = await POST();
+    const response = await POST(mergeRequest());
 
     expect(response.status).toBe(403);
     await expect(response.json()).resolves.toEqual({ error: 'Invalid guestId' });
@@ -61,7 +84,7 @@ describe('POST /api/auth/merge-guest', () => {
     const db = createSupabase({ data: null, error: { status: 500, message: 'unavailable' } });
     mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: accountId }, guestId });
 
-    const response = await POST();
+    const response = await POST(mergeRequest());
 
     expect(response.status).toBe(503);
     expect(db.spies.from).not.toHaveBeenCalled();

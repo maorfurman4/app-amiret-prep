@@ -7,8 +7,9 @@ import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
-import { UserCircle, Mail, AlertCircle, GraduationCap } from 'lucide-react';
+import { UserCircle, Mail, AlertCircle, GraduationCap, RotateCcw } from 'lucide-react';
 import { safeRedirectPath } from '@/lib/safe-redirect';
+import { mergeGuestProgress } from '@/lib/merge-guest-client';
 
 function LoginForm() {
   const supabase = createClient();
@@ -26,6 +27,10 @@ function LoginForm() {
   const [forgotSent, setForgotSent] = useState(false);
   const [showForgot, setShowForgot] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null | undefined>(undefined);
+  // Set only when the post-login guest-data merge fails after its retries —
+  // holds the access token so "try again" can re-run just the merge without
+  // asking the user to log in a second time.
+  const [mergeFailedToken, setMergeFailedToken] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user ?? null));
@@ -47,17 +52,20 @@ function LoginForm() {
     if (error) { setError('שגיאה בכניסה עם Google'); setGoogleLoading(false); }
   };
 
-  // Moves guest-mode history (exam sessions, review queue, seen-question
-  // history) onto the account — was previously only wired up on the Google
-  // OAuth callback, so email/password users never got their guest progress
-  // merged in. Fire-and-forget, idempotent server-side.
-  const mergeGuest = (accessToken: string) => {
-    fetch('/api/auth/merge-guest', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-      body: JSON.stringify({}),
-      keepalive: true,
-    }).catch(() => {});
+  // Moves guest-mode history (exam sessions, review queue, streak, vocab
+  // known/favorites) onto the account before continuing — awaited and
+  // retried, because a silently-lost merge here means real study progress
+  // (a streak, known words) is gone for good. Only blocks navigation on
+  // failure, so the user can still choose to continue without it.
+  const finishLogin = async (accessToken: string) => {
+    const result = await mergeGuestProgress(accessToken);
+    if (!result.ok) {
+      setMergeFailedToken(accessToken);
+      setLoading(false);
+      return;
+    }
+    setMergeFailedToken(null);
+    router.push(next);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,8 +83,7 @@ function LoginForm() {
         // signUp() returns an active session immediately when email
         // confirmation is off; falls to the "check your email" branch
         // below when it's on (as it currently is in production).
-        mergeGuest(data.session.access_token);
-        router.push(next);
+        await finishLogin(data.session.access_token);
       } else {
         setSignUpDone(true);
       }
@@ -85,8 +92,7 @@ function LoginForm() {
       if (error) {
         setError('אימייל או סיסמה שגויים');
       } else if (data.session) {
-        mergeGuest(data.session.access_token);
-        router.push(next);
+        await finishLogin(data.session.access_token);
       }
     }
     setLoading(false);
@@ -107,6 +113,36 @@ function LoginForm() {
     }
     setLoading(false);
   };
+
+  // ── Guest-progress merge failed after retries ─────────────────────────────
+  // The account itself is already created/signed in at this point — this is
+  // purely "we couldn't confirm your streak/vocab progress made it over."
+  // Offer a real retry (idempotent server-side) before letting the user
+  // continue without it.
+  if (mergeFailedToken) {
+    return (
+      <div className="text-center space-y-4">
+        <AlertCircle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
+        <h2 className="text-xl font-bold text-exam-ink">ההתחברות הצליחה</h2>
+        <p className="text-exam-ink-soft text-sm leading-relaxed">
+          אבל לא הצלחנו לאשר שההתקדמות שצברת כאורח/ת (רצף ימים, מילים שסימנת) הועברה לחשבון.
+          הנתונים עדיין נשמרים במכשיר הזה — כדאי לנסות שוב.
+        </p>
+        <button
+          onClick={() => finishLogin(mergeFailedToken)}
+          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+        >
+          <RotateCcw className="w-4 h-4" aria-hidden />נסה שוב
+        </button>
+        <button
+          onClick={() => router.push(next)}
+          className="w-full py-2.5 border border-exam-border text-exam-ink-soft rounded-sm text-sm hover:bg-exam-paper-alt transition-colors"
+        >
+          המשך בלי לשמור כרגע
+        </button>
+      </div>
+    );
+  }
 
   // ── Already logged in ─────────────────────────────────────────────────────
   if (currentUser) {

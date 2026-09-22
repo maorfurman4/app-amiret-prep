@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase';
 import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult } from '@/types/exam';
 import { routeNextDifficulty } from '@/lib/adaptive';
+import { aggregateAccuracyByType, findWeakestType } from '@/lib/weakness';
 import { BackNav } from '@/components/BackNav';
 import { BarChart3, Target, Check, Trophy, AlertTriangle, PartyPopper } from 'lucide-react';
 
@@ -70,32 +71,18 @@ export default function StatsPage() {
           }
 
           const scores = rows.map(r => r.score);
-          const performanceByType: Record<string, { correct: number; total: number }> = {};
-          const byType: Record<string, { correct: number; total: number }> = {};
-          const byDifficulty: Record<string, { correct: number; total: number }> = {};
           const recent = rows.slice(-10);
 
-          for (const row of rows) {
-            for (const sr of ((row.section_results ?? []) as SectionResult[])) {
-              const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
-              const t = cfg?.type ?? sr.type;
-              if (!t) continue;
-              if (!performanceByType[t]) performanceByType[t] = { correct: 0, total: 0 };
-              performanceByType[t].correct += sr.correctCount ?? 0;
-              performanceByType[t].total += sr.totalCount ?? 0;
-            }
-          }
+          // Per-type accuracy: all-time (for the performance breakdown) and
+          // last-10 (for the weakness analysis) — same shared aggregator the
+          // "today's session" weak-area pick uses, so both surfaces agree on
+          // what "your weakness" means (src/lib/weakness.ts).
+          const performanceByType = aggregateAccuracyByType(rows);
+          const byType = aggregateAccuracyByType(recent);
 
+          const byDifficulty: Record<string, { correct: number; total: number }> = {};
           for (const row of recent) {
             for (const sr of ((row.section_results ?? []) as SectionResult[])) {
-              const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
-              const t = cfg?.type ?? sr.type;
-              if (t) {
-                if (!byType[t]) byType[t] = { correct: 0, total: 0 };
-                byType[t].correct += sr.correctCount ?? 0;
-                byType[t].total += sr.totalCount ?? 0;
-              }
-
               // Aggregate by difficulty from the section's question level (1-5)
               const level = (sr.questions?.[0] as { difficulty_level?: number } | undefined)?.difficulty_level;
               if (level) {
@@ -172,14 +159,9 @@ export default function StatsPage() {
 
   const classification = stats.best_score ? classifyScore(stats.best_score) : null;
 
-  // Find weakest type for the weakness analysis section
-  const weakestType = weakness && Object.keys(weakness.byType).length > 0
-    ? Object.entries(weakness.byType).reduce((worst, [type, data]) => {
-        const pct = data.total > 0 ? data.correct / data.total : 1;
-        const worstPct = worst.data.total > 0 ? worst.data.correct / worst.data.total : 1;
-        return pct < worstPct ? { type, data } : worst;
-      }, { type: Object.keys(weakness.byType)[0], data: Object.values(weakness.byType)[0] })
-    : null;
+  // Find weakest type for the weakness analysis section — same "worst
+  // accuracy wins" policy src/lib/weakness.ts uses for today's session.
+  const weakestType = weakness ? findWeakestType(weakness.byType) : null;
 
   return (
     <div className="min-h-screen bg-exam-paper" dir="rtl">

@@ -81,57 +81,24 @@ export default function ReviewQueuePage() {
     setStep('reviewing');
   };
 
-  const handleSelect = useCallback((optionIndex: number) => {
-    if (showResult) return;
-    setAnswers(prev => {
-      const next = [...prev];
-      next[currentIndex] = optionIndex;
-      return next;
-    });
-    setShowResult(true);
-
-    const wasCorrect = optionIndex === questions[currentIndex].correct_answer;
-    if (wasCorrect) setCorrectCount(c => c + 1);
-
-    authFetch('/api/review-queue', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        guestId,
-        questionId: questions[currentIndex].id,
-        wasCorrect,
-      }),
-    }).catch(() => {});
-  }, [showResult, currentIndex, questions, guestId]);
-
-  const handleNext = useCallback(() => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(i => i + 1);
-      setShowResult(false);
-    } else {
-      setStep('done');
-    }
-  }, [currentIndex, questions.length]);
-
-  // Restart session (back to question 1, no DB change)
-  const handleRestartSession = () => {
-    setCurrentIndex(0);
-    setAnswers(Array(questions.length).fill(null));
-    setShowResult(false);
-    setCorrectCount(0);
-    setShowQuestionPicker(false);
-  };
-
-  // Delete a single question from the queue. Deleting a DIFFERENT question
-  // than the one currently being viewed must not move the viewer — the old
-  // code kept currentIndex as a raw number, so removing an earlier item
-  // silently shifted every later index down by one and swapped in whatever
-  // question now landed on that number, resetting showResult along with it
-  // (reproduced live: reviewing question 3, deleting question 1 from the
-  // picker silently jumped the view to question 4). Fixed by tracking the
-  // active question by id and only touching currentIndex/showResult when
-  // the deleted question IS the one being viewed.
-  const handleDeleteQuestion = async (questionId: string) => {
+  // Removes a question from local state only — no DELETE request. Shared by
+  // handleDeleteQuestion (which also tells the server) and handleSelect's
+  // graduation case below (where the server has already deleted the row
+  // itself, via record_correct_review reaching the interval cap — telling
+  // it again would be a no-op, but skipping this local update entirely left
+  // a graduated question sitting in the UI as if it were still queued, only
+  // resolving on a full reload).
+  //
+  // Deleting a DIFFERENT question than the one currently being viewed must
+  // not move the viewer — the old code kept currentIndex as a raw number, so
+  // removing an earlier item silently shifted every later index down by one
+  // and swapped in whatever question now landed on that number, resetting
+  // showResult along with it (reproduced live: reviewing question 3,
+  // deleting question 1 from the picker silently jumped the view to question
+  // 4). Fixed by tracking the active question by id and only touching
+  // currentIndex/showResult when the removed question IS the one being
+  // viewed.
+  const removeQuestionLocally = useCallback((questionId: string) => {
     const newAll = allQuestions.filter(q => q.id !== questionId);
     setAllQuestions(newAll);
 
@@ -160,7 +127,59 @@ export default function ReviewQueuePage() {
     } else if (newAll.length === 0) {
       setStep('empty');
     }
+  }, [allQuestions, step, showQuestionPicker, questions, currentIndex, answers]);
 
+  const handleSelect = useCallback((optionIndex: number) => {
+    if (showResult) return;
+    setAnswers(prev => {
+      const next = [...prev];
+      next[currentIndex] = optionIndex;
+      return next;
+    });
+    setShowResult(true);
+
+    const wasCorrect = optionIndex === questions[currentIndex].correct_answer;
+    if (wasCorrect) setCorrectCount(c => c + 1);
+    const answeredQuestionId = questions[currentIndex].id;
+
+    authFetch('/api/review-queue', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        guestId,
+        questionId: answeredQuestionId,
+        wasCorrect,
+      }),
+    }).then(async res => {
+      if (!res.ok) return;
+      // A correct answer at the interval cap graduates the question out of
+      // the queue server-side — reflect that locally now instead of leaving
+      // it shown as still-queued until a full reload re-fetches.
+      const data = await res.json().catch(() => null) as { action?: string } | null;
+      if (data?.action === 'graduated') removeQuestionLocally(answeredQuestionId);
+    }).catch(() => {});
+  }, [showResult, currentIndex, questions, guestId, removeQuestionLocally]);
+
+  const handleNext = useCallback(() => {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex(i => i + 1);
+      setShowResult(false);
+    } else {
+      setStep('done');
+    }
+  }, [currentIndex, questions.length]);
+
+  // Restart session (back to question 1, no DB change)
+  const handleRestartSession = () => {
+    setCurrentIndex(0);
+    setAnswers(Array(questions.length).fill(null));
+    setShowResult(false);
+    setCorrectCount(0);
+    setShowQuestionPicker(false);
+  };
+
+  const handleDeleteQuestion = async (questionId: string) => {
+    removeQuestionLocally(questionId);
     authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}&questionId=${encodeURIComponent(questionId)}`, {
       method: 'DELETE',
     }).catch(() => {});

@@ -214,6 +214,14 @@ function VocabularyContent() {
   // on its own (see the deck-rebuild effect below) so marking a word known
   // again doesn't reshuffle the whole deck.
   const [knownSchedule, setKnownSchedule] = useState<ScheduleMap>({});
+  // Bumped once, right after the DB-sync effect below applies an account's
+  // real known/schedule data — the one case that SHOULD force a deck
+  // rebuild despite `known`/`knownSchedule` otherwise being excluded from
+  // its deps (see that effect's comment): a returning signed-in user on a
+  // fresh device/session starts with an empty local `known` set, so the
+  // very first deck build has nothing to exclude yet, and would otherwise
+  // keep showing already-known words until an unrelated filter change.
+  const [knownSyncVersion, setKnownSyncVersion] = useState(0);
   // Set when a known/favorite write to the account still failed after
   // retrying — informational only (the local change stays applied either
   // way), so the user isn't left thinking it silently worked everywhere.
@@ -315,6 +323,9 @@ function VocabularyContent() {
         setFavorites(s);
         saveSet(FAV_KEY, s);
       }
+      // Force exactly one deck rebuild now that the account's real known/
+      // schedule data has landed — see knownSyncVersion's declaration.
+      setKnownSyncVersion(v => v + 1);
     });
   }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -421,16 +432,17 @@ function VocabularyContent() {
   // reference on every click) reshuffled the whole deck and jumped the user to a
   // random card, losing their place mid-study.
   //
-  // `known` is deliberately NOT a dependency here for the same reason: marking a
-  // card "ידעתי" already removes it from the deck directly (see handleKnew's
-  // `setDeck(prev => prev.slice(1))`), so re-running this effect on every known-set
-  // change reshuffled the entire remaining deck and threw away the deferred
-  // ordering handleUnknown relies on to push "לא ידעתי" cards toward the end. The
-  // `known.has()`/due-check below still applies correctly on every genuine
-  // rebuild (filter/pack change) — it just doesn't need to re-trigger the
-  // rebuild itself. A known word only re-enters the deck once its spaced-
-  // repetition interval says it's due again — otherwise it stays hidden,
-  // same as before.
+  // `known`/`knownSchedule` are deliberately NOT dependencies here for the same
+  // reason: marking a card "ידעתי" already removes it from the deck directly
+  // (see handleKnew's `setDeck(prev => prev.slice(1))`), so re-running this
+  // effect on every known-set change reshuffled the entire remaining deck and
+  // threw away the deferred ordering handleUnknown relies on to push "לא
+  // ידעתי" cards toward the end. The `known.has()`/due-check below still
+  // applies correctly on every genuine rebuild (filter/pack change, or a
+  // fresh DB sync via knownSyncVersion) — it just doesn't need every local
+  // swipe to re-trigger the rebuild itself. A known word only re-enters the
+  // deck once its spaced-repetition interval says it's due again — otherwise
+  // it stays hidden, same as before.
   const favoritesSignature = activePack === 'favorites' ? Array.from(favorites).sort().join(',') : '';
   useEffect(() => {
     if (!allWords.length) return;
@@ -446,7 +458,7 @@ function VocabularyContent() {
       setShowHint(false);
     });
     return () => cancelAnimationFrame(frame);
-  }, [allWords, filterCat, filterDiff, search, activePack, favoritesSignature]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [allWords, filterCat, filterDiff, search, activePack, favoritesSignature, knownSyncVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Build quiz options for current question ───────────────────────────────
   const buildQuizOptions = useCallback((word: VocabWord, pool: VocabWord[]): string[] => {

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import type { Question } from '@/types/exam';
 import { recordWrongAnswers } from '@/lib/review-queue';
-import { nextInterval } from '@/lib/spaced-repetition';
 
 const MAX_INTERVAL_DAYS = 30;
 
@@ -145,9 +144,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'questionId required' }, { status: 400 });
   }
 
-  const now = new Date();
   const ownCol = user ? 'user_id' : 'guest_id';
   const ownVal = user ? user.id : guestId!;
+  const ownerType = user ? 'user' : 'guest';
 
   if (!wasCorrect) {
     // A fresh mistake is due immediately (Anki-style): the user can review it
@@ -156,31 +155,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, action: 'added_or_updated' });
   }
 
-  const { data: existing } = await supabase
-    .from('review_queue').select('interval_days')
-    .eq(ownCol, ownVal).eq('question_id', questionId).single();
+  // Doubles the existing interval (or graduates it at the cap) as one
+  // atomic Postgres statement — see record_correct_review's own comment
+  // for why a client-side select-then-update can't safely do this under
+  // concurrent submissions for the same question.
+  const { data, error } = await supabase.rpc('record_correct_review', {
+    p_owner_type: ownerType,
+    p_owner_id: ownVal,
+    p_question_id: questionId,
+    p_max_interval_days: MAX_INTERVAL_DAYS,
+  }).single();
 
-  if (!existing) return NextResponse.json({ ok: true, action: 'not_in_queue' });
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  const { interval_days } = existing as { interval_days: number };
-
-  // Graduate only once the word has actually survived a review AT the
-  // 30-day cap, not the review that first reaches it — otherwise a word
-  // never really gets a 30-day-spaced review, it just gets deleted the
-  // moment doubling would exceed the cap (previously: 5 correct answers
-  // in a row and it's gone, regardless of how long those were spaced).
-  if (interval_days >= MAX_INTERVAL_DAYS) {
-    await supabase.from('review_queue').delete().eq(ownCol, ownVal).eq('question_id', questionId);
-    return NextResponse.json({ ok: true, action: 'graduated' });
-  }
-
-  const newInterval = nextInterval(interval_days, MAX_INTERVAL_DAYS);
-  const nextReview = new Date(now);
-  nextReview.setDate(nextReview.getDate() + newInterval);
-
-  await supabase.from('review_queue')
-    .update({ interval_days: newInterval, next_review_at: nextReview.toISOString(), last_reviewed_at: now.toISOString() })
-    .eq(ownCol, ownVal).eq('question_id', questionId);
-
-  return NextResponse.json({ ok: true, action: 'interval_extended', newInterval });
+  const { action, new_interval: newInterval } = data as { action: string; new_interval: number | null };
+  return NextResponse.json({ ok: true, action, ...(newInterval !== null ? { newInterval } : {}) });
 }

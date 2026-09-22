@@ -64,16 +64,35 @@ export async function GET(req: NextRequest) {
     const simpleBudget = includeRC ? Math.max(1, count - 5) : count;
     const perType = Math.ceil(simpleBudget / INTERLEAVE_TYPES.length);
 
-    const simpleFetches = await Promise.all(
-      INTERLEAVE_TYPES.map(t => userKey
-        ? fetchUnseenQuestions({ supabase, userKey, type: t, difficultyLevel: difficulty, needed: perType })
-        : fetchRandomQuestionsNoHistory(supabase, t, difficulty, perType))
-    );
+    // "random" difficulty must spread across all 5 levels per type, same as
+    // the solo-type random branch below — pinning the single `difficulty`
+    // value computed above (one random draw, reused everywhere) made a
+    // "random" mixed session sit at one fixed level for its entire length.
+    const fetchMixedTypeQuestions = (t: QuestionType, needed: number): Promise<Question[]> => {
+      if (diffParam !== 'random') {
+        return userKey
+          ? fetchUnseenQuestions({ supabase, userKey, type: t, difficultyLevel: difficulty, needed })
+          : fetchRandomQuestionsNoHistory(supabase, t, difficulty, needed);
+      }
+      const LEVELS: DifficultyLevel[] = [1, 2, 3, 4, 5];
+      const perLevel = Math.ceil((needed * 2) / 5);
+      return Promise.all(
+        LEVELS.map(lv => userKey
+          ? fetchUnseenQuestions({ supabase, userKey, type: t, difficultyLevel: lv, needed: perLevel })
+          : fetchRandomQuestionsNoHistory(supabase, t, lv, perLevel))
+      ).then(fetches => fisherYates(fetches.flat()).slice(0, needed));
+    };
+
+    const simpleFetches = await Promise.all(INTERLEAVE_TYPES.map(t => fetchMixedTypeQuestions(t, perType)));
     const simpleShuffled = fisherYates(simpleFetches.flat()).slice(0, simpleBudget);
 
     let rcBlock: Question[] = [];
     if (includeRC) {
-      rcBlock = await fetchUnseenRCQuestions({ supabase, userKey, difficultyLevel: difficulty, usedPIds: [] });
+      // A passage is a single indivisible block at one level, so "spreading
+      // across levels" means picking a fresh random level for it too,
+      // rather than reusing the one difficulty resolved above.
+      const rcDifficulty = diffParam === 'random' ? (Math.ceil(Math.random() * 5) as DifficultyLevel) : difficulty;
+      rcBlock = await fetchUnseenRCQuestions({ supabase, userKey, difficultyLevel: rcDifficulty, usedPIds: [] });
     }
 
     const questions = fisherYates([...simpleShuffled, ...rcBlock]);
@@ -84,7 +103,7 @@ export async function GET(req: NextRequest) {
       if (simpleShuffled.length > 0) await recordSeenQuestions(supabase, userKey, simpleShuffled.map(q => q.id));
       if (rcBlock.length > 0) await recordSeenPassage(supabase, userKey, rcBlock[0].passage_id!);
     }
-    return NextResponse.json({ questions, difficulty });
+    return NextResponse.json({ questions, difficulty: diffParam === 'random' ? 'random' : difficulty });
   }
 
   if (type === 'reading_comprehension') {

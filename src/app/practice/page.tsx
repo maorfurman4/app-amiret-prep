@@ -145,11 +145,21 @@ function PracticeContent() {
     const diff = overrideDiff ?? selectedDiff;
     try {
       const guestId = localStorage.getItem('amiret_guest_id') ?? '';
+      // Section mode always trims the response down to the real AMIRNET
+      // section size (SECTION_FORMAT), which is smaller than the count
+      // picker's own choice for sentence_completion/restatement (4/3 vs.
+      // the 5/10 the picker offers — RC already returns exactly 5 either
+      // way, so it never needs this). Without deferSeen, the server would
+      // mark every fetched question seen before the trim happens, burning
+      // the trimmed-off surplus from the pool for questions the student
+      // never actually saw.
+      const deferSeen = sectionMode && selectedType && selectedType !== 'reading_comprehension';
       const params = new URLSearchParams({
         type: selectedType!,
         difficulty: String(diff),
         count: String(selectedCount),
         ...(guestId ? { guestId } : {}),
+        ...(deferSeen ? { deferSeen: '1' } : {}),
       });
       const res = await authFetch(`/api/practice/questions?${params}`);
       if (!res.ok) {
@@ -168,6 +178,13 @@ function PracticeContent() {
         setError('לא נמצאו שאלות מתאימות. נסה רמת קושי או סוג שאלה אחרים.');
         setLoading(false);
         return;
+      }
+      if (deferSeen) {
+        authFetch('/api/practice/questions/mark-seen', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids: qs.map(q => q.id) }),
+        }).catch(() => {});
       }
       setQuestions(qs);
       setAnswers(Array(qs.length).fill(null));
@@ -405,7 +422,20 @@ function PracticeContent() {
     return (
       <div className="min-h-screen bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
         <div className="w-full max-w-lg">
-          <button onClick={() => setStep('pick-type')} className="text-exam-ink-soft text-sm mb-6 hover:text-exam-ink">
+          <button
+            onClick={() => {
+              // Mode flags are type-specific (SECTION_FORMAT/EXAM_TIMER_SECONDS
+              // are keyed by type) — carrying sectionMode/examMode back into a
+              // fresh type pick let a stale sectionMode=true reach the "mixed"
+              // type, whose section-mode UI is filtered out but whose state
+              // was never actually cleared. Reset here, same as handleRestart
+              // does when it lands on this same step.
+              setExamMode(false);
+              setSectionMode(false);
+              setStep('pick-type');
+            }}
+            className="text-exam-ink-soft text-sm mb-6 hover:text-exam-ink"
+          >
             ← חזרה
           </button>
           <h1 className="text-2xl font-bold text-exam-ink mb-1">רמת קושי</h1>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import { authFetch } from '@/lib/auth-fetch';
+import { clearGuestIdentity } from '@/lib/guest';
 import { BarChart3, ImageIcon, PenLine, Lock } from 'lucide-react';
 
 type Panel = 'menu' | 'name' | 'password' | 'avatar';
@@ -67,6 +68,7 @@ export function UserMenu() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    await clearGuestIdentity();
     router.push('/auth/login');
   };
 

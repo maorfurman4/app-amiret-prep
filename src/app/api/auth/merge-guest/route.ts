@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
+import { GUEST_COOKIE } from '@/lib/guest-token';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 // Generous but bounded — a real guest's local vocab lists are at most a
@@ -165,5 +166,12 @@ export async function POST(req: Request) {
     }, { onConflict: 'user_id' });
   }
 
-  return NextResponse.json({ ok: true, mergedExams: rows.length, mergedVocabKnown, mergedVocabFavorites });
+  // This specific guest identity has now been consumed into `user.id` —
+  // clear the cookie so it can never be merged again (e.g. into a second,
+  // unrelated account created later on the same shared device). A fresh
+  // guest identity is minted on demand the next time one is needed (guests
+  // and signed-in visitors alike pick one up via ensureGuestIdentity()).
+  const response = NextResponse.json({ ok: true, mergedExams: rows.length, mergedVocabKnown, mergedVocabFavorites });
+  response.cookies.delete(GUEST_COOKIE);
+  return response;
 }

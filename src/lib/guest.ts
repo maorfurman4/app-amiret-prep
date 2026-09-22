@@ -32,3 +32,23 @@ export function ensureGuestIdentity(): Promise<void> {
   }
   return initialization;
 }
+
+/**
+ * Ends the current guest identity: clears the signed HttpOnly cookie
+ * server-side (client JS can't drop it directly) and drops the cached
+ * display id, so the next ensureGuestIdentity() call — whether right after
+ * sign-out or on a future visit — mints a genuinely fresh identity instead
+ * of reusing one that may already be attached to an account (via merge) or
+ * to whoever used this browser/device before. Best-effort: sign-out itself
+ * always proceeds even if this fails (e.g. offline).
+ */
+export function clearGuestIdentity(): Promise<void> {
+  initialization = null;
+  try {
+    localStorage.removeItem('amiret_guest_id');
+    localStorage.removeItem('amiret_legacy_guest_id');
+  } catch { /* Storage may be disabled. */ }
+  return fetch('/api/auth/guest', { method: 'DELETE', credentials: 'same-origin', cache: 'no-store' })
+    .then(() => {})
+    .catch(() => {});
+}

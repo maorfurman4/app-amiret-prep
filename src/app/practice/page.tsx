@@ -197,21 +197,25 @@ function PracticeContent() {
     }
   };
 
-  const handleSelect = (optionIndex: number) => {
+  const handleSelect = useCallback((optionIndex: number) => {
     if (showResult) return;
     // Section mode: answers stay editable until the section is submitted,
     // and spaced-repetition tracking happens once at the end.
     if (sectionMode) {
-      const next = [...answers];
-      next[currentIndex] = optionIndex;
-      setAnswers(next);
+      setAnswers(prev => {
+        const next = [...prev];
+        next[currentIndex] = optionIndex;
+        return next;
+      });
       return;
     }
     // In exam mode, only allow one selection per question
     if (examMode && answers[currentIndex] !== null) return;
-    const next = [...answers];
-    next[currentIndex] = optionIndex;
-    setAnswers(next);
+    setAnswers(prev => {
+      const next = [...prev];
+      next[currentIndex] = optionIndex;
+      return next;
+    });
     if (!examMode) {
       setShowResult(true);
     }
@@ -223,7 +227,7 @@ function PracticeContent() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ guestId, questionId: questions[currentIndex].id, wasCorrect: isCorrect }),
     }).catch(() => {});
-  };
+  }, [showResult, sectionMode, examMode, answers, currentIndex, questions]);
 
   // Section mode: submit the whole section (manually or on timeout)
   const finishSection = useCallback(() => {
@@ -325,8 +329,7 @@ function PracticeContent() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, showResult, currentIndex, questions, handleNext, examMode]);
+  }, [step, showResult, currentIndex, questions, handleNext, handleSelect, examMode, sectionMode]);
 
   // ── Timer color helper ─────────────────────────────────────────────────────
   function timerColor(t: number): string {

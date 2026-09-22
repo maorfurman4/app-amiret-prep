@@ -10,6 +10,7 @@ import type { User } from '@supabase/supabase-js';
 import { UserCircle, Mail, AlertCircle, GraduationCap, RotateCcw } from 'lucide-react';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { mergeGuestProgress } from '@/lib/merge-guest-client';
+import { clearGuestIdentity } from '@/lib/guest';
 
 function LoginForm() {
   const supabase = createClient();
@@ -38,6 +39,7 @@ function LoginForm() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    await clearGuestIdentity();
     setCurrentUser(null);
   };
 

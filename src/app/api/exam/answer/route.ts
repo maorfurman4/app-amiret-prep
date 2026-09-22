@@ -70,7 +70,15 @@ export async function POST(req: NextRequest) {
   }
 
   if (session.current_section_index !== sectionIndex) {
-    return NextResponse.json({ error: 'Section mismatch' }, { status: 400 });
+    // 409 Conflict, not 400 — this fires whenever the session has already
+    // moved on from the section the client thinks it's still submitting
+    // (a stale resubmit whose earlier attempt actually succeeded server-
+    // side, a second tab, or a timed-out retry), which is exactly the same
+    // "server is the source of truth, resync" case the client's 409
+    // handling already covers below. It was a genuine request that arrived
+    // in the wrong state, not a malformed one, so 400 was the wrong status
+    // to begin with — this fix is the status code, not new client logic.
+    return NextResponse.json({ error: 'Section mismatch' }, { status: 409 });
   }
 
   const questionsBySection = session.questions_by_section as Record<number, Question[]>;

@@ -9,6 +9,15 @@ interface UseCountdownOptions {
   onExpire?: () => void;
   /** Poll interval in ms. Default 1000; pass e.g. 500 for a smoother sub-second display. */
   intervalMs?: number;
+  /**
+   * Estimated `serverClock - clientClock` in ms, added to every Date.now()
+   * read here so the countdown tracks the deadline's true (server) time
+   * rather than this device's own clock. Default 0 (no correction) — only
+   * a caller that actually measured skew against a server timestamp (see
+   * exam/[sessionId]/page.tsx) should pass a non-zero value; untimed/
+   * client-only countdowns (practice mode) are unaffected either way.
+   */
+  clockSkewMs?: number;
 }
 
 /**
@@ -21,10 +30,12 @@ interface UseCountdownOptions {
  * a deadline is set, before the initial tick lands), so callers can show a
  * "not running yet" state distinct from "just hit zero."
  */
-export function useCountdown({ expiresAt, onExpire, intervalMs = 1000 }: UseCountdownOptions): number | null {
+export function useCountdown({ expiresAt, onExpire, intervalMs = 1000, clockSkewMs = 0 }: UseCountdownOptions): number | null {
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
   const onExpireRef = useRef(onExpire);
   useEffect(() => { onExpireRef.current = onExpire; }, [onExpire]);
+  const skewRef = useRef(clockSkewMs);
+  useEffect(() => { skewRef.current = clockSkewMs; }, [clockSkewMs]);
 
   useEffect(() => {
     // No deadline to run — leave remainingMs at its last value rather than
@@ -35,7 +46,7 @@ export function useCountdown({ expiresAt, onExpire, intervalMs = 1000 }: UseCoun
 
     let fired = false;
     const tick = () => {
-      const ms = Math.max(0, expiresAt - Date.now());
+      const ms = Math.max(0, expiresAt - (Date.now() + skewRef.current));
       setRemainingMs(ms);
       if (ms <= 0 && !fired) {
         fired = true;

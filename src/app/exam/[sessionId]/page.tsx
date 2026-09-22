@@ -27,6 +27,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const { sessionId } = use(params);
   const router = useRouter();
   const [session, setSession] = useState<SessionState | null>(null);
+  // Estimated serverClock - clientClock, so the section timer counts down
+  // to the true (server) deadline instead of this device's own clock — see
+  // loadSession and /api/exam/state's serverNow.
+  const [clockSkewMs, setClockSkewMs] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,10 +63,20 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   }, [sessionId]);
 
   // Load or recover session state from server
-  const loadSession = useCallback(() => authFetch(`/api/exam/state?sessionId=${sessionId}`).then(async res => {
+  const loadSession = useCallback(() => {
+    const requestStartedAt = Date.now();
+    return authFetch(`/api/exam/state?sessionId=${sessionId}`).then(async res => {
     if (res.status === 429) { setError('יותר מדי בקשות בזמן קצר — חכה כדקה ולחץ "נסה שוב".'); return; }
     if (!res.ok) { setError('לא ניתן לטעון את המבחן'); return; }
-    const data = await res.json() as { session: SessionState };
+    const data = await res.json() as { session: SessionState; serverNow?: string };
+
+    if (data.serverNow) {
+      // Round-trip midpoint estimate (like NTP): assume the server's
+      // timestamp was generated halfway through this request's flight time.
+      const roundTripMs = Date.now() - requestStartedAt;
+      const assumedServerSampleAt = requestStartedAt + roundTripMs / 2;
+      setClockSkewMs(new Date(data.serverNow).getTime() - assumedServerSampleAt);
+    }
 
     if (data.session.completed_at) {
       router.replace(`/results/${sessionId}`);
@@ -83,9 +97,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     lastTickRef.current = Date.now();
     prevIndexRef.current = 0;
 
-  }).catch(() => {
-    setError('לא ניתן להתחבר. בדוק את החיבור ונסה שוב.');
-  }), [sessionId, router, readDraft]);
+    }).catch(() => {
+      setError('לא ניתן להתחבר. בדוק את החיבור ונסה שוב.');
+    });
+  }, [sessionId, router, readDraft]);
 
   useEffect(() => {
     void loadSession();
@@ -321,6 +336,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <ExamTimer
               expiresAt={session.current_section_expires_at}
               isPractice={session.is_practice}
+              clockSkewMs={clockSkewMs}
               onExpire={handleTimerExpire}
             />
           </div>

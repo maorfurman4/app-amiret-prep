@@ -134,6 +134,23 @@ describe('POST /api/exam/answer', () => {
     }));
   });
 
+  it('returns a conflict (not a bad request) for a stale resubmit whose section already advanced', async () => {
+    // The session has already moved to section 2 (e.g. an earlier attempt
+    // of this exact submission actually succeeded, and the client is now
+    // retrying with its now-stale sectionIndex) — 409, same "resync"
+    // treatment as the RPC-level conflict above, not 400 (which the client
+    // shows as a scary "your answers failed to send" error for what is
+    // actually a harmless, already-saved submission).
+    const db = createSupabase(session({ current_section_index: 2 }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+
+    const response = await POST(request(validBody({ sectionIndex: 1 })));
+
+    expect(response.status).toBe(409);
+    await expect(response.json()).resolves.toEqual({ error: 'Section mismatch' });
+    expect(db.spies.rpc).not.toHaveBeenCalled();
+  });
+
   it('uses the authenticated owner instead of a supplied guest id', async () => {
     const db = createSupabase();
     mocks.getServerClients.mockResolvedValue({

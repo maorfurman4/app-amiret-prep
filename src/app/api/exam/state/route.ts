@@ -47,7 +47,14 @@ export async function GET(req: NextRequest) {
     ),
   };
 
-  return NextResponse.json({ session: safeSession });
+  // serverNow lets the client measure its own clock's skew against the
+  // server's (see exam/[sessionId]/page.tsx's loadSession) — a client whose
+  // system clock runs slow would otherwise keep counting down past the true
+  // section deadline (its Date.now() takes longer to reach expiresAt), so
+  // its auto-submit lands at the server genuinely late relative to
+  // LATE_GRACE_MS even though the student answered everything within the
+  // real time budget shown on screen.
+  return NextResponse.json({ session: safeSession, serverNow: new Date().toISOString() });
 }
 
 /**

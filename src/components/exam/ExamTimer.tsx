@@ -7,9 +7,11 @@ interface ExamTimerProps {
   expiresAt: string | null;      // ISO string from server
   isPractice: boolean;
   onExpire: () => void;          // called when timer hits 0
+  /** See useCountdown's clockSkewMs — estimated serverClock - clientClock, from comparing expiresAt's session load against the server's own reported time. */
+  clockSkewMs?: number;
 }
 
-export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
+export function ExamTimer({ expiresAt, isPractice, onExpire, clockSkewMs }: ExamTimerProps) {
   const WARN_THRESHOLD = 10_000; // 10 seconds
 
   const deadline = expiresAt ? new Date(expiresAt).getTime() : null;
@@ -17,6 +19,7 @@ export function ExamTimer({ expiresAt, isPractice, onExpire }: ExamTimerProps) {
     expiresAt: isPractice ? null : deadline,
     onExpire,
     intervalMs: 500,
+    clockSkewMs,
   });
 
   if (remainingMs === null && !isPractice) {

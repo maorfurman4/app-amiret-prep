@@ -99,9 +99,26 @@ export async function proxy(req: NextRequest) {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
   const actor = `${ip}:${actorKey(req)}`;
 
+  // A transient Upstash error/timeout must not take down every /api/*
+  // route with it (this middleware runs in front of all of them, including
+  // login and guest-cookie issuance) — fail OPEN (treat as allowed) on a
+  // rate-limiter failure rather than letting the rejection propagate and
+  // 500 the request. The in-memory fallback below already handles the
+  // "not configured" case; this handles the separate "configured but
+  // erroring right now" case the same way: degrade, don't block everyone.
   const [actorAllowed, ipAllowed] = await Promise.all([
-    actorRatelimit ? actorRatelimit.limit(actor).then(r => r.success) : inMemoryLimit(actor, ACTOR_MAX_REQUESTS),
-    ipRatelimit ? ipRatelimit.limit(ip).then(r => r.success) : inMemoryLimit(`ip:${ip}`, IP_MAX_REQUESTS),
+    actorRatelimit
+      ? actorRatelimit.limit(actor).then(r => r.success).catch(err => {
+          console.error('actor rate limit check failed, failing open:', err);
+          return true;
+        })
+      : inMemoryLimit(actor, ACTOR_MAX_REQUESTS),
+    ipRatelimit
+      ? ipRatelimit.limit(ip).then(r => r.success).catch(err => {
+          console.error('IP rate limit check failed, failing open:', err);
+          return true;
+        })
+      : inMemoryLimit(`ip:${ip}`, IP_MAX_REQUESTS),
   ]);
 
   if (!actorAllowed || !ipAllowed) {

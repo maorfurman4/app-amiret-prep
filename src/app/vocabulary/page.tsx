@@ -141,20 +141,6 @@ async function writeWithRetry(fn: () => PromiseLike<{ error: unknown }>, attempt
   return false;
 }
 
-let _speakTimer: ReturnType<typeof setTimeout> | null = null;
-function speak(word: string) {
-  if (typeof window === 'undefined') return;
-  if (_speakTimer) clearTimeout(_speakTimer);
-  _speakTimer = setTimeout(() => {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.85;
-    utterance.pitch = 1;
-    window.speechSynthesis.speak(utterance);
-  }, 150);
-}
-
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -203,6 +189,31 @@ export default function VocabularyPage() {
 function VocabularyContent() {
   const params = useSearchParams();
   const supabase = createClient();
+
+  // Debounced pronunciation. Component-scoped (not the module-level free
+  // function this used to be) so its pending timer — and any utterance
+  // already mid-speech — can be cleared on unmount: tapping the speaker
+  // icon and immediately navigating away within the 150ms debounce window
+  // used to leave the word audibly spoken on whatever page loads next.
+  const speakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const speak = useCallback((word: string) => {
+    if (typeof window === 'undefined') return;
+    if (speakTimerRef.current) clearTimeout(speakTimerRef.current);
+    speakTimerRef.current = setTimeout(() => {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.85;
+      utterance.pitch = 1;
+      window.speechSynthesis.speak(utterance);
+    }, 150);
+  }, []);
+  useEffect(() => {
+    return () => {
+      if (speakTimerRef.current) clearTimeout(speakTimerRef.current);
+      if (typeof window !== 'undefined') window.speechSynthesis.cancel();
+    };
+  }, []);
 
   // Core state
   const [allWords, setAllWords] = useState<VocabWord[]>([]);
@@ -268,6 +279,13 @@ function VocabularyContent() {
   const [wordStart, setWordStart] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timedIndexRef = useRef(0);
+  // Mirrors timeLeft for the interval tick below to read synchronously —
+  // same pattern as timedIndexRef, needed so the tick can decide "did this
+  // second hit zero" as a plain read instead of inside a setState updater
+  // (that updater used to run several other setState calls and schedule a
+  // setTimeout as a side effect of computing the next value, which React
+  // is allowed to invoke more than once for a single state transition).
+  const timeLeftRef = useRef(20);
   const [timedWordCount, setTimedWordCount] = useState<5 | 10 | 20>(10);
   const [timedTimePerWord, setTimedTimePerWord] = useState<10 | 15 | 20 | 30>(20);
   const [showTimedConfig, setShowTimedConfig] = useState(false);
@@ -499,6 +517,7 @@ function VocabularyContent() {
     setTimedCorrect(null);
     setTimedDone(false);
     setTimedResults([]);
+    timeLeftRef.current = timePerWord;
     setTimeLeft(timePerWord);
     setWordStart(Date.now());
     setShowTimedConfig(false);
@@ -507,8 +526,9 @@ function VocabularyContent() {
     }
   }, [filteredWords, buildQuizOptions, timedWordCount, timedTimePerWord]);
 
-  // Sync timedIndex to ref (fix stale closure in timer)
+  // Sync timedIndex/timeLeft to refs (fix stale closure in timer)
   useEffect(() => { timedIndexRef.current = timedIndex; }, [timedIndex]);
+  useEffect(() => { timeLeftRef.current = timeLeft; }, [timeLeft]);
 
   // Switching modes preserves an unfinished run; filters apply to the next run.
   const changeMode = (nextMode: Mode) => {
@@ -537,6 +557,7 @@ function VocabularyContent() {
     setTimedIndex(nextIndex);
     setTimedSelected(null);
     setTimedCorrect(null);
+    timeLeftRef.current = timedTimePerWord;
     setTimeLeft(timedTimePerWord);
     setWordStart(Date.now());
     setTimedOptions(buildQuizOptions(timedDeck[nextIndex], filteredWords.length > 0 ? filteredWords : timedDeck));
@@ -548,21 +569,28 @@ function VocabularyContent() {
     if (timedDeck.length === 0) return;
 
     timerRef.current = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current!);
-          const cur = timedDeck[timedIndexRef.current];
-          if (!cur) return 0;
-          const elapsed = (Date.now() - wordStart) / 1000;
-          const newResults = [...timedResults, { word: cur, correct: false, timeTaken: elapsed }];
-          setTimedResults(newResults);
-          setTimedCorrect(false);
-          setTimedSelected(-1);
-          setTimeout(() => advanceTimed(newResults), 1000);
-          return 0;
-        }
-        return prev - 1;
-      });
+      // Plain read-then-write against the ref, not a setState updater —
+      // an updater is expected to be pure, but this used to run several
+      // other setState calls and schedule a setTimeout as a side effect of
+      // computing the next value, which React is allowed to invoke more
+      // than once for a single state transition (double-recording the
+      // result / double-scheduling the advance).
+      if (timeLeftRef.current <= 1) {
+        clearInterval(timerRef.current!);
+        timeLeftRef.current = 0;
+        setTimeLeft(0);
+        const cur = timedDeck[timedIndexRef.current];
+        if (!cur) return;
+        const elapsed = (Date.now() - wordStart) / 1000;
+        const newResults = [...timedResults, { word: cur, correct: false, timeTaken: elapsed }];
+        setTimedResults(newResults);
+        setTimedCorrect(false);
+        setTimedSelected(-1);
+        setTimeout(() => advanceTimed(newResults), 1000);
+        return;
+      }
+      timeLeftRef.current -= 1;
+      setTimeLeft(timeLeftRef.current);
     }, 1000);
 
     return () => { if (timerRef.current) clearInterval(timerRef.current); };

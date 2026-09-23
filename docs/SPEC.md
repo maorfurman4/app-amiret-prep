@@ -165,6 +165,7 @@
   - **A — תרגול מאתגר:** תשובות תרגול/אבחון היום עם `responses.p_correct` ∈ [0.5, 0.85] (ה-p מחושב בשרת בזמן הרישום מאומדן היכולת — EAP על 200 התשובות האחרונות, `lib/ability.ts`; θ שהלקוח שולח נשמר כהקשר בלבד). יעד: `user_goals.daily_activity_target` (ברירת מחדל 15).
   - **B — חזרות בזמן:** שורות `srs_review_log` של היום עם `was_due` (נקבע בשרת ממצב הכרטיס) ו-`answered` — רק הסקירה הראשונה של כרטיס שהגיע מועדו; טעות→מיד נכון לעולם לא נספר. היעד = הושלמו + ממתינים כרגע.
   - **C — סימולציה שבועית:** מבחן מלא לא-תרגול שהושלם מאז ראשון 00:00 (שעון ישראל).
+- **`OfficialScorePrompt`** (2026-09-24, אותו מקום של `ExamDateCard` — לעולם לא שניהם): מהיום שאחרי `exam_date`, עד 180 יום, אם לא דווח/נדחה — "איך הלך המבחן ב-…?": שדה מספרי אחד (placeholder "50–150", לא ציון — כדי לא לעגן), בחירת סוג מבחן (ברירת מחדל אמירנ"ט), "עוד לא קיבלתי" (דחייה ל-3 ימים במכשיר), "מעדיף לא לשתף" (`POST /api/official-score/dismiss`). אחרי שליחה (`PUT /api/official-score`) — השוואה כנה בין אומדן האתר לפני המבחן לציון הרשמי; בסגירה המקום חוזר ל-`ExamDateCard` ("מתי המבחן הבא?").
 - `StreakCelebration` — מודל מסך-מלא **פעם ביום** (מפתח `amiret_streak_celebration_seen_date`, יום לפי Asia/Jerusalem), נסגר אוטומטית/בלחיצה.
 - CTA ראשי "מבחן מלא" → `/exam`.
 - `DiagnosticBanner` — לפני מבחן ראשון: "12 שאלות אדפטיביות · ~10 דקות · רמה + תוכנית מותאמת"; אחרי: ניסוח "בדיקה מהירה בין מבחנים".
@@ -314,6 +315,8 @@ Server component; `SELECT display_name, avatar_url, best_score, total_exams, avg
 | (`questions` +) | `b_calibrated` (±4), `calibration_n`, `calibrated_at` | | `b` ו-`difficulty_level` לא משתנים |
 | (`responses` +) | `calibrated` (תשובה כבר כיילה את הפריט) | | |
 | (`exam_sessions` +) | `theta_se`, `p_exempt` | | |
+| `official_scores` | `user_id → auth.users (cascade), test_type (amirnet/amiram/psychometric), score 50–150, test_date (unique per user), reported_at, app_theta, app_se, app_score, app_p_exempt, app_exams_used, app_days_before` | ✅ | אין (service-role בלבד). ציון רשמי מדווח + תמונת התחזית של האתר **לפני** המבחן (כלל `currentEstimate` על מבחנים שהסתיימו לפני תחילת יום המבחן). דיווח חוזר על אותו מועד מתקן את הציון ושומר את התחזית המקורית. View `official_score_linking` (security_invoker) — זוגות + residual לכיול עתידי |
+| (`user_goals` +) | `score_prompt_dismissed_for` ("מעדיף לא לשתף" לאותו מועד) | | |
 | `activity_log` | `user_id text, activity_date, source` (העמודות `activity_units`/`review_cleared` כבר לא נקראות — streak בלבד) | ✅ | public ALL ("app enforces ownership") |
 | `user_stats` | `user_id, total_exams, best_score, avg_score, last_exam_at, score_history jsonb, performance_by_type, display_name, avatar_url` | ✅ | own read/write (`auth.uid()`) |
 | `leaderboard` | `user_id, display_name, avatar_url, best_score, total_exams, avg_score, last_exam_at` | ✅ | public SELECT **+ GRANT ברמת עמודה** ל-anon/authenticated על כל העמודות **חוץ מ-`user_id`** |

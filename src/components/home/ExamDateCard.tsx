@@ -48,6 +48,8 @@ export function ExamDateCard() {
   const [error, setError] = useState<string | null>(null);
 
   if (!data) return null;
+  // The official-score prompt takes this slot while it's pending.
+  if (data.officialScorePrompt) return null;
 
   const today = todayLocalStr();
   const examDate = savedDate !== undefined ? savedDate : data.examDate;

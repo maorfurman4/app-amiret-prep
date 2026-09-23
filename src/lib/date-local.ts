@@ -33,7 +33,7 @@ function tzOffsetMs(at: Date): number {
 }
 
 /** The instant local midnight began on the given local date (DST-correct). */
-function localMidnight(dateStr: string): Date {
+export function localMidnight(dateStr: string): Date {
   const utcMidnight = Date.parse(`${dateStr}T00:00:00Z`);
   // Offset at that wall-clock moment; re-check once in case the guess
   // straddled a DST switch.

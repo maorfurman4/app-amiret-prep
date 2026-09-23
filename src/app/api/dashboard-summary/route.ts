@@ -3,6 +3,8 @@ import { getServerClients } from '@/lib/supabase-server';
 import { computeStreakInfo } from '@/lib/streak-server';
 import { computeForecast, type Forecast } from '@/lib/forecast';
 import { computeRings, DEFAULT_EFFORT_TARGET, type Rings } from '@/lib/rings';
+import { shouldPromptForScore } from '@/lib/official-score';
+import { todayLocalStr } from '@/lib/date-local';
 
 const VICTORY_PATH_TARGET_SCORE = 134;
 
@@ -19,6 +21,9 @@ export interface DashboardSummary {
   examDate: string | null;
   /** Only accounts can store an exam date (user_goals → auth.users). */
   canSetExamDate: boolean;
+  /** Set when the student's exam date has passed and its official score
+   * hasn't been reported or declined — the dashboard asks for it. */
+  officialScorePrompt: { testDate: string } | null;
   forecast: Forecast | null;
 }
 
@@ -36,6 +41,7 @@ const EMPTY: DashboardSummary = {
   },
   examDate: null,
   canSetExamDate: false,
+  officialScorePrompt: null,
   forecast: null,
 };
 
@@ -76,7 +82,7 @@ export async function GET() {
     : null;
 
   const goalQuery = user
-    ? supabase.from('user_goals').select('daily_activity_target, exam_date').eq('user_id', user.id).maybeSingle()
+    ? supabase.from('user_goals').select('daily_activity_target, exam_date, score_prompt_dismissed_for').eq('user_id', user.id).maybeSingle()
     : null;
 
   const [streakInfo, lastScoreRes, forecastRowsRes, examCountRes, reviewCountRes, vocabDueRes, goalRes] = await Promise.all([
@@ -116,7 +122,28 @@ export async function GET() {
 
   const reviewDueCount = reviewCountRes.count ?? 0;
   const vocabDueCount = vocabDueRes?.count ?? 0;
-  const goal = goalRes?.data as { daily_activity_target?: number | null; exam_date?: string | null } | null | undefined;
+  const goal = goalRes?.data as {
+    daily_activity_target?: number | null;
+    exam_date?: string | null;
+    score_prompt_dismissed_for?: string | null;
+  } | null | undefined;
+
+  let officialScorePrompt: DashboardSummary['officialScorePrompt'] = null;
+  const examDate = goal?.exam_date ?? null;
+  if (user && examDate) {
+    const { data: reported } = await supabase
+      .from('official_scores')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('test_date', examDate)
+      .maybeSingle();
+    if (shouldPromptForScore({
+      examDate,
+      today: todayLocalStr(),
+      reported: !!reported,
+      dismissedFor: goal?.score_prompt_dismissed_for ?? null,
+    })) officialScorePrompt = { testDate: examDate };
+  }
 
   const rings = await computeRings(supabase, { id: owner, type: user ? 'user' : 'guest' }, {
     effortTarget: goal?.daily_activity_target ?? DEFAULT_EFFORT_TARGET,
@@ -133,6 +160,7 @@ export async function GET() {
     rings,
     examDate: goal?.exam_date ?? null,
     canSetExamDate: !!user,
+    officialScorePrompt,
     forecast: computeForecast(forecastRowsRes.data ?? [], VICTORY_PATH_TARGET_SCORE),
   } satisfies DashboardSummary);
 }

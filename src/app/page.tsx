@@ -12,6 +12,7 @@ import { StreakCelebration } from '@/components/home/StreakCelebration';
 import { TodaySessionCta } from '@/components/home/TodaySessionCta';
 import { VictoryPathSummary } from '@/components/home/VictoryPathSummary';
 import { ExamDateCard } from '@/components/home/ExamDateCard';
+import { OfficialScorePrompt } from '@/components/home/OfficialScorePrompt';
 
 const LEARN_LINKS_BEFORE = [
   { href: '/practice',   icon: PenLine,  title: 'תרגול ממוקד', sub: 'לפי סוג שאלה' },
@@ -50,8 +51,10 @@ export default function HomePage() {
           </div>
 
           {/* Exam date — prompts for it while unset (the spaced-repetition
-              scheduler times every review to it), then a quiet countdown. */}
-          <div className="animate-fade-up [animation-delay:90ms] empty:hidden"><ExamDateCard /></div>
+              scheduler times every review to it), then a quiet countdown.
+              Once the date has passed, the same slot asks for the official
+              score instead (the two never show together). */}
+          <div className="animate-fade-up [animation-delay:90ms] empty:hidden"><ExamDateCard /><OfficialScorePrompt /></div>
 
           {/* Primary action */}
           <Link

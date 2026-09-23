@@ -8,9 +8,12 @@ import type { DashboardSummary } from '@/app/api/dashboard-summary/route';
 interface DashboardContextValue {
   data: DashboardSummary | null;
   loading: boolean;
+  /** Applies a local update after an action on the page (e.g. a reported
+   * score clears its prompt) without refetching the whole summary. */
+  patch: (update: Partial<DashboardSummary>) => void;
 }
 
-const DashboardContext = createContext<DashboardContextValue>({ data: null, loading: true });
+const DashboardContext = createContext<DashboardContextValue>({ data: null, loading: true, patch: () => {} });
 
 /**
  * Fetches the home-page personalization payload exactly once and hands it
@@ -35,7 +38,7 @@ export function DashboardSummaryProvider({ children }: { children: ReactNode }) 
   }, []);
 
   return (
-    <DashboardContext.Provider value={{ data, loading }}>
+    <DashboardContext.Provider value={{ data, loading, patch: update => setData(d => (d ? { ...d, ...update } : d)) }}>
       {children}
     </DashboardContext.Provider>
   );

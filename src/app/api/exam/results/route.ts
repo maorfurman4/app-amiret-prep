@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
   const { data: session, error } = await supabase
     .from('exam_sessions')
-    .select('score, theta_final, theta_history, section_results, answers_by_section, questions_by_section, is_practice, completed_at')
+    .select('score, theta_final, theta_se, p_exempt, theta_history, section_results, answers_by_section, questions_by_section, is_practice, completed_at')
     .eq('id', sessionId)
     .eq('user_id', owner)
     .single();

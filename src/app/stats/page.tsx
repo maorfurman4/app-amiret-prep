@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult } from '@/types/exam';
-import { routeNextDifficulty } from '@/lib/adaptive';
+import { routeNextDifficulty, thetaToScore } from '@/lib/adaptive';
+import { currentEstimate, sessionMeasurement, type Measurement } from '@/lib/exemption';
+import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
 import { aggregateAccuracyByType, findWeakestType } from '@/lib/weakness';
 import { BackNav } from '@/components/BackNav';
 import { VictoryPath } from '@/components/stats/VictoryPath';
@@ -17,6 +19,16 @@ interface Stats {
   avg_score: number | null;
   score_history: { date: string; score: number }[];
   performance_by_type: Record<string, { correct: number; total: number }>;
+}
+
+/** One completed exam, as /api/stats returns it. */
+interface StatsRow {
+  score: number;
+  completed_at: string;
+  section_results: unknown;
+  theta_final?: number | null;
+  theta_se?: number | null;
+  p_exempt?: number | null;
 }
 
 interface WeaknessData {
@@ -40,7 +52,7 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 export default function StatsPage() {
   const supabase = createClient();
   const [stats, setStats] = useState<Stats | null>(null);
-  const [rawRows, setRawRows] = useState<{ score: number; completed_at: string; section_results: unknown }[]>([]);
+  const [rawRows, setRawRows] = useState<StatsRow[]>([]);
   const [weakness, setWeakness] = useState<WeaknessData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -61,7 +73,7 @@ export default function StatsPage() {
 
       authFetch(`/api/stats?guestId=${encodeURIComponent(localStorage.getItem('amiret_guest_id') ?? '')}`)
         .then(r => { if (!r.ok) throw new Error(`stats fetch failed: ${r.status}`); return r.json(); })
-        .then((d: { sessions: { score: number; completed_at: string; section_results: unknown }[] }) => {
+        .then((d: { sessions: StatsRow[] }) => {
           if (cancelled) return;
           const rows = d.sessions ?? [];
 
@@ -169,6 +181,28 @@ export default function StatsPage() {
       <BackNav backHref="/exam" backLabel="מבחן" />
       <div className="max-w-2xl mx-auto space-y-6 py-8 px-4">
         <h1 className="text-2xl font-bold text-exam-ink">הסטטיסטיקה שלי</h1>
+
+        {/* Current probability of 134+: the last few exams pooled by their
+            measurement precision, leaving out any clearly below the latest
+            one (src/lib/exemption.ts currentEstimate) — steadier than any
+            single exam, yet a real breakthrough shows up immediately. */}
+        {(() => {
+          const current = currentEstimate(rawRows
+            .map(sessionMeasurement)
+            .filter((m): m is Measurement => m !== null));
+          if (!current) return null;
+          const basis = current.used === 1 ? 'המבחן האחרון שלך' : `${current.used} המבחנים האחרונים שלך`;
+          return (
+            <ExemptionCard
+              measurement={current.measurement}
+              heading={<>הסיכוי שלך ל-<ExemptTarget /> כרגע</>}
+              basis={current.dropped > 0
+                ? `${basis} — מבחנים קודמים נמוכים בבירור לא נכללו, כי התקדמת מאז`
+                : basis}
+              score={thetaToScore(current.measurement.theta)}
+            />
+          );
+        })()}
 
         {/* Readiness report — ready / almost / not yet, with reasons */}
         {rawRows.length >= 1 && (() => {

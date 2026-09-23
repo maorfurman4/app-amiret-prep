@@ -15,7 +15,7 @@ export async function GET() {
 
   const { data: sessions } = await supabase
     .from('exam_sessions')
-    .select('score, completed_at, section_results')
+    .select('score, completed_at, section_results, theta_final, theta_se, p_exempt')
     .eq('user_id', owner)
     .eq('is_practice', false)
     .not('completed_at', 'is', null)

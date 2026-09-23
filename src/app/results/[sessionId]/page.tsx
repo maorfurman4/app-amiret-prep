@@ -9,10 +9,14 @@ import { AlertTriangle, CheckCircle2, BookOpen, Clock, Trophy, Target } from 'lu
 import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
+import { sessionMeasurement } from '@/lib/exemption';
+import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
 
 interface SessionData {
   score: number;
   theta_final: number;
+  theta_se?: number | null;
+  p_exempt?: number | null;
   theta_history: { after_section: number; theta: number }[];
   section_results: SectionResult[];
   answers_by_section: Record<number, (number | null)[]>;
@@ -73,6 +77,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
   const score = session.score ?? thetaToScore(session.theta_final ?? 0);
   const classification = classifyScore(score);
+  const exemption = sessionMeasurement(session);
   const sectionResults = session.section_results as SectionResult[];
   const totalCorrect = sectionResults.reduce((a, s) => a + (s.correctCount ?? 0), 0);
   const totalQuestions = sectionResults.reduce((a, s) => a + (s.totalCount ?? 0), 0);
@@ -135,62 +140,17 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
         <AuthCTA message="התחבר כדי לשמור את הציון הזה ולהמשיך מכל מכשיר — כל מה שעשית עד עכשיו יעבור אוטומטית לחשבון." />
 
-        {/* Score Prediction */}
-        {(() => {
-          const lo = Math.max(50, score - 10);
-          const hi = Math.min(150, score + 10);
-          const pct = Math.min(100, Math.max(0, ((score - 50) / 100) * 100));
-          const loPct = Math.min(100, Math.max(0, ((lo - 50) / 100) * 100));
-          const hiPct = Math.min(100, Math.max(0, ((hi - 50) / 100) * 100));
-          const bands = [
-            { min: 134, max: 150, label: 'פטור מלא — אין צורך בקורס אנגלית', color: 'bg-exam-sage-strong' },
-            { min: 120, max: 133, label: "מתקדמים ב' — קורס מקוצר אחד", color: 'bg-exam-accent' },
-            { min: 100, max: 119, label: "מתקדמים א' — קורס אחד", color: 'bg-exam-alt' },
-            { min: 85,  max: 99,  label: 'בסיסי — שני קורסים', color: 'bg-exam-alt' },
-            { min: 70,  max: 84,  label: "טרום-בסיסי ב'", color: 'bg-exam-wrong' },
-            { min: 50,  max: 69,  label: "טרום-בסיסי א'", color: 'bg-exam-wrong' },
-          ];
-          const currentBand = bands.find(b => score >= b.min && score <= b.max);
-          return (
-            <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:80ms]">
-              <h2 className="font-bold text-exam-ink mb-1">הערכת טווח ציון</h2>
-              <p className="text-exam-ink-soft text-sm mb-4">
-                על בסיס הביצועים שלך כאן, הטווח המוערך הוא {lo}–{hi} — אומדן פנימי של האתר, לא ציון רשמי של מאל&quot;ו
-              </p>
-              {/* Gradient score bar — RTL: low scores (50) on the right */}
-              <div className="relative mb-5">
-                <div className="h-5 rounded-full overflow-hidden flex">
-                  <div className="bg-exam-wrong"        style={{ width: '20%' }} />
-                  <div className="bg-exam-wrong/70"     style={{ width: '15%' }} />
-                  <div className="bg-exam-alt/70"       style={{ width: '15%' }} />
-                  <div className="bg-exam-alt"          style={{ width: '20%' }} />
-                  <div className="bg-exam-accent/70"    style={{ width: '14%' }} />
-                  <div className="bg-exam-sage-strong"  style={{ width: '16%' }} />
-                </div>
-                {/* Range bracket */}
-                <div
-                  className="absolute top-0 h-5 border-2 border-exam-ink rounded-full bg-exam-surface/40"
-                  style={{ right: `${loPct}%`, width: `${Math.max(hiPct - loPct, 2)}%` }}
-                />
-                {/* Current score needle */}
-                <div
-                  className="absolute -top-0.5 w-0.5 h-6 bg-exam-ink"
-                  style={{ right: `calc(${pct}% - 1px)` }}
-                />
-                <div className="flex justify-between text-xs text-exam-ink-soft mt-1.5">
-                  <span>50</span>
-                  <span>150</span>
-                </div>
-              </div>
-              {currentBand && (
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-exam-paper-alt border border-exam-border">
-                  <div className={`w-3 h-3 rounded-full flex-shrink-0 ${currentBand.color}`} />
-                  <span className="text-sm font-semibold text-exam-ink">{currentBand.label}</span>
-                </div>
-              )}
-            </div>
-          );
-        })()}
+        {/* Probability of exemption — the real measurement uncertainty of
+            THIS exam (stored at completion, or re-derived identically for
+            exams scored before it was stored), replacing the old fixed ±10. */}
+        {exemption && (
+          <ExemptionCard
+            measurement={exemption}
+            heading={<>מה הסיכוי שלך ל-<ExemptTarget />?</>}
+            basis="המבחן הזה"
+            score={score}
+          />
+        )}
 
         {/* Score scale */}
         <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:140ms]">

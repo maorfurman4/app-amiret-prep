@@ -22,7 +22,11 @@ const LEARN_LINKS = [
   { href: '/vocabulary', icon: BookOpen, title: 'אוצר מילים',   sub: 'מעל 1,000 מילים' },
 ];
 
-const ROW_CLASSES = 'flex items-center gap-3 p-4 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed transition-[background-color,border-color,box-shadow] duration-200';
+// Tactile lifecycle: rest → hover lifts + expands its shadow with a spring
+// overshoot → press settles with an inset shadow and a slight scale-down.
+// The same physical vocabulary is used on every interactive row/card on
+// this page so the whole dashboard reads as one coherent, "expensive" feel.
+const ROW_CLASSES = 'flex items-center gap-3 p-4 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform';
 
 export default function HomePage() {
   return (
@@ -33,7 +37,7 @@ export default function HomePage() {
           {/* Top bar: compact brand mark + account controls — the big score
               mark used to anchor the page; that role now belongs to the
               Today's Session hero below, so this stays small and quiet. */}
-          <div className="flex items-center justify-between gap-2 mb-5 lg:mb-8">
+          <div className="flex items-center justify-between gap-2 mb-5 lg:mb-8 animate-fade-up">
             <Link href="/" className="flex items-center gap-2">
               <GraduationCap className="w-7 h-7 text-exam-ink" strokeWidth={1.5} aria-hidden />
               <span className="font-black text-xl" dir="ltr">134<span className="text-exam-accent">+</span></span>
@@ -52,10 +56,12 @@ export default function HomePage() {
           <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_336px] lg:gap-10 lg:items-start">
             {/* ── Main column: the dominant hero + primary actions ── */}
             <div className="space-y-6 lg:space-y-8">
-              <HeroTagline />
+              <div className="animate-fade-up [animation-delay:60ms]">
+                <HeroTagline />
+              </div>
 
               {/* HERO — Today's Session is the dominant section on the page */}
-              <section>
+              <section className="animate-fade-up [animation-delay:120ms]">
                 <h2 className="text-label text-exam-ink-soft mb-2 pr-1 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5" aria-hidden />
                   היום שלך
@@ -65,10 +71,10 @@ export default function HomePage() {
 
               {/* Secondary actions: full exam + quick diagnostic, no longer
                   competing with Today's Session for top billing */}
-              <div className="grid sm:grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3 animate-fade-up [animation-delay:200ms]">
                 <Link
                   href="/exam"
-                  className="w-full py-4 px-4 bg-exam-accent hover:opacity-90 rounded-2xl shadow-raised active:shadow-pressed text-lg font-bold text-center text-exam-accent-ink transition-opacity flex items-center justify-center gap-2"
+                  className="w-full py-4 px-4 bg-exam-accent hover:opacity-90 rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] text-lg font-bold text-center text-exam-accent-ink transition-[opacity,box-shadow,transform] duration-300 ease-spring will-change-transform flex items-center justify-center gap-2"
                 >
                   <Target className="w-5 h-5" aria-hidden />
                   התחל מבחן מלא
@@ -78,7 +84,7 @@ export default function HomePage() {
 
               {/* Learning & practice — two featured actions, not a grid of
                   four look-alike tiles */}
-              <section>
+              <section className="animate-fade-up [animation-delay:280ms]">
                 <h2 className="text-label text-exam-ink-soft mb-2 pr-1">לימוד ותרגול</h2>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {LEARN_LINKS.map(l => (
@@ -97,7 +103,7 @@ export default function HomePage() {
 
             {/* ── Sidebar: live progress cards, then quiet reference links ── */}
             <aside className="space-y-6 mt-8 lg:mt-0">
-              <section>
+              <section className="animate-fade-up [animation-delay:200ms]">
                 <h2 className="text-label text-exam-ink-soft mb-2 pr-1">מעקב והתקדמות</h2>
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <StatsCard />
@@ -106,7 +112,7 @@ export default function HomePage() {
                 <VictoryPathSummary />
               </section>
 
-              <div className="space-y-3">
+              <div className="space-y-3 animate-fade-up [animation-delay:280ms]">
                 <Link href="/leaderboard" className={ROW_CLASSES}>
                   <Trophy className="w-6 h-6 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />
                   <div className="flex-1 text-right min-w-0">
@@ -136,7 +142,7 @@ export default function HomePage() {
 
                 {/* Score scale — collapsed by default to keep the page short */}
                 <details className="bg-exam-surface border border-exam-border rounded-2xl shadow-surface group">
-                  <summary className="p-4 text-sm font-semibold text-exam-ink-soft cursor-pointer select-none list-none flex items-center justify-between">
+                  <summary className="p-4 text-sm font-semibold text-exam-ink-soft cursor-pointer select-none list-none flex items-center justify-between rounded-2xl hover:bg-exam-paper-alt transition-colors duration-300 ease-spring">
                     <span className="flex items-center gap-2">
                       <Ruler className="w-4 h-4" aria-hidden />
                       סקאלת הציונים (50–150)

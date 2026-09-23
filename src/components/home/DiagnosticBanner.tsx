@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Stethoscope, ChevronLeft } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
-const BANNER_CLASSES = 'flex items-center gap-3 p-4 -mt-3 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-md transition-colors';
+const BANNER_CLASSES = 'flex items-center gap-3 p-4 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform';
 
 /**
  * "לא יודע מאיפה להתחיל?" reads oddly once someone already has a real

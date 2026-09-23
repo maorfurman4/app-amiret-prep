@@ -22,7 +22,7 @@ export function VictoryPathSummary() {
   return (
     <Link
       href="/stats"
-      className="flex items-center gap-2 px-4 py-2.5 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-md text-sm transition-colors"
+      className="flex items-center gap-2 px-4 py-2.5 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] text-sm transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform"
     >
       <TrendingUp className="w-4 h-4 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />
       {forecast.daysToTarget === 0 ? (

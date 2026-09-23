@@ -42,11 +42,13 @@ export function DailyRings({ activityUnitsToday, dailyActivityTarget, reviewClea
   return (
     <div className="flex items-center gap-3 px-3" dir="rtl">
       <div className="relative shrink-0">
+        {/* Ambient glow behind the rings — quiet spatial depth, not a spotlight */}
+        <div className="absolute inset-0 -z-10 rounded-full bg-exam-sage/20 blur-lg animate-ambient-glow motion-reduce:animate-none" aria-hidden />
         <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} className="-scale-x-100" aria-hidden>
           <circle cx={SIZE / 2} cy={SIZE / 2} r={R_OUTER} strokeWidth={STROKE} className="stroke-exam-border" fill="none" />
           <circle
             cx={SIZE / 2} cy={SIZE / 2} r={R_OUTER} strokeWidth={STROKE} fill="none"
-            className="stroke-exam-accent transition-[stroke-dashoffset] duration-500"
+            className="stroke-exam-accent transition-[stroke-dashoffset] duration-700 ease-spring-soft"
             strokeLinecap="round"
             strokeDasharray={CIRC_OUTER}
             strokeDashoffset={ringOffset(CIRC_OUTER, ringARatio)}
@@ -55,7 +57,7 @@ export function DailyRings({ activityUnitsToday, dailyActivityTarget, reviewClea
           <circle cx={SIZE / 2} cy={SIZE / 2} r={R_INNER} strokeWidth={STROKE} className="stroke-exam-border" fill="none" />
           <circle
             cx={SIZE / 2} cy={SIZE / 2} r={R_INNER} strokeWidth={STROKE} fill="none"
-            className="stroke-exam-sage transition-[stroke-dashoffset] duration-500"
+            className="stroke-exam-sage transition-[stroke-dashoffset] duration-700 ease-spring-soft"
             strokeLinecap="round"
             strokeDasharray={CIRC_INNER}
             strokeDashoffset={ringOffset(CIRC_INNER, ringBRatio)}
@@ -63,7 +65,12 @@ export function DailyRings({ activityUnitsToday, dailyActivityTarget, reviewClea
           />
         </svg>
         {reviewsCaughtUp && (
-          <span className="absolute inset-0 m-auto flex size-7 items-center justify-center rounded-full bg-exam-sage-bg text-exam-sage-strong shadow-progress">
+          // Two animations on one element: a one-shot spring pop-in, then a
+          // slow rewarding glow pulse that kicks in right after it settles.
+          <span
+            className="absolute inset-0 m-auto flex size-7 items-center justify-center rounded-full bg-exam-sage-bg text-exam-sage-strong shadow-progress"
+            style={{ animation: 'check-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both, ring-glow 2.2s ease-in-out 0.6s infinite' }}
+          >
             <Check className="size-4" strokeWidth={2.5} aria-hidden="true" />
           </span>
         )}

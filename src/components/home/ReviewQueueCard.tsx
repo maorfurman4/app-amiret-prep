@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { RotateCcw } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
-const CARD_CLASSES = 'relative flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed text-center transition-[background-color,border-color,box-shadow] duration-200';
+const CARD_CLASSES = 'relative flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] text-center transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform';
 
 /**
  * Same "חזרה חכמה" card as always, plus a due-count badge once the

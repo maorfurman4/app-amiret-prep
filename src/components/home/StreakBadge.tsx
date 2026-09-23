@@ -23,7 +23,13 @@ export function StreakBadge() {
   const atRisk = data != null && !data.hasActivityToday && isEveningLocal();
 
   return (
-    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm border ${atRisk ? 'bg-transparent border-exam-alt/40' : 'bg-exam-alt-bg border-exam-alt/40'}`}>
+    <div className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-sm border ${atRisk ? 'bg-transparent border-exam-alt/40' : 'bg-exam-alt-bg border-exam-alt/40'}`}>
+      {/* Continuous, organic breathing glow behind the flame — a separate,
+          slower rhythm from the icon's own flicker, so it reads as "alive"
+          at rest rather than mid-flicker at every frame */}
+      {!atRisk && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 size-4 -z-10 rounded-full bg-exam-alt/50 blur-sm animate-flame-breathe motion-reduce:animate-none" aria-hidden />
+      )}
       <Flame
         className="w-4 h-4 text-exam-alt animate-streak-flicker motion-reduce:animate-none"
         fill={atRisk ? 'none' : 'currentColor'}

@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { getServerClients } from '@/lib/supabase-server';
 import { recordClientResponses } from '@/lib/responses';
 import { applyResponsesToSrs } from '@/lib/srs';
+import { estimateOwnerTheta } from '@/lib/ability';
+import { todayLocalStr } from '@/lib/date-local';
 
 const MAX_RESPONSES = 25;
 // An hour on one item is a tab left open, not a latency — reject rather
@@ -37,6 +39,10 @@ const bodySchema = z.object({
  * logged answer is fed to its concept's FSRS card (src/lib/srs.ts). The
  * response log is the source of truth, so a scheduling failure is reported
  * but does not fail the request.
+ *
+ * It is also what keeps the streak: a day counts as active because the
+ * server logged real answers on it — there is no client-reported "I did
+ * some practice" endpoint any more.
  */
 export async function POST(req: Request) {
   const { supabase, user, guestId } = await getServerClients();
@@ -50,8 +56,22 @@ export async function POST(req: Request) {
   }
 
   const owner = { id: ownerId, type: user ? 'user' as const : 'guest' as const };
-  const { recorded, graded, error } = await recordClientResponses(supabase, owner, parsed.data.responses);
+  const theta = await estimateOwnerTheta(supabase, owner).catch(() => 0);
+  const { recorded, graded, error } = await recordClientResponses(supabase, owner, parsed.data.responses, theta);
   if (error) return NextResponse.json({ error: 'Failed to record responses' }, { status: 500 });
+
+  if (recorded > 0) {
+    // Marks today active for the streak (no unit counts — the rings read
+    // the responses log itself).
+    const { error: dayErr } = await supabase.rpc('increment_daily_activity', {
+      p_user_id: ownerId,
+      p_activity_date: todayLocalStr(),
+      p_source: parsed.data.responses[0].context,
+      p_activity_units: 0,
+      p_review_cleared: 0,
+    });
+    if (dayErr) console.error('[responses] streak day mark failed:', dayErr.message);
+  }
 
   const srs = await applyResponsesToSrs(supabase, owner, graded)
     .catch((e: unknown) => ({ created: 0, reviewed: 0, error: String(e) }));

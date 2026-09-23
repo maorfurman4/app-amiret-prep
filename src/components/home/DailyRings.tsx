@@ -1,72 +1,69 @@
 'use client';
 
 import { Check } from 'lucide-react';
+import { ringProgress, type Rings } from '@/lib/rings';
 
 /**
- * Two concentric Apple-Fitness-style progress rings for the home page's
- * "Today" card. Hand-rolled SVG (stroke-dasharray/stroke-dashoffset) —
- * two circles don't need a charting library.
- *
- * Ring A ("תרגול היום"): activity units completed today vs. a personal
- * daily target. Ring B ("חזרה חכמה"): spaced-repetition items cleared
- * today vs. a target that's derived, not stored — clearedToday + stillDue,
- * so the ring is only ever "full" when nothing is left due right now.
+ * Three concentric Apple-Fitness-style rings for the home page's "Today"
+ * card, each a science-backed learning signal computed on the server
+ * (src/lib/rings.ts) — never a client-reported count:
+ *   outer  (accent) — effortful practice: questions answered today in the
+ *                     student's difficulty sweet spot
+ *   middle (sage)   — due FSRS reviews completed today
+ *   inner  (amber)  — a full, timed exam simulation this week
+ * Hand-rolled SVG (stroke-dasharray/stroke-dashoffset) — three circles
+ * don't need a charting library.
  */
-interface DailyRingsProps {
-  activityUnitsToday: number;
-  dailyActivityTarget: number;
-  reviewClearedToday: number;
-  reviewStillDue: number;
-}
 
-const SIZE = 72;
+const SIZE = 84;
 const STROKE = 7;
-const R_OUTER = SIZE / 2 - STROKE / 2;
-const R_INNER = R_OUTER - STROKE - 3;
-const CIRC_OUTER = 2 * Math.PI * R_OUTER;
-const CIRC_INNER = 2 * Math.PI * R_INNER;
+const GAP = 2.5;
+const RADII = [0, 1, 2].map(i => SIZE / 2 - STROKE / 2 - i * (STROKE + GAP));
 
-function ringOffset(circumference: number, ratio: number): number {
-  const clamped = Math.min(Math.max(ratio, 0), 1);
-  return circumference * (1 - clamped);
+const RING_STYLES = [
+  { track: 'stroke-exam-border', fill: 'stroke-exam-accent', dot: 'bg-exam-accent' },
+  { track: 'stroke-exam-border', fill: 'stroke-exam-sage', dot: 'bg-exam-sage' },
+  { track: 'stroke-exam-border', fill: 'stroke-exam-alt', dot: 'bg-exam-alt' },
+] as const;
+
+function Ring({ r, ratio, fill, track }: { r: number; ratio: number; fill: string; track: string }) {
+  const circumference = 2 * Math.PI * r;
+  const c = SIZE / 2;
+  return (
+    <>
+      <circle cx={c} cy={c} r={r} strokeWidth={STROKE} className={track} fill="none" />
+      <circle
+        cx={c} cy={c} r={r} strokeWidth={STROKE} fill="none"
+        className={`${fill} transition-[stroke-dashoffset] duration-700 ease-spring-soft`}
+        strokeLinecap="round"
+        strokeDasharray={circumference}
+        strokeDashoffset={circumference * (1 - ratio)}
+        transform={`rotate(-90 ${c} ${c})`}
+      />
+    </>
+  );
 }
 
-export function DailyRings({ activityUnitsToday, dailyActivityTarget, reviewClearedToday, reviewStillDue }: DailyRingsProps) {
-  const ringATarget = Math.max(dailyActivityTarget, 1);
-  const ringARatio = activityUnitsToday / ringATarget;
-  const ringBTarget = reviewClearedToday + reviewStillDue;
-  const reviewsCaughtUp = reviewStillDue === 0;
-  // An empty queue is settled, not an invented one-item obligation.
-  const ringBRatio = ringBTarget > 0 ? reviewClearedToday / ringBTarget : 1;
+export function DailyRings({ rings }: { rings: Rings }) {
+  const progress = ringProgress(rings);
+  const ratios = [progress.effort, progress.retention, progress.simulation];
+  const allClosed = ratios.every(r => r >= 1);
+  const reviewsCaughtUp = rings.retention.due === 0;
+  const retentionTarget = rings.retention.done + rings.retention.due;
 
   return (
-    <div className="flex items-center gap-3 px-3" dir="rtl">
+    <div className="flex items-center gap-4 px-3" dir="rtl" role="group" aria-label="ההתקדמות שלך היום">
       <div className="relative shrink-0">
         {/* Ambient glow behind the rings — quiet spatial depth, not a spotlight */}
         <div className="absolute inset-0 -z-10 rounded-full bg-exam-sage/20 blur-lg animate-ambient-glow motion-reduce:animate-none" aria-hidden />
         <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} className="-scale-x-100" aria-hidden>
-          <circle cx={SIZE / 2} cy={SIZE / 2} r={R_OUTER} strokeWidth={STROKE} className="stroke-exam-border" fill="none" />
-          <circle
-            cx={SIZE / 2} cy={SIZE / 2} r={R_OUTER} strokeWidth={STROKE} fill="none"
-            className="stroke-exam-accent transition-[stroke-dashoffset] duration-700 ease-spring-soft"
-            strokeLinecap="round"
-            strokeDasharray={CIRC_OUTER}
-            strokeDashoffset={ringOffset(CIRC_OUTER, ringARatio)}
-            transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
-          />
-          <circle cx={SIZE / 2} cy={SIZE / 2} r={R_INNER} strokeWidth={STROKE} className="stroke-exam-border" fill="none" />
-          <circle
-            cx={SIZE / 2} cy={SIZE / 2} r={R_INNER} strokeWidth={STROKE} fill="none"
-            className="stroke-exam-sage transition-[stroke-dashoffset] duration-700 ease-spring-soft"
-            strokeLinecap="round"
-            strokeDasharray={CIRC_INNER}
-            strokeDashoffset={ringOffset(CIRC_INNER, ringBRatio)}
-            transform={`rotate(-90 ${SIZE / 2} ${SIZE / 2})`}
-          />
+          {RADII.map((r, i) => (
+            <Ring key={i} r={r} ratio={ratios[i]} fill={RING_STYLES[i].fill} track={RING_STYLES[i].track} />
+          ))}
         </svg>
-        {reviewsCaughtUp && (
-          // Two animations on one element: a one-shot spring pop-in, then a
-          // slow rewarding glow pulse that kicks in right after it settles.
+        {allClosed && (
+          // All three closed: a one-shot spring pop, then a slow rewarding
+          // glow pulse once it settles.
           <span
             className="absolute inset-0 m-auto flex size-7 items-center justify-center rounded-full bg-exam-sage-bg text-exam-sage-strong shadow-progress"
             style={{ animation: 'check-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both, ring-glow 2.2s ease-in-out 0.6s infinite' }}
@@ -75,27 +72,37 @@ export function DailyRings({ activityUnitsToday, dailyActivityTarget, reviewClea
           </span>
         )}
       </div>
-      <div className="flex min-w-0 flex-col gap-1.5 text-label">
-        <div className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-exam-accent" aria-hidden />
-          <span className="text-exam-ink-soft">תרגול היום</span>
-          <span className="font-bold text-exam-ink tabular-nums" dir="ltr">{activityUnitsToday}/{ringATarget}</span>
-        </div>
-        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-          <span className="size-2 shrink-0 rounded-full bg-exam-sage" aria-hidden />
-          <span className="text-exam-ink-soft">חזרה חכמה</span>
+
+      <ul className="flex min-w-0 flex-col gap-1.5 text-label">
+        <li className="flex items-center gap-1.5">
+          <span className={`size-2 shrink-0 rounded-full ${RING_STYLES[0].dot}`} aria-hidden />
+          <span className="text-exam-ink-soft">תרגול מאתגר</span>
+          <span className="font-bold text-exam-ink tabular-nums" dir="ltr">{rings.effort.done}/{rings.effort.target}</span>
+        </li>
+        <li className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+          <span className={`size-2 shrink-0 rounded-full ${RING_STYLES[1].dot}`} aria-hidden />
+          <span className="text-exam-ink-soft">חזרות בזמן</span>
           {reviewsCaughtUp ? (
-            <span className="font-semibold text-exam-sage-strong">הכול מעודכן</span>
+            <span className="font-semibold text-exam-sage-strong">
+              {rings.retention.done > 0 ? `הכול מעודכן · ${rings.retention.done} הושלמו` : 'אין חזרות ממתינות'}
+            </span>
           ) : (
-            <span className="font-bold text-exam-ink tabular-nums" dir="ltr">{reviewClearedToday}/{ringBTarget}</span>
+            <span className="font-bold text-exam-ink tabular-nums" dir="ltr">{rings.retention.done}/{retentionTarget}</span>
           )}
-        </div>
-        {reviewsCaughtUp && (
-          <p className="text-xs font-normal text-exam-ink-soft">
-            {reviewClearedToday > 0 ? `השלמת ${reviewClearedToday} חזרות · אין חזרות ממתינות` : 'אין חזרות שממתינות לך כרגע'}
-          </p>
-        )}
-      </div>
+        </li>
+        <li className="flex items-center gap-1.5">
+          <span className={`size-2 shrink-0 rounded-full ${RING_STYLES[2].dot}`} aria-hidden />
+          <span className="text-exam-ink-soft">סימולציה שבועית</span>
+          {rings.simulation.done ? (
+            <span className="inline-flex items-center gap-0.5 font-semibold text-exam-sage-strong">
+              <Check className="size-3.5" strokeWidth={3} aria-hidden />
+              בוצעה
+            </span>
+          ) : (
+            <span className="font-semibold text-exam-ink">טרם השבוע</span>
+          )}
+        </li>
+      </ul>
     </div>
   );
 }

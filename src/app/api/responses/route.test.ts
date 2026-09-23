@@ -1,8 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ getServerClients: vi.fn(), applyResponsesToSrs: vi.fn() }));
+const mocks = vi.hoisted(() => ({ getServerClients: vi.fn(), applyResponsesToSrs: vi.fn(), estimateOwnerTheta: vi.fn() }));
 vi.mock('@/lib/supabase-server', () => ({ getServerClients: mocks.getServerClients }));
 vi.mock('@/lib/srs', () => ({ applyResponsesToSrs: mocks.applyResponsesToSrs }));
+vi.mock('@/lib/ability', async importOriginal => ({
+  ...(await importOriginal<typeof import('@/lib/ability')>()),
+  estimateOwnerTheta: mocks.estimateOwnerTheta,
+}));
+vi.mock('@/lib/date-local', () => ({ todayLocalStr: () => '2026-09-23' }));
 
 import { POST } from './route';
 
@@ -10,16 +15,17 @@ const ITEM_A = '11111111-1111-4111-8111-111111111111';
 const ITEM_B = '22222222-2222-4222-8222-222222222222';
 const UNKNOWN = '33333333-3333-4333-8333-333333333333';
 
-/** Answer keys the fake DB knows about: A → 2, B → 0. */
+/** Answer keys the fake DB knows about: A → 2 (b = 0), B → 0 (b = 2). */
 function createSupabase({ insertError = null as unknown } = {}) {
   const insert = vi.fn().mockResolvedValue({ error: insertError });
   const inFn = vi.fn().mockResolvedValue({
-    data: [{ id: ITEM_A, correct_answer: 2 }, { id: ITEM_B, correct_answer: 0 }],
+    data: [{ id: ITEM_A, correct_answer: 2, b: 0, c: 0.25 }, { id: ITEM_B, correct_answer: 0, b: 2, c: 0.25 }],
     error: null,
   });
   const select = vi.fn().mockReturnValue({ in: inFn });
   const from = vi.fn((table: string) => (table === 'questions' ? { select } : { insert }));
-  return { supabase: { from }, insert, from };
+  const rpc = vi.fn().mockResolvedValue({ error: null });
+  return { supabase: { from, rpc }, insert, from, rpc };
 }
 
 function request(body: unknown) {
@@ -38,6 +44,7 @@ describe('POST /api/responses', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.applyResponsesToSrs.mockResolvedValue({ created: 0, reviewed: 0, cleared: 0, error: null });
+    mocks.estimateOwnerTheta.mockResolvedValue(0);
   });
 
   it('requires an identity', async () => {
@@ -108,8 +115,42 @@ describe('POST /api/responses', () => {
       entry({ itemId: UNKNOWN }),
     ] }));
     expect(mocks.applyResponsesToSrs).toHaveBeenCalledWith(db.supabase, { id: 'user-1', type: 'user' }, [
-      { itemId: ITEM_A, correct: false, latencyMs: 700, confidence: null },
+      { itemId: ITEM_A, correct: false, answered: true, latencyMs: 700, confidence: null },
     ]);
+  });
+
+  it('p_correct comes from the SERVER ability estimate, never a client-sent theta', async () => {
+    const db = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'guest-1' });
+    mocks.estimateOwnerTheta.mockResolvedValue(0);
+    await POST(request({ responses: [
+      // Diagnostic claims θ = 3.9 (would make every item "easy"); ignored for p_correct.
+      entry({ itemId: ITEM_A, context: 'diagnostic', thetaBefore: 3.9 }),
+      entry({ itemId: ITEM_B }),
+    ] }));
+    const [rowA, rowB] = db.insert.mock.calls[0][0];
+    // θ = 0 vs b = 0 (a = 1.2, c = .25): P = .25 + .75/2 — in the sweet spot.
+    expect(rowA.p_correct).toBeCloseTo(0.625, 6);
+    expect(rowA.theta_before).toBe(3.9); // the client value is kept as context only
+    // θ = 0 vs b = 2: well below the sweet spot.
+    expect(rowB.p_correct).toBeCloseTo(0.25 + 0.75 / (1 + Math.exp(2.4)), 6);
+    expect(rowB.theta_before).toBe(0); // otherwise the server estimate is recorded
+  });
+
+  it('marks today active for the streak from the verified answers (no unit counts)', async () => {
+    const db = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'guest-1' });
+    await POST(request({ responses: [entry({ context: 'review' })] }));
+    expect(db.rpc).toHaveBeenCalledWith('increment_daily_activity', {
+      p_user_id: 'guest-1', p_activity_date: '2026-09-23', p_source: 'review', p_activity_units: 0, p_review_cleared: 0,
+    });
+  });
+
+  it('marks nothing when no answer was actually recorded', async () => {
+    const db = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'guest-1' });
+    await POST(request({ responses: [entry({ itemId: UNKNOWN })] }));
+    expect(db.rpc).not.toHaveBeenCalled();
   });
 
   it('still reports the answers as logged when scheduling throws', async () => {

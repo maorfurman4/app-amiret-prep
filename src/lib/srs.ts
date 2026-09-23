@@ -1,9 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Question } from '@/types/exam';
-import { todayLocalStr } from '@/lib/date-local';
 import {
-  Again, Hard, capDueToExam, examInstant, gradeResponse, initialState, reviewCard, scheduleDue,
-  MS_PER_DAY, type CardState,
+  Again, capDueToExam, examInstant, gradeResponse, initialState, reviewCard, scheduleDue,
+  MS_PER_DAY, type CardState, type Grade,
 } from '@/lib/fsrs';
 
 /**
@@ -25,6 +24,8 @@ export interface SrsEvent {
   itemId: string;
   /** Graded server-side against the answer key. */
   correct: boolean;
+  /** false = presented but left blank. Defaults to true. */
+  answered?: boolean;
   latencyMs: number | null;
   confidence?: number | null;
   /** When the answer happened; defaults to now. */
@@ -71,12 +72,29 @@ function toState(row: CardRow): CardState {
   };
 }
 
+/** One card state change, as written to srs_review_log. */
+export interface ReviewLogEntry {
+  itemId: string;
+  grade: Grade;
+  answered: boolean;
+  /** Only the first review of a card that was due at the time counts. */
+  wasDue: boolean;
+  /** null for the review that created the card. */
+  elapsedDays: number | null;
+  stabilityBefore: number | null;
+  stabilityAfter: number;
+  difficultyBefore: number | null;
+  difficultyAfter: number;
+  at: Date;
+}
+
 export interface FoldResult {
   state: CardState | null;
   /** First event that created the card (null when the card already existed). */
   createdBy: SrsEvent | null;
-  /** The card was due and this batch reviewed it successfully. */
+  /** The card was due and this batch answered a review of it (Ring B). */
   cleared: boolean;
+  logs: ReviewLogEntry[];
 }
 
 /**
@@ -87,23 +105,44 @@ export function foldEvents(existing: CardRow | null, type: string, events: SrsEv
   let state = existing ? toState(existing) : null;
   let createdBy: SrsEvent | null = null;
   let cleared = false;
-  const wasDue = existing ? new Date(existing.due_at).getTime() <= now.getTime() : false;
+  // Due-ness is the card's own server-side state, checked once: after the
+  // first review in this batch the card is rescheduled, so later events in
+  // the same batch are never "due".
+  let dueAvailable = existing ? new Date(existing.due_at).getTime() <= now.getTime() : false;
+  const logs: ReviewLogEntry[] = [];
 
   for (const event of events) {
     const at = event.at ?? now;
+    const answered = event.answered ?? true;
     const grade = gradeResponse({ correct: event.correct, latencyMs: event.latencyMs, type, confidence: event.confidence });
     if (!state) {
       if (grade !== Again) continue;
       state = initialState(Again, at);
       createdBy = event;
+      logs.push({
+        itemId: event.itemId, grade, answered, wasDue: false, elapsedDays: null,
+        stabilityBefore: null, stabilityAfter: state.stability,
+        difficultyBefore: null, difficultyAfter: state.difficulty, at,
+      });
       continue;
     }
     // A review can never be dated before the review it follows.
     const reviewAt = at.getTime() < state.lastReviewAt.getTime() ? state.lastReviewAt : at;
-    if (wasDue && !cleared && grade >= Hard) cleared = true;
-    state = reviewCard(state, grade, reviewAt);
+    const wasDue = dueAvailable;
+    dueAvailable = false;
+    // Ring B counts completing a due review — answering it, right or wrong
+    // (a wrong answer is still the retrieval work; FSRS handles the lapse).
+    if (wasDue && answered) cleared = true;
+    const next = reviewCard(state, grade, reviewAt);
+    logs.push({
+      itemId: event.itemId, grade, answered, wasDue,
+      elapsedDays: (reviewAt.getTime() - state.lastReviewAt.getTime()) / MS_PER_DAY,
+      stabilityBefore: state.stability, stabilityAfter: next.stability,
+      difficultyBefore: state.difficulty, difficultyAfter: next.difficulty, at: reviewAt,
+    });
+    state = next;
   }
-  return { state, createdBy, cleared };
+  return { state, createdBy, cleared, logs };
 }
 
 /**
@@ -161,7 +200,7 @@ export async function applyResponsesToSrs(
   for (const [conceptKey, { item, events: conceptEvents }] of byConcept) {
     for (let attempt = 1; attempt <= MAX_CAS_ATTEMPTS; attempt++) {
       const existing = cards.get(conceptKey) ?? null;
-      const { state, createdBy, cleared } = foldEvents(existing, item.type, conceptEvents, now);
+      const { state, createdBy, cleared, logs } = foldEvents(existing, item.type, conceptEvents, now);
       if (!state) break; // only correct answers on an unscheduled concept
 
       const due = scheduleDue(state.stability, state.lastReviewAt, examAt);
@@ -206,6 +245,23 @@ export async function applyResponsesToSrs(
       if (written && written.length > 0) {
         if (existing) result.reviewed++; else result.created++;
         if (cleared) result.cleared++;
+        const { error: logErr } = await supabase.from('srs_review_log').insert(logs.map(l => ({
+          owner_id: owner.id,
+          owner_type: owner.type,
+          card_id: written![0].id,
+          concept_key: conceptKey,
+          item_id: l.itemId,
+          grade: l.grade,
+          answered: l.answered,
+          was_due: l.wasDue,
+          elapsed_days: l.elapsedDays,
+          stability_before: l.stabilityBefore,
+          stability_after: l.stabilityAfter,
+          difficulty_before: l.difficultyBefore,
+          difficulty_after: l.difficultyAfter,
+          reviewed_at: l.at.toISOString(),
+        })));
+        if (logErr) result.error = logErr.message;
         break;
       }
       // Lost a race: someone else created/updated this card first. Re-read
@@ -219,18 +275,6 @@ export async function applyResponsesToSrs(
         break;
       }
     }
-  }
-
-  // Ring B ("smart review") counts concepts that were due and got reviewed
-  // successfully — same meaning as before, now per concept.
-  if (result.cleared > 0) {
-    await supabase.rpc('increment_daily_activity', {
-      p_user_id: owner.id,
-      p_activity_date: todayLocalStr(),
-      p_source: 'review_queue',
-      p_activity_units: 0,
-      p_review_cleared: result.cleared,
-    });
   }
 
   return result;

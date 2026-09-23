@@ -103,15 +103,11 @@ export default function TodaySessionPage() {
     else setPhase('done');
   };
 
+  // Progress (rings, streak) is recorded server-side from the logged
+  // answers themselves — nothing to report here.
   const finishSession = useCallback(() => {
     setPhase('done');
-    const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
-    authFetch('/api/activity/complete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ guestId, source: 'today', units: Math.max(totalAnswered, 1) }),
-    }).catch(() => {});
-  }, [totalAnswered]);
+  }, []);
 
   // ── Question phases (review + weak) ───────────────────────────────────────
   const currentQuestions = phase === 'review' ? data?.reviewQuestions ?? [] : phase === 'weak' ? data?.weakQuestions ?? [] : [];

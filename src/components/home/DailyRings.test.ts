@@ -3,31 +3,43 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { DailyRings } from './DailyRings';
 
-function render(reviewClearedToday: number, reviewStillDue: number) {
-  return renderToStaticMarkup(createElement(DailyRings, {
-    activityUnitsToday: 0, dailyActivityTarget: 15, reviewClearedToday, reviewStillDue,
-  }));
+function render(o: { effort?: number; target?: number; done?: number; due?: number; sim?: boolean } = {}) {
+  return renderToStaticMarkup(createElement(DailyRings, { rings: {
+    effort: { done: o.effort ?? 0, target: o.target ?? 15 },
+    retention: { done: o.done ?? 0, due: o.due ?? 0 },
+    simulation: { done: o.sim ?? false },
+  } }));
 }
 
-describe('daily review progress', () => {
-  it('represents an empty queue as caught up without inventing work or practice completion', () => {
-    const html = render(0, 0);
-    expect(html).toContain('הכול מעודכן');
-    expect(html).toContain('אין חזרות שממתינות לך כרגע');
-    expect(html).not.toContain('>0/1<');
+describe('three learning rings', () => {
+  it('renders all three rings with their labels and never NaN', () => {
+    const html = render();
+    expect(html.match(/<circle/g)).toHaveLength(6); // track + fill per ring
+    for (const label of ['תרגול מאתגר', 'חזרות בזמן', 'סימולציה שבועית']) expect(html).toContain(label);
     expect(html).toContain('>0/15<');
     expect(html).not.toMatch(/NaN|Infinity/);
   });
 
-  it('keeps outstanding review work visible', () => {
-    const html = render(2, 3);
+  it('shows outstanding due reviews as done/total', () => {
+    const html = render({ done: 2, due: 3 });
     expect(html).toContain('>2/5<');
-    expect(html).not.toContain('הכול מעודכן');
+    expect(html).not.toContain('אין חזרות ממתינות');
   });
 
-  it('recognizes completed reviews with an accurate count', () => {
-    const html = render(5, 0);
-    expect(html).toContain('הכול מעודכן');
-    expect(html).toContain('השלמת 5 חזרות');
+  it('an empty queue is caught up, with an honest count of what was done', () => {
+    expect(render({ done: 0, due: 0 })).toContain('אין חזרות ממתינות');
+    expect(render({ done: 4, due: 0 })).toContain('הכול מעודכן · 4 הושלמו');
+  });
+
+  it('marks the weekly simulation', () => {
+    expect(render({ sim: false })).toContain('טרם השבוע');
+    expect(render({ sim: true })).toContain('בוצעה');
+  });
+
+  it('only celebrates when all three rings are closed', () => {
+    const pop = 'check-pop';
+    expect(render({ effort: 15, done: 3, due: 0, sim: false })).not.toContain(pop);
+    expect(render({ effort: 14, done: 3, due: 0, sim: true })).not.toContain(pop);
+    expect(render({ effort: 15, done: 3, due: 0, sim: true })).toContain(pop);
   });
 });

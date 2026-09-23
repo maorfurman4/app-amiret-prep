@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { isCorrectAnswer, type Question } from '@/types/exam';
+import { predictCorrect } from '@/lib/ability';
 
 /**
  * Server-side writers for public.responses — the per-item answer log every
@@ -20,6 +21,7 @@ export interface ExamResponseRow {
   chosen_option: number | null;
   latency_ms: number | null;
   theta_before: number;
+  p_correct: number;
   section_index: number;
 }
 
@@ -57,6 +59,7 @@ export function buildExamResponseRows({
     chosen_option: answers[i] ?? null,
     latency_ms: timingsSeconds ? Math.round(timingsSeconds[i] * 1000) : null,
     theta_before: thetaBefore,
+    p_correct: predictCorrect(thetaBefore, question),
     section_index: sectionIndex,
   }));
 }
@@ -65,6 +68,8 @@ export function buildExamResponseRows({
 export interface GradedResponse {
   itemId: string;
   correct: boolean;
+  /** false = presented but left blank. */
+  answered: boolean;
   latencyMs: number | null;
   confidence: number | null;
 }
@@ -85,36 +90,48 @@ export interface ClientResponseInput {
  * Grades client-reported responses against the stored answer key and
  * inserts them. Responses for item ids that don't exist are dropped (never
  * trusted, never guessed at). Returns how many rows were written.
+ *
+ * `theta` is the owner's server-side ability estimate (src/lib/ability.ts):
+ * every row's p_correct comes from it, never from anything the client sent,
+ * because p_correct decides what counts toward Ring A. A client-supplied
+ * thetaBefore (the diagnostic's own running estimate) is stored as context
+ * only; otherwise theta_before records the server estimate.
  */
 export async function recordClientResponses(
   supabase: SupabaseClient,
   owner: { id: string; type: OwnerType },
   inputs: ClientResponseInput[],
+  theta: number,
 ): Promise<{ recorded: number; graded: GradedResponse[]; error: string | null }> {
   if (inputs.length === 0) return { recorded: 0, graded: [], error: null };
 
   const itemIds = [...new Set(inputs.map(r => r.itemId))];
   const { data: keys, error: keyErr } = await supabase
     .from('questions')
-    .select('id, correct_answer')
+    .select('id, correct_answer, b, c')
     .in('id', itemIds);
   if (keyErr) return { recorded: 0, graded: [], error: keyErr.message };
 
-  const keyById = new Map((keys ?? []).map(k => [k.id as string, k.correct_answer as number]));
+  type Key = { id: string; correct_answer: number; b: number; c: number | null };
+  const keyById = new Map(((keys ?? []) as Key[]).map(k => [k.id, k]));
   const rows = inputs
     .filter(r => keyById.has(r.itemId))
-    .map(r => ({
-      owner_id: owner.id,
-      owner_type: owner.type,
-      item_id: r.itemId,
-      context: r.context,
-      correct: r.chosenOption !== null && r.chosenOption === keyById.get(r.itemId),
-      chosen_option: r.chosenOption,
-      latency_ms: r.latencyMs ?? null,
-      confidence: r.confidence ?? null,
-      theta_before: r.thetaBefore ?? null,
-      section_index: r.sectionIndex ?? null,
-    }));
+    .map(r => {
+      const key = keyById.get(r.itemId)!;
+      return {
+        owner_id: owner.id,
+        owner_type: owner.type,
+        item_id: r.itemId,
+        context: r.context,
+        correct: r.chosenOption !== null && r.chosenOption === key.correct_answer,
+        chosen_option: r.chosenOption,
+        latency_ms: r.latencyMs ?? null,
+        confidence: r.confidence ?? null,
+        theta_before: r.thetaBefore ?? theta,
+        p_correct: Number.isFinite(key.b) ? predictCorrect(theta, key) : null,
+        section_index: r.sectionIndex ?? null,
+      };
+    });
   if (rows.length === 0) return { recorded: 0, graded: [], error: null };
 
   const { error } = await supabase.from('responses').insert(rows);
@@ -122,6 +139,7 @@ export async function recordClientResponses(
   const graded = rows.map(r => ({
     itemId: r.item_id,
     correct: r.correct,
+    answered: r.chosen_option !== null,
     latencyMs: r.latency_ms,
     confidence: r.confidence,
   }));

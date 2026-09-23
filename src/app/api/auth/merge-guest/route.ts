@@ -69,6 +69,10 @@ export async function POST(req: Request) {
   }
   await supabase.from('srs_cards').update({ owner_id: user.id, owner_type: 'user' })
     .eq('owner_type', 'guest').eq('owner_id', guestId);
+  //    Their review history goes with them (it's what Ring B and FSRS
+  //    re-fitting read); every row is a distinct event, nothing to dedupe.
+  await supabase.from('srs_review_log').update({ owner_id: user.id, owner_type: 'user' })
+    .eq('owner_type', 'guest').eq('owner_id', guestId);
 
   // 3. Seen-question / seen-passage history (cross-session dedup keys)
   const { data: myQ } = await supabase.from('user_question_history').select('question_id').eq('user_key', user.id);

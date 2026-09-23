@@ -3,8 +3,6 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { applyResponsesToSrs, foldEvents, selectDueReviewQuestions, recapCardsToExam } from './srs';
 import { MS_PER_DAY, FSRS_WEIGHTS } from './fsrs';
 
-vi.mock('@/lib/date-local', () => ({ todayLocalStr: () => '2026-10-01' }));
-
 // ── A small in-memory stand-in for the supabase-js query builder ─────────────
 
 type Row = Record<string, unknown>;
@@ -27,7 +25,8 @@ function fakeSupabase(db: FakeDb, hooks: { beforeUpdate?: (table: string) => voi
 
   function from(table: string) {
     const filters: ((r: Row) => boolean)[] = [];
-    let op: 'select' | 'update' | 'upsert' | 'delete' = 'select';
+    let op: 'select' | 'update' | 'upsert' | 'delete' | 'insert' = 'select';
+    let inserted: Row[] = [];
     let payload: Row = {};
     let upsertOpts: { onConflict?: string; ignoreDuplicates?: boolean } = {};
     let order: { col: string; asc: boolean } | null = null;
@@ -48,6 +47,7 @@ function fakeSupabase(db: FakeDb, hooks: { beforeUpdate?: (table: string) => voi
       maybeSingle: () => { single = true; return q; },
       update: (p: Row) => { op = 'update'; payload = p; return q; },
       delete: () => { op = 'delete'; return q; },
+      insert: (r: Row | Row[]) => { op = 'insert'; inserted = Array.isArray(r) ? r : [r]; return q; },
       upsert: (p: Row, o: typeof upsertOpts) => { op = 'upsert'; payload = p; upsertOpts = o; return q; },
       then(resolve: (v: { data: unknown; error: null }) => void) {
         const match = (r: Row) => filters.every(f => f(r));
@@ -62,6 +62,9 @@ function fakeSupabase(db: FakeDb, hooks: { beforeUpdate?: (table: string) => voi
           const hit = rows().filter(match);
           hit.forEach(r => Object.assign(r, payload));
           data = hit.map(r => ({ id: r.id }));
+        } else if (op === 'insert') {
+          rows().push(...inserted.map(r => ({ id: rows().length + 1, ...r })));
+          data = null;
         } else if (op === 'delete') {
           db[table] = rows().filter(r => !match(r));
           data = null;
@@ -129,13 +132,39 @@ describe('foldEvents', () => {
     expect(r.state!.stability / FSRS_WEIGHTS[0]).toBeLessThan(1.05);
   });
 
-  it('counts a successful review of a due card as cleared — but not of a not-yet-due one', () => {
+  it('Ring B: an answered review of a DUE card counts (right or wrong); not-due or blank never does', () => {
     const due = card() as never;
     const notDue = card({ due_at: iso(daysFrom(3)) }) as never;
-    const ev = [{ itemId: 'q', correct: true, latencyMs: 30_000 }];
-    expect(foldEvents(due, 'sentence_completion', ev, NOW).cleared).toBe(true);
-    expect(foldEvents(notDue, 'sentence_completion', ev, NOW).cleared).toBe(false);
-    expect(foldEvents(due, 'sentence_completion', [{ itemId: 'q', correct: false, latencyMs: 30_000 }], NOW).cleared).toBe(false);
+    const right = [{ itemId: 'q', correct: true, latencyMs: 30_000 }];
+    const wrong = [{ itemId: 'q', correct: false, latencyMs: 30_000 }];
+    const blank = [{ itemId: 'q', correct: false, answered: false, latencyMs: 30_000 }];
+    expect(foldEvents(due, 'sentence_completion', right, NOW).cleared).toBe(true);
+    expect(foldEvents(due, 'sentence_completion', wrong, NOW).cleared).toBe(true);
+    expect(foldEvents(due, 'sentence_completion', blank, NOW).cleared).toBe(false);
+    expect(foldEvents(notDue, 'sentence_completion', right, NOW).cleared).toBe(false);
+  });
+
+  it('closes the old loophole: wrong → immediately right is never a due review', () => {
+    const r = foldEvents(null, 'sentence_completion', [
+      { itemId: 'miss', correct: false, latencyMs: 20_000, at: NOW },
+      { itemId: 'sib', correct: true, latencyMs: 20_000, at: new Date(NOW.getTime() + 60_000) },
+    ], NOW);
+    expect(r.cleared).toBe(false);
+    expect(r.logs.map(l => l.wasDue)).toEqual([false, false]);
+  });
+
+  it('logs every state change with before/after state and real elapsed time', () => {
+    const due = card({ stability: 2, difficulty: 6, last_review_at: iso(daysFrom(-3)) }) as never;
+    const { logs } = foldEvents(due, 'sentence_completion', [
+      { itemId: 'a', correct: true, latencyMs: 30_000 },
+      { itemId: 'b', correct: true, latencyMs: 30_000 },
+    ], NOW);
+    expect(logs).toHaveLength(2);
+    expect(logs[0]).toMatchObject({ itemId: 'a', grade: 3, answered: true, wasDue: true, stabilityBefore: 2, difficultyBefore: 6 });
+    expect(logs[0].elapsedDays).toBeCloseTo(3, 6);
+    // Only the first review in a batch can be the due one.
+    expect(logs[1]).toMatchObject({ itemId: 'b', wasDue: false, stabilityBefore: logs[0].stabilityAfter });
+    expect(logs[1].elapsedDays).toBe(0);
   });
 });
 
@@ -151,7 +180,7 @@ describe('applyResponsesToSrs', () => {
     };
   });
 
-  it('a mistake creates one concept card anchored on the missed question', async () => {
+  it('a mistake creates one concept card anchored on the missed question, and logs its creation', async () => {
     const { client } = fakeSupabase(db);
     const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-raise', correct: false, latencyMs: 30_000 }], NOW);
     expect(res).toMatchObject({ created: 1, reviewed: 0, error: null });
@@ -161,9 +190,13 @@ describe('applyResponsesToSrs', () => {
     const hours = (new Date(c.due_at as string).getTime() - NOW.getTime()) / 3_600_000;
     expect(hours).toBeGreaterThan(6);
     expect(hours).toBeLessThan(13);
+    expect(db.srs_review_log).toEqual([expect.objectContaining({
+      owner_id: 'guest-1', owner_type: 'guest', card_id: c.id, concept_key: 'sc.vocab/raise', item_id: 'q-raise',
+      grade: 1, answered: true, was_due: false, elapsed_days: null, stability_before: null,
+    })]);
   });
 
-  it('a sibling answered correctly reviews the SAME concept card and clears it for Ring B', async () => {
+  it('a sibling answered correctly reviews the SAME concept card; the log marks it a due review', async () => {
     db.srs_cards.push(card());
     const { client, rpc } = fakeSupabase(db);
     const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-replace-2', correct: true, latencyMs: 30_000 }], NOW);
@@ -171,7 +204,11 @@ describe('applyResponsesToSrs', () => {
     expect(db.srs_cards).toHaveLength(1);
     expect(db.srs_cards[0]).toMatchObject({ version: 5, reps: 3 });
     expect(db.srs_cards[0].stability as number).toBeGreaterThan(2);
-    expect(rpc).toHaveBeenCalledWith('increment_daily_activity', expect.objectContaining({ p_user_id: 'guest-1', p_review_cleared: 1, p_activity_units: 0 }));
+    expect(db.srs_review_log).toEqual([expect.objectContaining({
+      card_id: 1, concept_key: 'sc.vocab/replace', item_id: 'q-replace-2', was_due: true, answered: true, grade: 3,
+    })]);
+    // No client-trusting counter any more — Ring B reads the log.
+    expect(rpc).not.toHaveBeenCalledWith('increment_daily_activity', expect.anything());
   });
 
   it('correct answers on concepts without a card write nothing', async () => {

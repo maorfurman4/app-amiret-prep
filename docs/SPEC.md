@@ -155,6 +155,11 @@
 ### 5.1 `/` — דף הבית (dashboard)
 - שורה עליונה: `StreakBadge` (להבה + מספר ימים, מוסתר כשאין streak, הבהוב עדין), `UserMenu`, `ThemeToggle`.
 - לוגו 🎓 `134+`, `HeroTagline` — ברירת מחדל "הכנה ממוקדת לאמירנ"ט — בדרך לפטור"; אם יש ציון אחרון → ניסוח מותאם.
+- **`ExamDateCard`** (2026-09-23, מתחת ל-hero): אורח → הזמנה להתחבר; רשום בלי תאריך/תאריך שעבר → באנר שפותח עורך inline (`input type=date`, היום–שנתיים, `PUT /api/goals`); תאריך עתידי → גלולת ספירה לאחור ("עוד N ימים למבחן") עם כפתור עריכה ואפשרות להסיר.
+- **טבעות למידה** (`DailyRings`, `lib/rings.ts`) — שלוש, כולן מחושבות בשרת מנתונים מאומתים, בלי ספירות מהלקוח:
+  - **A — תרגול מאתגר:** תשובות תרגול/אבחון היום עם `responses.p_correct` ∈ [0.5, 0.85] (ה-p מחושב בשרת בזמן הרישום מאומדן היכולת — EAP על 200 התשובות האחרונות, `lib/ability.ts`; θ שהלקוח שולח נשמר כהקשר בלבד). יעד: `user_goals.daily_activity_target` (ברירת מחדל 15).
+  - **B — חזרות בזמן:** שורות `srs_review_log` של היום עם `was_due` (נקבע בשרת ממצב הכרטיס) ו-`answered` — רק הסקירה הראשונה של כרטיס שהגיע מועדו; טעות→מיד נכון לעולם לא נספר. היעד = הושלמו + ממתינים כרגע.
+  - **C — סימולציה שבועית:** מבחן מלא לא-תרגול שהושלם מאז ראשון 00:00 (שעון ישראל).
 - `StreakCelebration` — מודל מסך-מלא **פעם ביום** (מפתח `amiret_streak_celebration_seen_date`, יום לפי Asia/Jerusalem), נסגר אוטומטית/בלחיצה.
 - CTA ראשי "מבחן מלא" → `/exam`.
 - `DiagnosticBanner` — לפני מבחן ראשון: "12 שאלות אדפטיביות · ~10 דקות · רמה + תוכנית מותאמת"; אחרי: ניסוח "בדיקה מהירה בין מבחנים".
@@ -189,7 +194,7 @@
 - **מקבץ בתנאי אמת** — פורמט פרק אמיתי (SC 4q/240s, RST 3q/360s, RC 5q/900s), countdown אחד, ניווט חופשי, הגשה אוטומטית, סקירה בסוף, בלי רמזים.
 - Deep link: `/practice?type=X&difficulty=Y` (מהסטטיסטיקות "תרגל את החולשה שלך" ומהאבחון).
 - מסך סיום: אבחון רמה IRT/EAP (רמה 1–5 + ציון משוער + רצועה; "רמה מעורבת" במצב אקראי).
-- כל תשובה → `POST /api/review-queue` (fire-and-forget); סיום → `POST /api/activity/complete` (streak). מסמן `inProgress` ל-BottomNav.
+- כל תשובה → `POST /api/responses` (רישום + FSRS + סימון יום ל-streak, הכל בשרת). מסמן `inProgress` ל-BottomNav.
 - נתונים: `GET /api/practice/questions` (stateless, dedup בין סשנים).
 
 ### 5.7 `/diagnostic` — אבחון מהיר
@@ -276,7 +281,7 @@ Server component; `SELECT display_name, avatar_url, best_score, total_exams, avg
 | `/api/stats` | GET | כל הסשנים שהושלמו של הבעלים | |
 | `/api/dashboard-summary` | GET | streak, ציון אחרון, מספר מבחנים, ספירת תור | `head:true` counts — קריאה אחת זולה |
 | `/api/streak` | GET | streak בלבד | `lib/streak-server.ts`: ימים רצופים (Asia/Jerusalem) עם פעילות ב-`activity_log`, מסתיימים היום או אתמול |
-| `/api/activity/complete` | POST | רישום פעילות יומית (תרגול/אבחון) | מבחנים נרשמים inline ב-answer |
+| ~~`/api/activity/complete`~~ | — | **הוסר (2026-09-23)** — קיבל ספירות יחידות מהלקוח בלי אימות. יום פעיל ל-streak מסומן עכשיו בשרת מתוך `/api/responses` ומבחנים | |
 | `/api/auth/merge-guest` | POST | מיזוג אורח→חשבון | 403 אם guestId = משתמש רשום |
 | `/api/profile/update-name` | POST | שם תצוגה | |
 | `/api/profile/upload-avatar` | POST/DELETE | אווטאר | bucket `avatars` |
@@ -297,7 +302,8 @@ Server component; `SELECT display_name, avatar_url, best_score, total_exams, avg
 | `review_queue` | `id, guest_id text, user_id uuid, question_id, times_wrong, interval_days, next_review_at, last_reviewed_at` | ✅ | אין. **מיושן (2026-09-23)** — לא נכתב ע"י הקוד; להסיר אחרי חלון הפריסה |
 | `srs_cards` | `owner_id, owner_type, concept_key (unique per owner), item_type, skill, target_lemma, anchor_question_id, stability, difficulty, reps, lapses, last_review_at, due_at, version (CAS)` | ✅ | אין (service-role בלבד); merge-guest מעביר (כרטיס קיים של החשבון גובר) |
 | `user_question_history` / `user_passage_history` | `user_key text, question_id/passage_id, seen_at` (unique) | ✅ | אין |
-| `activity_log` | `user_id text, activity_date, source` | ✅ | public ALL ("app enforces ownership") |
+| `srs_review_log` | `owner_id, owner_type, card_id → srs_cards (set null), concept_key, item_id, grade 1–4, answered, was_due, elapsed_days, stability/difficulty before/after, reviewed_at` | ✅ | אין (service-role בלבד). מקור טבעת B + נתוני אימון ל-FSRS |
+| `activity_log` | `user_id text, activity_date, source` (העמודות `activity_units`/`review_cleared` כבר לא נקראות — streak בלבד) | ✅ | public ALL ("app enforces ownership") |
 | `user_stats` | `user_id, total_exams, best_score, avg_score, last_exam_at, score_history jsonb, performance_by_type, display_name, avatar_url` | ✅ | own read/write (`auth.uid()`) |
 | `leaderboard` | `user_id, display_name, avatar_url, best_score, total_exams, avg_score, last_exam_at` | ✅ | public SELECT **+ GRANT ברמת עמודה** ל-anon/authenticated על כל העמודות **חוץ מ-`user_id`** |
 | `responses` | `owner_id, owner_type (user/guest), item_id → questions, context (exam/practice/review/diagnostic), correct, chosen_option (אינדקס קנוני; null = ריק), latency_ms (זמן על הפריט עד תשובה סופית), confidence 1–3, theta_before, section_index, session_id → exam_sessions (set null), created_at` | ✅ | אין (service-role בלבד); merge-guest מעביר שורות אורח |

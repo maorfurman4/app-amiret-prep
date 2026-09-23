@@ -1,10 +1,8 @@
 /**
- * Single-line, honest loss-aversion nudge inside the "Today" card. Phase A:
- * copy describes the real spaced-repetition mechanic (a correct review
- * doubles the interval, a wrong one resets it) — intervals do not currently
- * decay from neglect, so the copy never claims otherwise. See the
- * architectural plan's Pillar 3 for the Phase B (real neglect-decay cron)
- * that would make a stronger claim honest later.
+ * Single-line nudge inside the "Today" card. The copy states the real FSRS
+ * mechanic (src/lib/fsrs.ts): an item comes due when its predicted recall
+ * has faded to the target, which is exactly when a successful retrieval
+ * strengthens the memory most — and it does keep fading if left.
  */
 export function ReviewDueNudge({ dueCount }: { dueCount: number }) {
   if (dueCount < 1) return null;
@@ -14,7 +12,7 @@ export function ReviewDueNudge({ dueCount }: { dueCount: number }) {
       <span className="font-bold text-exam-wrong tabular-nums">{dueCount}</span>
       {' '}
       {dueCount === 1 ? 'פריט ממתין לחזרה' : 'פריטים ממתינים לחזרה'}
-      {' — תשובה נכונה תכפיל את המרווח הבא, תשובה שגויה תאפס אותו'}
+      {' — עכשיו, כשהזיכרון מתחיל לדעוך, חזרה מחזקת אותו הכי הרבה'}
     </p>
   );
 }

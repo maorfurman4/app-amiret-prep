@@ -179,11 +179,13 @@ describe('POST /api/exam/answer', () => {
 
     expect(response.status).toBe(200);
     const rows = db.spies.rpc.mock.calls[0][1].p_responses;
+    // θ = 0.7 vs b = 0 under the baseline a = 1.2, c = .25.
+    const p = expect.closeTo(0.25 + 0.75 / (1 + Math.exp(-1.2 * 0.7)), 6);
     expect(rows).toEqual([
-      { owner_type: 'guest', item_id: 'question-1', context: 'exam', correct: true, chosen_option: 0, latency_ms: 12345, theta_before: 0.7, section_index: 1 },
-      { owner_type: 'guest', item_id: 'question-2', context: 'exam', correct: false, chosen_option: 1, latency_ms: 40000, theta_before: 0.7, section_index: 1 },
-      { owner_type: 'guest', item_id: 'question-3', context: 'exam', correct: false, chosen_option: null, latency_ms: 3200, theta_before: 0.7, section_index: 1 },
-      { owner_type: 'guest', item_id: 'question-4', context: 'exam', correct: true, chosen_option: 0, latency_ms: 0, theta_before: 0.7, section_index: 1 },
+      { owner_type: 'guest', item_id: 'question-1', context: 'exam', correct: true, chosen_option: 0, latency_ms: 12345, theta_before: 0.7, p_correct: p, section_index: 1 },
+      { owner_type: 'guest', item_id: 'question-2', context: 'exam', correct: false, chosen_option: 1, latency_ms: 40000, theta_before: 0.7, p_correct: p, section_index: 1 },
+      { owner_type: 'guest', item_id: 'question-3', context: 'exam', correct: false, chosen_option: null, latency_ms: 3200, theta_before: 0.7, p_correct: p, section_index: 1 },
+      { owner_type: 'guest', item_id: 'question-4', context: 'exam', correct: true, chosen_option: 0, latency_ms: 0, theta_before: 0.7, p_correct: p, section_index: 1 },
     ]);
     // Section results still carry whole seconds for the pacing display.
     expect(db.getUpdatePayload()?.section_results).toEqual([
@@ -220,8 +222,8 @@ describe('POST /api/exam/answer', () => {
 
   it('at completion, feeds every logged exam answer (right and wrong) to FSRS with its real latency and time', async () => {
     const logged = [
-      { item_id: 'question-1', correct: true, latency_ms: 21000, created_at: '2026-09-23T10:00:00.000Z' },
-      { item_id: 'question-2', correct: false, latency_ms: 64000, created_at: '2026-09-23T10:00:00.000Z' },
+      { item_id: 'question-1', correct: true, chosen_option: 0, latency_ms: 21000, created_at: '2026-09-23T10:00:00.000Z' },
+      { item_id: 'question-2', correct: false, chosen_option: null, latency_ms: 64000, created_at: '2026-09-23T10:00:00.000Z' },
     ];
     const db = createSupabase(
       session({ current_section_index: 7, questions_by_section: { 7: questions }, current_section_expires_at: '2999-01-01T00:00:00.000Z' }),
@@ -237,8 +239,8 @@ describe('POST /api/exam/answer', () => {
     expect((await response.json()).isComplete).toBe(true);
     expect(db.spies.responsesEq).toHaveBeenCalledWith('session_id', 'session-id');
     expect(mocks.applyResponsesToSrs).toHaveBeenCalledWith(db.supabase, { id: 'account-id', type: 'user' }, [
-      { itemId: 'question-1', correct: true, latencyMs: 21000, at: new Date('2026-09-23T10:00:00.000Z') },
-      { itemId: 'question-2', correct: false, latencyMs: 64000, at: new Date('2026-09-23T10:00:00.000Z') },
+      { itemId: 'question-1', correct: true, answered: true, latencyMs: 21000, at: new Date('2026-09-23T10:00:00.000Z') },
+      { itemId: 'question-2', correct: false, answered: false, latencyMs: 64000, at: new Date('2026-09-23T10:00:00.000Z') },
     ]);
   });
 

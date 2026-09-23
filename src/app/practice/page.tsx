@@ -256,14 +256,7 @@ function PracticeContent() {
     // Logging also feeds spaced repetition (server-side).
     logResponses(questions.map((q, i) =>
       responseEntry(q, answers[i], 'practice', dwellRef.current.elapsedMs(q.id))));
-    const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
     setStep('done');
-    authFetch('/api/activity/complete', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ guestId, source: 'practice', units: questions.length }),
-    }).catch(() => {});
-
   }, [questions, answers]);
 
   // Section mode: one hard countdown for the whole section, like the real
@@ -309,12 +302,6 @@ function PracticeContent() {
       setShowResult(answers[nextIndex] !== null);
     } else {
       setStep('done');
-      const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
-      authFetch('/api/activity/complete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guestId, source: 'practice', units: questions.length }),
-      }).catch(() => {});
     }
   }, [currentIndex, questions, answers, examMode, sectionMode, selectedType]);
 

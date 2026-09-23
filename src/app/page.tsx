@@ -11,6 +11,7 @@ import { StatsCard } from '@/components/home/StatsCard';
 import { StreakCelebration } from '@/components/home/StreakCelebration';
 import { TodaySessionCta } from '@/components/home/TodaySessionCta';
 import { VictoryPathSummary } from '@/components/home/VictoryPathSummary';
+import { ExamDateCard } from '@/components/home/ExamDateCard';
 
 const LEARN_LINKS_BEFORE = [
   { href: '/practice',   icon: PenLine,  title: 'תרגול ממוקד', sub: 'לפי סוג שאלה' },
@@ -47,6 +48,10 @@ export default function HomePage() {
             </h1>
             <HeroTagline />
           </div>
+
+          {/* Exam date — prompts for it while unset (the spaced-repetition
+              scheduler times every review to it), then a quiet countdown. */}
+          <div className="animate-fade-up [animation-delay:90ms] empty:hidden"><ExamDateCard /></div>
 
           {/* Primary action */}
           <Link

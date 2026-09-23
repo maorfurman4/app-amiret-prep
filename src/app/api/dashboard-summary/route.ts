@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { computeStreakInfo } from '@/lib/streak-server';
-import { todayLocalStr } from '@/lib/date-local';
 import { computeForecast, type Forecast } from '@/lib/forecast';
+import { computeRings, DEFAULT_EFFORT_TARGET, type Rings } from '@/lib/rings';
 
-const DEFAULT_DAILY_ACTIVITY_TARGET = 15;
 const VICTORY_PATH_TARGET_SCORE = 134;
 
 export interface DashboardSummary {
@@ -14,9 +13,12 @@ export interface DashboardSummary {
   reviewDueCount: number;
   todayDueCount: number;
   hasActivityToday: boolean;
-  activityUnitsToday: number;
-  reviewClearedToday: number;
-  dailyActivityTarget: number;
+  /** Server-derived learning rings (src/lib/rings.ts). */
+  rings: Rings;
+  /** The account's exam date (YYYY-MM-DD), null if unset or a guest. */
+  examDate: string | null;
+  /** Only accounts can store an exam date (user_goals → auth.users). */
+  canSetExamDate: boolean;
   forecast: Forecast | null;
 }
 
@@ -27,9 +29,13 @@ const EMPTY: DashboardSummary = {
   reviewDueCount: 0,
   todayDueCount: 0,
   hasActivityToday: false,
-  activityUnitsToday: 0,
-  reviewClearedToday: 0,
-  dailyActivityTarget: DEFAULT_DAILY_ACTIVITY_TARGET,
+  rings: {
+    effort: { done: 0, target: DEFAULT_EFFORT_TARGET },
+    retention: { done: 0, due: 0 },
+    simulation: { done: false },
+  },
+  examDate: null,
+  canSetExamDate: false,
   forecast: null,
 };
 
@@ -50,7 +56,6 @@ export async function GET() {
   if (!owner) return NextResponse.json(EMPTY);
 
   const now = new Date().toISOString();
-  const today = todayLocalStr();
 
   // Due FSRS concept cards (one per concept, however many questions test it).
   const reviewQuery = supabase
@@ -71,10 +76,10 @@ export async function GET() {
     : null;
 
   const goalQuery = user
-    ? supabase.from('user_goals').select('daily_activity_target').eq('user_id', user.id).maybeSingle()
+    ? supabase.from('user_goals').select('daily_activity_target, exam_date').eq('user_id', user.id).maybeSingle()
     : null;
 
-  const [streakInfo, lastScoreRes, forecastRowsRes, examCountRes, reviewCountRes, vocabDueRes, todayRowRes, goalRes] = await Promise.all([
+  const [streakInfo, lastScoreRes, forecastRowsRes, examCountRes, reviewCountRes, vocabDueRes, goalRes] = await Promise.all([
     computeStreakInfo(supabase, owner),
     supabase
       .from('exam_sessions')
@@ -106,17 +111,17 @@ export async function GET() {
       .not('score', 'is', null),
     reviewQuery,
     vocabDueQuery,
-    supabase
-      .from('activity_log')
-      .select('activity_units, review_cleared')
-      .eq('user_id', owner)
-      .eq('activity_date', today)
-      .maybeSingle(),
     goalQuery,
   ]);
 
   const reviewDueCount = reviewCountRes.count ?? 0;
   const vocabDueCount = vocabDueRes?.count ?? 0;
+  const goal = goalRes?.data as { daily_activity_target?: number | null; exam_date?: string | null } | null | undefined;
+
+  const rings = await computeRings(supabase, { id: owner, type: user ? 'user' : 'guest' }, {
+    effortTarget: goal?.daily_activity_target ?? DEFAULT_EFFORT_TARGET,
+    dueNow: reviewDueCount,
+  });
 
   return NextResponse.json({
     streak: streakInfo.streak,
@@ -125,9 +130,9 @@ export async function GET() {
     reviewDueCount,
     todayDueCount: reviewDueCount + vocabDueCount,
     hasActivityToday: streakInfo.hasActivityToday,
-    activityUnitsToday: todayRowRes.data?.activity_units ?? 0,
-    reviewClearedToday: todayRowRes.data?.review_cleared ?? 0,
-    dailyActivityTarget: goalRes?.data?.daily_activity_target ?? DEFAULT_DAILY_ACTIVITY_TARGET,
+    rings,
+    examDate: goal?.exam_date ?? null,
+    canSetExamDate: !!user,
     forecast: computeForecast(forecastRowsRes.data ?? [], VICTORY_PATH_TARGET_SCORE),
   } satisfies DashboardSummary);
 }

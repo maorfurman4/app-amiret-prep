@@ -7,8 +7,8 @@ import { DailyRings } from './DailyRings';
 import { ReviewDueNudge } from './ReviewDueNudge';
 
 /**
- * The home page's composite "Today" card: daily rings (Pillar 2) + a
- * loss-aversion nudge (Pillar 3) + the CTA to /today, folded into one
+ * The home page's composite "Today" card: the three learning rings + a
+ * due-review nudge + the CTA to /today, folded into one
  * card instead of three separate blocks competing for attention. Falls
  * back to the plain CTA pill (no rings/nudge) until dashboard data loads,
  * same zero/loading/no-data contract every other home card follows.
@@ -25,12 +25,7 @@ export function TodaySessionCta() {
       <div className="relative w-full bg-exam-sage-bg/90 backdrop-blur-sm bg-linear-to-br from-exam-surface/50 to-transparent border border-exam-sage/40 dark:border-white/10 rounded-2xl shadow-raised overflow-hidden">
         {data && (
           <div className="flex justify-center pt-4">
-            <DailyRings
-              activityUnitsToday={data.activityUnitsToday}
-              dailyActivityTarget={data.dailyActivityTarget}
-              reviewClearedToday={data.reviewClearedToday}
-              reviewStillDue={data.todayDueCount}
-            />
+            <DailyRings rings={data.rings} />
           </div>
         )}
         <Link

@@ -313,15 +313,15 @@ export async function POST(req: NextRequest) {
   if (isLastSection) {
     const { data: logged, error: logErr } = await supabase
       .from('responses')
-      .select('item_id, correct, latency_ms, created_at')
+      .select('item_id, correct, chosen_option, latency_ms, created_at')
       .eq('session_id', body.sessionId);
     const srs = logErr
       ? { error: logErr.message }
       : await applyResponsesToSrs(
           supabase,
           { id: userKey, type: user ? 'user' : 'guest' },
-          ((logged ?? []) as { item_id: string; correct: boolean; latency_ms: number | null; created_at: string }[])
-            .map(r => ({ itemId: r.item_id, correct: r.correct, latencyMs: r.latency_ms, at: new Date(r.created_at) })),
+          ((logged ?? []) as { item_id: string; correct: boolean; chosen_option: number | null; latency_ms: number | null; created_at: string }[])
+            .map(r => ({ itemId: r.item_id, correct: r.correct, answered: r.chosen_option !== null, latencyMs: r.latency_ms, at: new Date(r.created_at) })),
         ).catch((e: unknown) => ({ error: String(e) }));
     if (srs.error) console.error('[exam/answer] SRS update failed:', srs.error);
   }

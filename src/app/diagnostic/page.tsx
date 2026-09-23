@@ -140,12 +140,6 @@ export default function DiagnosticPage() {
       loadStage(stageIdx + 1, newDoneQs, newDoneAns);
     } else {
       setPhase('done');
-      const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
-      authFetch('/api/activity/complete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guestId, source: 'diagnostic', units: newDoneQs.length }),
-      }).catch(() => {});
     }
   };
 

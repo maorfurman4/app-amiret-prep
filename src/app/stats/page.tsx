@@ -124,7 +124,7 @@ export default function StatsPage() {
           <p className="text-exam-ink-soft mb-6">לא הצלחנו לטעון את הסטטיסטיקה. בדוק את החיבור ונסה שוב.</p>
           <button
             onClick={() => { setError(false); setLoading(true); setLoadToken(t => t + 1); }}
-            className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity"
+            className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-semibold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
           >
             נסה שוב
           </button>
@@ -150,7 +150,7 @@ export default function StatsPage() {
           <BarChart3 className="w-14 h-14 mx-auto mb-4 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
           <h1 className="text-2xl font-bold text-exam-ink mb-2">אין עדיין נתונים</h1>
           <p className="text-exam-ink-soft mb-6">סיים לפחות מבחן אחד כדי לראות סטטיסטיקות</p>
-          <Link href="/exam" className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity">
+          <Link href="/exam" className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-semibold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform">
             התחל מבחן
           </Link>
         </div>
@@ -205,9 +205,9 @@ export default function StatsPage() {
             ? { label: 'כמעט שם', cls: 'bg-exam-alt text-on-amber', desc: 'הבסיס חזק — סגור את הפערים שמסומנים למטה.' }
             : { label: 'עוד לא — ממשיכים לעבוד', cls: 'bg-exam-paper-alt text-exam-ink', desc: 'תוכנית: סימולציית פרקי הליבה + תרגול חולשה ממוקד כל יום.' };
           return (
-            <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
+            <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up">
               <div className="flex items-center gap-3 mb-1">
-                <span className={`px-3 py-1 rounded-sm text-sm font-bold ${verdict.cls}`}>{verdict.label}</span>
+                <span className={`px-3 py-1 rounded-lg text-sm font-bold ${verdict.cls}`}>{verdict.label}</span>
                 <h2 className="font-bold text-exam-ink text-sm">מדד מוכנות פנימי</h2>
               </div>
               <p className="text-xs text-exam-ink-soft mb-3">{verdict.desc}</p>
@@ -229,8 +229,12 @@ export default function StatsPage() {
             { label: 'מבחנים', value: stats.total_exams },
             { label: 'ציון מקסימלי', value: stats.best_score ?? '—' },
             { label: 'ממוצע', value: stats.avg_score ? Math.round(stats.avg_score) : '—' },
-          ].map(card => (
-            <div key={card.label} className="bg-exam-surface rounded-md p-4 border border-exam-border text-center">
+          ].map((card, i) => (
+            <div
+              key={card.label}
+              style={{ animationDelay: `${60 + i * 60}ms` }}
+              className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised hover:-translate-y-1 transition-[box-shadow,transform] duration-300 ease-spring will-change-transform border border-exam-border p-4 text-center animate-fade-up"
+            >
               <div className="text-2xl font-bold text-exam-ink">{card.value}</div>
               <div className="text-xs text-exam-ink-soft mt-1">{card.label}</div>
             </div>
@@ -239,7 +243,7 @@ export default function StatsPage() {
 
         {/* Best score classification */}
         {classification && stats.best_score && (
-          <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
+          <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up [animation-delay:240ms]">
             <div className="text-sm text-exam-ink-soft mb-1">ציון מקסימלי</div>
             <div className="text-4xl font-bold text-exam-ink">{stats.best_score}</div>
             <div className={`text-lg font-bold mt-1 ${classification.color}`}>
@@ -272,10 +276,15 @@ export default function StatsPage() {
           const examsToGo = reached ? 0 : (slope >= 0.3 ? Math.max(1, Math.ceil((134 - last) / slope)) : null);
           const pct = Math.min(100, Math.max(0, ((best - 50) / 84) * 100));
           return (
-            <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
+            <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up [animation-delay:300ms]">
               <div className="flex items-center justify-between mb-1">
                 <h2 className="font-bold text-exam-ink flex items-center gap-2"><Target className="w-4 h-4" aria-hidden />הדרך ל-134+</h2>
-                {reached && <span className="text-xs font-bold bg-exam-sage-strong text-on-emerald px-2 py-0.5 rounded-sm inline-flex items-center gap-1"><PartyPopper className="w-3 h-3" aria-hidden />האומדן הגיע ל-134+</span>}
+                {reached && (
+                  <span
+                    className="text-xs font-bold bg-exam-sage-strong text-on-emerald px-2 py-0.5 rounded-lg inline-flex items-center gap-1 shadow-progress"
+                    style={{ animation: 'check-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both, ring-glow 2.2s ease-in-out 0.6s infinite' }}
+                  ><PartyPopper className="w-3 h-3" aria-hidden />האומדן הגיע ל-134+</span>
+                )}
               </div>
               <p className="text-xs text-exam-ink-soft mb-4">134 הוא סף פטור נפוץ; הנתונים כאן הם אומדן פנימי ולא ציון רשמי</p>
               {/* Progress to goal */}
@@ -288,11 +297,11 @@ export default function StatsPage() {
                 <span>50</span>
               </div>
               <div className="grid grid-cols-2 gap-3 text-center">
-                <div className="bg-exam-paper-alt rounded-sm p-3">
+                <div className="bg-exam-paper-alt rounded-xl p-3">
                   <div className="text-2xl font-bold text-exam-ink">{reached ? <Check className="w-6 h-6 mx-auto" strokeWidth={3} aria-hidden /> : gap}</div>
                   <div className="text-xs text-exam-ink-soft mt-0.5">{reached ? 'עברת את היעד' : 'נקודות עד היעד'}</div>
                 </div>
-                <div className="bg-exam-paper-alt rounded-sm p-3">
+                <div className="bg-exam-paper-alt rounded-xl p-3">
                   {reached ? (
                     <>
                       <Trophy className="w-7 h-7 mx-auto text-exam-sage-strong" aria-hidden />
@@ -320,7 +329,7 @@ export default function StatsPage() {
 
         {/* Performance by type */}
         {Object.keys(stats.performance_by_type ?? {}).length > 0 && (
-          <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
+          <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up [animation-delay:360ms]">
             <h2 className="font-bold text-exam-ink mb-4">ביצועים לפי סוג שאלה</h2>
             <div className="space-y-3">
               {Object.entries(stats.performance_by_type ?? {}).filter(([, d]) => d.total > 0).map(([type, data]) => {
@@ -346,7 +355,7 @@ export default function StatsPage() {
 
         {/* Weakness Analysis */}
         {weakness && Object.keys(weakness.byType).length > 0 && (
-          <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
+          <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up [animation-delay:420ms]">
             <h2 className="font-bold text-exam-ink mb-1">ניתוח חולשות</h2>
             <p className="text-exam-ink-soft text-xs mb-4">מבוסס על 10 המבחנים האחרונים שלך</p>
 
@@ -357,7 +366,7 @@ export default function StatsPage() {
               return (
                 <Link
                   href={`/practice?type=${weakestType.type}&difficulty=${level}`}
-                  className="flex items-center justify-between gap-3 mb-4 p-4 bg-exam-accent hover:opacity-90 rounded-sm transition-opacity"
+                  className="flex items-center justify-between gap-3 mb-4 p-4 bg-exam-accent rounded-xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
                 >
                   <div>
                     <div className="text-exam-accent-ink font-bold text-sm flex items-center gap-1.5"><Target className="w-4 h-4" aria-hidden />תרגל את החולשה שלך עכשיו</div>
@@ -379,7 +388,7 @@ export default function StatsPage() {
                 return (
                   <div
                     key={type}
-                    className={`p-3 rounded-sm border ${isWeakest ? 'bg-exam-wrong-bg border-exam-wrong/40' : 'bg-exam-paper-alt border-exam-border'}`}
+                    className={`p-3 rounded-xl border shadow-surface hover:shadow-raised hover:-translate-y-0.5 transition-[box-shadow,transform] duration-300 ease-spring will-change-transform ${isWeakest ? 'bg-exam-wrong-bg border-exam-wrong/40' : 'bg-exam-paper-alt border-exam-border'}`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
@@ -425,7 +434,7 @@ export default function StatsPage() {
                       ? 'text-exam-alt bg-exam-alt-bg border-exam-alt/40'
                       : 'text-exam-wrong bg-exam-wrong-bg border-exam-wrong/40';
                     return (
-                      <div key={diff} className={`p-3 rounded-sm border text-center ${color}`}>
+                      <div key={diff} className={`p-3 rounded-xl border text-center shadow-surface hover:shadow-raised hover:-translate-y-0.5 transition-[box-shadow,transform] duration-300 ease-spring will-change-transform ${color}`}>
                         <div className="text-xl font-bold">{pct}%</div>
                         <div className="text-xs font-semibold mt-0.5">{DIFFICULTY_LABELS[diff]}</div>
                         <div className="text-xs opacity-70 mt-0.5">{data.correct}/{data.total}</div>

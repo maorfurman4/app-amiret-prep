@@ -49,7 +49,7 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
   if (!forecast) {
     const remaining = Math.max(0, 4 - sessions.length);
     return (
-      <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
+      <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up">
         <h2 className="font-bold text-exam-ink mb-1 flex items-center gap-2">
           <TrendingUp className="w-4 h-4" aria-hidden />
           מסלול הניצחון
@@ -78,7 +78,7 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
   const yMax = Math.max(150, ...sorted.map(s => s.score), targetScore) + 5;
 
   return (
-    <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
+    <div className="bg-exam-surface rounded-2xl shadow-raised hover:shadow-overlay transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up">
       <h2 className="font-bold text-exam-ink mb-1 flex items-center gap-2">
         <TrendingUp className="w-4 h-4" aria-hidden />
         מסלול הניצחון
@@ -125,6 +125,7 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
               stroke="currentColor"
               className="text-exam-sage"
               strokeDasharray="4 4"
+              strokeLinecap="round"
               label={{ value: String(targetScore), position: 'insideTopLeft', fontSize: 10, fill: 'currentColor' }}
             />
             <Line
@@ -133,7 +134,11 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
               stroke="currentColor"
               className="text-exam-accent"
               strokeWidth={2.5}
-              dot={{ r: 3, strokeWidth: 0, fill: 'currentColor' }}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              dot={{ r: 3.5, strokeWidth: 0, fill: 'currentColor' }}
+              activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--exam-surface)' }}
+              style={{ filter: 'drop-shadow(0 0 3px currentColor)' }}
               connectNulls
               isAnimationActive={false}
             />
@@ -144,7 +149,10 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
               className={accelerating ? 'text-exam-sage-strong' : 'text-exam-accent'}
               strokeWidth={2}
               strokeDasharray="6 4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               dot={false}
+              style={{ filter: 'drop-shadow(0 0 3px currentColor)' }}
               connectNulls
               isAnimationActive={false}
             />

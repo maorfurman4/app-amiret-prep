@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
-import { AlertTriangle, CheckCircle2, BookOpen, Clock } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, BookOpen, Clock, Trophy, Target } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
@@ -54,7 +54,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           <p className="text-exam-ink-soft text-sm">לא הצלחנו לטעון את התוצאות. בדוק את החיבור ונסה שוב.</p>
           <button
             onClick={() => { setError(false); setLoadToken(t => t + 1); }}
-            className="px-6 py-2.5 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity"
+            className="px-6 py-2.5 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-semibold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
           >
             נסה שוב
           </button>
@@ -98,20 +98,39 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
     <div className="min-h-screen bg-exam-paper" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
       <div className="max-w-2xl mx-auto space-y-8 py-8 px-4">
-        {/* Score card */}
-        <div className="bg-exam-surface rounded-md p-8 border border-exam-border text-center">
-          <div className="text-xs text-exam-ink-soft mb-1">אומדן פנימי של האתר</div>
-          <div className="text-6xl font-bold text-exam-ink mb-2">{score}</div>
-          <div className={`text-xl font-bold mb-1 ${classification.color}`}>{classification.label}</div>
-          <div className="text-exam-ink-soft text-sm mb-6">{classification.description}</div>
-          <div className="text-exam-ink font-medium">
-            {totalCorrect} / {totalQuestions} תשובות נכונות
-          </div>
-          {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
-            <div className="text-xs text-exam-ink-soft mt-1">
-              כולל תרגול חלופי — הוא אינו חלק מהדמיית פרקי הליבה וטעויות בו לא הורידו את האומדן
+        {/* Score card — the moment of the whole page: a staggered cascade
+            reveal inside a glowing, glassmorphic hero, colored by how the
+            score classifies (sage for pass, accent for mid, amber for low
+            — amber rather than a harsh red, since finishing a full exam is
+            worth celebrating regardless of the number). */}
+        <div className="relative">
+          <div
+            className={`absolute -inset-4 -z-10 rounded-[36px] blur-2xl animate-ambient-glow motion-reduce:animate-none ${
+              score >= 134 ? 'bg-exam-sage/30' : score >= 100 ? 'bg-exam-accent/25' : 'bg-exam-alt/25'
+            }`}
+            aria-hidden
+          />
+          <div className="relative bg-exam-surface/90 backdrop-blur-sm rounded-2xl shadow-overlay border border-exam-border dark:border-white/10 p-8 text-center overflow-hidden">
+            <div className="flex justify-center mb-3 animate-check-pop">
+              {score >= 134 ? (
+                <Trophy className="w-10 h-10 text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
+              ) : (
+                <Target className="w-10 h-10 text-exam-accent" strokeWidth={1.5} aria-hidden />
+              )}
             </div>
-          )}
+            <div className="text-xs text-exam-ink-soft mb-1 animate-fade-up [animation-delay:80ms]">אומדן פנימי של האתר</div>
+            <div className="text-7xl font-black text-exam-ink mb-2 tabular-nums animate-score-reveal [animation-delay:120ms]" dir="ltr">{score}</div>
+            <div className={`text-xl font-bold mb-1 animate-fade-up [animation-delay:280ms] ${classification.color}`}>{classification.label}</div>
+            <div className="text-exam-ink-soft text-sm mb-6 animate-fade-up [animation-delay:340ms]">{classification.description}</div>
+            <div className="text-exam-ink font-medium animate-fade-up [animation-delay:400ms]">
+              {totalCorrect} / {totalQuestions} תשובות נכונות
+            </div>
+            {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
+              <div className="text-xs text-exam-ink-soft mt-1 animate-fade-up [animation-delay:460ms]">
+                כולל תרגול חלופי — הוא אינו חלק מהדמיית פרקי הליבה וטעויות בו לא הורידו את האומדן
+              </div>
+            )}
+          </div>
         </div>
 
         <AuthCTA message="התחבר כדי לשמור את הציון הזה ולהמשיך מכל מכשיר — כל מה שעשית עד עכשיו יעבור אוטומטית לחשבון." />
@@ -133,7 +152,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           ];
           const currentBand = bands.find(b => score >= b.min && score <= b.max);
           return (
-            <div className="bg-exam-surface rounded-md p-6 border border-exam-border">
+            <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:80ms]">
               <h2 className="font-bold text-exam-ink mb-1">הערכת טווח ציון</h2>
               <p className="text-exam-ink-soft text-sm mb-4">
                 על בסיס הביצועים שלך כאן, הטווח המוערך הוא {lo}–{hi} — אומדן פנימי של האתר, לא ציון רשמי של מאל&quot;ו
@@ -150,7 +169,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 </div>
                 {/* Range bracket */}
                 <div
-                  className="absolute top-0 h-5 border-2 border-exam-ink rounded-sm bg-exam-surface/40"
+                  className="absolute top-0 h-5 border-2 border-exam-ink rounded-full bg-exam-surface/40"
                   style={{ right: `${loPct}%`, width: `${Math.max(hiPct - loPct, 2)}%` }}
                 />
                 {/* Current score needle */}
@@ -164,7 +183,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 </div>
               </div>
               {currentBand && (
-                <div className="flex items-center gap-2 p-3 rounded-sm bg-exam-paper-alt border border-exam-border">
+                <div className="flex items-center gap-2 p-3 rounded-xl bg-exam-paper-alt border border-exam-border">
                   <div className={`w-3 h-3 rounded-full flex-shrink-0 ${currentBand.color}`} />
                   <span className="text-sm font-semibold text-exam-ink">{currentBand.label}</span>
                 </div>
@@ -174,7 +193,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         })()}
 
         {/* Score scale */}
-        <div className="bg-exam-surface rounded-md p-6 border border-exam-border">
+        <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:140ms]">
           <h2 className="font-bold text-exam-ink mb-1">סקאלת ציונים</h2>
           <p className="text-xs text-exam-ink-soft mb-4">
             הסף המדויק לפטור/רמה נקבע בנפרד על ידי כל מוסד לימודים — הטווחים כאן הם הנפוצים ביותר בפועל, לא תקן מחייב אחיד.
@@ -187,8 +206,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             { range: '70–84',  label: 'טרום-בסיסי ב\'', color: 'bg-exam-wrong', min: 70, max: 84 },
             { range: '50–69',  label: 'טרום-בסיסי א\'', color: 'bg-exam-wrong', min: 50, max: 69 },
           ].map(row => (
-            <div key={row.range} className={`flex items-center gap-3 p-3 rounded-sm mb-2 ${
-              score >= row.min && score <= row.max ? 'bg-exam-paper-alt ring-2 ring-exam-accent' : ''
+            <div key={row.range} className={`flex items-center gap-3 p-3 rounded-xl mb-2 transition-colors duration-300 ${
+              score >= row.min && score <= row.max ? 'bg-exam-paper-alt ring-2 ring-exam-accent shadow-surface' : ''
             }`}>
               <div className={`w-3 h-3 rounded-full ${row.color}`} />
               <span className="font-mono text-sm text-exam-ink-soft">{row.range}</span>
@@ -198,16 +217,20 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         </div>
 
         {/* Breakdown by question type */}
-        <div className="bg-exam-surface rounded-md p-6 border border-exam-border">
+        <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:200ms]">
           <h2 className="font-bold text-exam-ink mb-4">פירוט לפי סוג שאלה</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-            {Object.entries(byType).map(([type, { correct, total }]) => {
+            {Object.entries(byType).map(([type, { correct, total }], i) => {
               const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
               const color = pct >= 75 ? 'text-exam-sage-strong bg-exam-sage-bg border-exam-sage/40'
                 : pct >= 50 ? 'text-exam-alt bg-exam-alt-bg border-exam-alt/40'
                 : 'text-exam-wrong bg-exam-wrong-bg border-exam-wrong/40';
               return (
-                <div key={type} className={`p-3 rounded-sm border text-center ${color}`}>
+                <div
+                  key={type}
+                  style={{ animationDelay: `${240 + i * 60}ms` }}
+                  className={`p-3 rounded-xl border text-center shadow-surface hover:shadow-raised hover:-translate-y-0.5 transition-[box-shadow,transform] duration-300 ease-spring will-change-transform animate-fade-up ${color}`}
+                >
                   <div className="text-2xl font-bold">{correct}/{total}</div>
                   <div className="text-xs font-semibold mt-1">{TYPE_LABELS[type] ?? type}</div>
                   <div className="text-xs opacity-75">{pct}%</div>
@@ -274,7 +297,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               wrong: sr.answers?.[i] !== sr.questions?.[i]?.correct_answer })).filter(x => x.t > x.cap);
           });
           return (
-            <div className="bg-exam-surface rounded-md p-6 border border-exam-border">
+            <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:260ms]">
               <h2 className="font-bold text-exam-ink mb-1 flex items-center gap-1.5"><Clock className="w-4 h-4" aria-hidden />ניתוח קצב</h2>
               <p className="text-xs text-exam-ink-soft mb-4">
                 כמה זמן השקעת בכל פרק ביחס לזמן המוקצב — ניהול זמן עוזר להשלים את הפרק
@@ -312,7 +335,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 })}
               </div>
               {overCap.length > 0 ? (
-                <div className="p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm">
+                <div className="p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl">
                   <div className="text-sm font-semibold text-exam-alt mb-1 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
                     {overCap.length} שאלות חרגו מ&quot;תקציב התקיעה&quot;
@@ -323,7 +346,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                   </div>
                 </div>
               ) : (
-                <div className="p-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-sm text-exam-sage-strong font-medium flex items-center gap-1.5">
+                <div className="p-3 bg-exam-sage-bg border border-exam-sage/40 rounded-xl text-sm text-exam-sage-strong font-medium flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 flex-shrink-0" aria-hidden />
                   קצב מצוין — אף שאלה לא חרגה מתקציב התקיעה
                 </div>
@@ -333,8 +356,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         })()}
 
         {/* Review all questions */}
-        <Link href={`/review/${sessionId}`} className="block">
-          <div className="bg-exam-surface border border-exam-border rounded-sm p-5 flex items-center gap-4 hover:bg-exam-paper-alt hover:border-exam-border-strong transition-colors cursor-pointer">
+        <Link href={`/review/${sessionId}`} className="block animate-fade-up [animation-delay:320ms]">
+          <div className="bg-exam-surface border border-exam-border rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] p-5 flex items-center gap-4 hover:bg-exam-paper-alt hover:border-exam-border-strong transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform cursor-pointer">
             <BookOpen className="w-8 h-8 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
             <div>
               <div className="font-bold text-exam-ink">עבור על כל השאלות ולמד מהטעויות</div>
@@ -345,16 +368,16 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         </Link>
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="flex gap-3 animate-fade-up [animation-delay:380ms]">
           <button
             onClick={() => router.push('/exam')}
-            className="flex-1 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity"
+            className="flex-1 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-semibold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
           >
             מבחן חדש
           </button>
           <button
             onClick={() => router.push('/stats')}
-            className="flex-1 py-3 bg-exam-paper-alt text-exam-ink rounded-sm font-semibold hover:bg-exam-border/40 transition-colors"
+            className="flex-1 py-3 bg-exam-paper-alt text-exam-ink rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] hover:bg-exam-border/40 font-semibold transition-[background-color,box-shadow,transform] duration-300 ease-spring will-change-transform"
           >
             הסטטיסטיקה שלי
           </button>

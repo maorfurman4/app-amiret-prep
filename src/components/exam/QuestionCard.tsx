@@ -30,6 +30,11 @@ interface QuestionCardProps {
   isPractice?: boolean;
   showResult?: boolean;
   hideHeader?: boolean;
+  /** Opt-in tactile motion (hover lift, spring easing, premium shadows) for
+   * the learning-flow screens (Practice, Review). Defaults to false so the
+   * real exam screen — which intentionally mimics the plain, no-frills test
+   * environment — renders exactly as it always has. */
+  premium?: boolean;
 }
 
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
@@ -43,6 +48,7 @@ export function QuestionCard({
   isPractice = false,
   showResult = false,
   hideHeader = false,
+  premium = false,
 }: QuestionCardProps) {
   const [hintQuestionId, setHintQuestionId] = useState<string | null>(null);
   const hintVisible = hintQuestionId === question.id;
@@ -115,9 +121,15 @@ export function QuestionCard({
               key={option.id ?? i}
               onClick={() => onSelect(i)}
               disabled={showResult}
-              className={`w-full text-left px-4 py-3 rounded-sm border transition-colors flex items-center gap-3 ${
-                showCorrect  ? 'border-exam-sage bg-exam-sage-bg text-exam-sage-strong' :
-                isWrong      ? 'border-exam-wrong bg-exam-wrong-bg text-exam-wrong' :
+              className={`w-full text-left px-4 py-3 border flex items-center gap-3 ${
+                premium
+                  ? `rounded-2xl shadow-surface transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ${
+                      !showResult ? 'hover:-translate-y-0.5 hover:shadow-raised active:translate-y-0 active:scale-[0.98] active:shadow-pressed' : ''
+                    }`
+                  : 'rounded-sm transition-colors'
+              } ${
+                showCorrect  ? `border-exam-sage bg-exam-sage-bg text-exam-sage-strong ${premium ? 'shadow-raised' : ''}` :
+                isWrong      ? `border-exam-wrong bg-exam-wrong-bg text-exam-wrong ${premium ? 'shadow-pressed' : ''}` :
                 isSelected   ? 'border-exam-accent bg-exam-paper-alt text-exam-ink font-medium' :
                                'border-exam-border bg-exam-surface text-exam-ink hover:bg-exam-paper-alt hover:border-exam-border-strong'
               }`}

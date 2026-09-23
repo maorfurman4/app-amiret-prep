@@ -322,10 +322,11 @@ export default function ReviewQueuePage() {
             </div>
 
             <div className="space-y-3">
-              {order.map(type => (
+              {order.map((type, i) => (
                 <div
                   key={type}
-                  className="flex items-center gap-3 p-4 bg-exam-surface rounded-md border border-exam-border"
+                  style={{ animationDelay: `${i * 70}ms` }}
+                  className="flex items-center gap-3 p-4 bg-exam-surface rounded-2xl border border-exam-border shadow-surface hover:shadow-raised hover:-translate-y-1 transition-[box-shadow,transform] duration-300 ease-spring will-change-transform animate-fade-up"
                 >
                   {(() => { const Icon = CATEGORY_ICONS[type] ?? HelpCircle; return <Icon className="w-6 h-6 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />; })()}
                   <div className="flex-1 min-w-0">
@@ -334,13 +335,13 @@ export default function ReviewQueuePage() {
                   </div>
                   <button
                     onClick={() => handleStartReview(type)}
-                    className="px-3 py-2 bg-exam-alt text-on-amber rounded-sm text-sm font-bold hover:opacity-90 transition-opacity flex-shrink-0"
+                    className="px-3 py-2 bg-exam-alt text-on-amber rounded-xl text-sm font-bold shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform flex-shrink-0"
                   >
                     תרגל ‹
                   </button>
                   <button
                     onClick={() => handleDeleteCategory(type)}
-                    className="w-9 h-9 flex items-center justify-center rounded-sm text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg transition-colors text-base flex-shrink-0"
+                    className="w-9 h-9 flex items-center justify-center rounded-xl text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg active:scale-90 transition-[background-color,color,transform] duration-300 ease-spring text-base flex-shrink-0"
                     title={`מחק את כל שאלות ${CATEGORY_LABELS[type] ?? type}`}
                   >
                     <Trash2 className="w-4 h-4 mx-auto" aria-hidden />
@@ -349,16 +350,16 @@ export default function ReviewQueuePage() {
               ))}
             </div>
 
-            <div className="space-y-3 pt-2">
+            <div className="space-y-3 pt-2 animate-fade-up [animation-delay:280ms]">
               <button
                 onClick={() => handleStartReview()}
-                className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
+                className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
               >
                 <span className="inline-flex items-center gap-2"><Target className="w-4 h-4" aria-hidden />התחל חזרה על הכל ({allQuestions.length})</span>
               </button>
               <button
                 onClick={handleClearAll}
-                className="w-full py-3 bg-exam-surface border border-exam-wrong/40 text-exam-wrong rounded-sm font-medium hover:bg-exam-wrong-bg transition-colors"
+                className="w-full py-3 bg-exam-surface border border-exam-wrong/40 text-exam-wrong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] hover:bg-exam-wrong-bg font-medium transition-[background-color,box-shadow,transform] duration-300 ease-spring will-change-transform"
               >
                 <span className="inline-flex items-center gap-2"><Trash2 className="w-4 h-4" aria-hidden />מחק את כל השאלות</span>
               </button>
@@ -381,7 +382,7 @@ export default function ReviewQueuePage() {
             <div className={`text-5xl font-bold ${color}`}>{correctCount}/{questions.length}</div>
             <div className="text-exam-ink-soft mt-1 text-lg">{pct}% נכון בחזרה</div>
           </div>
-          <div className="bg-exam-surface rounded-md border border-exam-border p-4 text-sm text-exam-ink-soft">
+          <div className="bg-exam-surface rounded-2xl shadow-surface border border-exam-border p-4 text-sm text-exam-ink-soft">
             {pct >= 80 && 'מצוין! אתה שולט בשאלות האלה.'}
             {pct >= 60 && pct < 80 && 'טוב! עוד קצת תרגול ותגיע לשלמות.'}
             {pct < 60 && 'הלמידה לוקחת זמן — ממשיכים לחזור!'}
@@ -389,19 +390,19 @@ export default function ReviewQueuePage() {
           <div className="space-y-3">
             <button
               onClick={handleRestartSession}
-              className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
+              className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
             >
               חזרה על אותן שאלות מחדש
             </button>
             <button
               onClick={() => fetchDueQuestions(guestId)}
-              className="w-full py-3 bg-exam-alt text-on-amber rounded-sm font-bold hover:opacity-90 transition-opacity"
+              className="w-full py-3 bg-exam-alt text-on-amber rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
             >
               חזרה לרשימת קטגוריות
             </button>
             <button
               onClick={() => router.push('/exam')}
-              className="w-full py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-sm font-medium hover:bg-exam-paper-alt transition-colors"
+              className="w-full py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] hover:bg-exam-paper-alt font-medium transition-[background-color,box-shadow,transform] duration-300 ease-spring will-change-transform"
             >
               חזרה לתפריט
             </button>
@@ -454,12 +455,16 @@ export default function ReviewQueuePage() {
                 </button>
               </div>
               <div className="space-y-2">
-                {pickerGroups[type].map(({ q, i }) => {
+                {pickerGroups[type].map(({ q, i }, listIdx) => {
                   const answered = answers[i] !== null;
                   const correct = answered && answers[i] === q.correct_answer;
                   const wrong = answered && answers[i] !== q.correct_answer;
                   return (
-                    <div key={q.id} className={`flex items-center gap-3 p-3 rounded-sm border transition-colors ${i === currentIndex ? 'border-exam-alt bg-exam-alt-bg' : 'border-exam-border bg-exam-paper-alt hover:bg-exam-border/20'}`}>
+                    <div
+                      key={q.id}
+                      style={{ animationDelay: `${Math.min(listIdx, 10) * 40}ms` }}
+                      className={`flex items-center gap-3 p-3 rounded-xl border transition-colors animate-fade-up ${i === currentIndex ? 'border-exam-alt bg-exam-alt-bg' : 'border-exam-border bg-exam-paper-alt hover:bg-exam-border/20'}`}
+                    >
                       <button
                         onClick={() => handleJumpTo(i)}
                         className="flex-1 flex items-center gap-3 text-right"
@@ -556,13 +561,14 @@ export default function ReviewQueuePage() {
           isPractice={true}
           showResult={showResult}
           hideHeader
+          premium
         />
 
         <div className="mt-6 flex items-center justify-between gap-3">
           {/* Delete current question */}
           <button
             onClick={() => handleDeleteQuestion(question.id)}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-sm border border-exam-border text-exam-ink-soft hover:text-exam-wrong hover:border-exam-wrong/40 hover:bg-exam-wrong-bg transition-colors text-sm font-medium"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-exam-border text-exam-ink-soft hover:text-exam-wrong hover:border-exam-wrong/40 hover:bg-exam-wrong-bg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,border-color,color,transform] duration-300 ease-spring will-change-transform text-sm font-medium"
           >
             <span className="inline-flex items-center gap-1.5"><Trash2 className="w-4 h-4" aria-hidden />הסר שאלה</span>
           </button>
@@ -570,7 +576,7 @@ export default function ReviewQueuePage() {
           {showResult && (
             <button
               onClick={handleNext}
-              className="px-6 py-3 bg-exam-alt text-on-amber rounded-sm font-bold hover:opacity-90 transition-opacity"
+              className="px-6 py-3 bg-exam-alt text-on-amber rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
             >
               {isLast ? <span className="inline-flex items-center gap-1.5">סיום חזרה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
             </button>

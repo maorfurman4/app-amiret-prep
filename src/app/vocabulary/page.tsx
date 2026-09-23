@@ -890,8 +890,12 @@ function VocabularyContent() {
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {allWords.filter(w => favorites.has(w.id)).map(w => (
-                      <div key={w.id} className="flex items-center justify-between p-3 bg-exam-paper-alt rounded-sm border border-exam-border">
+                    {allWords.filter(w => favorites.has(w.id)).map((w, i) => (
+                      <div
+                        key={w.id}
+                        style={{ animationDelay: `${Math.min(i, 12) * 35}ms` }}
+                        className="flex items-center justify-between p-3 bg-exam-paper-alt rounded-xl border border-exam-border animate-fade-up"
+                      >
                         <div dir="ltr" className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
                             <div className="font-serif font-bold text-exam-ink text-sm">{w.word}</div>
@@ -937,7 +941,7 @@ function VocabularyContent() {
             <button
               key={m.id}
               onClick={() => changeMode(m.id)}
-              className={`flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${mode === m.id ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft hover:text-exam-ink'}`}
+              className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-[background-color,color,box-shadow,transform] duration-300 ease-spring active:scale-[0.96] ${mode === m.id ? 'bg-exam-surface text-exam-ink shadow-surface' : 'text-exam-ink-soft hover:text-exam-ink'}`}
             >{m.label}</button>
           ))}
         </div>
@@ -954,7 +958,7 @@ function VocabularyContent() {
               <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => setShowFilterDrawer(true)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-sm border text-sm font-semibold transition-colors ${hasActive ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold shadow-surface hover:shadow-raised active:shadow-pressed active:scale-[0.96] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ${hasActive ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
                 >
                   <Search className="inline w-4 h-4 ml-1" strokeWidth={1.75} aria-hidden />סינון{activeCount > 0 ? ` (${activeCount})` : ''}
                 </button>
@@ -1013,7 +1017,7 @@ function VocabularyContent() {
                       <button
                         key={pack.id}
                         onClick={() => setActivePack(activePack === pack.id ? '' : pack.id)}
-                        className={`px-3 py-1.5 rounded-sm text-sm font-medium border transition-colors flex items-center gap-1.5 ${activePack === pack.id ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
+                        className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] flex items-center gap-1.5 ${activePack === pack.id ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
                       ><pack.icon className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />{pack.label}</button>
                     ))}
                   </div>
@@ -1023,9 +1027,9 @@ function VocabularyContent() {
                 <div>
                   <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">קטגוריה</div>
                   <div className="flex flex-wrap gap-2">
-                    <button onClick={() => setFilterCat('')} className={`px-3 py-1.5 rounded-sm text-sm font-medium border transition-colors ${!filterCat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>הכל</button>
+                    <button onClick={() => setFilterCat('')} className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] ${!filterCat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>הכל</button>
                     {categories.map(cat => (
-                      <button key={cat} onClick={() => setFilterCat(cat === filterCat ? '' : cat)} className={`px-3 py-1.5 rounded-sm text-sm font-medium border transition-colors ${filterCat === cat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{CATEGORY_LABELS[cat] ?? cat}</button>
+                      <button key={cat} onClick={() => setFilterCat(cat === filterCat ? '' : cat)} className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] ${filterCat === cat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{CATEGORY_LABELS[cat] ?? cat}</button>
                     ))}
                   </div>
                 </div>
@@ -1035,7 +1039,7 @@ function VocabularyContent() {
                   <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">רמה</div>
                   <div className="flex gap-2 flex-wrap">
                     {[0, 1, 2, 3, 4, 5].map(d => (
-                      <button key={d} onClick={() => setFilterDiff(d === filterDiff ? 0 : d)} className={`w-10 h-10 rounded-sm text-xs font-bold border transition-colors flex items-center justify-center ${filterDiff === d && d !== 0 ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : d === 0 ? 'bg-exam-surface text-exam-ink-soft border-exam-border text-[10px]' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{d === 0 ? 'הכל' : <StarRow n={d} size={10} />}</button>
+                      <button key={d} onClick={() => setFilterDiff(d === filterDiff ? 0 : d)} className={`w-10 h-10 rounded-xl text-xs font-bold border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.9] flex items-center justify-center ${filterDiff === d && d !== 0 ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : d === 0 ? 'bg-exam-surface text-exam-ink-soft border-exam-border text-[10px]' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{d === 0 ? 'הכל' : <StarRow n={d} size={10} />}</button>
                     ))}
                   </div>
                 </div>
@@ -1084,15 +1088,17 @@ function VocabularyContent() {
 
             {current ? (
               <div className="relative select-none">
-                {deck[2] && <div className="absolute inset-0 bg-exam-surface rounded-md border border-exam-border" style={{ transform: 'scale(0.92) translateY(18px)', zIndex: 0 }} />}
-                {deck[1] && <div className="absolute inset-0 bg-exam-surface rounded-md border border-exam-border" style={{ transform: 'scale(0.96) translateY(9px)', zIndex: 1 }} />}
+                {deck[2] && <div className="absolute inset-0 bg-exam-surface rounded-2xl shadow-surface border border-exam-border" style={{ transform: 'scale(0.92) translateY(18px)', zIndex: 0 }} />}
+                {deck[1] && <div className="absolute inset-0 bg-exam-surface rounded-2xl shadow-surface border border-exam-border" style={{ transform: 'scale(0.96) translateY(9px)', zIndex: 1 }} />}
 
                 <div
-                  className="relative bg-exam-surface rounded-md border border-exam-border-strong p-8 min-h-[320px] flex flex-col justify-center cursor-grab active:cursor-grabbing"
+                  className="relative bg-exam-surface rounded-2xl shadow-raised border border-exam-border-strong p-8 min-h-[320px] flex flex-col justify-center cursor-grab active:cursor-grabbing [perspective:1200px]"
                   style={{
                     zIndex: 2,
                     transform: `translateX(${tx}px) rotate(${rotate}deg)`,
-                    transition: dragX === 0 && !animating ? 'transform 0.3s ease' : animating ? 'transform 0.28s ease' : 'none',
+                    transition: dragX === 0 && !animating
+                      ? 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease'
+                      : animating ? 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
                     userSelect: 'none',
                   }}
                   onMouseDown={e => onDragStart(e.clientX)}
@@ -1104,8 +1110,8 @@ function VocabularyContent() {
                   onTouchEnd={onDragEnd}
                 >
                   {/* Swipe overlays */}
-                  <div className="absolute inset-0 rounded-md bg-exam-sage-strong flex items-center justify-center gap-2 text-on-emerald text-2xl font-bold pointer-events-none" style={{ opacity: knewOpacity }}><Check strokeWidth={3} aria-hidden />ידעתי!</div>
-                  <div className="absolute inset-0 rounded-md bg-exam-wrong flex items-center justify-center gap-2 text-on-danger text-2xl font-bold pointer-events-none" style={{ opacity: unknownOpacity }}><X strokeWidth={3} aria-hidden />לא ידעתי</div>
+                  <div className="absolute inset-0 rounded-2xl bg-exam-sage-strong flex items-center justify-center gap-2 text-on-emerald text-2xl font-bold pointer-events-none" style={{ opacity: knewOpacity }}><Check strokeWidth={3} aria-hidden />ידעתי!</div>
+                  <div className="absolute inset-0 rounded-2xl bg-exam-wrong flex items-center justify-center gap-2 text-on-danger text-2xl font-bold pointer-events-none" style={{ opacity: unknownOpacity }}><X strokeWidth={3} aria-hidden />לא ידעתי</div>
 
                   {/* Favorite button */}
                   <button
@@ -1116,7 +1122,7 @@ function VocabularyContent() {
                   ><Heart className="w-5 h-5" fill={favorites.has(current.id) ? 'currentColor' : 'none'} aria-hidden /></button>
 
                   {!flipped ? (
-                    <div className="text-center" dir="ltr">
+                    <div key="front" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="ltr">
                       <div className="flex items-center justify-center gap-1.5 mb-4">
                         <div className={`inline-block px-3 py-1 rounded-sm text-xs font-medium ${CATEGORY_COLORS[current.category] ?? 'bg-exam-paper-alt text-exam-ink-soft'}`}>
                           {CATEGORY_LABELS[current.category] ?? current.category}
@@ -1156,7 +1162,7 @@ function VocabularyContent() {
                       >הצג תרגום ←</button>
                     </div>
                   ) : (
-                    <div className="text-center" dir="rtl">
+                    <div key="back" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="rtl">
                       <div className="flex items-center justify-center gap-2 mb-1" dir="ltr">
                         <span className="font-serif text-lg font-bold text-exam-ink-soft">{current.word}</span>
                         <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>
@@ -1203,12 +1209,12 @@ function VocabularyContent() {
                 <button
                   onClick={handleUnknown}
                   disabled={!!animating}
-                  className="flex-1 max-w-[140px] py-4 rounded-md bg-exam-wrong-bg border-2 border-exam-wrong/40 text-exam-wrong font-bold text-lg hover:opacity-80 active:scale-95 transition-all disabled:opacity-50"
+                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-exam-wrong-bg border-2 border-exam-wrong/40 text-exam-wrong font-bold text-lg shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-surface"
                 ><X className="mx-auto" strokeWidth={3} aria-hidden /><br /><span className="text-sm font-medium">לא ידעתי</span></button>
                 <button
                   onClick={handleKnew}
                   disabled={!!animating}
-                  className="flex-1 max-w-[140px] py-4 rounded-md bg-exam-sage-bg border-2 border-exam-sage/40 text-exam-sage-strong font-bold text-lg hover:opacity-80 active:scale-95 transition-all disabled:opacity-50"
+                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-exam-sage-bg border-2 border-exam-sage/40 text-exam-sage-strong font-bold text-lg shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-surface"
                 ><Check className="mx-auto" strokeWidth={3} aria-hidden /><br /><span className="text-sm font-medium">ידעתי</span></button>
               </div>
             )}
@@ -1231,8 +1237,12 @@ function VocabularyContent() {
                 {showKnownList && (
                   <div className="mt-3 space-y-2">
                     <button onClick={handleResetAll} className="text-xs text-exam-wrong hover:opacity-80 mb-2 inline-flex items-center gap-1"><RotateCcw className="w-3 h-3" aria-hidden />אפס הכל</button>
-                    {knownWords.map(w => (
-                      <div key={w.id} className="flex items-center justify-between px-4 py-2.5 bg-exam-surface border border-exam-border rounded-sm">
+                    {knownWords.map((w, i) => (
+                      <div
+                        key={w.id}
+                        style={{ animationDelay: `${Math.min(i, 12) * 35}ms` }}
+                        className="flex items-center justify-between px-4 py-2.5 bg-exam-surface border border-exam-border rounded-xl animate-fade-up"
+                      >
                         <div dir="ltr">
                           <span className="font-semibold text-exam-ink text-sm">{w.word}</span>
                           <span className="text-exam-ink-soft text-xs mr-2"> — {w.hebrew_translation}</span>
@@ -1354,7 +1364,7 @@ function VocabularyContent() {
                 </div>
 
                 {/* Quiz card */}
-                <div className="bg-exam-surface rounded-md border border-exam-border p-6 mb-4">
+                <div className="bg-exam-surface rounded-2xl shadow-raised border border-exam-border p-6 mb-4">
                   <div className="flex items-start justify-between mb-3">
                     <button
                       onClick={e => toggleFavorite(quizDeck[quizIndex].id, e)}
@@ -1378,15 +1388,15 @@ function VocabularyContent() {
                 <div className="space-y-3 mb-4">
                   {quizOptions.map((opt, i) => {
                     const isCorrectOpt = opt === quizDeck[quizIndex].hebrew_translation;
-                    let cls = 'w-full px-4 py-3 rounded-sm border text-right font-medium text-sm transition-all ';
+                    let cls = 'w-full px-4 py-3 rounded-2xl border text-right font-medium text-sm shadow-surface transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ';
                     if (quizSelected === null) {
-                      cls += 'bg-exam-surface border-exam-border hover:border-exam-accent hover:bg-exam-accent/5 text-exam-ink';
+                      cls += 'bg-exam-surface border-exam-border hover:border-exam-accent hover:bg-exam-accent/5 hover:shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] active:shadow-pressed text-exam-ink';
                     } else if (isCorrectOpt) {
-                      cls += 'bg-exam-sage-bg border-exam-sage-strong text-exam-sage-strong';
+                      cls += 'bg-exam-sage-bg border-exam-sage-strong text-exam-sage-strong shadow-raised';
                     } else if (quizSelected === i) {
-                      cls += 'bg-exam-wrong-bg border-exam-wrong text-exam-wrong';
+                      cls += 'bg-exam-wrong-bg border-exam-wrong text-exam-wrong shadow-pressed';
                     } else {
-                      cls += 'bg-exam-surface border-exam-border text-exam-ink-soft';
+                      cls += 'bg-exam-surface border-exam-border text-exam-ink-soft opacity-70';
                     }
                     return (
                       <button key={i} onClick={() => handleQuizSelect(i, opt)} className={cls} disabled={quizSelected !== null}>
@@ -1410,7 +1420,7 @@ function VocabularyContent() {
                     )}
                     <button
                       onClick={handleQuizNext}
-                      className="px-8 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-1.5 mx-auto"
+                      className="px-8 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] font-semibold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform flex items-center gap-1.5 mx-auto"
                     >{quizIndex + 1 >= quizDeck.length ? <><Check className="w-4 h-4" strokeWidth={3} aria-hidden />סיום</> : 'הבא ←'}</button>
                   </div>
                 )}
@@ -1557,7 +1567,7 @@ function VocabularyContent() {
                 <div className="text-center text-sm font-bold text-exam-ink-soft mb-5">{timeLeft}ש׳</div>
 
                 {/* Timed card */}
-                <div className="bg-exam-surface rounded-md border border-exam-border p-6 mb-4">
+                <div className="bg-exam-surface rounded-2xl shadow-raised border border-exam-border p-6 mb-4">
                   <div className="flex items-start justify-between mb-3">
                     <button
                       onClick={e => toggleFavorite(timedDeck[timedIndex].id, e)}
@@ -1581,15 +1591,15 @@ function VocabularyContent() {
                 <div className="space-y-3 mb-4">
                   {timedOptions.map((opt, i) => {
                     const isCorrectOpt = opt === timedDeck[timedIndex].hebrew_translation;
-                    let cls = 'w-full px-4 py-3 rounded-sm border text-right font-medium text-sm transition-all ';
+                    let cls = 'w-full px-4 py-3 rounded-2xl border text-right font-medium text-sm shadow-surface transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ';
                     if (timedSelected === null) {
-                      cls += 'bg-exam-surface border-exam-border hover:border-exam-accent hover:bg-exam-accent/5 text-exam-ink';
+                      cls += 'bg-exam-surface border-exam-border hover:border-exam-accent hover:bg-exam-accent/5 hover:shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] active:shadow-pressed text-exam-ink';
                     } else if (isCorrectOpt) {
-                      cls += 'bg-exam-sage-bg border-exam-sage-strong text-exam-sage-strong';
+                      cls += 'bg-exam-sage-bg border-exam-sage-strong text-exam-sage-strong shadow-raised';
                     } else if (timedSelected === i) {
-                      cls += 'bg-exam-wrong-bg border-exam-wrong text-exam-wrong';
+                      cls += 'bg-exam-wrong-bg border-exam-wrong text-exam-wrong shadow-pressed';
                     } else {
-                      cls += 'bg-exam-surface border-exam-border text-exam-ink-soft';
+                      cls += 'bg-exam-surface border-exam-border text-exam-ink-soft opacity-70';
                     }
                     return (
                       <button key={i} onClick={() => handleTimedSelect(i, opt, Date.now())} className={cls} disabled={timedSelected !== null}>

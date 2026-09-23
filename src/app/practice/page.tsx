@@ -366,11 +366,12 @@ function PracticeContent() {
           <h1 className="text-2xl font-bold text-exam-ink mb-1">תרגול סעיף</h1>
           <p className="text-exam-ink-soft mb-8 text-sm">בחר את סוג השאלות שתרצה לתרגל</p>
           <div className="space-y-3">
-            {TYPE_OPTIONS.map(opt => (
+            {TYPE_OPTIONS.map((opt, i) => (
               <button
                 key={opt.type}
                 onClick={() => { setType(opt.type); setStep('pick-difficulty'); }}
-                className={`w-full text-right p-5 bg-exam-surface rounded-md border transition-colors flex items-center gap-4 ${
+                style={{ animationDelay: `${i * 70}ms` }}
+                className={`w-full text-right p-5 bg-exam-surface rounded-2xl border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform flex items-center gap-4 animate-fade-up ${
                   selectedType === opt.type ? 'border-exam-accent ring-1 ring-exam-accent/30' : 'border-exam-border hover:border-exam-border-strong'
                 }`}
               >
@@ -384,10 +385,10 @@ function PracticeContent() {
           </div>
 
           {/* Review queue */}
-          <div className="mt-4">
+          <div className="mt-4 animate-fade-up [animation-delay:210ms]">
             <button
               onClick={() => router.push('/review-queue')}
-              className="w-full text-right p-6 bg-exam-alt-bg rounded-md border border-exam-alt/40 hover:border-exam-alt transition-colors flex items-center gap-4"
+              className="w-full text-right p-6 bg-exam-alt-bg rounded-2xl border border-exam-alt/40 shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] hover:border-exam-alt transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform flex items-center gap-4"
             >
               <RotateCcw className="w-7 h-7 text-exam-alt flex-shrink-0" strokeWidth={1.75} aria-hidden />
               <div>
@@ -403,10 +404,10 @@ function PracticeContent() {
           </div>
 
           {/* Vocabulary link */}
-          <div className="mt-4 text-center">
+          <div className="mt-4 text-center animate-fade-up [animation-delay:280ms]">
             <Link
               href="/vocabulary"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-exam-surface rounded-sm border border-exam-border hover:border-exam-border-strong transition-colors text-sm text-exam-ink-soft hover:text-exam-ink"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-exam-surface rounded-2xl border border-exam-border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] hover:border-exam-border-strong transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform text-sm text-exam-ink-soft hover:text-exam-ink"
             >
               <BookOpen className="w-4 h-4" strokeWidth={1.75} aria-hidden />
               <span>אוצר מילים — כרטיסיות לימוד</span>
@@ -441,14 +442,15 @@ function PracticeContent() {
           <h1 className="text-2xl font-bold text-exam-ink mb-1">רמת קושי</h1>
           <p className="text-exam-ink-soft mb-8 text-sm">בחר את רמת הקושי של השאלות</p>
           <div className="grid grid-cols-3 gap-3">
-            {DIFFICULTY_OPTIONS.map(opt => (
+            {DIFFICULTY_OPTIONS.map((opt, i) => (
               <button
                 key={String(opt.value)}
                 onClick={() => {
                   setDiff(opt.value);
                   setStep('pick-count');
                 }}
-                className={`p-4 bg-exam-surface rounded-md border transition-colors text-center ${
+                style={{ animationDelay: `${i * 50}ms` }}
+                className={`p-4 bg-exam-surface rounded-2xl border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.95] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform text-center animate-fade-up ${
                   selectedDiff === opt.value ? 'border-exam-accent ring-1 ring-exam-accent/30' : 'border-exam-border hover:border-exam-border-strong'
                 }`}
               >
@@ -478,11 +480,12 @@ function PracticeContent() {
             <div className="mb-4 p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm">{error}</div>
           )}
           <div className={`grid grid-cols-2 gap-4 ${sectionMode ? 'hidden' : ''}`}>
-            {([5, 10] as const).map(n => (
+            {([5, 10] as const).map((n, i) => (
               <button
                 key={n}
                 onClick={() => { setCount(n); }}
-                className={`p-6 rounded-md border transition-colors text-center ${
+                style={{ animationDelay: `${i * 60}ms` }}
+                className={`p-6 rounded-2xl border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform text-center animate-fade-up ${
                   selectedCount === n
                     ? 'border-exam-accent bg-exam-accent/10 text-exam-accent'
                     : 'border-exam-border bg-exam-surface text-exam-ink hover:border-exam-border-strong'
@@ -503,11 +506,12 @@ function PracticeContent() {
               // "true exam conditions" mode doesn't map onto a mixed-type
               // session — filtered out below rather than shown disabled.
               ...(selectedType !== 'mixed' ? [{ id: 'section', title: 'מקבץ בתנאי אמת', desc: selectedType ? `בדיוק כמו במבחן: ${SECTION_FORMAT[selectedType].count} שאלות ב-${SECTION_FORMAT[selectedType].seconds / 60} דקות, ניווט חופשי, הסברים בסוף` : '', active: sectionMode, on: () => { setExamMode(false); setSectionMode(true); } }] : []),
-            ].map(m => (
+            ].map((m, i) => (
               <button
                 key={m.id}
                 onClick={m.on}
-                className={`w-full text-right p-4 rounded-md border transition-colors ${
+                style={{ animationDelay: `${120 + i * 60}ms` }}
+                className={`w-full text-right p-4 rounded-2xl border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform animate-fade-up ${
                   m.active
                     ? 'border-exam-accent bg-exam-accent/10'
                     : 'border-exam-border bg-exam-surface hover:border-exam-border-strong'
@@ -522,7 +526,7 @@ function PracticeContent() {
           <button
             onClick={() => fetchQuestions()}
             disabled={loading}
-            className="mt-8 w-full py-4 bg-exam-accent text-exam-accent-ink rounded-sm font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-60"
+            className="mt-8 w-full py-4 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold text-lg transition-[opacity,box-shadow,transform] duration-300 ease-spring will-change-transform disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-raised"
           >
             {loading ? 'טוען...' : sectionMode ? 'התחל מקבץ אמיתי' : examMode ? 'התחל בחינה' : 'התחל תרגול'}
           </button>
@@ -619,6 +623,7 @@ function PracticeContent() {
             isPractice={!examMode && !sectionMode}
             showResult={examMode || sectionMode ? false : showResult}
             hideHeader
+            premium
           />
 
           {/* Normal (learn) mode: back to previous question / picker + next */}
@@ -626,14 +631,14 @@ function PracticeContent() {
             <div className="mt-6 flex items-center justify-between gap-3">
               <button
                 onClick={handlePrevQuestion}
-                className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt transition-colors text-sm"
+                className="px-4 py-2 rounded-xl border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,transform] duration-300 ease-spring will-change-transform text-sm"
               >
                 {currentIndex === 0 ? '← לרמת קושי' : 'קודם ›'}
               </button>
               {showResult && (
                 <button
                   onClick={handleNext}
-                  className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-colors"
+                  className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
                 >
                   {isLast ? <span className="inline-flex items-center gap-1.5">ראה תוצאות <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
                 </button>
@@ -647,21 +652,21 @@ function PracticeContent() {
               <button
                 onClick={() => setCurrentIndex(i => Math.max(0, i - 1))}
                 disabled={currentIndex === 0}
-                className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt transition-colors text-sm"
+                className="px-4 py-2 rounded-xl border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,transform] duration-300 ease-spring will-change-transform text-sm"
               >
                 קודם ›
               </button>
               {currentIndex < questions.length - 1 ? (
                 <button
                   onClick={() => setCurrentIndex(i => Math.min(questions.length - 1, i + 1))}
-                  className="px-4 py-2 rounded-sm bg-exam-accent text-exam-accent-ink hover:opacity-90 transition-opacity text-sm font-medium"
+                  className="px-4 py-2 rounded-xl bg-exam-accent text-exam-accent-ink shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform text-sm font-medium"
                 >
                   ‹ הבא
                 </button>
               ) : (
                 <button
                   onClick={finishSection}
-                  className="px-5 py-2 rounded-sm bg-exam-sage-strong text-on-emerald hover:opacity-90 transition-opacity text-sm font-bold"
+                  className="px-5 py-2 rounded-xl bg-exam-sage-strong text-on-emerald shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform text-sm font-bold"
                 >
                   <span className="inline-flex items-center gap-1.5">סיים מקבץ <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span>
                 </button>
@@ -674,7 +679,7 @@ function PracticeContent() {
             <div className="mt-6 flex justify-start">
               <button
                 onClick={handleNext}
-                className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-colors"
+                className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
               >
                 {isLast ? <span className="inline-flex items-center gap-1.5">סיים בחינה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
               </button>
@@ -717,7 +722,7 @@ function PracticeContent() {
               <div className={`text-5xl font-bold ${color}`}>{correctCount}/{questions.length}</div>
               <div className="text-exam-ink-soft mt-1 text-lg">{pct}% נכון</div>
             </div>
-            <div className="bg-exam-surface rounded-md border border-exam-border p-4 text-sm text-exam-ink-soft">
+            <div className="bg-exam-surface rounded-2xl shadow-surface border border-exam-border p-4 text-sm text-exam-ink-soft">
               {pct >= 80 && 'מצוין! אתה שולט בחומר הזה.'}
               {pct >= 60 && pct < 80 && 'טוב! עוד קצת תרגול ותגיע לשלמות.'}
               {pct < 60 && 'כדאי לחזור על החומר הזה ולתרגל שוב.'}
@@ -730,7 +735,7 @@ function PracticeContent() {
 
             {/* Level diagnosis — IRT-based, like the real adaptive exam */}
             {diagLevel !== null && diagScore !== null && diagClass !== null && (
-              <div className="bg-exam-surface rounded-md border border-exam-border p-5 text-right">
+              <div className="bg-exam-surface rounded-2xl shadow-surface border border-exam-border p-5 text-right">
                 <div className="flex items-center gap-2 mb-3">
                   <Target className="w-5 h-5 text-exam-ink" strokeWidth={1.75} aria-hidden />
                   <span className="font-bold text-exam-ink">אבחון רמה</span>
@@ -759,13 +764,13 @@ function PracticeContent() {
             <div className="space-y-3">
               <button
                 onClick={handleRestart}
-                className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-colors"
+                className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
               >
                 תרגול נוסף
               </button>
               <button
                 onClick={() => router.push('/exam')}
-                className="w-full py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-sm font-medium hover:bg-exam-paper-alt transition-colors"
+                className="w-full py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] hover:bg-exam-paper-alt font-medium transition-[background-color,box-shadow,transform] duration-300 ease-spring will-change-transform"
               >
                 חזרה לתפריט
               </button>
@@ -783,7 +788,8 @@ function PracticeContent() {
                 return (
                   <div
                     key={q.id ?? i}
-                    className={`rounded-md border overflow-hidden ${
+                    style={{ animationDelay: `${Math.min(i, 8) * 60}ms` }}
+                    className={`rounded-2xl border shadow-surface overflow-hidden animate-fade-up ${
                       isCorrect ? 'border-exam-sage/40' : 'border-exam-wrong/40'
                     }`}
                   >
@@ -809,6 +815,7 @@ function PracticeContent() {
                         isPractice={true}
                         showResult={true}
                         hideHeader
+                        premium
                       />
                     </div>
                   </div>
@@ -819,13 +826,13 @@ function PracticeContent() {
               <div className="space-y-3 pt-4">
                 <button
                   onClick={handleRestart}
-                  className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-colors"
+                  className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
                 >
                   תרגול נוסף
                 </button>
                 <button
                   onClick={() => router.push('/exam')}
-                  className="w-full py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-sm font-medium hover:bg-exam-paper-alt transition-colors"
+                  className="w-full py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] hover:bg-exam-paper-alt font-medium transition-[background-color,box-shadow,transform] duration-300 ease-spring will-change-transform"
                 >
                   חזרה לתפריט
                 </button>

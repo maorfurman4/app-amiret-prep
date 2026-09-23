@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, type ExamMode, type Question } from '@/types/exam';
-import { routeNextDifficulty } from '@/lib/adaptive';
-import { fetchUnseenQuestions, recordSeenQuestions } from '@/lib/question-history';
+import { recordSeenQuestions } from '@/lib/question-history';
+import { planInformativeQuestions } from '@/lib/item-selection';
+
+/** Every exam starts where the ability prior is centred: the real test
+ * knows nothing about the candidate yet, and neither do we. */
+const START_THETA = 0;
 
 /**
  * POST /api/exam/start
- * True Multistage CAT: initializes ONLY Section 1 at difficulty=3 (θ=0 start).
- * Every subsequent section is fetched in /api/exam/answer after θ is updated.
+ * Multistage CAT: initializes ONLY Section 1 — the most informative items
+ * at θ = 0 (by calibrated difficulty, src/lib/item-selection.ts). Every
+ * subsequent section is fetched in /api/exam/answer after θ is updated.
  *
  * Uses user_question_history for cross-session deduplication so users never
  * see the same question twice until the full pool is exhausted (then resets).
@@ -31,16 +36,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid exam settings' }, { status: 400 });
   }
 
-  // Initial θ=0 → difficulty level 3
-  const initialDifficulty = routeNextDifficulty(0); // = 3
   const section1Cfg = SECTION_CONFIGS[0]; // { index:1, type:'sentence_completion', questionCount:4 }
 
-  // Fetch Section 1 questions, excluding already-seen ones cross-session
-  const section1Questions = await fetchUnseenQuestions({
+  // Section 1: most informative items at the prior mean, unseen first.
+  const section1Questions = await planInformativeQuestions({
     supabase,
     userKey,
     type: section1Cfg.type,
-    difficultyLevel: initialDifficulty,
+    theta: START_THETA,
     needed: section1Cfg.questionCount,
   });
 

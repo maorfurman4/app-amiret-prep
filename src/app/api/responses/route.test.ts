@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ getServerClients: vi.fn(), applyResponsesToSrs: vi.fn(), estimateOwnerTheta: vi.fn() }));
+const mocks = vi.hoisted(() => ({ getServerClients: vi.fn(), applyResponsesToSrs: vi.fn(), estimateOwnerAbility: vi.fn(), calibrateItems: vi.fn() }));
 vi.mock('@/lib/supabase-server', () => ({ getServerClients: mocks.getServerClients }));
 vi.mock('@/lib/srs', () => ({ applyResponsesToSrs: mocks.applyResponsesToSrs }));
 vi.mock('@/lib/ability', async importOriginal => ({
   ...(await importOriginal<typeof import('@/lib/ability')>()),
-  estimateOwnerTheta: mocks.estimateOwnerTheta,
+  estimateOwnerAbility: mocks.estimateOwnerAbility,
 }));
+vi.mock('@/lib/calibration-server', () => ({ calibrateItems: mocks.calibrateItems }));
 vi.mock('@/lib/date-local', () => ({ todayLocalStr: () => '2026-09-23' }));
 
 import { POST } from './route';
@@ -17,9 +18,17 @@ const UNKNOWN = '33333333-3333-4333-8333-333333333333';
 
 /** Answer keys the fake DB knows about: A → 2 (b = 0), B → 0 (b = 2). */
 function createSupabase({ insertError = null as unknown } = {}) {
-  const insert = vi.fn().mockResolvedValue({ error: insertError });
+  // insert(rows).select('id') → ids 1..n in insert order, like PostgREST.
+  const insert = vi.fn((rows: Record<string, unknown>[]) => ({
+    select: vi.fn().mockResolvedValue(insertError
+      ? { data: null, error: insertError }
+      : { data: rows.map((_, i) => ({ id: i + 1 })), error: null }),
+  }));
   const inFn = vi.fn().mockResolvedValue({
-    data: [{ id: ITEM_A, correct_answer: 2, b: 0, c: 0.25 }, { id: ITEM_B, correct_answer: 0, b: 2, c: 0.25 }],
+    data: [
+      { id: ITEM_A, type: 'sentence_completion', correct_answer: 2, b: 0, c: 0.25, b_calibrated: null },
+      { id: ITEM_B, type: 'restatement', correct_answer: 0, b: 2, c: 0.25, b_calibrated: null },
+    ],
     error: null,
   });
   const select = vi.fn().mockReturnValue({ in: inFn });
@@ -44,7 +53,8 @@ describe('POST /api/responses', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.applyResponsesToSrs.mockResolvedValue({ created: 0, reviewed: 0, cleared: 0, error: null });
-    mocks.estimateOwnerTheta.mockResolvedValue(0);
+    mocks.estimateOwnerAbility.mockResolvedValue({ theta: 0, n: 0 });
+    mocks.calibrateItems.mockResolvedValue({ updated: 0, skipped: null, error: null });
   });
 
   it('requires an identity', async () => {
@@ -115,14 +125,13 @@ describe('POST /api/responses', () => {
       entry({ itemId: UNKNOWN }),
     ] }));
     expect(mocks.applyResponsesToSrs).toHaveBeenCalledWith(db.supabase, { id: 'user-1', type: 'user' }, [
-      { itemId: ITEM_A, correct: false, answered: true, latencyMs: 700, confidence: null },
+      { responseId: 1, itemId: ITEM_A, type: 'sentence_completion', correct: false, answered: true, latencyMs: 700, confidence: null },
     ]);
   });
 
   it('p_correct comes from the SERVER ability estimate, never a client-sent theta', async () => {
     const db = createSupabase();
     mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'guest-1' });
-    mocks.estimateOwnerTheta.mockResolvedValue(0);
     await POST(request({ responses: [
       // Diagnostic claims θ = 3.9 (would make every item "easy"); ignored for p_correct.
       entry({ itemId: ITEM_A, context: 'diagnostic', thetaBefore: 3.9 }),
@@ -144,6 +153,26 @@ describe('POST /api/responses', () => {
     expect(db.rpc).toHaveBeenCalledWith('increment_daily_activity', {
       p_user_id: 'guest-1', p_activity_date: '2026-09-23', p_source: 'review', p_activity_units: 0, p_review_cleared: 0,
     });
+  });
+
+  it('calibrates the logged answers against the ability estimated BEFORE them', async () => {
+    const db = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: 'u' }, guestId: null });
+    mocks.estimateOwnerAbility.mockResolvedValue({ theta: 0.8, n: 55 });
+    await POST(request({ responses: [entry({ latencyMs: 30_000 }), entry({ itemId: ITEM_B, latencyMs: 2_000 })] }));
+    expect(mocks.calibrateItems).toHaveBeenCalledWith(db.supabase, { theta: 0.8, n: 55 }, [
+      { responseId: 1, type: 'sentence_completion', latencyMs: 30_000 },
+      { responseId: 2, type: 'restatement', latencyMs: 2_000 },
+    ]);
+    // p_correct used the same pre-insert estimate.
+    expect(db.insert.mock.calls[0][0][0].theta_before).toBe(0.8);
+  });
+
+  it('a calibration failure never fails the logging request', async () => {
+    const db = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'g' });
+    mocks.calibrateItems.mockRejectedValue(new Error('db down'));
+    expect((await POST(request({ responses: [entry()] }))).status).toBe(200);
   });
 
   it('marks nothing when no answer was actually recorded', async () => {

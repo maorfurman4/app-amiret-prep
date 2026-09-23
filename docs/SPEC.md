@@ -112,7 +112,12 @@
 - מודל **3PL IRT**: `P(θ) = c + (1-c) / (1 + e^{-a(θ-b)})`. כל שאלה ב-DB נושאת `a` (0.51–2.5), `b` (-2.69–2.79), `c` (קבוע 0.25 — ניחוש מ-4 אפשרויות).
 - **`a` קבוע (2026-09-23):** המנוע מתעלם מה-`a` השמור ומשתמש ב-`BASELINE_A = 1.2` לכל פריט (`itemIrtParams` ב-`adaptive.ts` — כל אומדן θ עובר דרכה). ה-`a` השמור הומצא בזמן כתיבה ולא נמדד, ונתן לשאלות משקל לא שוויוני בלי בסיס. העמודה נשארת כמות שהיא עד כיול מבוסס-נתונים מטבלת `responses`.
 - אומדן θ אחרי כל פרק, **מצטבר** על כל הפרקים המנוקדים: MLE (Newton) עם fallback ל-EAP (41 נקודות) כשאין פתרון (הכל נכון/הכל שגוי).
-- ניתוב: `routeNextDifficulty(θ)` → רמה 1–5 לפרק הבא. השאלות לפרק הבא נשלפות **רק אז** (multistage CAT אמיתי — אין pre-fetch).
+- **ניתוב מבוסס מידע (2026-09-23):** הפרק הבא מורכב מהפריטים עם **מידע פישר** מקסימלי בנקודת יעד (`pick_informative_items` / `pick_informative_passage`, `lib/item-selection.ts`), לפי הקושי המכויל — לא לפי רמה 1–5. בחירה randomesque (אקראית מתוך 3× הנדרש המובילים; שוויון נשבר אקראית) — 30/30 סטים שונים בבדיקה. לא-נראים קודם; אין יותר איפוס היסטוריה. פרק 1: θ = 0.
+  - **יעד:** θ לניתוב = EAP (יציב אחרי 4 פריטים; ה-MLE נשאר לציון). מפרק 5 ואילך (הכרעה) — **ציון החתך θ = 1.7 (134)** כל עוד הוא בטווח 2·SE מ-θ̂; אחרת θ̂. היעד והסיבה נרשמים ב-`theta_history` (`target_theta`, `target_reason`, `route_theta`, `route_se`).
+  - **ממצא סימולציה (20K/מדיניות):** כיוון לחתך ניטרלי בפועל — 71.56% מול 71.10% סיווג נכון ליד החתך (±12 נק'), 88.58% מול 88.91% באוכלוסייה. ב-23 פריטים ה-SE (~0.45 θ ≈ 9 נק') שולט; ~29% מהנבחנים בטווח ±12 מהחתך יסווגו שגוי בכל מדיניות ניתוב.
+  - `routeNextDifficulty` נשאר רק לתוויות רמה ב-UI (תרגול, סטטיסטיקות, אבחון).
+- **כיול פריטים (Elo, Pelánek 2016):** `questions.b_calibrated` (הקושי שהמנוע משתמש בו; `itemIrtParams` מעדיף אותו) נפרד מ-`b` (הקושי שנכתב — prior קבוע) ומ-`difficulty_level` (הרמה הסטטית). `b ← b + K0/(1+n/N0)·(P−y)`, K0 = 0.4, N0 = 20, חסום ±4; `calibrate_from_responses` מיישם אטומית (נעילת שורה לכל פריט), זהה ל-`eloStep` עד 10 ספרות. רק: תשובה (לא ריקה), הקשר exam/practice/diagnostic (לא review), תשובה ראשונה של התלמיד לפריט, תלמיד עם ≥10 תשובות בהיסטוריה, לא ניחוש מהיר (<5% מהתקציב). θ לכיול: EAP מההיסטוריה **לפני** התשובות (ובמבחן — בלי המבחן עצמו). סימולציה: משחזר קושי אמיתי ±0.3 מתוך 400 תלמידים גם כשנכתב שגוי ב-1.5.
+- **הסתברות פטור:** בסיום מבחן — `theta_se = 1/√I(θ̂)` ו-`p_exempt = Φ((θ̂ − 1.7)/SE)` נשמרים ב-`exam_sessions`. **הערת סקאלה:** הכיול עוגן לאוכלוסיית האפליקציה (θ = 0 ≈ תלמיד ממוצע כאן); המיפוי θ·20+100 (134 ↔ 1.7) עדיין הנחה עד לקישור לציוני נית"ה רשמיים (equating).
 - ציון: `thetaToScore = θ·20 + 100`, חסום 50–150.
 - פרק ניסיוני: θ בסיס מפרקים 1–6; אם הכללת פרק 7 מעלה את הציון — לוקחים את הגבוה, מוגבל ל-+2.
 - רמות (`classifyScore`): 134+ פטור מלא · 120–133 מתקדמים ב' · 100–119 מתקדמים א' · 85–99 בסיסי · 70–84 טרום-בסיסי ב' · 50–69 טרום-בסיסי א'.
@@ -303,6 +308,9 @@ Server component; `SELECT display_name, avatar_url, best_score, total_exams, avg
 | `srs_cards` | `owner_id, owner_type, concept_key (unique per owner), item_type, skill, target_lemma, anchor_question_id, stability, difficulty, reps, lapses, last_review_at, due_at, version (CAS)` | ✅ | אין (service-role בלבד); merge-guest מעביר (כרטיס קיים של החשבון גובר) |
 | `user_question_history` / `user_passage_history` | `user_key text, question_id/passage_id, seen_at` (unique) | ✅ | אין |
 | `srs_review_log` | `owner_id, owner_type, card_id → srs_cards (set null), concept_key, item_id, grade 1–4, answered, was_due, elapsed_days, stability/difficulty before/after, reviewed_at` | ✅ | אין (service-role בלבד). מקור טבעת B + נתוני אימון ל-FSRS |
+| (`questions` +) | `b_calibrated` (±4), `calibration_n`, `calibrated_at` | | `b` ו-`difficulty_level` לא משתנים |
+| (`responses` +) | `calibrated` (תשובה כבר כיילה את הפריט) | | |
+| (`exam_sessions` +) | `theta_se`, `p_exempt` | | |
 | `activity_log` | `user_id text, activity_date, source` (העמודות `activity_units`/`review_cleared` כבר לא נקראות — streak בלבד) | ✅ | public ALL ("app enforces ownership") |
 | `user_stats` | `user_id, total_exams, best_score, avg_score, last_exam_at, score_history jsonb, performance_by_type, display_name, avatar_url` | ✅ | own read/write (`auth.uid()`) |
 | `leaderboard` | `user_id, display_name, avatar_url, best_score, total_exams, avg_score, last_exam_at` | ✅ | public SELECT **+ GRANT ברמת עמודה** ל-anon/authenticated על כל העמודות **חוץ מ-`user_id`** |

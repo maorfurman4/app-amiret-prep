@@ -19,12 +19,16 @@ export const BASELINE_C = 0.25;
 /**
  * The IRT parameters the engine actually scores an item with. Every θ
  * estimate (exam, practice, diagnostic) must go through this — never read
- * `a` straight off a question row.
+ * `a` or `b` straight off a question row.
+ *
+ * Difficulty is the data-driven `b_calibrated` (Elo-updated from real
+ * answers, see src/lib/calibration.ts) when present, else the authored `b`
+ * it was seeded from.
  */
-export function itemIrtParams(item: { b: number; c?: number | null }): IrtParams {
+export function itemIrtParams(item: { b: number; c?: number | null; b_calibrated?: number | null }): IrtParams {
   return {
     a: BASELINE_A,
-    b: item.b,
+    b: Number.isFinite(item.b_calibrated) ? (item.b_calibrated as number) : item.b,
     c: Number.isFinite(item.c) ? (item.c as number) : BASELINE_C,
   };
 }
@@ -145,8 +149,9 @@ export function estimateThetaEAP(items: IrtParams[], responses: number[]): numbe
 // ─── Section Routing ──────────────────────────────────────────────────────────
 
 /**
- * Maps current θ estimate to difficulty level (1-5) for next section pool.
- * Targets P=0.5 — the most informative operating point.
+ * Maps a θ estimate to the nearest authored difficulty level (1-5) — for
+ * labels and level pickers in the UI only. The exam no longer routes by
+ * level: it selects items by Fisher information (src/lib/item-selection.ts).
  */
 export function routeNextDifficulty(theta: number): DifficultyLevel {
   if (!isFinite(theta)) return 3;

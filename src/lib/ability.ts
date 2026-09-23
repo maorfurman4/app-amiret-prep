@@ -21,29 +21,52 @@ export function isInSweetSpot(pCorrect: number | null | undefined): boolean {
   return typeof pCorrect === 'number' && pCorrect >= SWEET_SPOT.min && pCorrect <= SWEET_SPOT.max;
 }
 
-export function predictCorrect(theta: number, item: { b: number; c?: number | null }): number {
+export function predictCorrect(theta: number, item: { b: number; c?: number | null; b_calibrated?: number | null }): number {
   return irtProbability(theta, itemIrtParams(item));
+}
+
+export interface OwnerAbility {
+  theta: number;
+  /** How many answers the estimate rests on (0 = pure prior). */
+  n: number;
+}
+
+/**
+ * `excludeSessionId` leaves one exam out — so the exam's own answers can
+ * calibrate its items against an ability estimated independently of them.
+ */
+export async function estimateOwnerAbility(
+  supabase: SupabaseClient,
+  owner: { id: string; type: 'user' | 'guest' },
+  { excludeSessionId }: { excludeSessionId?: string } = {},
+): Promise<OwnerAbility> {
+  let q = supabase
+    .from('responses')
+    .select('correct, questions(b, c, b_calibrated)')
+    .eq('owner_type', owner.type)
+    .eq('owner_id', owner.id)
+    .not('chosen_option', 'is', null);
+  if (excludeSessionId) q = q.or(`session_id.is.null,session_id.neq.${excludeSessionId}`);
+  const { data, error } = await q
+    .order('created_at', { ascending: false })
+    .limit(ABILITY_WINDOW);
+  if (error || !data) return { theta: 0, n: 0 };
+
+  type Row = { correct: boolean; questions: { b: number; c: number | null; b_calibrated: number | null } | null };
+  const rows = (data as unknown as Row[]).filter(r => r.questions && Number.isFinite(r.questions.b));
+  if (rows.length === 0) return { theta: 0, n: 0 };
+  return {
+    theta: estimateThetaEAP(
+      rows.map(r => itemIrtParams(r.questions!)),
+      rows.map(r => (r.correct ? 1 : 0)),
+    ),
+    n: rows.length,
+  };
 }
 
 export async function estimateOwnerTheta(
   supabase: SupabaseClient,
   owner: { id: string; type: 'user' | 'guest' },
 ): Promise<number> {
-  const { data, error } = await supabase
-    .from('responses')
-    .select('correct, questions(b, c)')
-    .eq('owner_type', owner.type)
-    .eq('owner_id', owner.id)
-    .not('chosen_option', 'is', null)
-    .order('created_at', { ascending: false })
-    .limit(ABILITY_WINDOW);
-  if (error || !data) return 0;
-
-  type Row = { correct: boolean; questions: { b: number; c: number | null } | null };
-  const rows = (data as unknown as Row[]).filter(r => r.questions && Number.isFinite(r.questions.b));
-  if (rows.length === 0) return 0;
-  return estimateThetaEAP(
-    rows.map(r => itemIrtParams(r.questions!)),
-    rows.map(r => (r.correct ? 1 : 0)),
-  );
+  return (await estimateOwnerAbility(supabase, owner)).theta;
 }

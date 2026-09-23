@@ -2,21 +2,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, isExperimentalSection, type Question, type SectionResult } from '@/types/exam';
-import { updateThetaAfterSection, routeNextDifficulty, thetaToScore, correctCount } from '@/lib/adaptive';
-import {
-  planUnseenQuestions,
-  planUnseenRCQuestions,
-} from '@/lib/question-history';
+import { updateThetaAfterSection, thetaToScore, correctCount, estimateThetaEAP, itemIrtParams } from '@/lib/adaptive';
+import { planInformativeQuestions, planInformativePassage } from '@/lib/item-selection';
+import { chooseRouteTarget, exemptionProbability, standardError } from '@/lib/calibration';
+import { calibrateItems } from '@/lib/calibration-server';
+import { estimateOwnerAbility } from '@/lib/ability';
 import { buildExamResponseRows } from '@/lib/responses';
 import { applyResponsesToSrs } from '@/lib/srs';
 
 /**
  * POST /api/exam/answer
- * True Multistage CAT:
- *  1. Updates θ via MLE/EAP based on the completed section.
- *  2. Derives the difficulty level for the NEXT section from the new θ.
- *  3. Fetches ONLY the next section's questions from DB at that difficulty.
- * No section is ever pre-fetched — every section is determined adaptively.
+ * Multistage CAT with information-based routing:
+ *  1. Scores θ (MLE, EAP fallback) over every section so far.
+ *  2. Picks a routing target: the student's ability (a stable EAP estimate)
+ *     — or, in the decision sections, the exemption cut score while the
+ *     pass/fail call is still uncertain (src/lib/calibration.ts).
+ *  3. Fetches ONLY the next section: the items (or reading passage) with
+ *     the most Fisher information at that target, by calibrated difficulty
+ *     (src/lib/item-selection.ts). No section is ever pre-fetched.
+ * At completion it also records θ's standard error and P(exempt), and feeds
+ * the exam's answers to spaced repetition and item calibration.
  *
  * Uses user_question_history / user_passage_history for cross-session deduplication.
  */
@@ -116,6 +121,15 @@ export async function POST(req: NextRequest) {
   const sectionForAdaptive = { questions: allQuestions, answers: allAnswers };
   const newTheta = updateThetaAfterSection(session.theta, sectionForAdaptive);
 
+  // Routing uses EAP, not the MLE score: after only a few items MLE swings
+  // wildly (and diverges on all-right/all-wrong), which would aim the next
+  // section at the wrong place. EAP's prior keeps early routing sane and
+  // converges to the same place as answers accumulate.
+  const allItems = allQuestions.map(itemIrtParams);
+  const allOutcomes = allAnswers.map((ans, i) => (ans !== null && ans === allQuestions[i].correct_answer ? 1 : 0));
+  const routeTheta = estimateThetaEAP(allItems, allOutcomes);
+  const routeSe = standardError(routeTheta, allQuestions);
+
   // Optional per-question pace data — accepted only if well-formed. The
   // raw (sub-second) values feed the responses log's latency; the section
   // result keeps whole seconds for the results page's pacing display.
@@ -139,13 +153,22 @@ export async function POST(req: NextRequest) {
     ...(timings ? { timings } : {}),
   };
 
-  const newHistory = [
-    ...(session.theta_history as object[]),
-    { after_section: body.sectionIndex, theta: newTheta },
-  ];
-
   const nextSectionIndex = body.sectionIndex + 1;
   const isLastSection = nextSectionIndex > SECTION_CONFIGS.length;
+  const target = chooseRouteTarget({ nextSectionIndex, theta: routeTheta, se: routeSe });
+
+  // The routing decision is kept with the θ trail, so every section's
+  // targeting can be audited later.
+  const newHistory = [
+    ...(session.theta_history as object[]),
+    {
+      after_section: body.sectionIndex,
+      theta: newTheta,
+      route_theta: routeTheta,
+      route_se: routeSe,
+      ...(isLastSection ? {} : { target_theta: target.theta, target_reason: target.reason }),
+    },
+  ];
 
   const updatePayload: Record<string, unknown> = {
     theta: newTheta,
@@ -154,8 +177,6 @@ export async function POST(req: NextRequest) {
     answers_by_section: { ...session.answers_by_section, [body.sectionIndex]: answers },
     section_results: [...(session.section_results as object[]), result],
   };
-  let resetQuestionIds: string[] = [];
-  let resetPassageHistory = false;
   let seenQuestionIds: string[] = [];
   let seenPassageId: string | null = null;
   let activityDate: string | null = null;
@@ -178,68 +199,53 @@ export async function POST(req: NextRequest) {
     const scoreWithExperimental = Math.min(thetaToScore(newTheta), baseScore + 2);
     const finalIsExperimental = scoreWithExperimental > baseScore;
 
+    const thetaFinal = finalIsExperimental ? newTheta : baseTheta;
+    // Uncertainty of the reported θ, from the information of the items it
+    // rests on — and from it, the probability the student is truly at or
+    // above the exemption cut (on the app's scale).
+    const finalItems = finalIsExperimental
+      ? allQuestions
+      : scoredResults.flatMap(sr => sr.questions as Question[]);
+    const thetaSe = standardError(thetaFinal, finalItems);
+
     updatePayload.completed_at = new Date().toISOString();
-    updatePayload.theta_final = finalIsExperimental ? newTheta : baseTheta;
+    updatePayload.theta_final = thetaFinal;
+    if (Number.isFinite(thetaSe)) updatePayload.theta_se = thetaSe;
+    updatePayload.p_exempt = exemptionProbability(thetaFinal, thetaSe);
     updatePayload.score = Math.max(baseScore, scoreWithExperimental);
     updatePayload.current_section_expires_at = null;
 
     activityDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
     activitySource = session.is_practice ? 'practice_exam' : 'exam';
   } else {
-    // ── Step 2: Derive next difficulty from updated θ ──────────────────────────
-    const nextDifficulty = routeNextDifficulty(newTheta);
     const nextCfg = SECTION_CONFIGS[nextSectionIndex - 1];
-
-    // in-session tracking (kept for within-session RC passage deduplication)
     const usedQIds: string[] = (session.used_question_ids as string[] | null) ?? [];
     const usedPIds: string[] = (session.used_passage_ids as string[] | null) ?? [];
 
-    // ── Step 3: Fetch ONLY next section from DB at the adaptive difficulty ─────
+    // Fetch ONLY the next section: the most informative items at the target
+    // (unseen across sessions first; never repeating this exam's items).
     let nextQuestions: Question[] = [];
 
     if (nextCfg.type === 'reading_comprehension') {
-      const selection = await planUnseenRCQuestions({
+      nextQuestions = await planInformativePassage({
         supabase,
         userKey,
-        difficultyLevel: nextDifficulty,
-        usedPIds,
+        theta: target.theta,
+        excludePassageIds: usedPIds,
       });
-      nextQuestions = selection.questions;
-      resetPassageHistory = selection.resetPassageHistory;
-
       if (nextQuestions.length > 0) {
         seenPassageId = nextQuestions[0].passage_id!;
         updatePayload.used_passage_ids = [...usedPIds, seenPassageId];
       }
     } else {
-      if (userKey) {
-        // Cross-session deduplication
-        const selection = await planUnseenQuestions({
-          supabase,
-          userKey,
-          type: nextCfg.type,
-          difficultyLevel: nextDifficulty,
-          needed: nextCfg.questionCount,
-        });
-        nextQuestions = selection.questions;
-        resetQuestionIds = selection.resetQuestionIds;
-      } else {
-        // No user_key — fall back to in-session deduplication only
-        let qQuery = supabase
-          .from('questions')
-          .select('*')
-          .eq('type', nextCfg.type)
-          .eq('difficulty_level', nextDifficulty)
-          .eq('active', true)
-          .limit(nextCfg.questionCount + 10);
-        if (usedQIds.length > 0) {
-          qQuery = qQuery.not('id', 'in', `(${usedQIds.join(',')})`);
-        }
-        const { data: qs } = await qQuery;
-        nextQuestions = ((qs ?? []) as Question[])
-          .sort(() => Math.random() - 0.5)
-          .slice(0, nextCfg.questionCount);
-      }
+      nextQuestions = await planInformativeQuestions({
+        supabase,
+        userKey,
+        type: nextCfg.type,
+        theta: target.theta,
+        needed: nextCfg.questionCount,
+        excludeIds: usedQIds,
+      });
     }
 
     if (nextQuestions.length !== nextCfg.questionCount) {
@@ -284,9 +290,11 @@ export async function POST(req: NextRequest) {
     p_owner_id: userKey,
     p_section_index: body.sectionIndex,
     p_update: updatePayload,
-    p_reset_question_ids: resetQuestionIds,
+    // Information-based selection never needs to wipe seen-history: when
+    // unseen items run short it simply draws from seen ones.
+    p_reset_question_ids: [],
     p_seen_question_ids: seenQuestionIds,
-    p_reset_passage_history: resetPassageHistory,
+    p_reset_passage_history: false,
     p_seen_passage_id: seenPassageId,
     p_activity_date: activityDate,
     p_activity_source: activitySource,
@@ -311,19 +319,37 @@ export async function POST(req: NextRequest) {
   // their real latencies and timestamps. The exam itself is already safely
   // committed, so a scheduling failure is logged, not surfaced.
   if (isLastSection) {
+    const owner = { id: userKey, type: user ? 'user' as const : 'guest' as const };
     const { data: logged, error: logErr } = await supabase
       .from('responses')
-      .select('item_id, correct, chosen_option, latency_ms, created_at')
+      .select('id, item_id, correct, chosen_option, latency_ms, created_at')
       .eq('session_id', body.sessionId);
     const srs = logErr
       ? { error: logErr.message }
       : await applyResponsesToSrs(
           supabase,
-          { id: userKey, type: user ? 'user' : 'guest' },
+          owner,
           ((logged ?? []) as { item_id: string; correct: boolean; chosen_option: number | null; latency_ms: number | null; created_at: string }[])
             .map(r => ({ itemId: r.item_id, correct: r.correct, answered: r.chosen_option !== null, latencyMs: r.latency_ms, at: new Date(r.created_at) })),
         ).catch((e: unknown) => ({ error: String(e) }));
     if (srs.error) console.error('[exam/answer] SRS update failed:', srs.error);
+
+    // Item calibration from the exam's answers — timed, no feedback: the
+    // cleanest difficulty evidence the app gets. Ability comes from the
+    // student's history *excluding this exam*, so the items aren't judged
+    // against an estimate built from the same answers.
+    if (!logErr) {
+      const typeById = new Map(allQuestions.map(q => [q.id, q.type]));
+      const loggedRows = (logged ?? []) as { id: number; item_id: string; latency_ms: number | null }[];
+      const calibration = await estimateOwnerAbility(supabase, owner, { excludeSessionId: session.id as string })
+        .then(ability => calibrateItems(supabase, ability, loggedRows.map(r => ({
+          responseId: r.id,
+          type: typeById.get(r.item_id) ?? 'sentence_completion',
+          latencyMs: r.latency_ms,
+        }))))
+        .catch((e: unknown) => ({ updated: 0, skipped: null, error: String(e) }));
+      if (calibration.error) console.error('[exam/answer] item calibration failed:', calibration.error);
+    }
   }
 
   return NextResponse.json({

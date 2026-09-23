@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { getServerClients } from '@/lib/supabase-server';
 import { recordClientResponses } from '@/lib/responses';
 import { applyResponsesToSrs } from '@/lib/srs';
-import { estimateOwnerTheta } from '@/lib/ability';
+import { estimateOwnerAbility } from '@/lib/ability';
+import { calibrateItems } from '@/lib/calibration-server';
 import { todayLocalStr } from '@/lib/date-local';
 
 const MAX_RESPONSES = 25;
@@ -56,8 +57,11 @@ export async function POST(req: Request) {
   }
 
   const owner = { id: ownerId, type: user ? 'user' as const : 'guest' as const };
-  const theta = await estimateOwnerTheta(supabase, owner).catch(() => 0);
-  const { recorded, graded, error } = await recordClientResponses(supabase, owner, parsed.data.responses, theta);
+  // Estimated BEFORE these answers are inserted, so neither p_correct nor
+  // the item calibration below is judged against an ability that already
+  // includes the very answers being judged.
+  const ability = await estimateOwnerAbility(supabase, owner).catch(() => ({ theta: 0, n: 0 }));
+  const { recorded, graded, error } = await recordClientResponses(supabase, owner, parsed.data.responses, ability.theta);
   if (error) return NextResponse.json({ error: 'Failed to record responses' }, { status: 500 });
 
   if (recorded > 0) {
@@ -76,6 +80,13 @@ export async function POST(req: Request) {
   const srs = await applyResponsesToSrs(supabase, owner, graded)
     .catch((e: unknown) => ({ created: 0, reviewed: 0, error: String(e) }));
   if (srs.error) console.error('[responses] SRS update failed:', srs.error);
+
+  const calibration = await calibrateItems(
+    supabase,
+    ability,
+    graded.filter(g => Number.isFinite(g.responseId)).map(g => ({ responseId: g.responseId, type: g.type, latencyMs: g.latencyMs })),
+  ).catch((e: unknown) => ({ updated: 0, skipped: null, error: String(e) }));
+  if (calibration.error) console.error('[responses] item calibration failed:', calibration.error);
 
   return NextResponse.json({ ok: true, recorded, srs: { created: srs.created, reviewed: srs.reviewed } });
 }

@@ -216,7 +216,7 @@ async function queryPassage(
   return passages[Math.floor(Math.random() * passages.length)];
 }
 
-async function buildRCQuestions(
+export async function buildRCQuestions(
   supabase: SupabaseClient,
   passage: { id: string; text: string; difficulty_level: number; b: number },
 ): Promise<Question[]> {

@@ -4,16 +4,23 @@ import type { Question } from '@/types/exam';
 
 const mocks = vi.hoisted(() => ({
   getServerClients: vi.fn(),
-  planUnseenQuestions: vi.fn(),
-  planUnseenRCQuestions: vi.fn(),
+  planInformativeQuestions: vi.fn(),
+  planInformativePassage: vi.fn(),
   applyResponsesToSrs: vi.fn(),
+  calibrateItems: vi.fn(),
+  estimateOwnerAbility: vi.fn(),
 }));
 vi.mock('@/lib/srs', () => ({ applyResponsesToSrs: mocks.applyResponsesToSrs }));
+vi.mock('@/lib/calibration-server', () => ({ calibrateItems: mocks.calibrateItems }));
+vi.mock('@/lib/ability', async importOriginal => ({
+  ...(await importOriginal<typeof import('@/lib/ability')>()),
+  estimateOwnerAbility: mocks.estimateOwnerAbility,
+}));
 
 vi.mock('@/lib/supabase-server', () => ({ getServerClients: mocks.getServerClients }));
-vi.mock('@/lib/question-history', () => ({
-  planUnseenQuestions: mocks.planUnseenQuestions,
-  planUnseenRCQuestions: mocks.planUnseenRCQuestions,
+vi.mock('@/lib/item-selection', () => ({
+  planInformativeQuestions: mocks.planInformativeQuestions,
+  planInformativePassage: mocks.planInformativePassage,
 }));
 
 import { POST } from './route';
@@ -94,7 +101,9 @@ function validBody(overrides: Record<string, unknown> = {}) {
 describe('POST /api/exam/answer', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.planUnseenQuestions.mockResolvedValue({ questions, resetQuestionIds: [] });
+    mocks.planInformativeQuestions.mockResolvedValue(questions);
+    mocks.estimateOwnerAbility.mockResolvedValue({ theta: 0.3, n: 40 });
+    mocks.calibrateItems.mockResolvedValue({ updated: 0, skipped: null, error: null });
   });
 
   it('rejects an answer list that does not match the section', async () => {
@@ -255,21 +264,135 @@ describe('POST /api/exam/answer', () => {
     expect((await response.json()).isComplete).toBe(true);
   });
 
-  it('commits question-history changes in the same RPC as the section', async () => {
+  it('commits the next section’s seen-history in the same RPC, never wiping history', async () => {
     const db = createSupabase();
-    mocks.planUnseenQuestions.mockResolvedValue({
-      questions,
-      resetQuestionIds: ['old-question-id'],
-    });
     mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
 
     const response = await POST(request(validBody()));
 
     expect(response.status).toBe(200);
     expect(db.spies.rpc).toHaveBeenCalledWith('commit_exam_section', expect.objectContaining({
-      p_reset_question_ids: ['old-question-id'],
+      p_reset_question_ids: [],
+      p_reset_passage_history: false,
       p_seen_question_ids: questions.map(question => question.id),
       p_update: expect.objectContaining({ current_section_index: 2 }),
     }));
+  });
+
+  it('routes early sections by information at the (EAP) ability estimate, excluding this exam’s items', async () => {
+    const db = createSupabase(session({ current_section_expires_at: '2999-01-01T00:00:00.000Z' }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+
+    await POST(request(validBody({ answers: [0, 0, 0, 0] }))); // all right on b = 0 items
+
+    const call = mocks.planInformativeQuestions.mock.calls[0][0];
+    expect(call).toMatchObject({ type: 'sentence_completion', needed: 4, userKey: 'owner-id', excludeIds: questions.map(q => q.id) });
+    // All four right → EAP moves up from 0 but stays finite (MLE would diverge).
+    expect(call.theta).toBeGreaterThan(0.3);
+    expect(call.theta).toBeLessThan(2);
+    const trail = db.getUpdatePayload()!.theta_history as Record<string, unknown>[];
+    expect(trail[0]).toMatchObject({ after_section: 1, target_reason: 'ability' });
+    expect(trail[0].target_theta).toBeCloseTo(call.theta as number, 10);
+  });
+
+  it('decision sections aim at the cut score while the exemption call is uncertain…', async () => {
+    // Entering section 5: answers put the student near θ ≈ 1.7.
+    const hard = questions.map(q => ({ ...q, b: 1.7, type: 'restatement' as const }));
+    const db = createSupabase(session({
+      current_section_index: 4,
+      questions_by_section: { 4: hard.slice(0, 3) },
+      current_section_expires_at: '2999-01-01T00:00:00.000Z',
+      section_results: [
+        { sectionIndex: 1, questions: hard, answers: [0, 0, 1, 0] },
+        { sectionIndex: 2, questions: hard, answers: [0, 1, 0, 0] },
+      ],
+    }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    mocks.planInformativeQuestions.mockResolvedValue(hard.slice(0, 3)); // section 5 = 3 restatements
+
+    await POST(request(validBody({ sectionIndex: 4, answers: [0, 1, 0] })));
+
+    expect(mocks.planInformativeQuestions.mock.calls[0][0].theta).toBe(1.7);
+    const trail = db.getUpdatePayload()!.theta_history as Record<string, unknown>[];
+    expect(trail.at(-1)).toMatchObject({ target_theta: 1.7, target_reason: 'cut_score' });
+  });
+
+  it('…but keep measuring a student far from the cut where they actually are', async () => {
+    const easy = questions.map(q => ({ ...q, b: -2, type: 'restatement' as const }));
+    const db = createSupabase(session({
+      current_section_index: 4,
+      questions_by_section: { 4: easy.slice(0, 3) },
+      current_section_expires_at: '2999-01-01T00:00:00.000Z',
+      section_results: [
+        { sectionIndex: 1, questions: easy, answers: [1, 1, 1, 0] },
+        { sectionIndex: 2, questions: easy, answers: [1, 1, 0, 1] },
+      ],
+    }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    mocks.planInformativeQuestions.mockResolvedValue(easy.slice(0, 3));
+
+    await POST(request(validBody({ sectionIndex: 4, answers: [1, 1, 1] })));
+
+    const target = mocks.planInformativeQuestions.mock.calls[0][0].theta as number;
+    expect(target).toBeLessThan(0);
+    expect((db.getUpdatePayload()!.theta_history as Record<string, unknown>[]).at(-1)).toMatchObject({ target_reason: 'ability' });
+  });
+
+  it('routes a reading section to the most informative passage and records it as used', async () => {
+    const rc = questions.slice(0, 4).concat(questions[0]).map((q, i) => ({ ...q, id: `rc-${i}`, type: 'reading_comprehension' as const, passage_id: 'passage-9' }));
+    mocks.planInformativePassage.mockResolvedValue(rc);
+    const db = createSupabase(session({
+      current_section_index: 2,
+      questions_by_section: { 2: questions },
+      used_passage_ids: ['passage-1'],
+      current_section_expires_at: '2999-01-01T00:00:00.000Z',
+    }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+
+    const response = await POST(request(validBody({ sectionIndex: 2 })));
+
+    expect(response.status).toBe(200);
+    expect(mocks.planInformativePassage.mock.calls[0][0]).toMatchObject({ userKey: 'owner-id', excludePassageIds: ['passage-1'] });
+    expect(db.spies.rpc).toHaveBeenCalledWith('commit_exam_section', expect.objectContaining({ p_seen_passage_id: 'passage-9' }));
+    expect(db.getUpdatePayload()!.used_passage_ids).toEqual(['passage-1', 'passage-9']);
+  });
+
+  it('fails the transition (503) rather than serving a short section', async () => {
+    mocks.planInformativeQuestions.mockResolvedValue(questions.slice(0, 2));
+    const db = createSupabase(session({ current_section_expires_at: '2999-01-01T00:00:00.000Z' }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    expect((await POST(request(validBody()))).status).toBe(503);
+    expect(db.spies.rpc).not.toHaveBeenCalled();
+  });
+
+  it('at completion records θ’s standard error and P(exempt), and calibrates items against an ability that excludes this exam', async () => {
+    const logged = [
+      { id: 101, item_id: 'question-1', correct: true, chosen_option: 0, latency_ms: 21000, created_at: '2026-09-23T10:00:00.000Z' },
+      { id: 102, item_id: 'question-2', correct: false, chosen_option: 1, latency_ms: 800, created_at: '2026-09-23T10:00:00.000Z' },
+    ];
+    // Six scored sections behind it, as in any real exam.
+    const scored = [1, 2, 3, 4, 5, 6].map(sectionIndex => ({ sectionIndex, questions, answers: [0, 1, 0, 0] }));
+    const db = createSupabase(
+      session({ current_section_index: 7, questions_by_section: { 7: questions }, section_results: scored, current_section_expires_at: '2999-01-01T00:00:00.000Z' }),
+      { data: true, error: null },
+      logged,
+    );
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: 'account-id' } });
+    mocks.applyResponsesToSrs.mockResolvedValue({ created: 0, reviewed: 0, cleared: 0, error: null });
+
+    await POST(request(validBody({ sectionIndex: 7 })));
+
+    const payload = db.getUpdatePayload()!;
+    // 24 scored items at b = 0 answered 75% right: θ̂ well above 0, SE from their information.
+    expect(payload.theta_se as number).toBeGreaterThan(0.2);
+    expect(payload.theta_se as number).toBeLessThan(0.6);
+    // θ̂ sits well below the 1.7 cut → exemption unlikely but not impossible.
+    expect(payload.p_exempt as number).toBeGreaterThan(0);
+    expect(payload.p_exempt as number).toBeLessThan(0.2);
+    expect(mocks.estimateOwnerAbility).toHaveBeenCalledWith(db.supabase, { id: 'account-id', type: 'user' }, { excludeSessionId: 'session-id' });
+    expect(mocks.calibrateItems).toHaveBeenCalledWith(db.supabase, { theta: 0.3, n: 40 }, [
+      { responseId: 101, type: 'sentence_completion', latencyMs: 21000 },
+      { responseId: 102, type: 'sentence_completion', latencyMs: 800 },
+    ]);
   });
 });

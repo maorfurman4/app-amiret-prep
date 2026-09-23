@@ -66,7 +66,10 @@ export function buildExamResponseRows({
 
 /** A logged response, graded — the input the SRS engine consumes. */
 export interface GradedResponse {
+  /** The responses row id (for calibration). */
+  responseId: number;
   itemId: string;
+  type: string;
   correct: boolean;
   /** false = presented but left blank. */
   answered: boolean;
@@ -108,11 +111,11 @@ export async function recordClientResponses(
   const itemIds = [...new Set(inputs.map(r => r.itemId))];
   const { data: keys, error: keyErr } = await supabase
     .from('questions')
-    .select('id, correct_answer, b, c')
+    .select('id, type, correct_answer, b, c, b_calibrated')
     .in('id', itemIds);
   if (keyErr) return { recorded: 0, graded: [], error: keyErr.message };
 
-  type Key = { id: string; correct_answer: number; b: number; c: number | null };
+  type Key = { id: string; type: string; correct_answer: number; b: number; c: number | null; b_calibrated: number | null };
   const keyById = new Map(((keys ?? []) as Key[]).map(k => [k.id, k]));
   const rows = inputs
     .filter(r => keyById.has(r.itemId))
@@ -134,10 +137,14 @@ export async function recordClientResponses(
     });
   if (rows.length === 0) return { recorded: 0, graded: [], error: null };
 
-  const { error } = await supabase.from('responses').insert(rows);
+  const { data: inserted, error } = await supabase.from('responses').insert(rows).select('id');
   if (error) return { recorded: 0, graded: [], error: error.message };
-  const graded = rows.map(r => ({
+  // PostgREST returns inserted rows in insert order.
+  const ids = ((inserted ?? []) as { id: number }[]).map(r => r.id);
+  const graded = rows.map((r, i) => ({
+    responseId: ids[i],
     itemId: r.item_id,
+    type: keyById.get(r.item_id)!.type,
     correct: r.correct,
     answered: r.chosen_option !== null,
     latencyMs: r.latency_ms,

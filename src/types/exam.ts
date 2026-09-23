@@ -32,7 +32,12 @@ export interface Question {
   a: number;
   b: number;
   c: number;
+  /** Authored difficulty level (1-5) — static, fixed at creation. */
   difficulty_level: DifficultyLevel;
+  /** Data-driven difficulty (Elo-calibrated from real answers); the engine
+   * uses this over the authored `b` whenever it's present. */
+  b_calibrated?: number | null;
+  calibration_n?: number;
   /** Concept tags (see migration 20260923160000). Stripped from live-exam
    * payloads: for sentence completion target_lemma is the answer. */
   skill?: string | null;

@@ -8,6 +8,7 @@ import { classifyScore, SECTION_CONFIGS, type SectionResult } from '@/types/exam
 import { routeNextDifficulty } from '@/lib/adaptive';
 import { aggregateAccuracyByType, findWeakestType } from '@/lib/weakness';
 import { BackNav } from '@/components/BackNav';
+import { VictoryPath } from '@/components/stats/VictoryPath';
 import { BarChart3, Target, Check, Trophy, AlertTriangle, PartyPopper } from 'lucide-react';
 
 interface Stats {
@@ -314,35 +315,8 @@ export default function StatsPage() {
           );
         })()}
 
-        {/* Score history */}
-        {(stats.score_history ?? []).length > 0 && (
-          <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
-            <h2 className="font-bold text-exam-ink mb-4">היסטוריית ציונים</h2>
-            <div className="relative flex items-end gap-2 h-24">
-              {/* 134 target line */}
-              <div className="absolute inset-x-0 border-t-2 border-dashed border-exam-sage/60 z-10 pointer-events-none" style={{ bottom: '84%' }}>
-                <span className="absolute -top-2.5 left-0 text-[10px] font-bold text-exam-sage-strong bg-exam-surface px-1 rounded-sm">134</span>
-              </div>
-              {(stats.score_history ?? []).slice(-20).map((entry, i) => {
-                const height = Math.max(8, ((entry.score - 50) / 100) * 100);
-                const cls = classifyScore(entry.score);
-                return (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                    <div
-                      className={`w-full rounded-t-sm transition-all ${
-                        cls.label === 'פטור מלא' ? 'bg-exam-sage-strong' :
-                        cls.label.includes('מתקדמים') ? 'bg-exam-accent' :
-                        cls.label === 'בסיסי' ? 'bg-exam-alt' : 'bg-exam-wrong'
-                      }`}
-                      style={{ height: `${height}%` }}
-                    />
-                    <span className="text-xs text-exam-ink-soft hidden sm:block">{entry.score}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        {/* Victory Path — calendar-day-based projection to the 134+ target */}
+        {rawRows.length > 0 && <VictoryPath sessions={rawRows} targetScore={134} />}
 
         {/* Performance by type */}
         {Object.keys(stats.performance_by_type ?? {}).length > 0 && (

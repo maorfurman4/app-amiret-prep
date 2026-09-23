@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { computeStreakInfo } from '@/lib/streak-server';
 import { todayLocalStr } from '@/lib/date-local';
+import { computeForecast, type Forecast } from '@/lib/forecast';
 
 const DEFAULT_DAILY_ACTIVITY_TARGET = 15;
+const VICTORY_PATH_TARGET_SCORE = 134;
 
 export interface DashboardSummary {
   streak: number;
@@ -15,6 +17,7 @@ export interface DashboardSummary {
   activityUnitsToday: number;
   reviewClearedToday: number;
   dailyActivityTarget: number;
+  forecast: Forecast | null;
 }
 
 const EMPTY: DashboardSummary = {
@@ -27,6 +30,7 @@ const EMPTY: DashboardSummary = {
   activityUnitsToday: 0,
   reviewClearedToday: 0,
   dailyActivityTarget: DEFAULT_DAILY_ACTIVITY_TARGET,
+  forecast: null,
 };
 
 /**
@@ -68,7 +72,7 @@ export async function GET() {
     ? supabase.from('user_goals').select('daily_activity_target').eq('user_id', user.id).maybeSingle()
     : null;
 
-  const [streakInfo, lastScoreRes, examCountRes, reviewCountRes, vocabDueRes, todayRowRes, goalRes] = await Promise.all([
+  const [streakInfo, lastScoreRes, forecastRowsRes, examCountRes, reviewCountRes, vocabDueRes, todayRowRes, goalRes] = await Promise.all([
     computeStreakInfo(supabase, owner),
     supabase
       .from('exam_sessions')
@@ -80,6 +84,17 @@ export async function GET() {
       .order('completed_at', { ascending: false })
       .limit(1)
       .maybeSingle(),
+    // Same shape /api/stats fetches for the full Victory Path chart, minus
+    // section_results — the home page only needs the compact headline, not
+    // the full chart, but the forecast math needs the whole score history.
+    supabase
+      .from('exam_sessions')
+      .select('score, completed_at')
+      .eq('user_id', owner)
+      .eq('is_practice', false)
+      .not('completed_at', 'is', null)
+      .not('score', 'is', null)
+      .order('completed_at', { ascending: true }),
     supabase
       .from('exam_sessions')
       .select('id', { count: 'exact', head: true })
@@ -111,5 +126,6 @@ export async function GET() {
     activityUnitsToday: todayRowRes.data?.activity_units ?? 0,
     reviewClearedToday: todayRowRes.data?.review_cleared ?? 0,
     dailyActivityTarget: goalRes?.data?.daily_activity_target ?? DEFAULT_DAILY_ACTIVITY_TARGET,
+    forecast: computeForecast(forecastRowsRes.data ?? [], VICTORY_PATH_TARGET_SCORE),
   } satisfies DashboardSummary);
 }

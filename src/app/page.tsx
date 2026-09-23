@@ -10,6 +10,7 @@ import { ReviewQueueCard } from '@/components/home/ReviewQueueCard';
 import { StatsCard } from '@/components/home/StatsCard';
 import { StreakCelebration } from '@/components/home/StreakCelebration';
 import { TodaySessionCta } from '@/components/home/TodaySessionCta';
+import { VictoryPathSummary } from '@/components/home/VictoryPathSummary';
 
 const LEARN_LINKS_BEFORE = [
   { href: '/practice',   icon: PenLine,  title: 'תרגול ממוקד', sub: 'לפי סוג שאלה' },
@@ -87,6 +88,7 @@ export default function HomePage() {
                 <span className="text-exam-ink-soft text-xs">איפה אתה ביחס לכולם</span>
               </Link>
             </div>
+            <div className="mt-3"><VictoryPathSummary /></div>
           </section>
 
           {/* Tips — full-width row */}

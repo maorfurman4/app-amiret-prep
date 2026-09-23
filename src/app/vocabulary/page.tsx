@@ -798,6 +798,8 @@ function VocabularyContent() {
   const tx = animating === 'right' ? 400 : animating === 'left' ? -400 : dragX;
   const knewOpacity = Math.min(1, Math.max(0, (animating === 'right' ? 1 : dragX) / 100));
   const unknownOpacity = Math.min(1, Math.max(0, (animating === 'left' ? 1 : -dragX) / 100));
+  // The face clears out under the swipe color before the label is strong.
+  const faceOpacity = 1 - Math.min(1, 2 * Math.max(knewOpacity, unknownOpacity));
 
   const categoryCounts = allWords.reduce<Record<string, number>>((acc, w) => { acc[w.category] = (acc[w.category] ?? 0) + 1; return acc; }, {});
   const categories = [...new Set(allWords.map(w => w.category))].filter(c => categoryCounts[c] >= 5).sort();
@@ -1037,10 +1039,33 @@ function VocabularyContent() {
                 {/* Difficulty */}
                 <div>
                   <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">רמה</div>
-                  <div className="flex gap-2 flex-wrap">
-                    {[0, 1, 2, 3, 4, 5].map(d => (
-                      <button key={d} onClick={() => setFilterDiff(d === filterDiff ? 0 : d)} className={`w-10 h-10 rounded-xl text-xs font-bold border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.9] flex items-center justify-center ${filterDiff === d && d !== 0 ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : d === 0 ? 'bg-exam-surface text-exam-ink-soft border-exam-border text-[10px]' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{d === 0 ? 'הכל' : <StarRow n={d} size={10} />}</button>
-                    ))}
+                  {/* Six even columns: "all" + levels 1–5, each a number with a
+                      single star — a full 5-star row can't fit a chip this size. */}
+                  <div className="grid grid-cols-6 gap-2" dir="rtl">
+                    {[0, 1, 2, 3, 4, 5].map(d => {
+                      const selected = filterDiff === d;
+                      return (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => setFilterDiff(d === filterDiff ? 0 : d)}
+                          aria-pressed={selected}
+                          aria-label={d === 0 ? 'כל הרמות' : `רמה ${d} מתוך 5`}
+                          className={`h-11 rounded-xl border text-sm font-bold inline-flex items-center justify-center gap-1 transition-[background-color,color,border-color,box-shadow,transform] duration-300 ease-spring active:scale-[0.92] ${
+                            selected
+                              ? 'bg-exam-accent text-exam-accent-ink border-exam-accent shadow-surface'
+                              : 'bg-exam-surface text-exam-ink border-exam-border hover:border-exam-border-strong hover:shadow-surface'
+                          }`}
+                        >
+                          {d === 0 ? 'הכל' : (
+                            <>
+                              <span className="tabular-nums">{d}</span>
+                              <Star className={`w-3.5 h-3.5 fill-current ${selected ? '' : 'text-exam-alt'}`} aria-hidden />
+                            </>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -1109,9 +1134,20 @@ function VocabularyContent() {
                   onTouchMove={e => onDragMove(e.touches[0].clientX)}
                   onTouchEnd={onDragEnd}
                 >
-                  {/* Swipe overlays */}
-                  <div className="absolute inset-0 rounded-2xl bg-exam-sage-strong flex items-center justify-center gap-2 text-on-emerald text-2xl font-bold pointer-events-none" style={{ opacity: knewOpacity }}><Check strokeWidth={3} aria-hidden />ידעתי!</div>
-                  <div className="absolute inset-0 rounded-2xl bg-exam-wrong flex items-center justify-center gap-2 text-on-danger text-2xl font-bold pointer-events-none" style={{ opacity: unknownOpacity }}><X strokeWidth={3} aria-hidden />לא ידעתי</div>
+                  {/* Swipe feedback: the whole card turns green/red with the
+                      label written straight on the color, the way the card
+                      always looked. It sits ABOVE the card content (z-20) —
+                      the animated card face forms its own layer, so an
+                      un-indexed overlay used to paint under the word and the
+                      stars — and the face fades out twice as fast as the
+                      color fades in, so nothing shows through the label. The label
+                      leans toward the card edge that stays on screen. */}
+                  <div className="absolute inset-0 z-20 rounded-2xl bg-exam-sage-strong flex items-center justify-center gap-2 pr-24 text-on-emerald text-3xl font-black pointer-events-none" style={{ opacity: knewOpacity }} aria-hidden>
+                    <Check className="w-8 h-8" strokeWidth={3} />ידעתי!
+                  </div>
+                  <div className="absolute inset-0 z-20 rounded-2xl bg-exam-wrong flex items-center justify-center gap-2 pl-24 text-on-danger text-3xl font-black pointer-events-none" style={{ opacity: unknownOpacity }} aria-hidden>
+                    <X className="w-8 h-8" strokeWidth={3} />לא ידעתי
+                  </div>
 
                   {/* Favorite button */}
                   <button
@@ -1122,7 +1158,7 @@ function VocabularyContent() {
                   ><Heart className="w-5 h-5" fill={favorites.has(current.id) ? 'currentColor' : 'none'} aria-hidden /></button>
 
                   {!flipped ? (
-                    <div key="front" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="ltr">
+                    <div key="front" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="ltr" style={{ opacity: faceOpacity }}>
                       <div className="flex items-center justify-center gap-1.5 mb-4">
                         <div className={`inline-block px-3 py-1 rounded-sm text-xs font-medium ${CATEGORY_COLORS[current.category] ?? 'bg-exam-paper-alt text-exam-ink-soft'}`}>
                           {CATEGORY_LABELS[current.category] ?? current.category}
@@ -1162,7 +1198,7 @@ function VocabularyContent() {
                       >הצג תרגום ←</button>
                     </div>
                   ) : (
-                    <div key="back" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="rtl">
+                    <div key="back" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="rtl" style={{ opacity: faceOpacity }}>
                       <div className="flex items-center justify-center gap-2 mb-1" dir="ltr">
                         <span className="font-serif text-lg font-bold text-exam-ink-soft">{current.word}</span>
                         <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>

@@ -5,16 +5,40 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Semantic roles; each filled status has an explicit foreground. */
+  --color-ivory: var(--exam-paper);
+  --color-ink: var(--exam-ink);
+  --color-emerald: var(--exam-sage);
+  --color-on-emerald: var(--on-emerald);
+  --color-amber: var(--exam-alt);
+  --color-on-amber: var(--on-amber);
+  --color-on-danger: var(--on-danger);
+  --shadow-surface: var(--depth-surface);
+  --shadow-raised: var(--depth-raised);
+  --shadow-overlay: var(--depth-overlay);
+  --shadow-pressed: var(--depth-pressed);
+  --shadow-progress: var(--depth-progress);
+  --text-display: 3rem;
+  --text-display--line-height: 1.08;
+  --text-display--font-weight: 800;
+  --text-display--letter-spacing: -0.025em;
+  --text-heading: 1.5rem;
+  --text-heading--line-height: 1.3;
+  --text-heading--font-weight: 700;
+  --text-body: 1rem;
+  --text-body--line-height: 1.65;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.45;
+  --text-label--font-weight: 600;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-heebo), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --font-heading: var(--font-heebo), system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   /* Serif for English exam content only (passage/question/options) — apply
      via the `font-serif` utility on those containers, never globally. */
   --font-serif: var(--font-lora), Georgia, 'Times New Roman', serif;
-  /* Academic-minimal exam palette (flat, paper-toned) — QuestionCard,
-     ExamTimer, SectionProgress and the exam-session shell only. */
+  /* Existing exam tokens remain compatible across learning screens. */
   --color-exam-paper: var(--exam-paper);
   --color-exam-surface: var(--exam-surface);
   --color-exam-paper-alt: var(--exam-paper-alt);
@@ -87,111 +111,95 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  color-scheme: light;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-
-  /* Academic-minimal exam palette — light */
-  --exam-paper: #F9F9F6;
+  --exam-paper: #FAF8F2;
   --exam-surface: #FFFFFF;
-  --exam-paper-alt: #F1EFE7;
-  --exam-ink: #21262F;
-  --exam-ink-soft: #646B78;
-  --exam-border: #D9D5C9;
-  --exam-border-strong: #B9B3A2;
-  --exam-sage: #4F7355;
-  --exam-sage-bg: #E7EEE3;
-  --exam-sage-strong: #3C5A40;
-  --exam-wrong: #9C4A3D;
-  --exam-wrong-bg: #F4E7E2;
-  --exam-alt: #8A6A2E;
-  --exam-alt-bg: #F2EAD8;
-  /* Filled/active state (current step, selected option, primary action) —
-     distinct from --exam-ink so it stays a usable fill in dark mode too
-     (ink itself flips light there, which breaks as a badge background). */
-  --exam-accent: #2B3450;
+  --exam-paper-alt: #F0EDE5;
+  --exam-ink: #202C38;
+  --exam-ink-soft: #586573;
+  --exam-border: #DCDDD5;
+  --exam-border-strong: #A4ACA7;
+  --exam-sage: #176648;
+  --exam-sage-bg: #E6F3EB;
+  --exam-sage-strong: #14563E;
+  --on-emerald: #FFFFFF;
+  --exam-wrong: #9C3E36;
+  --exam-wrong-bg: #FBECE7;
+  --on-danger: #FFFFFF;
+  --exam-alt: #855410;
+  --exam-alt-bg: #FFF0D4;
+  --on-amber: #FFFFFF;
+  --exam-accent: #283F5A;
   --exam-accent-ink: #FFFFFF;
+  --depth-surface: 0 1px 2px rgb(32 44 56 / 0.04), 0 4px 12px -4px rgb(32 44 56 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.8);
+  --depth-raised: 0 2px 4px rgb(32 44 56 / 0.04), 0 12px 28px -8px rgb(32 44 56 / 0.15), inset 0 1px 0 rgb(255 255 255 / 0.35);
+  --depth-overlay: 0 4px 12px rgb(32 44 56 / 0.08), 0 24px 64px -16px rgb(32 44 56 / 0.24), inset 0 1px 0 rgb(255 255 255 / 0.65);
+  --depth-pressed: inset 0 1px 3px rgb(32 44 56 / 0.16), inset 0 -1px 0 rgb(255 255 255 / 0.25);
+  --depth-progress: 0 0 16px rgb(23 102 72 / 0.12), 0 3px 8px rgb(23 102 72 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.7);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  color-scheme: dark;
+  --exam-paper: #171E25;
+  --exam-surface: #202830;
+  --exam-paper-alt: #2A333D;
+  --exam-ink: #F4F1E8;
+  --exam-ink-soft: #B6C1CD;
+  --exam-border: #3C4853;
+  --exam-border-strong: #647585;
+  --exam-sage: #79D8AF;
+  --exam-sage-bg: #16372C;
+  --exam-sage-strong: #96E5C1;
+  --on-emerald: #10271F;
+  --exam-wrong: #FFB4A7;
+  --exam-wrong-bg: #402923;
+  --on-danger: #3A1814;
+  --exam-alt: #F1C779;
+  --exam-alt-bg: #3A2D18;
+  --on-amber: #30200B;
+  --exam-accent: #B7C9F1;
+  --exam-accent-ink: #19283F;
+  --depth-surface: 0 1px 2px rgb(0 0 0 / 0.16), 0 5px 14px -4px rgb(0 0 0 / 0.25), inset 0 1px 0 rgb(255 255 255 / 0.05);
+  --depth-raised: 0 2px 6px rgb(0 0 0 / 0.2), 0 14px 32px -8px rgb(0 0 0 / 0.4), inset 0 1px 0 rgb(255 255 255 / 0.08);
+  --depth-overlay: 0 4px 14px rgb(0 0 0 / 0.24), 0 28px 64px -16px rgb(0 0 0 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.09);
+  --depth-pressed: inset 0 2px 4px rgb(0 0 0 / 0.28), inset 0 -1px 0 rgb(255 255 255 / 0.04);
+  --depth-progress: 0 0 18px rgb(121 216 175 / 0.15), 0 4px 12px rgb(0 0 0 / 0.2), inset 0 1px 0 rgb(255 255 255 / 0.1);
+}
 
-  /* Academic-minimal exam palette — dark (warm charcoal, not pure black) */
-  --exam-paper: #1C1E22;
-  --exam-surface: #23262B;
-  --exam-paper-alt: #292C32;
-  --exam-ink: #EDEBE3;
-  --exam-ink-soft: #A6A9AE;
-  --exam-border: #3A3D42;
-  --exam-border-strong: #4C4F55;
-  --exam-sage: #8FB393;
-  --exam-sage-bg: #26312A;
-  --exam-sage-strong: #6E9873;
-  --exam-wrong: #D08678;
-  --exam-wrong-bg: #362522;
-  --exam-alt: #C7A65E;
-  --exam-alt-bg: #332C1C;
-  --exam-accent: #5A6D9E;
-  --exam-accent-ink: #FFFFFF;
+/* Resolve aliases on both theme roots so primitives and legacy screens agree. */
+:root, .dark {
+  --background: var(--exam-paper);
+  --foreground: var(--exam-ink);
+  --card: var(--exam-surface);
+  --card-foreground: var(--exam-ink);
+  --popover: var(--exam-surface);
+  --popover-foreground: var(--exam-ink);
+  --primary: var(--exam-accent);
+  --primary-foreground: var(--exam-accent-ink);
+  --secondary: var(--exam-paper-alt);
+  --secondary-foreground: var(--exam-ink);
+  --muted: var(--exam-paper-alt);
+  --muted-foreground: var(--exam-ink-soft);
+  --accent: var(--exam-paper-alt);
+  --accent-foreground: var(--exam-ink);
+  --destructive: var(--exam-wrong);
+  --border: var(--exam-border);
+  --input: var(--exam-border-strong);
+  --ring: var(--exam-accent);
+  --chart-1: var(--exam-accent);
+  --chart-2: var(--exam-sage);
+  --chart-3: var(--exam-alt);
+  --chart-4: var(--exam-wrong);
+  --chart-5: var(--exam-ink-soft);
+  --sidebar: var(--exam-surface);
+  --sidebar-foreground: var(--exam-ink);
+  --sidebar-primary: var(--exam-accent);
+  --sidebar-primary-foreground: var(--exam-accent-ink);
+  --sidebar-accent: var(--exam-paper-alt);
+  --sidebar-accent-foreground: var(--exam-ink);
+  --sidebar-border: var(--exam-border);
+  --sidebar-ring: var(--exam-accent);
 }
 
 @layer base {
@@ -199,7 +207,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-body;
   }
   html {
     @apply font-sans;
@@ -237,12 +245,6 @@
 .hover\:bg-blue-700:hover, .hover\:bg-blue-600:hover, .hover\:bg-blue-400:hover { background-color: var(--exam-accent); filter: brightness(1.1); }
 .hover\:text-blue-700:hover, .hover\:text-blue-800:hover { color: var(--exam-accent); }
 .focus\:ring-blue-400:focus { --tw-ring-color: var(--exam-accent); }
-
-/* Flat design: no soft drop-shadows anywhere in the app */
-.shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl { box-shadow: none; }
-
-/* Tighter, more academic corner radius than the default Tailwind scale */
-.rounded-xl, .rounded-2xl, .rounded-3xl { border-radius: 0.5rem; }
 
 :where(a, button, input, select, textarea):focus-visible {
   outline: 2px solid var(--exam-accent);

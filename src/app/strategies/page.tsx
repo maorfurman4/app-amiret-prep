@@ -469,21 +469,21 @@ const COLOR_MAP: Record<string, { bg: string; border: string; badge: string; hea
     border: 'border-exam-accent/30',
     badge: 'bg-exam-accent/10 text-exam-accent',
     heading: 'text-exam-accent',
-    step: 'bg-exam-accent',
+    step: 'bg-exam-accent text-exam-accent-ink',
   },
   purple: {
     bg: 'bg-exam-alt-bg',
     border: 'border-exam-alt/40',
     badge: 'bg-exam-alt-bg text-exam-alt',
     heading: 'text-exam-alt',
-    step: 'bg-exam-alt',
+    step: 'bg-exam-alt text-on-amber',
   },
   green: {
     bg: 'bg-exam-sage-bg',
     border: 'border-exam-sage/40',
     badge: 'bg-exam-sage-bg text-exam-sage-strong',
     heading: 'text-exam-sage-strong',
-    step: 'bg-exam-sage-strong',
+    step: 'bg-exam-sage-strong text-on-emerald',
   },
 };
 
@@ -559,7 +559,7 @@ function QuestionGuideDetail({ guide }: { guide: QuestionGuide }) {
       <div className="flex items-center gap-3 mb-4">
         <div className={`w-12 h-12 rounded-md flex items-center justify-center ${colors.badge}`}><guide.icon className="w-6 h-6" strokeWidth={1.75} aria-hidden /></div>
         <div>
-          <h1 className="text-xl font-black text-exam-ink leading-tight">{guide.titleHe}</h1>
+          <h1 className="text-xl font-bold text-exam-ink leading-tight">{guide.titleHe}</h1>
           <span className="text-xs text-exam-ink-soft font-medium">{guide.titleEn}</span>
         </div>
       </div>
@@ -573,7 +573,7 @@ function QuestionGuideDetail({ guide }: { guide: QuestionGuide }) {
         <ol className="space-y-3">
           {guide.approach.map((s, i) => (
             <li key={i} className="flex items-start gap-2.5">
-              <span className={`w-5 h-5 rounded-full ${colors.step} text-white text-[11px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5`}>{i + 1}</span>
+              <span className={`w-5 h-5 rounded-full ${colors.step} text-[11px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5`}>{i + 1}</span>
               <div>
                 <span className="font-semibold text-exam-ink text-sm">{s.step}</span>
                 <p className="text-exam-ink-soft text-xs leading-relaxed mt-0.5">{s.detail}</p>
@@ -643,7 +643,7 @@ export default function StrategiesPage() {
 
       {/* Header */}
       <div className="bg-exam-surface border-b border-exam-border px-4 py-5">
-        <h1 className="text-2xl font-black text-exam-ink flex items-center gap-2"><Brain className="w-6 h-6" aria-hidden />המדריך המלא לפתרון האמירנ&quot;ט</h1>
+        <h1 className="text-2xl font-bold text-exam-ink flex items-center gap-2"><Brain className="w-6 h-6" aria-hidden />המדריך המלא לפתרון האמירנ&quot;ט</h1>
         <p className="text-sm text-exam-ink-soft mt-1">
           בחר נושא — כל נושא ממוקד ומהיר לגלילה
         </p>
@@ -677,7 +677,7 @@ export default function StrategiesPage() {
 
             {topic === 'rules' && (
               <section>
-                <h2 className="text-lg font-black text-exam-ink mb-3">חוקי המשחק</h2>
+                <h2 className="text-lg font-bold text-exam-ink mb-3">חוקי המשחק</h2>
                 <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={RULES_INTRO} tone="intro" />
                 </div>
@@ -697,7 +697,7 @@ export default function StrategiesPage() {
 
             {topic === 'time' && (
               <section>
-                <h2 className="text-lg font-black text-exam-ink mb-3">תקציב הזמן שלך — כולל &quot;תקציב תקיעה&quot;</h2>
+                <h2 className="text-lg font-bold text-exam-ink mb-3">תקציב הזמן שלך — כולל &quot;תקציב תקיעה&quot;</h2>
                 <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={TIME_INTRO} tone="intro" />
                 </div>
@@ -731,7 +731,7 @@ export default function StrategiesPage() {
 
             {topic === 'connectors' && (
               <section>
-                <h2 className="text-lg font-black text-exam-ink mb-3">מילות הקישור שקובעות הכל</h2>
+                <h2 className="text-lg font-bold text-exam-ink mb-3">מילות הקישור שקובעות הכל</h2>
 
                 <div className="mb-6 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={CONNECTORS_INTRO} tone="intro" />
@@ -742,7 +742,7 @@ export default function StrategiesPage() {
                     <div key={cat.id}>
                       <div className="flex items-center gap-2.5 mb-2">
                         <span className={`w-9 h-9 rounded-md flex items-center justify-center ${CATEGORY_COLOR[cat.color]}`}><cat.icon className="w-4 h-4" strokeWidth={1.75} aria-hidden /></span>
-                        <h3 className="font-black text-exam-ink text-base">{cat.title}</h3>
+                        <h3 className="font-bold text-exam-ink text-base">{cat.title}</h3>
                       </div>
                       <div className="mb-3">
                         <TextBlock text={cat.intro} tone="body" />
@@ -777,7 +777,7 @@ export default function StrategiesPage() {
 
             {topic === 'invest' && (
               <section>
-                <h2 className="text-lg font-black text-exam-ink mb-3">איפה כן שווה &quot;להיתקע&quot;</h2>
+                <h2 className="text-lg font-bold text-exam-ink mb-3">איפה כן שווה &quot;להיתקע&quot;</h2>
                 <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={INVEST_INTRO} tone="intro" />
                 </div>
@@ -797,7 +797,7 @@ export default function StrategiesPage() {
 
             {topic === 'methods' && (
               <section>
-                <h2 className="text-lg font-black text-exam-ink mb-3">שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
+                <h2 className="text-lg font-bold text-exam-ink mb-3">שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
                 <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={METHODS_INTRO} tone="intro" />
                 </div>
@@ -814,7 +814,7 @@ export default function StrategiesPage() {
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-bold text-exam-ink text-sm">{m.title}</h3>
                         {m.recommended && (
-                          <span className="text-[10px] font-bold bg-exam-sage-strong text-white px-2 py-0.5 rounded-sm">מומלץ</span>
+                          <span className="text-[10px] font-bold bg-exam-sage-strong text-on-emerald px-2 py-0.5 rounded-sm">מומלץ</span>
                         )}
                       </div>
                       <div className="text-xs text-exam-ink-soft mb-2">{m.who}</div>
@@ -828,7 +828,7 @@ export default function StrategiesPage() {
 
             {topic === 'habits' && (
               <section>
-                <h2 className="text-lg font-black text-exam-ink mb-3">ההכנה שעובדת (לפי כל המכונים)</h2>
+                <h2 className="text-lg font-bold text-exam-ink mb-3">ההכנה שעובדת (לפי כל המכונים)</h2>
                 <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock
                     text='כל השיטות שראית עד כה (מילות קישור, שיטות עבודה לפי סוג, תזמון) הן מיומנויות — ומיומנות לא נקבעת בפעם אחת, היא נבנית בחזרות. ארבעת ההרגלים הבאים לא מחליפים את הידע האסטרטגי, אלא הופכים אותו לאוטומטי, כך שביום המבחן אתה לא צריך "לחשוב" על השיטה — אתה פשוט מיישם אותה.'

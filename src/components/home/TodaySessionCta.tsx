@@ -18,7 +18,7 @@ export function TodaySessionCta() {
   const due = data?.todayDueCount ?? 0;
 
   return (
-    <div className="w-full bg-exam-sage-bg border border-exam-sage/40 rounded-md overflow-hidden">
+    <div className="w-full bg-exam-sage-bg bg-linear-to-br from-exam-surface/40 to-transparent border border-exam-sage/40 rounded-2xl shadow-surface overflow-hidden">
       {data && (
         <div className="flex justify-center pt-4">
           <DailyRings
@@ -36,7 +36,7 @@ export function TodaySessionCta() {
         <Sparkles className="w-5 h-5" aria-hidden />
         התרגול היומי שלי
         {due > 0 && (
-          <span className="absolute top-2 left-4 min-w-[20px] h-5 px-1 flex items-center justify-center rounded-full bg-exam-sage-strong text-white text-[11px] font-bold">
+          <span className="absolute top-2 left-4 min-w-[20px] h-5 px-1 flex items-center justify-center rounded-full bg-exam-sage-strong text-on-emerald text-[11px] font-bold">
             {due > 99 ? '99+' : due}
           </span>
         )}

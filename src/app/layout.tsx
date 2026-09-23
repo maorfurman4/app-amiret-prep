@@ -5,10 +5,10 @@ import { BottomNav } from '@/components/BottomNav';
 import { ActivityGuardProvider } from '@/lib/activity-guard';
 
 // UI font (Hebrew + Latin) — used everywhere via --font-sans in globals.css.
-const heebo = Heebo({ subsets: ['hebrew', 'latin'], weight: ['400', '500', '600', '700', '800'], variable: '--font-heebo' });
+const heebo = Heebo({ subsets: ['hebrew', 'latin'], weight: ['400', '500', '600', '700', '800'], display: 'swap', variable: '--font-heebo' });
 // Exam-content serif — applied ONLY via the `font-serif` utility, scoped to
 // the English question/option/passage text inside QuestionCard. Never global.
-const lora = Lora({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-lora' });
+const lora = Lora({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap', variable: '--font-lora' });
 
 const SITE_URL = 'https://amiret-prep.vercel.app';
 const TITLE = '134+ | הכנה לאמירנ"ט';

@@ -168,7 +168,7 @@ export default function StatsPage() {
     <div className="min-h-screen bg-exam-paper" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
       <div className="max-w-2xl mx-auto space-y-6 py-8 px-4">
-        <h1 className="text-2xl font-black text-exam-ink">הסטטיסטיקה שלי</h1>
+        <h1 className="text-2xl font-bold text-exam-ink">הסטטיסטיקה שלי</h1>
 
         {/* Readiness report — ready / almost / not yet, with reasons */}
         {rawRows.length >= 1 && (() => {
@@ -200,14 +200,14 @@ export default function StatsPage() {
           if (timedQ > 0) reasons.push({ ok: overCap / timedQ <= 0.15, text: overCap === 0 ? 'קצב מצוין — אפס חריגות תקציב' : `${overCap} שאלות חרגו מתקציב הזמן` });
           const okCount = reasons.filter(r => r.ok).length;
           const verdict = okCount === reasons.length && rawRows.length >= 3 && avg3 >= 134
-            ? { label: 'מוכנות גבוהה לפי מדדי האתר', cls: 'bg-exam-sage-strong', desc: 'הביצועים יציבים והאומדן הפנימי מעל 134. זו אינה תחזית ציון רשמית.' }
+            ? { label: 'מוכנות גבוהה לפי מדדי האתר', cls: 'bg-exam-sage-strong text-on-emerald', desc: 'הביצועים יציבים והאומדן הפנימי מעל 134. זו אינה תחזית ציון רשמית.' }
             : avg3 >= 120 && rawRows.length >= 3
-            ? { label: 'כמעט שם', cls: 'bg-exam-alt', desc: 'הבסיס חזק — סגור את הפערים שמסומנים למטה.' }
-            : { label: 'עוד לא — ממשיכים לעבוד', cls: 'bg-exam-ink-soft', desc: 'תוכנית: סימולציית פרקי הליבה + תרגול חולשה ממוקד כל יום.' };
+            ? { label: 'כמעט שם', cls: 'bg-exam-alt text-on-amber', desc: 'הבסיס חזק — סגור את הפערים שמסומנים למטה.' }
+            : { label: 'עוד לא — ממשיכים לעבוד', cls: 'bg-exam-paper-alt text-exam-ink', desc: 'תוכנית: סימולציית פרקי הליבה + תרגול חולשה ממוקד כל יום.' };
           return (
             <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
               <div className="flex items-center gap-3 mb-1">
-                <span className={`px-3 py-1 rounded-sm text-white text-sm font-bold ${verdict.cls}`}>{verdict.label}</span>
+                <span className={`px-3 py-1 rounded-sm text-sm font-bold ${verdict.cls}`}>{verdict.label}</span>
                 <h2 className="font-bold text-exam-ink text-sm">מדד מוכנות פנימי</h2>
               </div>
               <p className="text-xs text-exam-ink-soft mb-3">{verdict.desc}</p>
@@ -231,7 +231,7 @@ export default function StatsPage() {
             { label: 'ממוצע', value: stats.avg_score ? Math.round(stats.avg_score) : '—' },
           ].map(card => (
             <div key={card.label} className="bg-exam-surface rounded-md p-4 border border-exam-border text-center">
-              <div className="text-2xl font-black text-exam-ink">{card.value}</div>
+              <div className="text-2xl font-bold text-exam-ink">{card.value}</div>
               <div className="text-xs text-exam-ink-soft mt-1">{card.label}</div>
             </div>
           ))}
@@ -241,7 +241,7 @@ export default function StatsPage() {
         {classification && stats.best_score && (
           <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
             <div className="text-sm text-exam-ink-soft mb-1">ציון מקסימלי</div>
-            <div className="text-4xl font-black text-exam-ink">{stats.best_score}</div>
+            <div className="text-4xl font-bold text-exam-ink">{stats.best_score}</div>
             <div className={`text-lg font-bold mt-1 ${classification.color}`}>
               {classification.label} — {classification.description}
             </div>
@@ -275,7 +275,7 @@ export default function StatsPage() {
             <div className="bg-exam-surface rounded-md p-5 border border-exam-border">
               <div className="flex items-center justify-between mb-1">
                 <h2 className="font-bold text-exam-ink flex items-center gap-2"><Target className="w-4 h-4" aria-hidden />הדרך ל-134+</h2>
-                {reached && <span className="text-xs font-bold bg-exam-sage-strong text-white px-2 py-0.5 rounded-sm inline-flex items-center gap-1"><PartyPopper className="w-3 h-3" aria-hidden />האומדן הגיע ל-134+</span>}
+                {reached && <span className="text-xs font-bold bg-exam-sage-strong text-on-emerald px-2 py-0.5 rounded-sm inline-flex items-center gap-1"><PartyPopper className="w-3 h-3" aria-hidden />האומדן הגיע ל-134+</span>}
               </div>
               <p className="text-xs text-exam-ink-soft mb-4">134 הוא סף פטור נפוץ; הנתונים כאן הם אומדן פנימי ולא ציון רשמי</p>
               {/* Progress to goal */}
@@ -289,7 +289,7 @@ export default function StatsPage() {
               </div>
               <div className="grid grid-cols-2 gap-3 text-center">
                 <div className="bg-exam-paper-alt rounded-sm p-3">
-                  <div className="text-2xl font-black text-exam-ink">{reached ? <Check className="w-6 h-6 mx-auto" strokeWidth={3} aria-hidden /> : gap}</div>
+                  <div className="text-2xl font-bold text-exam-ink">{reached ? <Check className="w-6 h-6 mx-auto" strokeWidth={3} aria-hidden /> : gap}</div>
                   <div className="text-xs text-exam-ink-soft mt-0.5">{reached ? 'עברת את היעד' : 'נקודות עד היעד'}</div>
                 </div>
                 <div className="bg-exam-paper-alt rounded-sm p-3">
@@ -300,12 +300,12 @@ export default function StatsPage() {
                     </>
                   ) : examsToGo !== null ? (
                     <>
-                      <div className="text-2xl font-black text-exam-ink">~{examsToGo}</div>
+                      <div className="text-2xl font-bold text-exam-ink">~{examsToGo}</div>
                       <div className="text-xs text-exam-ink-soft mt-0.5">מבחנים עד היעד בקצב הנוכחי (+{slope.toFixed(1)} נק׳ למבחן)</div>
                     </>
                   ) : (
                     <>
-                      <div className="text-2xl font-black text-exam-ink-soft">—</div>
+                      <div className="text-2xl font-bold text-exam-ink-soft">—</div>
                       <div className="text-xs text-exam-ink-soft mt-0.5">{hist.length < 2 ? 'עוד מבחן אחד ונחשב מגמה' : 'המגמה עדיין לא עולה — התמקד בחולשות למטה'}</div>
                     </>
                   )}
@@ -426,7 +426,7 @@ export default function StatsPage() {
                       : 'text-exam-wrong bg-exam-wrong-bg border-exam-wrong/40';
                     return (
                       <div key={diff} className={`p-3 rounded-sm border text-center ${color}`}>
-                        <div className="text-xl font-black">{pct}%</div>
+                        <div className="text-xl font-bold">{pct}%</div>
                         <div className="text-xs font-semibold mt-0.5">{DIFFICULTY_LABELS[diff]}</div>
                         <div className="text-xs opacity-70 mt-0.5">{data.correct}/{data.total}</div>
                       </div>

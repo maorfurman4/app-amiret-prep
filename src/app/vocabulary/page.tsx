@@ -836,7 +836,7 @@ function VocabularyContent() {
             <Heart className="w-4 h-4" aria-hidden />
             <span>מועדפים</span>
             {favorites.size > 0 && (
-              <span className="bg-exam-wrong text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              <span className="bg-exam-wrong text-on-danger text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                 {favorites.size}
               </span>
             )}
@@ -912,7 +912,7 @@ function VocabularyContent() {
                             onClick={() => removeFavorite(w.id)}
                             aria-label={`הסר את ${w.word} מהמועדפים`}
                             title="הסר מהמועדפים"
-                            className="flex items-center gap-1 px-2 py-1 rounded-sm text-exam-wrong hover:text-white hover:bg-exam-wrong border border-exam-wrong/40 text-xs font-semibold transition-colors"
+                            className="flex items-center gap-1 px-2 py-1 rounded-sm text-exam-wrong hover:text-on-danger hover:bg-exam-wrong border border-exam-wrong/40 text-xs font-semibold transition-colors"
                           >
                             <Trash2 className="w-3.5 h-3.5" aria-hidden />
                             <span>הסר</span>
@@ -1104,8 +1104,8 @@ function VocabularyContent() {
                   onTouchEnd={onDragEnd}
                 >
                   {/* Swipe overlays */}
-                  <div className="absolute inset-0 rounded-md bg-exam-sage-strong flex items-center justify-center gap-2 text-white text-2xl font-black pointer-events-none" style={{ opacity: knewOpacity }}><Check strokeWidth={3} aria-hidden />ידעתי!</div>
-                  <div className="absolute inset-0 rounded-md bg-exam-wrong flex items-center justify-center gap-2 text-white text-2xl font-black pointer-events-none" style={{ opacity: unknownOpacity }}><X strokeWidth={3} aria-hidden />לא ידעתי</div>
+                  <div className="absolute inset-0 rounded-md bg-exam-sage-strong flex items-center justify-center gap-2 text-on-emerald text-2xl font-bold pointer-events-none" style={{ opacity: knewOpacity }}><Check strokeWidth={3} aria-hidden />ידעתי!</div>
+                  <div className="absolute inset-0 rounded-md bg-exam-wrong flex items-center justify-center gap-2 text-on-danger text-2xl font-bold pointer-events-none" style={{ opacity: unknownOpacity }}><X strokeWidth={3} aria-hidden />לא ידעתי</div>
 
                   {/* Favorite button */}
                   <button
@@ -1128,7 +1128,7 @@ function VocabularyContent() {
                         )}
                       </div>
                       <div className="flex items-center justify-center gap-3 mb-2">
-                        <div className="font-serif text-5xl font-black text-exam-ink leading-tight">{current.word}</div>
+                        <div className="font-serif text-5xl font-bold text-exam-ink leading-tight">{current.word}</div>
                         <button
                           onClick={e => { e.stopPropagation(); speak(current.word); }}
                           className="hover:scale-110 transition-transform text-exam-ink-soft"
@@ -1161,7 +1161,7 @@ function VocabularyContent() {
                         <span className="font-serif text-lg font-bold text-exam-ink-soft">{current.word}</span>
                         <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>
                       </div>
-                      <div className="text-3xl font-black text-exam-accent mb-3">{current.hebrew_translation}</div>
+                      <div className="text-3xl font-bold text-exam-accent mb-3">{current.hebrew_translation}</div>
                       <p className="text-exam-ink-soft text-sm leading-relaxed mb-4">{current.definition}</p>
                       {current.example_sentence && (
                         <div className="font-serif p-3 bg-exam-paper-alt border border-exam-border rounded-sm text-xs text-exam-ink-soft italic leading-relaxed text-left" dir="ltr">
@@ -1281,8 +1281,8 @@ function VocabularyContent() {
               <div className="py-6">
                 <div className="text-center mb-5">
                   <Target className="w-10 h-10 mx-auto mb-3 text-exam-accent" strokeWidth={1.5} aria-hidden />
-                  <div className="text-2xl font-black text-exam-ink mb-1">סיימת את החידון!</div>
-                  <div className="text-4xl font-black text-exam-accent mb-1">{quizScore.correct} / {quizScore.total}</div>
+                  <div className="text-2xl font-bold text-exam-ink mb-1">סיימת את החידון!</div>
+                  <div className="text-4xl font-bold text-exam-accent mb-1">{quizScore.correct} / {quizScore.total}</div>
                   <p className="text-exam-ink-soft text-sm flex items-center justify-center gap-1.5">
                     {quizScore.correct === quizScore.total
                       ? <><Trophy className="w-4 h-4" aria-hidden />מושלם!</>
@@ -1363,7 +1363,7 @@ function VocabularyContent() {
                       aria-pressed={favorites.has(quizDeck[quizIndex].id)}
                     ><Heart className="w-5 h-5" fill={favorites.has(quizDeck[quizIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>
                     <div className="flex items-center gap-2" dir="ltr">
-                      <span className="font-serif text-3xl font-black text-exam-ink">{quizDeck[quizIndex].word}</span>
+                      <span className="font-serif text-3xl font-bold text-exam-ink">{quizDeck[quizIndex].word}</span>
                       <button onClick={() => speak(quizDeck[quizIndex].word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
                     </div>
                   </div>
@@ -1478,8 +1478,8 @@ function VocabularyContent() {
               <div className="py-6">
                 <div className="text-center mb-6">
                   <Clock className="w-10 h-10 mx-auto mb-3 text-exam-accent" strokeWidth={1.5} aria-hidden />
-                  <div className="text-2xl font-black text-exam-ink mb-1">המבחן הסתיים!</div>
-                  <div className="text-5xl font-black text-exam-accent mb-1">{timedScore}/{timedDeck.length}</div>
+                  <div className="text-2xl font-bold text-exam-ink mb-1">המבחן הסתיים!</div>
+                  <div className="text-5xl font-bold text-exam-accent mb-1">{timedScore}/{timedDeck.length}</div>
                   <p className="text-exam-ink-soft text-sm flex items-center justify-center gap-1.5">
                     {timedScore === timedDeck.length
                       ? <><Trophy className="w-4 h-4" aria-hidden />מושלם!</>
@@ -1566,7 +1566,7 @@ function VocabularyContent() {
                       aria-pressed={favorites.has(timedDeck[timedIndex].id)}
                     ><Heart className="w-5 h-5" fill={favorites.has(timedDeck[timedIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>
                     <div className="flex items-center gap-2" dir="ltr">
-                      <span className="font-serif text-3xl font-black text-exam-ink">{timedDeck[timedIndex].word}</span>
+                      <span className="font-serif text-3xl font-bold text-exam-ink">{timedDeck[timedIndex].word}</span>
                       <button onClick={() => speak(timedDeck[timedIndex].word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
                     </div>
                   </div>

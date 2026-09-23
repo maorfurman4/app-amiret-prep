@@ -20,7 +20,7 @@ const LEARN_LINKS_AFTER = [
   { href: '/strategies', icon: Brain, title: 'אסטרטגיות', sub: 'איך לגשת למבחן' },
 ];
 
-const CARD_CLASSES = 'flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-md text-center transition-colors';
+const CARD_CLASSES = 'flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed text-center transition-[background-color,border-color,box-shadow] duration-200';
 
 export default function HomePage() {
   return (
@@ -37,14 +37,14 @@ export default function HomePage() {
 
           <div className="text-center">
             <GraduationCap className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
-            <h1 className="text-5xl font-black mb-2 tracking-tight" dir="ltr">
+            <h1 className="text-display mb-2" dir="ltr">
               134<span className="text-exam-accent">+</span>
             </h1>
             <HeroTagline />
           </div>
 
           {/* Primary action */}
-          <Link href="/exam" className="w-full py-4 bg-exam-accent hover:opacity-90 rounded-md text-xl font-bold text-center text-exam-accent-ink transition-opacity flex items-center justify-center gap-2">
+          <Link href="/exam" className="w-full py-4 bg-exam-accent hover:opacity-90 rounded-2xl shadow-raised active:shadow-pressed text-xl font-bold text-center text-exam-accent-ink transition-opacity flex items-center justify-center gap-2">
             <Target className="w-5 h-5" aria-hidden />
             התחל מבחן
           </Link>
@@ -57,7 +57,7 @@ export default function HomePage() {
 
           {/* Learning & practice */}
           <section>
-            <h2 className="text-sm font-semibold text-exam-ink-soft mb-2 pr-1">לימוד ותרגול</h2>
+            <h2 className="text-label text-exam-ink-soft mb-2 pr-1">לימוד ותרגול</h2>
             <div className="grid grid-cols-2 gap-3">
               {LEARN_LINKS_BEFORE.map(l => (
                 <Link key={l.href} href={l.href} className={CARD_CLASSES}>
@@ -79,7 +79,7 @@ export default function HomePage() {
 
           {/* Progress & comparison */}
           <section>
-            <h2 className="text-sm font-semibold text-exam-ink-soft mb-2 pr-1">מעקב והתקדמות</h2>
+            <h2 className="text-label text-exam-ink-soft mb-2 pr-1">מעקב והתקדמות</h2>
             <div className="grid grid-cols-2 gap-3">
               <StatsCard />
               <Link href="/leaderboard" className={CARD_CLASSES}>

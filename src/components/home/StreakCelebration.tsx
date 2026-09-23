@@ -56,13 +56,13 @@ export function StreakCelebration() {
         onClick={e => e.stopPropagation()}
       >
         <Flame className="w-16 h-16 mx-auto mb-3 text-exam-alt animate-streak-flicker" fill="currentColor" aria-hidden />
-        <div className="text-3xl font-black text-exam-alt mb-1 tabular-nums">
+        <div className="text-3xl font-bold text-exam-alt mb-1 tabular-nums">
           {streak} {streak === 1 ? 'יום רצוף' : 'ימים רצופים'}
         </div>
         <p className="text-exam-ink-soft text-sm mb-6">כל הכבוד! ממשיכים ככה</p>
         <button
           onClick={dismiss}
-          className="w-full py-3 bg-exam-alt hover:opacity-90 text-white rounded-sm font-bold transition-opacity"
+          className="w-full py-3 bg-exam-alt hover:opacity-90 text-on-amber rounded-sm font-bold transition-opacity"
         >
           המשך
         </button>

@@ -87,7 +87,7 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-exam-paper py-10 px-4" dir="rtl">
       <div className="max-w-xl mx-auto space-y-6">
-        <h1 className="text-2xl font-black text-exam-ink flex items-center gap-2"><Settings className="w-6 h-6" aria-hidden />פאנל אדמין</h1>
+        <h1 className="text-2xl font-bold text-exam-ink flex items-center gap-2"><Settings className="w-6 h-6" aria-hidden />פאנל אדמין</h1>
         <p className="text-exam-ink-soft text-sm">
           שימוש ב-GPT-4o ליצירת שאלות ושמירה ישירה ל-Supabase.
           <strong> לא ישמש במהלך מבחן פעיל.</strong>
@@ -212,7 +212,7 @@ function BulkGenerateButton() {
       <button
         onClick={runBulk}
         disabled={running}
-        className="w-full py-3 bg-exam-sage-strong text-white rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
+        className="w-full py-3 bg-exam-sage-strong text-on-emerald rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
       >
         {running ? 'מייצר...' : <span className="inline-flex items-center gap-2"><Rocket className="w-4 h-4" aria-hidden />צור מאגר מלא</span>}
       </button>

@@ -101,7 +101,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         {/* Score card */}
         <div className="bg-exam-surface rounded-md p-8 border border-exam-border text-center">
           <div className="text-xs text-exam-ink-soft mb-1">אומדן פנימי של האתר</div>
-          <div className="text-6xl font-black text-exam-ink mb-2">{score}</div>
+          <div className="text-6xl font-bold text-exam-ink mb-2">{score}</div>
           <div className={`text-xl font-bold mb-1 ${classification.color}`}>{classification.label}</div>
           <div className="text-exam-ink-soft text-sm mb-6">{classification.description}</div>
           <div className="text-exam-ink font-medium">
@@ -208,7 +208,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 : 'text-exam-wrong bg-exam-wrong-bg border-exam-wrong/40';
               return (
                 <div key={type} className={`p-3 rounded-sm border text-center ${color}`}>
-                  <div className="text-2xl font-black">{correct}/{total}</div>
+                  <div className="text-2xl font-bold">{correct}/{total}</div>
                   <div className="text-xs font-semibold mt-1">{TYPE_LABELS[type] ?? type}</div>
                   <div className="text-xs opacity-75">{pct}%</div>
                 </div>

@@ -394,7 +394,7 @@ function PracticeContent() {
                 <div className="flex items-center gap-2">
                   <div className="text-lg font-bold text-exam-alt">חזרה על טעויות</div>
                   {reviewCount !== null && (
-                    <span className="px-2 py-0.5 bg-exam-alt text-white text-xs font-bold rounded-sm">{reviewCount}</span>
+                    <span className="px-2 py-0.5 bg-exam-alt text-on-amber text-xs font-bold rounded-sm">{reviewCount}</span>
                   )}
                 </div>
                 <div className="text-sm text-exam-alt leading-relaxed">חזור על שאלות שטעית בהן — מערכת חזרה מרווחת</div>
@@ -452,7 +452,7 @@ function PracticeContent() {
                   selectedDiff === opt.value ? 'border-exam-accent ring-1 ring-exam-accent/30' : 'border-exam-border hover:border-exam-border-strong'
                 }`}
               >
-                <div className="text-2xl font-black text-exam-ink">
+                <div className="text-2xl font-bold text-exam-ink">
                   {opt.value === 'random' ? <Dices className="w-6 h-6 mx-auto" aria-hidden /> : opt.label}
                 </div>
                 <div className="text-xs font-semibold text-exam-ink mt-1">{opt.sublabel}</div>
@@ -488,7 +488,7 @@ function PracticeContent() {
                     : 'border-exam-border bg-exam-surface text-exam-ink hover:border-exam-border-strong'
                 }`}
               >
-                <div className="text-4xl font-black">{n}</div>
+                <div className="text-4xl font-bold">{n}</div>
                 <div className="text-sm mt-1">שאלות</div>
               </button>
             ))}
@@ -562,13 +562,13 @@ function PracticeContent() {
             <div className="flex items-center gap-3">
               {/* Timer (exam mode only) */}
               {examMode && !sectionMode && (
-                <div className={`font-mono text-xl font-black tabular-nums ${timerColor(timeLeft)}`}>
+                <div className={`font-mono text-xl font-bold tabular-nums ${timerColor(timeLeft)}`}>
                   {formatTime(timeLeft)}
                 </div>
               )}
               {/* Section timer — one hard countdown for the whole section */}
               {sectionMode && (
-                <div className={`font-mono text-xl font-black tabular-nums ${sectionTimeLeft <= 30 ? 'text-exam-wrong' : sectionTimeLeft <= 60 ? 'text-exam-alt' : 'text-exam-ink'}`}>
+                <div className={`font-mono text-xl font-bold tabular-nums ${sectionTimeLeft <= 30 ? 'text-exam-wrong' : sectionTimeLeft <= 60 ? 'text-exam-alt' : 'text-exam-ink'}`}>
                   {formatTime(sectionTimeLeft)}
                 </div>
               )}
@@ -661,7 +661,7 @@ function PracticeContent() {
               ) : (
                 <button
                   onClick={finishSection}
-                  className="px-5 py-2 rounded-sm bg-exam-sage-strong text-white hover:opacity-90 transition-opacity text-sm font-bold"
+                  className="px-5 py-2 rounded-sm bg-exam-sage-strong text-on-emerald hover:opacity-90 transition-opacity text-sm font-bold"
                 >
                   <span className="inline-flex items-center gap-1.5">סיים מקבץ <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span>
                 </button>
@@ -714,7 +714,7 @@ function PracticeContent() {
               </div>
             )}
             <div>
-              <div className={`text-5xl font-black ${color}`}>{correctCount}/{questions.length}</div>
+              <div className={`text-5xl font-bold ${color}`}>{correctCount}/{questions.length}</div>
               <div className="text-exam-ink-soft mt-1 text-lg">{pct}% נכון</div>
             </div>
             <div className="bg-exam-surface rounded-md border border-exam-border p-4 text-sm text-exam-ink-soft">
@@ -741,11 +741,11 @@ function PracticeContent() {
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <div className="text-sm text-exam-ink-soft">הרמה המשוערת שלך</div>
-                    <div className="text-2xl font-black text-exam-ink">רמה {diagLevel}/5</div>
+                    <div className="text-2xl font-bold text-exam-ink">רמה {diagLevel}/5</div>
                   </div>
                   <div className="text-left">
                     <div className="text-sm text-exam-ink-soft">אומדן פנימי</div>
-                    <div className={`text-2xl font-black ${diagClass.color}`}>~{diagScore}</div>
+                    <div className={`text-2xl font-bold ${diagClass.color}`}>~{diagScore}</div>
                     <div className={`text-xs font-semibold ${diagClass.color}`}>{diagClass.label}</div>
                   </div>
                 </div>

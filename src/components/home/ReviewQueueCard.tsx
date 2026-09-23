@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { RotateCcw } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
-const CARD_CLASSES = 'relative flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-md text-center transition-colors';
+const CARD_CLASSES = 'relative flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed text-center transition-[background-color,border-color,box-shadow] duration-200';
 
 /**
  * Same "חזרה חכמה" card as always, plus a due-count badge once the
@@ -18,7 +18,7 @@ export function ReviewQueueCard() {
   return (
     <Link href="/review-queue" className={CARD_CLASSES}>
       {due > 0 && (
-        <span className="absolute -top-1.5 -left-1.5 min-w-[20px] h-5 px-1 flex items-center justify-center rounded-full bg-exam-wrong text-white text-[11px] font-bold">
+        <span className="absolute -top-1.5 -left-1.5 min-w-[20px] h-5 px-1 flex items-center justify-center rounded-full bg-exam-wrong text-on-danger text-[11px] font-bold">
           {due > 99 ? '99+' : due}
         </span>
       )}

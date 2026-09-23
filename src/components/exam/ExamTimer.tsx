@@ -44,7 +44,7 @@ export function ExamTimer({ expiresAt, isPractice, onExpire, clockSkewMs }: Exam
 
   return (
     <div className={`flex flex-col items-center gap-1 px-4 py-2 rounded-sm border transition-colors ${
-      isExpired ? 'bg-exam-wrong border-exam-wrong text-white' :
+      isExpired ? 'bg-exam-wrong border-exam-wrong text-on-danger' :
       isWarning  ? 'bg-exam-wrong-bg border-exam-wrong text-exam-wrong' :
                    'bg-exam-paper-alt border-exam-border text-exam-ink'
     }`}>

@@ -27,7 +27,7 @@ export default async function LeaderboardPage() {
       <BackNav backHref="/" backLabel="דף הבית" />
       <div className="py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-black text-exam-ink mb-8 flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-exam-ink mb-8 flex items-center gap-2">
           <Trophy className="w-6 h-6" aria-hidden />
           לוח מובילים
         </h1>
@@ -52,7 +52,7 @@ export default async function LeaderboardPage() {
                   }`}
                 >
                   <div className={`w-8 h-8 flex-shrink-0 rounded-sm flex items-center justify-center text-sm font-bold ${
-                    top3 ? 'bg-exam-alt text-white' : 'bg-exam-paper-alt text-exam-ink-soft'
+                    top3 ? 'bg-exam-alt text-on-amber' : 'bg-exam-paper-alt text-exam-ink-soft'
                   }`}>
                     {i + 1}
                   </div>
@@ -60,7 +60,7 @@ export default async function LeaderboardPage() {
                     <div className="font-semibold text-exam-ink">{name}</div>
                     <div className="text-xs text-exam-ink-soft">{entry.total_exams} מבחנים | ממוצע {Math.round(entry.avg_score)}</div>
                   </div>
-                  <div className="text-2xl font-black text-exam-ink">{entry.best_score}</div>
+                  <div className="text-2xl font-bold text-exam-ink">{entry.best_score}</div>
                 </div>
               );
             })}

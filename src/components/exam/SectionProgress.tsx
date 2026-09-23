@@ -36,9 +36,9 @@ export function SectionProgress({ currentSection, completedSections }: SectionPr
           <div key={cfg.index} ref={isCurrent ? currentRef : undefined} className="flex items-center gap-1 flex-shrink-0">
             <div className="flex flex-col items-center">
               <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold border transition-colors ${
-                isDone    ? 'bg-exam-sage border-exam-sage text-white' :
+                isDone    ? 'bg-exam-sage border-exam-sage text-on-emerald' :
                 isCurrent ? (cfg.experimental
-                              ? 'bg-exam-alt border-exam-alt text-white'
+                              ? 'bg-exam-alt border-exam-alt text-on-amber'
                               : 'bg-exam-accent border-exam-accent text-exam-accent-ink') :
                 cfg.experimental ? 'bg-exam-surface border-exam-alt/50 text-exam-alt border-dashed' :
                             'bg-exam-surface border-exam-border text-exam-ink-soft'

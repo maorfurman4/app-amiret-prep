@@ -246,7 +246,7 @@ export default function TodaySessionPage() {
         <div className="max-w-lg mx-auto px-4 py-10">
           <div className="text-center mb-8">
             <Sparkles className="w-12 h-12 mx-auto mb-3 text-exam-accent" strokeWidth={1.5} aria-hidden />
-            <h1 className="text-2xl font-black text-exam-ink">הסשן של היום</h1>
+            <h1 className="text-2xl font-bold text-exam-ink">הסשן של היום</h1>
             <p className="text-exam-ink-soft text-sm mt-1">בנוי בשבילך — לחיצה אחת, בלי לבחור כלום</p>
           </div>
 
@@ -331,7 +331,7 @@ export default function TodaySessionPage() {
             {!flipped ? (
               <div dir="ltr">
                 <div className="flex items-center justify-center gap-2 mb-3">
-                  <div className="font-serif text-4xl font-black text-exam-ink">{currentWord.word}</div>
+                  <div className="font-serif text-4xl font-bold text-exam-ink">{currentWord.word}</div>
                   <button onClick={() => speak(currentWord.word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors">
                     <Volume2 className="w-5 h-5" aria-hidden />
                   </button>
@@ -345,7 +345,7 @@ export default function TodaySessionPage() {
             ) : (
               <div>
                 <div className="font-serif text-lg text-exam-ink-soft mb-1" dir="ltr">{currentWord.word}</div>
-                <div className="text-3xl font-black text-exam-accent">{currentWord.hebrew_translation}</div>
+                <div className="text-3xl font-bold text-exam-accent">{currentWord.hebrew_translation}</div>
               </div>
             )}
           </div>
@@ -371,10 +371,10 @@ export default function TodaySessionPage() {
       <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center max-w-sm space-y-4">
           <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
-          <h1 className="text-2xl font-black text-exam-ink">סיימת את הסשן של היום!</h1>
+          <h1 className="text-2xl font-bold text-exam-ink">סיימת את הסשן של היום!</h1>
           <div className="flex items-center justify-center gap-6 text-sm text-exam-ink-soft">
-            {pct !== null && <div><div className="text-2xl font-black text-exam-ink">{pct}%</div>שאלות נכונות</div>}
-            {vocabKnownCount > 0 && <div><div className="text-2xl font-black text-exam-ink">{vocabKnownCount}</div>מילים אושרו</div>}
+            {pct !== null && <div><div className="text-2xl font-bold text-exam-ink">{pct}%</div>שאלות נכונות</div>}
+            {vocabKnownCount > 0 && <div><div className="text-2xl font-bold text-exam-ink">{vocabKnownCount}</div>מילים אושרו</div>}
           </div>
           <div className="flex items-center justify-center gap-1.5 text-exam-ink-soft text-sm">
             <ThumbsUp className="w-4 h-4" aria-hidden />תחזור מחר לסשן הבא

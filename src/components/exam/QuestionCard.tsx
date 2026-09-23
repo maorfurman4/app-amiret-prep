@@ -123,8 +123,8 @@ export function QuestionCard({
               }`}
             >
               <span className={`flex-shrink-0 w-7 h-7 rounded-sm border flex items-center justify-center text-xs font-semibold font-sans ${
-                showCorrect  ? 'border-exam-sage bg-exam-sage text-white' :
-                isWrong      ? 'border-exam-wrong bg-exam-wrong text-white' :
+                showCorrect  ? 'border-exam-sage bg-exam-sage text-on-emerald' :
+                isWrong      ? 'border-exam-wrong bg-exam-wrong text-on-danger' :
                 isSelected   ? 'border-exam-accent bg-exam-accent text-exam-accent-ink' :
                                'border-exam-border text-exam-ink-soft'
               }`}>

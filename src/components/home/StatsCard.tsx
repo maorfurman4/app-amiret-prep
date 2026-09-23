@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { BarChart3 } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
-const CARD_CLASSES = 'flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-md text-center transition-colors';
+const CARD_CLASSES = 'flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed text-center transition-[background-color,border-color,box-shadow] duration-200';
 
 /**
  * Same "הסטטיסטיקה שלי" card, subtitle swapped for the last score once

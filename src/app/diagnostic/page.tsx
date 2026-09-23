@@ -152,7 +152,7 @@ export default function DiagnosticPage() {
         <div className="flex-1 flex items-center justify-center px-4 py-10">
           <div className="w-full max-w-lg text-center space-y-6">
             <Stethoscope className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
-            <h1 className="text-3xl font-black text-exam-ink">אבחון רמה מהיר</h1>
+            <h1 className="text-3xl font-bold text-exam-ink">אבחון רמה מהיר</h1>
             <p className="text-exam-ink-soft leading-relaxed">
               12 שאלות אדפטיביות בכ-10 דקות. השאלות מתאימות את עצמן לרמה שלך תוך כדי,
               ובסוף תקבל הערכת רמה פנימית והמלצה מאיפה להתחיל. זהו אבחון קצר, לא סימולציה של הבחינה.
@@ -218,12 +218,12 @@ export default function DiagnosticPage() {
         <div className="max-w-lg mx-auto space-y-5">
           <div className="text-center">
             <Stethoscope className="w-10 h-10 mx-auto mb-2 text-exam-ink" strokeWidth={1.5} aria-hidden />
-            <h1 className="text-2xl font-black text-exam-ink">תוצאות האבחון</h1>
+            <h1 className="text-2xl font-bold text-exam-ink">תוצאות האבחון</h1>
           </div>
 
           <div className="bg-exam-surface rounded-md p-6 border border-exam-border text-center">
             <div className="text-sm text-exam-ink-soft mb-1">הרמה המאובחנת שלך</div>
-            <div className="text-5xl font-black text-exam-ink mb-2">רמה {level}/5</div>
+            <div className="text-5xl font-bold text-exam-ink mb-2">רמה {level}/5</div>
             <div className={`text-lg font-bold ${band.color}`}>אומדן פנימי: ~{score} — {band.label}</div>
             <div className="text-xs text-exam-ink-soft mt-2">
               {totalCorrect}/{totalAnswered} נכונות · נותבת דרך רמות {levelsSeen.join(' ← ')}

@@ -334,7 +334,7 @@ export default function ReviewQueuePage() {
                   </div>
                   <button
                     onClick={() => handleStartReview(type)}
-                    className="px-3 py-2 bg-exam-alt text-white rounded-sm text-sm font-bold hover:opacity-90 transition-opacity flex-shrink-0"
+                    className="px-3 py-2 bg-exam-alt text-on-amber rounded-sm text-sm font-bold hover:opacity-90 transition-opacity flex-shrink-0"
                   >
                     תרגל ‹
                   </button>
@@ -378,7 +378,7 @@ export default function ReviewQueuePage() {
         <div className="w-full max-w-sm text-center space-y-6">
           {pct >= 80 ? <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden /> : pct >= 60 ? <ThumbsUp className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden /> : <BookOpen className="w-14 h-14 mx-auto text-exam-ink-soft" strokeWidth={1.5} aria-hidden />}
           <div>
-            <div className={`text-5xl font-black ${color}`}>{correctCount}/{questions.length}</div>
+            <div className={`text-5xl font-bold ${color}`}>{correctCount}/{questions.length}</div>
             <div className="text-exam-ink-soft mt-1 text-lg">{pct}% נכון בחזרה</div>
           </div>
           <div className="bg-exam-surface rounded-md border border-exam-border p-4 text-sm text-exam-ink-soft">
@@ -395,7 +395,7 @@ export default function ReviewQueuePage() {
             </button>
             <button
               onClick={() => fetchDueQuestions(guestId)}
-              className="w-full py-3 bg-exam-alt text-white rounded-sm font-bold hover:opacity-90 transition-opacity"
+              className="w-full py-3 bg-exam-alt text-on-amber rounded-sm font-bold hover:opacity-90 transition-opacity"
             >
               חזרה לרשימת קטגוריות
             </button>
@@ -465,9 +465,9 @@ export default function ReviewQueuePage() {
                         className="flex-1 flex items-center gap-3 text-right"
                       >
                         <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                          i === currentIndex ? 'bg-exam-alt text-white' :
-                          correct ? 'bg-exam-sage-strong text-white' :
-                          wrong ? 'bg-exam-wrong text-white' :
+                          i === currentIndex ? 'bg-exam-alt text-on-amber' :
+                          correct ? 'bg-exam-sage-strong text-on-emerald' :
+                          wrong ? 'bg-exam-wrong text-on-danger' :
                           'bg-exam-border text-exam-ink-soft'
                         }`}>
                           {correct ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : wrong ? <X className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : i + 1}
@@ -570,7 +570,7 @@ export default function ReviewQueuePage() {
           {showResult && (
             <button
               onClick={handleNext}
-              className="px-6 py-3 bg-exam-alt text-white rounded-sm font-bold hover:opacity-90 transition-opacity"
+              className="px-6 py-3 bg-exam-alt text-on-amber rounded-sm font-bold hover:opacity-90 transition-opacity"
             >
               {isLast ? <span className="inline-flex items-center gap-1.5">סיום חזרה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
             </button>

@@ -361,7 +361,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               <button
                 onClick={handleConfirmExit}
                 disabled={isSubmitting || isExiting}
-                className="px-4 py-2 rounded-sm bg-exam-wrong text-white text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="px-4 py-2 rounded-sm bg-exam-wrong text-on-danger text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50"
               >
                 {isExiting ? 'יוצא...' : 'כן, לצאת מהמבחן'}
               </button>
@@ -467,7 +467,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <button
               onClick={handleSubmitSection}
               disabled={isSubmitting}
-              className="px-5 py-2 rounded-sm bg-exam-sage-strong text-white hover:opacity-90 transition-opacity text-sm font-bold disabled:opacity-60"
+              className="px-5 py-2 rounded-sm bg-exam-sage-strong text-on-emerald hover:opacity-90 transition-opacity text-sm font-bold disabled:opacity-60"
             >
               {isSubmitting ? 'שולח...' : currentSection < SECTION_CONFIGS.length ? 'סיים פרק →' : (
               <span className="inline-flex items-center gap-1.5">סיים מבחן <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span>

@@ -188,7 +188,7 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <KeyRound className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
-          <h1 className="text-4xl font-black text-exam-ink tracking-tight" dir="ltr">
+          <h1 className="text-4xl font-bold text-exam-ink tracking-tight" dir="ltr">
             134<span className="text-exam-accent">+</span>
           </h1>
           <p className="text-exam-ink-soft text-sm mt-2">איפוס סיסמה</p>

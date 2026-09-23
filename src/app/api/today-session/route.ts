@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { computeWeakestType } from '@/lib/weakness';
 import { fetchUnseenQuestions, fetchUnseenRCQuestions } from '@/lib/question-history';
+import { shuffleAllOptions } from '@/lib/option-shuffle';
 import type { Question, QuestionType } from '@/types/exam';
 
 const REVIEW_LIMIT = 8;
@@ -109,9 +110,11 @@ export async function GET() {
   }
 
   return NextResponse.json({
-    reviewQuestions,
+    // Both question blocks are practice/review surfaces — options are
+    // reshuffled per serve (see src/lib/option-shuffle.ts).
+    reviewQuestions: shuffleAllOptions(reviewQuestions),
     vocabWords,
-    weakQuestions,
+    weakQuestions: shuffleAllOptions(weakQuestions),
     weakType: weakness?.type ?? null,
     weakLevel: weakness?.level ?? null,
     totalItems: reviewQuestions.length + vocabWords.length + weakQuestions.length,

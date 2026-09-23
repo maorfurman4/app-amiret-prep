@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { BackNav } from '@/components/BackNav';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { authFetch } from '@/lib/auth-fetch';
+import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
 import { createClient } from '@/lib/supabase';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { nextInterval, addDays } from '@/lib/spaced-repetition';
@@ -116,6 +117,11 @@ export default function TodaySessionPage() {
   const currentQuestions = phase === 'review' ? data?.reviewQuestions ?? [] : phase === 'weak' ? data?.weakQuestions ?? [] : [];
   const currentQuestion = currentQuestions[idx] ?? null;
 
+  // Per-question time on screen, for the responses log's latency.
+  const dwellRef = useRef(new DwellTimer());
+  const currentQuestionId = currentQuestion?.id ?? null;
+  useEffect(() => { dwellRef.current.focus(currentQuestionId); }, [currentQuestionId]);
+
   const handleAnswer = (optionIndex: number) => {
     if (selected !== null || !currentQuestion) return;
     setSelected(optionIndex);
@@ -123,6 +129,9 @@ export default function TodaySessionPage() {
     const correct = isCorrectAnswer(currentQuestion, optionIndex);
     if (correct) setCorrectCount(c => c + 1);
     setTotalAnswered(t => t + 1);
+    // Due reviews are review data; fresh weak-area questions are practice.
+    logResponses([responseEntry(currentQuestion, optionIndex, phase === 'review' ? 'review' : 'practice',
+      dwellRef.current.elapsedMs(currentQuestion.id))]);
     const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
     // Every answer feeds the same spaced-repetition review queue the rest
     // of the app uses — right extends the interval, wrong schedules it due

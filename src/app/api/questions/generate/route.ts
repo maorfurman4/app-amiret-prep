@@ -3,6 +3,7 @@ import { getServerClients } from '@/lib/supabase-server';
 import { isAdminEmail } from '@/lib/admin';
 import { generateQuestions, generatePassage } from '@/lib/ai';
 import type { QuestionType, DifficultyLevel } from '@/types/exam';
+import { BASELINE_A } from '@/lib/adaptive';
 
 /**
  * POST /api/questions/generate
@@ -49,7 +50,8 @@ export async function POST(req: NextRequest) {
       options: q.options,
       correct_answer: q.correct_answer,
       explanation: q.explanation,
-      a: q.a,
+      // Model-invented discrimination is discarded — see BASELINE_A.
+      a: BASELINE_A,
       b: q.b,
       c: q.c,
       difficulty_level: q.difficulty_level,
@@ -74,7 +76,7 @@ export async function POST(req: NextRequest) {
     options: q.options,
     correct_answer: q.correct_answer,
     explanation: q.explanation,
-    a: q.a,
+    a: BASELINE_A,
     b: q.b,
     c: q.c,
     difficulty_level: q.difficulty_level,

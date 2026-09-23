@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import type { Question } from '@/types/exam';
 import { recordWrongAnswers } from '@/lib/review-queue';
+import { shuffleAllOptions } from '@/lib/option-shuffle';
 
 const MAX_INTERVAL_DAYS = 30;
 
@@ -75,7 +76,9 @@ export async function GET() {
     .map(id => enriched.find(q => q.id === id))
     .filter(Boolean) as Question[];
 
-  return NextResponse.json({ questions: ordered, count: ordered.length });
+  // Fresh option order on every review, so a re-seen mistake can't be
+  // "remembered" by its position (see src/lib/option-shuffle.ts).
+  return NextResponse.json({ questions: shuffleAllOptions(ordered), count: ordered.length });
 }
 
 /**

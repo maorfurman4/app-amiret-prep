@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Stethoscope, PenLine, RotateCcw, Timer, BarChart3, Check, Lightbulb } from 'lucide-react';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
 import { classifyScore, isCorrectAnswer, type Question, type QuestionType } from '@/types/exam';
-import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
+import { estimateThetaEAP, thetaToScore, routeNextDifficulty, itemIrtParams } from '@/lib/adaptive';
 import { authFetch } from '@/lib/auth-fetch';
+import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
 import { ensureGuestIdentity } from '@/lib/guest';
 
 /**
@@ -65,9 +66,15 @@ export default function DiagnosticPage() {
   const [doneAnswers, setDoneAnswers] = useState<number[]>([]);
   const [levelsSeen, setLevelsSeen] = useState<number[]>([]);
 
+  // Per-question time on screen, for the responses log's latency.
+  const dwellRef = useRef(new DwellTimer());
+  useEffect(() => {
+    dwellRef.current.focus(phase === 'answering' ? questions[qIdx]?.id ?? null : null);
+  }, [phase, qIdx, questions]);
+
   const thetaOf = (qs: Question[], ans: number[]) =>
     qs.length === 0 ? 0 : estimateThetaEAP(
-      qs.map(q => ({ a: q.a, b: q.b, c: q.c })),
+      qs.map(itemIrtParams),
       qs.map((q, i) => (isCorrectAnswer(q, ans[i]) ? 1 : 0)),
     );
 
@@ -113,6 +120,14 @@ export default function DiagnosticPage() {
 
   const handleNext = () => {
     if (selected === null) return;
+    // Logged on commit ("next"), not on click — the diagnostic lets the
+    // student change their pick until then. θ is the running estimate the
+    // item was served under.
+    const answered = questions[qIdx];
+    logResponses([responseEntry(answered, selected, 'diagnostic', dwellRef.current.elapsedMs(answered.id), {
+      thetaBefore: thetaOf(doneQuestions, doneAnswers),
+      sectionIndex: stageIdx + 1,
+    })]);
     const newDoneQs = [...doneQuestions, questions[qIdx]];
     const newDoneAns = [...doneAnswers, selected];
     setDoneQuestions(newDoneQs);

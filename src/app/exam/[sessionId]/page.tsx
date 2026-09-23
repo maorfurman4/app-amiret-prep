@@ -178,9 +178,11 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         sessionId: sess.id,
         sectionIndex: sess.current_section_index,
         answers: sectionAnswers,
-        timings: sectionAnswers.map((_, i) => Math.round(
+        // Millisecond precision (as fractional seconds) — the server keeps
+        // the raw value for the responses log and rounds for display.
+        timings: sectionAnswers.map((_, i) => Math.round(1000 * (
           (timingsRef.current[i] ?? 0) + (i === prevIndexRef.current ? (Date.now() - lastTickRef.current) / 1000 : 0)
-        )),
+        )) / 1000),
       });
 
       // A shared-IP rate limit (school computer lab, office) shouldn't be

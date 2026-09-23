@@ -1,16 +1,17 @@
 'use client';
 
-import { Suspense, useState, useEffect, useCallback } from 'react';
+import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { classifyScore, isCorrectAnswer, type Question, type QuestionType } from '@/types/exam';
-import { estimateThetaEAP, thetaToScore, routeNextDifficulty } from '@/lib/adaptive';
+import { estimateThetaEAP, thetaToScore, routeNextDifficulty, itemIrtParams } from '@/lib/adaptive';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { useActivityGuard } from '@/lib/activity-guard';
 import { useCountdown } from '@/lib/use-countdown';
+import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
 import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon } from 'lucide-react';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
@@ -95,6 +96,12 @@ function PracticeContent() {
   const [answers, setAnswers]         = useState<(number | null)[]>([]);
   const [showResult, setShowResult]   = useState(false);
   const [reviewCount, setReviewCount] = useState<number | null>(null);
+
+  // Per-question time on screen, for the responses log's latency.
+  const dwellRef = useRef(new DwellTimer());
+  useEffect(() => {
+    dwellRef.current.focus(step === 'practicing' ? questions[currentIndex]?.id ?? null : null);
+  }, [step, currentIndex, questions]);
 
   // Guest identity is a signed, HttpOnly cookie the server issues — this
   // just makes sure it exists before the very first request on a page a
@@ -186,6 +193,7 @@ function PracticeContent() {
           body: JSON.stringify({ ids: qs.map(q => q.id) }),
         }).catch(() => {});
       }
+      dwellRef.current.reset();
       setQuestions(qs);
       setAnswers(Array(qs.length).fill(null));
       setCurrentIndex(0);
@@ -236,6 +244,8 @@ function PracticeContent() {
     if (!examMode) {
       setShowResult(true);
     }
+    const answered = questions[currentIndex];
+    if (answered) logResponses([responseEntry(answered, optionIndex, 'practice', dwellRef.current.elapsedMs(answered.id))]);
     // Track answers for spaced repetition (fire-and-forget)
     const isCorrect = questions[currentIndex] ? isCorrectAnswer(questions[currentIndex], optionIndex) : false;
     const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
@@ -248,6 +258,10 @@ function PracticeContent() {
 
   // Section mode: submit the whole section (manually or on timeout)
   const finishSection = useCallback(() => {
+    // Every question in the section is logged, blanks included — same as a
+    // real exam section, where an unanswered item was still presented.
+    logResponses(questions.map((q, i) =>
+      responseEntry(q, answers[i], 'practice', dwellRef.current.elapsedMs(q.id))));
     const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
     questions.forEach((q, i) => {
       authFetch('/api/review-queue', {
@@ -290,6 +304,12 @@ function PracticeContent() {
 
   // Keyboard shortcuts: 1-4 = select option, Space/Enter = next question
   const handleNext = useCallback(() => {
+    // Speed mode advances on timeout even with no answer — the question was
+    // still presented, so it's logged as a blank.
+    const leaving = questions[currentIndex];
+    if (examMode && !sectionMode && leaving && answers[currentIndex] === null) {
+      logResponses([responseEntry(leaving, null, 'practice', dwellRef.current.elapsedMs(leaving.id))]);
+    }
     if (currentIndex < questions.length - 1) {
       // Learn mode's "prev" can land on an already-answered question; moving
       // forward again must keep it locked/read-only (showResult=true) rather
@@ -309,7 +329,7 @@ function PracticeContent() {
         body: JSON.stringify({ guestId, source: 'practice', units: questions.length }),
       }).catch(() => {});
     }
-  }, [currentIndex, questions.length, answers, examMode, selectedType]);
+  }, [currentIndex, questions, answers, examMode, sectionMode, selectedType]);
 
   // Exam mode: per-question countdown, reset to a fresh deadline whenever
   // the question changes (questionExpiresAt is set both on first load and
@@ -696,10 +716,10 @@ function PracticeContent() {
 
     // Level diagnosis via IRT — same 3PL model the adaptive exam uses.
     // Most meaningful in mixed mode, where questions span all 5 levels.
-    const hasIrtParams = questions.every(q => isFinite(q.a) && isFinite(q.b) && isFinite(q.c));
+    const hasIrtParams = questions.every(q => isFinite(q.b));
     const diagTheta = hasIrtParams
       ? estimateThetaEAP(
-          questions.map(q => ({ a: q.a, b: q.b, c: q.c })),
+          questions.map(itemIrtParams),
           questions.map((q, i) => (isCorrectAnswer(q, answers[i]) ? 1 : 0)),
         )
       : null;

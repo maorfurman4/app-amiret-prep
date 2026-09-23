@@ -7,6 +7,8 @@ import {
   thetaToScore,
   updateThetaAfterSection,
   correctCount,
+  itemIrtParams,
+  BASELINE_A,
 } from './adaptive';
 import { classifyScore, SECTION_CONFIGS, isExperimentalSection, type Question } from '@/types/exam';
 
@@ -144,5 +146,37 @@ describe('classifyScore bands', () => {
     [69, "טווח טרום-בסיסי א'"], [50, "טווח טרום-בסיסי א'"],
   ])('score %i → %s', (score, label) => {
     expect(classifyScore(score).label).toBe(label);
+  });
+});
+
+describe('baseline item parameters (constant a)', () => {
+  const makeQuestion = (id: string, a: number, b: number): Question => ({
+    id, type: 'sentence_completion', text: id,
+    options: [0, 1, 2, 3].map(o => ({ id: String(o), text: String(o) })),
+    correct_answer: 0, a, b, c: 0.25, difficulty_level: 3,
+  });
+
+  it('ignores the stored a and keeps b and c', () => {
+    const storedRow = { a: 2.4, b: 1.5, c: 0.2 };
+    expect(itemIrtParams(storedRow)).toEqual({ a: BASELINE_A, b: 1.5, c: 0.2 });
+  });
+
+  it('falls back to the 4-option guessing floor when c is missing', () => {
+    expect(itemIrtParams({ b: 0, c: null })).toEqual({ a: BASELINE_A, b: 0, c: 0.25 });
+  });
+
+  it('scores a section identically no matter what a values the rows carry', () => {
+    const answers = [0, 1, 0, 3];
+    const lowA = [0.5, 0.6, 0.7, 0.8].map((a, i) => makeQuestion(`q${i}`, a, i - 1));
+    const highA = [2.5, 2.2, 1.9, 1.6].map((a, i) => makeQuestion(`q${i}`, a, i - 1));
+    expect(updateThetaAfterSection(0, { questions: lowA, answers }))
+      .toBe(updateThetaAfterSection(0, { questions: highA, answers }));
+  });
+
+  it('gives every item equal weight: swapping which equal-b item was missed does not move θ', () => {
+    const qs = [makeQuestion('x', 0.6, 0), makeQuestion('y', 2.4, 0), makeQuestion('z', 1.2, 0)];
+    const missFirst = updateThetaAfterSection(0, { questions: qs, answers: [null, 0, 0] });
+    const missSecond = updateThetaAfterSection(0, { questions: qs, answers: [0, null, 0] });
+    expect(missFirst).toBeCloseTo(missSecond, 10);
   });
 });

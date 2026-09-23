@@ -18,7 +18,7 @@ function sanitizeIds(raw: unknown): string[] {
  * POST /api/auth/merge-guest  { vocabKnown?: string[], vocabFavorites?: string[] }
  * Called once after login: moves everything the user accumulated as a guest
  * (exam sessions, review queue, seen-question/passage history, activity/streak
- * log) onto their account, then recomputes user_stats + leaderboard from the
+ * log, response log) onto their account, then recomputes user_stats + leaderboard from the
  * merged history. Also unions in the guest's locally-known/favorited vocab
  * word ids passed in the body — those tables have a hard FK to auth.users,
  * so a guest (who has no auth.users row) can never write them directly; the
@@ -90,6 +90,13 @@ export async function POST(req: Request) {
     await supabase.from('activity_log').delete().eq('user_id', guestId).in('activity_date', myDayStrs);
   }
   await supabase.from('activity_log').update({ user_id: user.id }).eq('user_id', guestId);
+
+  //    Response log — every row is a distinct answer event, so there is
+  //    nothing to dedupe; the guest's rows simply become the account's.
+  await supabase.from('responses')
+    .update({ owner_id: user.id, owner_type: 'user' })
+    .eq('owner_type', 'guest')
+    .eq('owner_id', guestId);
 
   // 5. Vocabulary "known" / "favorite" progress. user_vocab_known/favorites
   //    both have a FOREIGN KEY on user_id -> auth.users, so a guest row can

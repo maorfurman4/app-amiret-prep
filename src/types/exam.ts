@@ -33,6 +33,9 @@ export interface Question {
   b: number;
   c: number;
   difficulty_level: DifficultyLevel;
+  /** Present only on practice/review payloads whose options were shuffled
+   * for display: option_order[displayIndex] = stored (canonical) index. */
+  option_order?: number[];
 }
 
 export interface SectionConfig {

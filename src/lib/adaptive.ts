@@ -1,5 +1,34 @@
 import type { DifficultyLevel, IrtParams, SectionResult } from '@/types/exam';
 
+// ─── Baseline item parameters ────────────────────────────────────────────────
+
+/**
+ * Every item's discrimination (a) is pinned to one constant until it can be
+ * calibrated from real responses. The per-item `a` stored in the bank was
+ * assigned at authoring time, not measured — and since `a` sets how far each
+ * answer moves θ, those invented values were silently giving some questions
+ * twice the weight of others. Equal weights are the honest baseline; the
+ * stored column is left untouched so a later data-driven calibration can
+ * replace this constant without a destructive data migration.
+ */
+export const BASELINE_A = 1.2;
+
+/** Guessing parameter for 4-option multiple choice. */
+export const BASELINE_C = 0.25;
+
+/**
+ * The IRT parameters the engine actually scores an item with. Every θ
+ * estimate (exam, practice, diagnostic) must go through this — never read
+ * `a` straight off a question row.
+ */
+export function itemIrtParams(item: { b: number; c?: number | null }): IrtParams {
+  return {
+    a: BASELINE_A,
+    b: item.b,
+    c: Number.isFinite(item.c) ? (item.c as number) : BASELINE_C,
+  };
+}
+
 // ─── IRT 3PL Core ────────────────────────────────────────────────────────────
 
 /**
@@ -150,11 +179,7 @@ export function updateThetaAfterSection(
   prevTheta: number,
   sectionResult: Pick<SectionResult, 'questions' | 'answers'>,
 ): number {
-  const items: IrtParams[] = sectionResult.questions.map(q => ({
-    a: q.a,
-    b: q.b,
-    c: q.c,
-  }));
+  const items: IrtParams[] = sectionResult.questions.map(itemIrtParams);
 
   const responses: number[] = sectionResult.answers.map((ans, i) => {
     if (ans === null) return 0; // unanswered = wrong

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import type { Question } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
 import { PenLine, RotateCcw, BookOpen, Languages, HelpCircle, AlertTriangle, PartyPopper, Trash2, Target, ThumbsUp, Check, X, type LucideIcon } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
+import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
 
 type Step = 'loading' | 'empty' | 'error' | 'overview' | 'reviewing' | 'done';
 
@@ -53,6 +54,12 @@ export default function ReviewQueuePage() {
   const [showResult, setShowResult] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [showQuestionPicker, setShowQuestionPicker] = useState(false);
+
+  // Per-question time on screen, for the responses log's latency.
+  const dwellRef = useRef(new DwellTimer());
+  useEffect(() => {
+    dwellRef.current.focus(step === 'reviewing' ? questions[currentIndex]?.id ?? null : null);
+  }, [step, currentIndex, questions]);
 
   const fetchDueQuestions = useCallback((id: string) => authFetch(`/api/review-queue?guestId=${encodeURIComponent(id)}`).then(async res => {
       if (!res.ok) throw new Error('Unable to load review questions');
@@ -141,6 +148,7 @@ export default function ReviewQueuePage() {
     const wasCorrect = optionIndex === questions[currentIndex].correct_answer;
     if (wasCorrect) setCorrectCount(c => c + 1);
     const answeredQuestionId = questions[currentIndex].id;
+    logResponses([responseEntry(questions[currentIndex], optionIndex, 'review', dwellRef.current.elapsedMs(answeredQuestionId))]);
 
     authFetch('/api/review-queue', {
       method: 'POST',

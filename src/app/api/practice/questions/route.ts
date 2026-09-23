@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import type { Question, QuestionType, DifficultyLevel } from '@/types/exam';
 import { fetchUnseenQuestions, recordSeenQuestions, fetchUnseenRCQuestions, recordSeenPassage } from '@/lib/question-history';
+import { shuffleAllOptions } from '@/lib/option-shuffle';
 
 function fisherYates<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -37,6 +38,10 @@ function fisherYates<T>(arr: T[]): T[] {
  *     candidates than they'll actually show, so the unused candidates don't
  *     get burned from the pool — the caller must then POST the subset it
  *     actually used to /api/practice/questions/mark-seen itself.
+ *
+ * Every returned question has its options freshly shuffled (see
+ * src/lib/option-shuffle.ts) — `option_order` maps each displayed option
+ * back to its stored index for response logging.
  */
 export async function GET(req: NextRequest) {
   const { supabase, user, guestId } = await getServerClients();
@@ -103,7 +108,7 @@ export async function GET(req: NextRequest) {
       if (simpleShuffled.length > 0) await recordSeenQuestions(supabase, userKey, simpleShuffled.map(q => q.id));
       if (rcBlock.length > 0) await recordSeenPassage(supabase, userKey, rcBlock[0].passage_id!);
     }
-    return NextResponse.json({ questions, difficulty: diffParam === 'random' ? 'random' : difficulty });
+    return NextResponse.json({ questions: shuffleAllOptions(questions), difficulty: diffParam === 'random' ? 'random' : difficulty });
   }
 
   if (type === 'reading_comprehension') {
@@ -114,7 +119,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'No passages found for this difficulty' }, { status: 404 });
     }
     if (userKey && !deferSeen) await recordSeenPassage(supabase, userKey, questions[0].passage_id!);
-    return NextResponse.json({ questions, difficulty: questions[0].passage?.difficulty_level ?? difficulty });
+    return NextResponse.json({ questions: shuffleAllOptions(questions), difficulty: questions[0].passage?.difficulty_level ?? difficulty });
   }
 
   // sentence_completion or restatement
@@ -133,7 +138,7 @@ export async function GET(req: NextRequest) {
     }
     const questions = fisherYates(pool).slice(0, count);
     if (userKey && !deferSeen) await recordSeenQuestions(supabase, userKey, questions.map(q => q.id));
-    return NextResponse.json({ questions, difficulty: 'random' });
+    return NextResponse.json({ questions: shuffleAllOptions(questions), difficulty: 'random' });
   }
 
   const questions = userKey
@@ -145,7 +150,7 @@ export async function GET(req: NextRequest) {
   }
   if (userKey && !deferSeen) await recordSeenQuestions(supabase, userKey, questions.map(q => q.id));
 
-  return NextResponse.json({ questions, difficulty });
+  return NextResponse.json({ questions: shuffleAllOptions(questions), difficulty });
 }
 
 // Fallback used only when no auth user AND no guestId is present (e.g. localStorage

@@ -165,6 +165,45 @@ describe('POST /api/exam/answer', () => {
     expect(db.spies.fetchEq).toHaveBeenNthCalledWith(2, 'user_id', 'authenticated-owner');
   });
 
+  it('logs every question of the section in the same RPC, graded, with ms latency', async () => {
+    const db = createSupabase(session({ theta: 0.7, current_section_expires_at: '2999-01-01T00:00:00.000Z' }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+
+    const response = await POST(request(validBody({ answers: [0, 1, null, 0], timings: [12.345, 40, 3.2, 0] })));
+
+    expect(response.status).toBe(200);
+    const rows = db.spies.rpc.mock.calls[0][1].p_responses;
+    expect(rows).toEqual([
+      { owner_type: 'guest', item_id: 'question-1', context: 'exam', correct: true, chosen_option: 0, latency_ms: 12345, theta_before: 0.7, section_index: 1 },
+      { owner_type: 'guest', item_id: 'question-2', context: 'exam', correct: false, chosen_option: 1, latency_ms: 40000, theta_before: 0.7, section_index: 1 },
+      { owner_type: 'guest', item_id: 'question-3', context: 'exam', correct: false, chosen_option: null, latency_ms: 3200, theta_before: 0.7, section_index: 1 },
+      { owner_type: 'guest', item_id: 'question-4', context: 'exam', correct: true, chosen_option: 0, latency_ms: 0, theta_before: 0.7, section_index: 1 },
+    ]);
+    // Section results still carry whole seconds for the pacing display.
+    expect(db.getUpdatePayload()?.section_results).toEqual([
+      expect.objectContaining({ timings: [12, 40, 3, 0] }),
+    ]);
+  });
+
+  it('logs a late section as the blanks it was scored as, and practice exams as practice', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-16T10:00:21.000Z'));
+    const late = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: late.supabase, user: { id: 'account-id' } });
+    await POST(request(validBody()));
+    vi.useRealTimers();
+    const lateRows = late.spies.rpc.mock.calls[0][1].p_responses;
+    expect(lateRows).toHaveLength(4);
+    lateRows.forEach((row: Record<string, unknown>) => {
+      expect(row).toMatchObject({ owner_type: 'user', chosen_option: null, correct: false, latency_ms: null });
+    });
+
+    const practice = createSupabase(session({ is_practice: true }));
+    mocks.getServerClients.mockResolvedValue({ supabase: practice.supabase, user: null, guestId: 'owner-id' });
+    await POST(request(validBody()));
+    expect(practice.spies.rpc.mock.calls[0][1].p_responses.every((r: { context: string }) => r.context === 'practice')).toBe(true);
+  });
+
   it('commits question-history changes in the same RPC as the section', async () => {
     const db = createSupabase();
     mocks.planUnseenQuestions.mockResolvedValue({

@@ -110,6 +110,7 @@
 
 ### 4.2 מנוע אדפטיבי (`src/lib/adaptive.ts`)
 - מודל **3PL IRT**: `P(θ) = c + (1-c) / (1 + e^{-a(θ-b)})`. כל שאלה ב-DB נושאת `a` (0.51–2.5), `b` (-2.69–2.79), `c` (קבוע 0.25 — ניחוש מ-4 אפשרויות).
+- **`a` קבוע (2026-09-23):** המנוע מתעלם מה-`a` השמור ומשתמש ב-`BASELINE_A = 1.2` לכל פריט (`itemIrtParams` ב-`adaptive.ts` — כל אומדן θ עובר דרכה). ה-`a` השמור הומצא בזמן כתיבה ולא נמדד, ונתן לשאלות משקל לא שוויוני בלי בסיס. העמודה נשארת כמות שהיא עד כיול מבוסס-נתונים מטבלת `responses`.
 - אומדן θ אחרי כל פרק, **מצטבר** על כל הפרקים המנוקדים: MLE (Newton) עם fallback ל-EAP (41 נקודות) כשאין פתרון (הכל נכון/הכל שגוי).
 - ניתוב: `routeNextDifficulty(θ)` → רמה 1–5 לפרק הבא. השאלות לפרק הבא נשלפות **רק אז** (multistage CAT אמיתי — אין pre-fetch).
 - ציון: `thetaToScore = θ·20 + 100`, חסום 50–150.
@@ -138,6 +139,9 @@
 
 ### 4.5 מניעת חזרות (cross-session dedup)
 `lib/question-history.ts`: `user_question_history`/`user_passage_history` לפי `user_key`. משתמש לא רואה שאלה/קטע פעמיים עד מיצוי הפול לאותו סוג+רמה; אז ההיסטוריה מתאפסת. חל על מבחן, תרגול ואבחון.
+
+### 4.5.1 ערבוב אפשרויות (תרגול וחזרה)
+`lib/option-shuffle.ts`: כל הגשה של `/api/practice/questions`, `/api/review-queue` ו-`/api/today-session` מערבבת את האפשרויות מחדש (כולל `correct_answer` ו-`options_analysis`), ומצרפת `option_order` (תצוגה → קנוני). כל רישום ל-`responses` נעשה באינדקס הקנוני (`toCanonicalOption`). מבחן (אמיתי ותרגול) **לא** מעורבב.
 
 ### 4.6 מעקב קצב
 הלקוח מודד שניות/שאלה (`timingsRef`), נשלח ב-`timings[]`, מאומת ונשמר ב-`section_results`. דף התוצאות מציג "ניתוח קצב" (ניצול מול תקציב, ממוצע/שאלה, חריגות מ-"stuck caps": SC 90s / RST 150s / RC 180s).
@@ -261,7 +265,8 @@ Server component; `SELECT display_name, avatar_url, best_score, total_exams, avg
 | `/api/exam/results` | GET | תוצאות עם בדיקת בעלות | 403 אם אמיתי ולא הושלם |
 | `/api/exam/review` | GET | שאלות+תשובות+הסברים לסקירה | 401 בלי בעלות |
 | `/api/practice/questions` | GET | שאלות לתרגול/אבחון (stateless) | `type, difficulty|random, count, guestId` |
-| `/api/review-queue` | GET/POST/DELETE | תור חזרה מרווחת | ראה §5.8 |
+| `/api/review-queue` | GET/POST/DELETE | תור חזרה מרווחת | ראה §5.8; GET מערבב אפשרויות |
+| `/api/responses` | POST | רישום תשובות מתרגול/חזרה/אבחון ל-`responses` | עד 25 בבקשה; `chosenOption` קנוני; הנכונות נבדקת בשרת. מבחן נרשם אטומית ב-`commit_exam_section` |
 | `/api/my-words` | GET | מילים מטעויות SC | gloss עברי מתוך `correct_reason` |
 | `/api/stats` | GET | כל הסשנים שהושלמו של הבעלים | |
 | `/api/dashboard-summary` | GET | streak, ציון אחרון, מספר מבחנים, ספירת תור | `head:true` counts — קריאה אחת זולה |
@@ -289,6 +294,7 @@ Server component; `SELECT display_name, avatar_url, best_score, total_exams, avg
 | `activity_log` | `user_id text, activity_date, source` | ✅ | public ALL ("app enforces ownership") |
 | `user_stats` | `user_id, total_exams, best_score, avg_score, last_exam_at, score_history jsonb, performance_by_type, display_name, avatar_url` | ✅ | own read/write (`auth.uid()`) |
 | `leaderboard` | `user_id, display_name, avatar_url, best_score, total_exams, avg_score, last_exam_at` | ✅ | public SELECT **+ GRANT ברמת עמודה** ל-anon/authenticated על כל העמודות **חוץ מ-`user_id`** |
+| `responses` | `owner_id, owner_type (user/guest), item_id → questions, context (exam/practice/review/diagnostic), correct, chosen_option (אינדקס קנוני; null = ריק), latency_ms (זמן על הפריט עד תשובה סופית), confidence 1–3, theta_before, section_index, session_id → exam_sessions (set null), created_at` | ✅ | אין (service-role בלבד); merge-guest מעביר שורות אורח |
 | `vocabulary` | `id, word (unique), definition, hebrew_translation, example_sentence, category, difficulty_level` | ✅ | public read |
 | `user_vocab_known`, `user_vocab_favorites` | `user_id, word_id` | ✅ | own rows |
 

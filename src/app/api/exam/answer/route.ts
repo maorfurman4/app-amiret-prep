@@ -7,6 +7,7 @@ import {
   planUnseenQuestions,
   planUnseenRCQuestions,
 } from '@/lib/question-history';
+import { buildExamResponseRows } from '@/lib/responses';
 
 /**
  * POST /api/exam/answer
@@ -114,12 +115,15 @@ export async function POST(req: NextRequest) {
   const sectionForAdaptive = { questions: allQuestions, answers: allAnswers };
   const newTheta = updateThetaAfterSection(session.theta, sectionForAdaptive);
 
-  // Optional per-question pace data — accepted only if well-formed
-  const timings = Array.isArray(body.timings)
+  // Optional per-question pace data — accepted only if well-formed. The
+  // raw (sub-second) values feed the responses log's latency; the section
+  // result keeps whole seconds for the results page's pacing display.
+  const rawTimings = Array.isArray(body.timings)
     && body.timings.length === currentQuestions.length
     && body.timings.every(t => typeof t === 'number' && isFinite(t) && t >= 0 && t < 3600)
-    ? body.timings.map(t => Math.round(t))
+    ? body.timings
     : undefined;
+  const timings = rawTimings?.map(t => Math.round(t));
 
   const currentSectionResult = { questions: currentQuestions, answers };
   const result: SectionResult = {
@@ -266,9 +270,22 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // Every question in the section is logged — right, wrong, or left blank
+  // (a late submission logs the blanks it was scored as).
+  const responseRows = buildExamResponseRows({
+    questions: currentQuestions,
+    answers,
+    timingsSeconds: rawTimings,
+    ownerType: user ? 'user' : 'guest',
+    isPractice: !!session.is_practice,
+    thetaBefore: session.theta,
+    sectionIndex: body.sectionIndex,
+  });
+
   // One database transaction commits the session and every durable side
-  // effect. The row-level conditional update makes concurrent submissions
-  // serialize; the loser returns false before any history writes can run.
+  // effect, including the response log rows. The row-level conditional
+  // update makes concurrent submissions serialize; the loser returns false
+  // before any history (or response) writes can run.
   const { data: updated, error: updateErr } = await supabase.rpc('commit_exam_section', {
     p_session_id: body.sessionId,
     p_owner_id: userKey,
@@ -282,6 +299,7 @@ export async function POST(req: NextRequest) {
     p_activity_source: activitySource,
     p_wrong_question_ids: wrongQuestionIds,
     p_review_owner_type: user ? 'user' : 'guest',
+    p_responses: responseRows,
   });
 
   if (updateErr) {

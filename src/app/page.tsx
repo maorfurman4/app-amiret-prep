@@ -57,11 +57,22 @@ export default function HomePage() {
             התחל מבחן
           </Link>
 
+          {/* Today's session — spaced-repetition vocab + due review + weak-area
+              practice. Right under the primary exam CTA, ahead of everything
+              else, so it's the first thing after "start a full exam". */}
+          <section className="animate-fade-up [animation-delay:180ms]">
+            <h2 className="text-label text-exam-ink-soft mb-2 pr-1 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" aria-hidden />
+              היום שלך
+            </h2>
+            <TodaySessionCta />
+          </section>
+
           {/* Quick diagnostic */}
-          <div className="animate-fade-up [animation-delay:180ms]"><DiagnosticBanner /></div>
+          <div className="animate-fade-up [animation-delay:240ms]"><DiagnosticBanner /></div>
 
           {/* Learning & practice — classic 2x2 grid */}
-          <section className="animate-fade-up [animation-delay:240ms]">
+          <section className="animate-fade-up [animation-delay:300ms]">
             <h2 className="text-label text-exam-ink-soft mb-2 pr-1">לימוד ותרגול</h2>
             <div className="grid grid-cols-2 gap-3">
               {LEARN_LINKS_BEFORE.map(l => (
@@ -80,17 +91,6 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
-          </section>
-
-          {/* Today's session — spaced-repetition vocab + due review + weak-area
-              practice. Kept off the hero spot per the reverted layout, but
-              still one tap away right under the learning grid. */}
-          <section className="animate-fade-up [animation-delay:300ms]">
-            <h2 className="text-label text-exam-ink-soft mb-2 pr-1 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" aria-hidden />
-              היום שלך
-            </h2>
-            <TodaySessionCta />
           </section>
 
           {/* Progress & comparison */}

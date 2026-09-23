@@ -108,9 +108,9 @@ export default function TodaySessionPage() {
     authFetch('/api/activity/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ guestId, source: 'today' }),
+      body: JSON.stringify({ guestId, source: 'today', units: Math.max(totalAnswered, 1) }),
     }).catch(() => {});
-  }, []);
+  }, [totalAnswered]);
 
   // ── Question phases (review + weak) ───────────────────────────────────────
   const currentQuestions = phase === 'review' ? data?.reviewQuestions ?? [] : phase === 'weak' ? data?.weakQuestions ?? [] : [];

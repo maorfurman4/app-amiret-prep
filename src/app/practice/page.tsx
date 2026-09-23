@@ -260,7 +260,7 @@ function PracticeContent() {
     authFetch('/api/activity/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ guestId, source: 'practice' }),
+      body: JSON.stringify({ guestId, source: 'practice', units: questions.length }),
     }).catch(() => {});
 
   }, [questions, answers]);
@@ -306,7 +306,7 @@ function PracticeContent() {
       authFetch('/api/activity/complete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guestId, source: 'practice' }),
+        body: JSON.stringify({ guestId, source: 'practice', units: questions.length }),
       }).catch(() => {});
     }
   }, [currentIndex, questions.length, answers, examMode, selectedType]);

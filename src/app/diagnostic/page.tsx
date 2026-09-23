@@ -129,7 +129,7 @@ export default function DiagnosticPage() {
       authFetch('/api/activity/complete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guestId, source: 'diagnostic' }),
+        body: JSON.stringify({ guestId, source: 'diagnostic', units: newDoneQs.length }),
       }).catch(() => {});
       newDoneQs.forEach((q, i) => {
         authFetch('/api/review-queue', {

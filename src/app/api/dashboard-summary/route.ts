@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
-import { computeStreak } from '@/lib/streak-server';
+import { computeStreakInfo } from '@/lib/streak-server';
+import { todayLocalStr } from '@/lib/date-local';
+
+const DEFAULT_DAILY_ACTIVITY_TARGET = 15;
 
 export interface DashboardSummary {
   streak: number;
@@ -8,9 +11,23 @@ export interface DashboardSummary {
   examCount: number;
   reviewDueCount: number;
   todayDueCount: number;
+  hasActivityToday: boolean;
+  activityUnitsToday: number;
+  reviewClearedToday: number;
+  dailyActivityTarget: number;
 }
 
-const EMPTY: DashboardSummary = { streak: 0, lastScore: null, examCount: 0, reviewDueCount: 0, todayDueCount: 0 };
+const EMPTY: DashboardSummary = {
+  streak: 0,
+  lastScore: null,
+  examCount: 0,
+  reviewDueCount: 0,
+  todayDueCount: 0,
+  hasActivityToday: false,
+  activityUnitsToday: 0,
+  reviewClearedToday: 0,
+  dailyActivityTarget: DEFAULT_DAILY_ACTIVITY_TARGET,
+};
 
 /**
  * GET /api/dashboard-summary?guestId=xxx
@@ -29,6 +46,7 @@ export async function GET() {
   if (!owner) return NextResponse.json(EMPTY);
 
   const now = new Date().toISOString();
+  const today = todayLocalStr();
 
   let reviewQuery = supabase
     .from('review_queue')
@@ -46,8 +64,12 @@ export async function GET() {
         .lte('next_review_at', now)
     : null;
 
-  const [streak, lastScoreRes, examCountRes, reviewCountRes, vocabDueRes] = await Promise.all([
-    computeStreak(supabase, owner),
+  const goalQuery = user
+    ? supabase.from('user_goals').select('daily_activity_target').eq('user_id', user.id).maybeSingle()
+    : null;
+
+  const [streakInfo, lastScoreRes, examCountRes, reviewCountRes, vocabDueRes, todayRowRes, goalRes] = await Promise.all([
+    computeStreakInfo(supabase, owner),
     supabase
       .from('exam_sessions')
       .select('score')
@@ -67,16 +89,27 @@ export async function GET() {
       .not('score', 'is', null),
     reviewQuery,
     vocabDueQuery,
+    supabase
+      .from('activity_log')
+      .select('activity_units, review_cleared')
+      .eq('user_id', owner)
+      .eq('activity_date', today)
+      .maybeSingle(),
+    goalQuery,
   ]);
 
   const reviewDueCount = reviewCountRes.count ?? 0;
   const vocabDueCount = vocabDueRes?.count ?? 0;
 
   return NextResponse.json({
-    streak,
+    streak: streakInfo.streak,
     lastScore: lastScoreRes.data?.score ?? null,
     examCount: examCountRes.count ?? 0,
     reviewDueCount,
     todayDueCount: reviewDueCount + vocabDueCount,
+    hasActivityToday: streakInfo.hasActivityToday,
+    activityUnitsToday: todayRowRes.data?.activity_units ?? 0,
+    reviewClearedToday: todayRowRes.data?.review_cleared ?? 0,
+    dailyActivityTarget: goalRes?.data?.daily_activity_target ?? DEFAULT_DAILY_ACTIVITY_TARGET,
   } satisfies DashboardSummary);
 }

@@ -3,12 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Flame } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
-
-/** Same "today" definition as the server-side streak calc (lib/streak-server.ts). */
-const TZ = 'Asia/Jerusalem';
-function todayLocal(): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(new Date());
-}
+import { todayLocalStr } from '@/lib/date-local';
 
 const SEEN_KEY = 'amiret_streak_celebration_seen_date';
 
@@ -27,7 +22,7 @@ export function StreakCelebration() {
 
   useEffect(() => {
     if (streak < 1) return;
-    const today = todayLocal();
+    const today = todayLocalStr();
     try { if (localStorage.getItem(SEEN_KEY) === today) return; } catch { return; }
     const showTimer = setTimeout(() => {
       try { localStorage.setItem(SEEN_KEY, today); } catch { return; }

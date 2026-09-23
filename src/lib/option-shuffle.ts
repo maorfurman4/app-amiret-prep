@@ -20,6 +20,19 @@ export type ShuffledQuestion<Q extends Question = Question> = Q & { option_order
 
 type Rng = () => number;
 
+/**
+ * Uniform [0, 1) from the platform CSPRNG (Web Crypto — available in the
+ * Node runtime and every browser). Math.random is statistically fine but
+ * its xorshift state is recoverable from outputs; answer positions should
+ * be unpredictable, not merely fair.
+ */
+export function secureRandom(): number {
+  const buf = new Uint32Array(1);
+  crypto.getRandomValues(buf);
+  return buf[0] / 0x1_0000_0000;
+}
+
+/** Unbiased Fisher–Yates. */
 function permutation(n: number, rng: Rng): number[] {
   const order = Array.from({ length: n }, (_, i) => i);
   for (let i = n - 1; i > 0; i--) {
@@ -47,8 +60,25 @@ function permuteExplanation(raw: string | undefined, order: number[]): string | 
   }
 }
 
-export function shuffleQuestionOptions<Q extends Question>(question: Q, rng: Rng = Math.random): ShuffledQuestion<Q> {
-  const order = permutation(question.options.length, rng);
+/**
+ * `targetPosition`, when given, is where the correct option must land; the
+ * distractors still fill the other slots in uniformly random order.
+ */
+export function shuffleQuestionOptions<Q extends Question>(
+  question: Q,
+  rng: Rng = secureRandom,
+  targetPosition?: number,
+): ShuffledQuestion<Q> {
+  const n = question.options.length;
+  const key = question.correct_answer;
+  let order: number[];
+  if (targetPosition !== undefined && targetPosition >= 0 && targetPosition < n && key >= 0 && key < n) {
+    const distractors = permutation(n, rng).filter(i => i !== key);
+    order = [];
+    for (let slot = 0, d = 0; slot < n; slot++) order.push(slot === targetPosition ? key : distractors[d++]);
+  } else {
+    order = permutation(n, rng);
+  }
   const displayCorrect = order.indexOf(question.correct_answer);
   return {
     ...question,
@@ -60,8 +90,37 @@ export function shuffleQuestionOptions<Q extends Question>(question: Q, rng: Rng
   };
 }
 
-export function shuffleAllOptions<Q extends Question>(questions: Q[], rng: Rng = Math.random): ShuffledQuestion<Q>[] {
-  return questions.map(q => shuffleQuestionOptions(q, rng));
+/**
+ * Correct-answer positions for a batch of `n` questions with `k` options.
+ *
+ * Independent uniform draws clump: in a 5-question session about 1 in 16
+ * puts 4+ answers in the same slot ("the answer is always C"), which looks
+ * broken and trains students to read the key instead of the question. So
+ * draws are rejection-sampled to exclude clumps — no position more than
+ * ⌈n/k⌉+1 times, and never three in a row. The constraints are symmetric in
+ * the positions, so each question's correct position is still exactly
+ * uniform on its own. The key is deliberately NOT fully balanced (e.g. one
+ * per slot in a 4-question section): that would let a student deduce the
+ * last answer from the others.
+ */
+export function keyPositions(n: number, k = 4, rng: Rng = secureRandom): number[] {
+  const cap = Math.ceil(n / k) + 1;
+  let draw: number[] = [];
+  for (let attempt = 0; attempt < 500; attempt++) {
+    draw = Array.from({ length: n }, () => Math.floor(rng() * k));
+    const counts = new Array(k).fill(0);
+    draw.forEach(p => counts[p]++);
+    const clumped = counts.some(c => c > cap);
+    const run = draw.some((p, i) => i >= 2 && p === draw[i - 1] && p === draw[i - 2]);
+    if (!clumped && !run) return draw;
+  }
+  return draw; // unreachable in practice: valid draws are the majority
+}
+
+/** Shuffles a batch served together, with an anti-clumping answer key. */
+export function shuffleAllOptions<Q extends Question>(questions: Q[], rng: Rng = secureRandom): ShuffledQuestion<Q>[] {
+  const targets = keyPositions(questions.length, 4, rng);
+  return questions.map((q, i) => shuffleQuestionOptions(q, rng, q.options.length === 4 ? targets[i] : undefined));
 }
 
 /**

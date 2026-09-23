@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { shuffleQuestionOptions, shuffleAllOptions, toCanonicalOption } from './option-shuffle';
+import { describe, it, expect, vi } from 'vitest';
+import { shuffleQuestionOptions, shuffleAllOptions, toCanonicalOption, keyPositions } from './option-shuffle';
 import { isCorrectAnswer, type Question } from '@/types/exam';
 
 const question = (overrides: Partial<Question> = {}): Question => ({
@@ -82,5 +82,82 @@ describe('toCanonicalOption', () => {
   it('is the identity for an unshuffled question and keeps blanks blank', () => {
     expect(toCanonicalOption(question(), 3)).toBe(3);
     expect(toCanonicalOption(shuffleQuestionOptions(question()), null)).toBeNull();
+  });
+});
+
+describe('anti-clumping answer key (keyPositions)', () => {
+  const maxSame = (key: number[]) => Math.max(...[0, 1, 2, 3].map(p => key.filter(x => x === p).length));
+  const hasRun3 = (key: number[]) => key.some((p, i) => i >= 2 && p === key[i - 1] && p === key[i - 2]);
+
+  it('never clumps: at most ⌈n/4⌉+1 per slot, never three in a row', () => {
+    for (const n of [3, 4, 5, 8, 10]) {
+      for (let t = 0; t < 2000; t++) {
+        const key = keyPositions(n);
+        expect(maxSame(key)).toBeLessThanOrEqual(Math.ceil(n / 4) + 1);
+        expect(hasRun3(key)).toBe(false);
+      }
+    }
+  });
+
+  it('old independent draws DO clump (4+ of 5 in one slot ~6%); the new key never does', () => {
+    let oldClumps = 0, newClumps = 0;
+    const N = 20000;
+    for (let t = 0; t < N; t++) {
+      const independent = Array.from({ length: 5 }, () => Math.floor(Math.random() * 4));
+      if (maxSame(independent) >= 4) oldClumps++;
+      if (maxSame(keyPositions(5)) >= 4) newClumps++;
+    }
+    // Exact: 4·[5·(1/4)^4·(3/4) + (1/4)^5] = 6.25%
+    expect(oldClumps / N).toBeGreaterThan(0.05);
+    expect(oldClumps / N).toBeLessThan(0.075);
+    expect(newClumps).toBe(0);
+  });
+
+  it('keeps every question’s correct position exactly uniform (symmetric constraints)', () => {
+    const counts = Array.from({ length: 5 }, () => [0, 0, 0, 0]);
+    const N = 40000;
+    for (let t = 0; t < N; t++) keyPositions(5).forEach((p, i) => counts[i][p]++);
+    for (const perSlot of counts) for (const c of perSlot) expect(c / N).toBeCloseTo(0.25, 1); // ±5pp
+  });
+
+  it('is not fully balanced — a 4-question section can repeat a slot, so the last answer can’t be deduced', () => {
+    const keys = Array.from({ length: 2000 }, () => keyPositions(4));
+    expect(keys.some(k => maxSame(k) === 2)).toBe(true);
+    expect(keys.some(k => maxSame(k) === 1)).toBe(true);
+  });
+
+  it('uses the platform CSPRNG by default', () => {
+    const spy = vi.spyOn(globalThis.crypto, 'getRandomValues');
+    keyPositions(5);
+    shuffleAllOptions([question()]);
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
+});
+
+describe('targeted shuffle', () => {
+  it('lands the key on the target and still shuffles the distractors uniformly', () => {
+    const seenAtSlot0 = new Set<string>();
+    for (let t = 0; t < 400; t++) {
+      const s = shuffleQuestionOptions(question(), undefined, 3);
+      expect(s.correct_answer).toBe(3);
+      expect(s.options[3].text).toBe('charlie');
+      expect(toCanonicalOption(s, 3)).toBe(2);
+      seenAtSlot0.add(s.options[0].text);
+      // analysis stays aligned with what's on screen
+      const analysis = JSON.parse(s.explanation!).options_analysis as string[];
+      s.options.forEach((opt, i) => expect(analysis[i]).toContain(`about ${opt.text}`));
+    }
+    expect([...seenAtSlot0].sort()).toEqual(['alpha', 'bravo', 'delta']);
+  });
+
+  it('a batch whose stored keys are ALL the same slot still comes out unclumped', () => {
+    const batch = Array.from({ length: 5 }, (_, i) => question({ id: `q${i}`, correct_answer: 2 }));
+    for (let t = 0; t < 500; t++) {
+      const served = shuffleAllOptions(batch);
+      const key = served.map(q => q.correct_answer);
+      expect(Math.max(...[0, 1, 2, 3].map(p => key.filter(x => x === p).length))).toBeLessThanOrEqual(3);
+      served.forEach(q => expect(q.options[q.correct_answer].text).toBe('charlie'));
+    }
   });
 });

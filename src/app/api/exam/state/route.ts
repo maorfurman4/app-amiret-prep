@@ -41,6 +41,11 @@ export async function GET(req: NextRequest) {
           delete safe.correct_answer;
           delete safe.explanation;
           delete safe.hint;
+          // For sentence completion the target word IS the correct option,
+          // so every concept tag is as much a key as correct_answer.
+          delete safe.skill;
+          delete safe.target_lemma;
+          delete safe.concept_key;
           return safe;
         })]
       )

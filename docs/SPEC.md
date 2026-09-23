@@ -196,10 +196,14 @@
 12 שאלות, 4 שלבים × 3 (SC/RST/SC/RST — 6/6, בלי RC כי קטע = 5 שאלות שהיו מכפילים את האורך). שלב 1 ברמה 3, כל שלב הבא מנותב לפי θ מצטבר (אותו 3PL, בצד הלקוח). בלי פידבק מיידי ("ענה לפי תחושת הבטן"). תוצאה: רמה 1–5, ציון משוער, פירוט לפי סוג (עם אזהרת מדגם קטן <5), תוכנית התחלה עם deep-links. שולף `count=10` לכל שלב ונכשל למסך שגיאה אם אחרי dedup אין 3 (היה באג של 11/12).
 
 ### 5.8 `/review-queue` — חזרה על טעויות (spaced repetition)
-- מקור: כל שאלה שנענתה לא נכון (תרגול, אבחון, מבחן אמיתי בסיום — `lib/review-queue.ts::recordWrongAnswers`).
-- אלגוריתם (`POST /api/review-queue`): טעות חדשה → `interval_days=1`, `next_review_at=now` (זמינה מיד, Anki-style). תשובה נכונה בחזרה → מרווח ×2 (1→2→4→8→16); **≥30 ימים → "graduated"** ונמחקת. טעות שוב → חזרה ל-1, `times_wrong++`.
+- **(2026-09-23) מנוע FSRS מבוסס-מושגים** (`lib/fsrs.ts` מתמטיקה טהורה, `lib/srs.ts` שמירה ושליפה) החליף את הכפלת המרווחים. יחידת התזמון היא **מושג** (`questions.concept_key`), לא שאלה: כרטיס אחד לכל בעלים×מושג ב-`srs_cards`.
+- **תיוג מושגים:** `questions.skill` + `target_lemma` מסווגים ב-SQL (`classify_question`, טריגר על insert/עריכה): SC → המילה הנכונה (`sc.vocab`/`sc.connector`); ניסוח מחדש → מילת הקישור (`rst.contrast/though`…), בלי מילת קישור → `rst.general` שמתוזמן לפי פריט; RC → המיומנות (`rc.main_idea`, `rc.inference`, `rc.detail`…), ו-`rc.vocab_in_context/<המילה>`. `concept_key` עמודה מחושבת. כיסוי אחים: RC 85%, SC 53%, RST 47%.
+- **מקור:** כל תשובה שנרשמת (`/api/responses` מתרגול/חזרה/אבחון/היום; מבחן — בסיום, מתוך שורות `responses` של הסשן). טעות על מושג בלי כרטיס → כרטיס חדש (עוגן = השאלה שנכשלה). תשובה נכונה על מושג בלי כרטיס → לא נרשם כלום.
+- **מודל:** FSRS-4.5 (משקלות ברירת מחדל). יציבות/קושי/retrievability לפי **זמן שעבר בפועל** — תשובה נכונה דקה אחרי טעות כמעט לא מזיזה. ציון סמוי: שגוי=Again; נכון מהר מדי (<5% מהתקציב, ניחוש)=Hard; ≤⅓ תקציב=Easy; ≤תקציב=Good; מעל=Hard (תקציב: SC 60s, RST 120s, RC 180s); ביטחון עצמי יכול רק להוריד. טעות ראשונה → זמינה בעוד ~12 שעות (לא מיד). מרווחים 6 שעות–180 יום. אין "graduation".
+- **מועד מבחן** (`user_goals.exam_date`, `PUT /api/goals`, משתמשים רשומים בלבד): יעד השליפה עולה מ-90% ל-95% ב-14 הימים האחרונים; מועד שחורג נמשך לחלון 1–3 ימים לפני המבחן (יעד: 2); 24 השעות האחרונות ללא חזרות מתוזמנות. קביעת מועד מיישרת מיד כרטיסים קיימים.
+- **שליפה:** לכל כרטיס שהגיע מועדו מוגשת **שאלת אח** אקראית מאותו מושג (`srs_pick_siblings`, לא העוגן ולא שאלה שנענתה ב-14 הימים האחרונים); אין אח → העוגן. `review_queue` + ה-RPCs הישנים נשארו רק לתאימות חלון הפריסה (לא נכתבים); `srs_import_legacy_review_queue()` מייבא מחדש.
 - ממשק: סקירה לפי קטגוריה (סוג שאלה) עם ספירות, התחלת סשן (הכל / קטגוריה), מחיקת שאלה בודדת / קטגוריה / הכל, "התחל מחדש", בוחר שאלות באמצע. מחיקת שאלה אחרת מהנצפית לא מזיזה את המצביע (תוקן — מעקב לפי id).
-- נתונים: `GET /api/review-queue` (רק due: `next_review_at <= now`, עם קטעי RC), `DELETE` (הכל / `questionId` / `type`).
+- נתונים: `GET /api/review-queue` (כרטיסים שהגיע מועדם → שאלה לכל כרטיס עם `review: {conceptKey, sibling}`, אפשרויות מעורבבות), `DELETE` (הכל / `questionId` → הכרטיס של המושג שלה / `type`). אין POST — תשובות עוברות דרך `/api/responses`.
 
 ### 5.9 `/vocabulary` — אוצר מילים (1,417 שורות — הדף הגדול ביותר)
 - 1,158 מילים, 7 קטגוריות: verbs 287, connectors 182, academic 178, adjectives 166, nouns 136, advanced 122, descriptive 87; רמות 1–5. נטענות פעם אחת ונשמרות ב-`vocab_cache_v3` (6 שעות) — **תיקוני תרגום ב-DB מופיעים אצל משתמש קיים רק אחרי פקיעת המטמון**.
@@ -265,7 +269,8 @@ Server component; `SELECT display_name, avatar_url, best_score, total_exams, avg
 | `/api/exam/results` | GET | תוצאות עם בדיקת בעלות | 403 אם אמיתי ולא הושלם |
 | `/api/exam/review` | GET | שאלות+תשובות+הסברים לסקירה | 401 בלי בעלות |
 | `/api/practice/questions` | GET | שאלות לתרגול/אבחון (stateless) | `type, difficulty|random, count, guestId` |
-| `/api/review-queue` | GET/POST/DELETE | תור חזרה מרווחת | ראה §5.8; GET מערבב אפשרויות |
+| `/api/review-queue` | GET/DELETE | תור חזרה מרווחת (FSRS, שאלות אח) | ראה §5.8; GET מערבב אפשרויות |
+| `/api/goals` | GET/PUT | מועד מבחן (`examDate`) + יעד יומי | רשומים בלבד ל-PUT; תאריך היום–שנתיים; מיישר כרטיסים |
 | `/api/responses` | POST | רישום תשובות מתרגול/חזרה/אבחון ל-`responses` | עד 25 בבקשה; `chosenOption` קנוני; הנכונות נבדקת בשרת. מבחן נרשם אטומית ב-`commit_exam_section` |
 | `/api/my-words` | GET | מילים מטעויות SC | gloss עברי מתוך `correct_reason` |
 | `/api/stats` | GET | כל הסשנים שהושלמו של הבעלים | |
@@ -286,10 +291,11 @@ Server component; `SELECT display_name, avatar_url, best_score, total_exams, avg
 ### 8.1 טבלאות (`public`)
 | טבלה | עמודות עיקריות | RLS | מדיניות |
 |---|---|---|---|
-| `questions` | `id, type, text, passage_id, options jsonb [{id,text}×4], correct_answer 0–3, explanation (JSON string: strategy/correct_reason/options_analysis[4]), a, b, c, difficulty_level 1–5, created_by, hint, active` | ✅ | **אין** → service-role בלבד |
+| `questions` | `id, type, text, passage_id, options jsonb [{id,text}×4], correct_answer 0–3, explanation (JSON string: strategy/correct_reason/options_analysis[4]), a, b, c, difficulty_level 1–5, created_by, hint, active, skill, target_lemma, concept_key (מחושב)` | ✅ | **אין** → service-role בלבד. `/api/exam/state` מסיר את שלוש עמודות המושג במבחן אמיתי (ב-SC ה-lemma = התשובה) |
 | `passages` | `id, text, difficulty_level, b, active` | ✅ | אין |
 | `exam_sessions` | `id, user_id (guest או auth), mode, started_at, completed_at, current_section_index, current_section_expires_at, theta, theta_history, theta_final, score, questions_by_section jsonb (snapshot!), section_results jsonb, answers_by_section jsonb, is_practice, used_question_ids[], used_passage_ids[]` | ✅ | אין |
-| `review_queue` | `id, guest_id text, user_id uuid, question_id, times_wrong, interval_days, next_review_at, last_reviewed_at` | ✅ | אין |
+| `review_queue` | `id, guest_id text, user_id uuid, question_id, times_wrong, interval_days, next_review_at, last_reviewed_at` | ✅ | אין. **מיושן (2026-09-23)** — לא נכתב ע"י הקוד; להסיר אחרי חלון הפריסה |
+| `srs_cards` | `owner_id, owner_type, concept_key (unique per owner), item_type, skill, target_lemma, anchor_question_id, stability, difficulty, reps, lapses, last_review_at, due_at, version (CAS)` | ✅ | אין (service-role בלבד); merge-guest מעביר (כרטיס קיים של החשבון גובר) |
 | `user_question_history` / `user_passage_history` | `user_key text, question_id/passage_id, seen_at` (unique) | ✅ | אין |
 | `activity_log` | `user_id text, activity_date, source` | ✅ | public ALL ("app enforces ownership") |
 | `user_stats` | `user_id, total_exams, best_score, avg_score, last_exam_at, score_history jsonb, performance_by_type, display_name, avatar_url` | ✅ | own read/write (`auth.uid()`) |

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getServerClients } from '@/lib/supabase-server';
 import { recordClientResponses } from '@/lib/responses';
+import { applyResponsesToSrs } from '@/lib/srs';
 
 const MAX_RESPONSES = 25;
 // An hour on one item is a tab left open, not a latency — reject rather
@@ -31,6 +32,11 @@ const bodySchema = z.object({
  * stored index — clients map shuffled display positions back through
  * toCanonicalOption first. Correctness is graded here from the answer key;
  * the client never reports it.
+ *
+ * This is also the spaced-repetition entry point for those surfaces: every
+ * logged answer is fed to its concept's FSRS card (src/lib/srs.ts). The
+ * response log is the source of truth, so a scheduling failure is reported
+ * but does not fail the request.
  */
 export async function POST(req: Request) {
   const { supabase, user, guestId } = await getServerClients();
@@ -43,12 +49,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
-  const { recorded, error } = await recordClientResponses(
-    supabase,
-    { id: ownerId, type: user ? 'user' : 'guest' },
-    parsed.data.responses,
-  );
+  const owner = { id: ownerId, type: user ? 'user' as const : 'guest' as const };
+  const { recorded, graded, error } = await recordClientResponses(supabase, owner, parsed.data.responses);
   if (error) return NextResponse.json({ error: 'Failed to record responses' }, { status: 500 });
 
-  return NextResponse.json({ ok: true, recorded });
+  const srs = await applyResponsesToSrs(supabase, owner, graded)
+    .catch((e: unknown) => ({ created: 0, reviewed: 0, error: String(e) }));
+  if (srs.error) console.error('[responses] SRS update failed:', srs.error);
+
+  return NextResponse.json({ ok: true, recorded, srs: { created: srs.created, reviewed: srs.reviewed } });
 }

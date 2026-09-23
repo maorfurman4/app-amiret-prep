@@ -244,32 +244,19 @@ function PracticeContent() {
     if (!examMode) {
       setShowResult(true);
     }
+    // Logging the answer also feeds spaced repetition (server-side).
     const answered = questions[currentIndex];
     if (answered) logResponses([responseEntry(answered, optionIndex, 'practice', dwellRef.current.elapsedMs(answered.id))]);
-    // Track answers for spaced repetition (fire-and-forget)
-    const isCorrect = questions[currentIndex] ? isCorrectAnswer(questions[currentIndex], optionIndex) : false;
-    const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
-    authFetch('/api/review-queue', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ guestId, questionId: questions[currentIndex].id, wasCorrect: isCorrect }),
-    }).catch(() => {});
   }, [showResult, sectionMode, examMode, answers, currentIndex, questions]);
 
   // Section mode: submit the whole section (manually or on timeout)
   const finishSection = useCallback(() => {
     // Every question in the section is logged, blanks included — same as a
     // real exam section, where an unanswered item was still presented.
+    // Logging also feeds spaced repetition (server-side).
     logResponses(questions.map((q, i) =>
       responseEntry(q, answers[i], 'practice', dwellRef.current.elapsedMs(q.id))));
     const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
-    questions.forEach((q, i) => {
-      authFetch('/api/review-queue', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ guestId, questionId: q.id, wasCorrect: isCorrectAnswer(q, answers[i]) }),
-      }).catch(() => {});
-    });
     setStep('done');
     authFetch('/api/activity/complete', {
       method: 'POST',

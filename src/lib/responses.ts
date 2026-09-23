@@ -61,6 +61,14 @@ export function buildExamResponseRows({
   }));
 }
 
+/** A logged response, graded — the input the SRS engine consumes. */
+export interface GradedResponse {
+  itemId: string;
+  correct: boolean;
+  latencyMs: number | null;
+  confidence: number | null;
+}
+
 /** A response as reported by a client surface (practice / review / diagnostic). */
 export interface ClientResponseInput {
   itemId: string;
@@ -82,15 +90,15 @@ export async function recordClientResponses(
   supabase: SupabaseClient,
   owner: { id: string; type: OwnerType },
   inputs: ClientResponseInput[],
-): Promise<{ recorded: number; error: string | null }> {
-  if (inputs.length === 0) return { recorded: 0, error: null };
+): Promise<{ recorded: number; graded: GradedResponse[]; error: string | null }> {
+  if (inputs.length === 0) return { recorded: 0, graded: [], error: null };
 
   const itemIds = [...new Set(inputs.map(r => r.itemId))];
   const { data: keys, error: keyErr } = await supabase
     .from('questions')
     .select('id, correct_answer')
     .in('id', itemIds);
-  if (keyErr) return { recorded: 0, error: keyErr.message };
+  if (keyErr) return { recorded: 0, graded: [], error: keyErr.message };
 
   const keyById = new Map((keys ?? []).map(k => [k.id as string, k.correct_answer as number]));
   const rows = inputs
@@ -107,9 +115,15 @@ export async function recordClientResponses(
       theta_before: r.thetaBefore ?? null,
       section_index: r.sectionIndex ?? null,
     }));
-  if (rows.length === 0) return { recorded: 0, error: null };
+  if (rows.length === 0) return { recorded: 0, graded: [], error: null };
 
   const { error } = await supabase.from('responses').insert(rows);
-  if (error) return { recorded: 0, error: error.message };
-  return { recorded: rows.length, error: null };
+  if (error) return { recorded: 0, graded: [], error: error.message };
+  const graded = rows.map(r => ({
+    itemId: r.item_id,
+    correct: r.correct,
+    latencyMs: r.latency_ms,
+    confidence: r.confidence,
+  }));
+  return { recorded: rows.length, graded, error: null };
 }

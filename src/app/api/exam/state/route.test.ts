@@ -4,7 +4,11 @@ const mocks = vi.hoisted(() => ({ getServerClients: vi.fn() }));
 vi.mock('@/lib/supabase-server', () => ({ getServerClients: mocks.getServerClients }));
 import { GET } from './route';
 
-const question = { id: 'q', text: 'Question', correct_answer: 2, explanation: 'Secret answer', hint: 'Secret hint' };
+// For sentence completion the concept tags spell out the answer word.
+const question = {
+  id: 'q', text: 'Question', correct_answer: 2, explanation: 'Secret answer', hint: 'Secret hint',
+  skill: 'sc.vocab', target_lemma: 'secretword', concept_key: 'sc.vocab/secretword',
+};
 function setup(isPractice: boolean, guestId: string | null) {
   const eq = vi.fn().mockReturnThis();
   const single = vi.fn().mockResolvedValue({ data: {
@@ -30,6 +34,8 @@ describe('exam recovery privacy', () => {
     expect(JSON.stringify(data)).not.toContain('Secret answer');
     expect(JSON.stringify(data)).not.toContain('correct_answer');
     expect(JSON.stringify(data)).not.toContain('Secret hint');
+    expect(JSON.stringify(data)).not.toContain('secretword');
+    expect(JSON.stringify(data)).not.toContain('sc.vocab');
     expect(data.session.questions_by_section[1][0].text).toBe('Question');
     expect(data.session.section_results).toEqual([]);
   });

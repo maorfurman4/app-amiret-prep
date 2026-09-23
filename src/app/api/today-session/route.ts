@@ -3,6 +3,7 @@ import { getServerClients } from '@/lib/supabase-server';
 import { computeWeakestType } from '@/lib/weakness';
 import { fetchUnseenQuestions, fetchUnseenRCQuestions } from '@/lib/question-history';
 import { shuffleAllOptions } from '@/lib/option-shuffle';
+import { selectDueReviewQuestions } from '@/lib/srs';
 import type { Question, QuestionType } from '@/types/exam';
 
 const REVIEW_LIMIT = 8;
@@ -26,7 +27,8 @@ interface VocabWord {
  * of making the student choose between five separate entry points (review
  * queue, vocabulary, focused practice by type+difficulty+count, diagnostic,
  * full simulation) before answering a single question:
- *   1. Due review-queue questions (wrong answers up for spaced review)
+ *   1. Due spaced-review concepts, each served as a sibling question when
+ *      one exists (see src/lib/srs.ts)
  *   2. Due vocabulary words (known words up for spaced review) — signed-in
  *      users only; guest vocab progress is localStorage-only (see
  *      user_vocab_known's FK to auth.users in src/lib/guest.ts), so there's
@@ -47,31 +49,12 @@ export async function GET() {
 
   const now = new Date().toISOString();
 
-  // 1. Due review-queue questions
-  let rq = supabase
-    .from('review_queue')
-    .select('question_id')
-    .lte('next_review_at', now)
-    .order('next_review_at', { ascending: true })
-    .limit(REVIEW_LIMIT);
-  rq = user ? rq.eq('user_id', user.id) : rq.eq('guest_id', guestId!);
-  const { data: dueRows } = await rq;
-  const dueQuestionIds = (dueRows ?? []).map(r => r.question_id as string);
-
-  let reviewQuestions: Question[] = [];
-  if (dueQuestionIds.length > 0) {
-    const { data: qs } = await supabase.from('questions').select('*').in('id', dueQuestionIds);
-    const passageIds = [...new Set((qs ?? []).filter(q => q.passage_id).map(q => q.passage_id as string))];
-    let passageMap: Record<string, { id: string; text: string; difficulty_level: number; b: number }> = {};
-    if (passageIds.length > 0) {
-      const { data: passages } = await supabase.from('passages').select('id, text, difficulty_level, b').in('id', passageIds);
-      passageMap = Object.fromEntries((passages ?? []).map(p => [p.id, p]));
-    }
-    reviewQuestions = (qs ?? []).map(q => ({
-      ...q,
-      passage: q.passage_id ? passageMap[q.passage_id] : undefined,
-    })) as Question[];
-  }
+  // 1. Due spaced-review concepts
+  const { questions: reviewQuestions } = await selectDueReviewQuestions(
+    supabase,
+    { id: owner, type: user ? 'user' : 'guest' },
+    { limit: REVIEW_LIMIT },
+  );
 
   // 2. Due vocabulary words — signed-in only, see docstring above
   let vocabWords: VocabWord[] = [];

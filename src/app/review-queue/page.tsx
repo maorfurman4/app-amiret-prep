@@ -88,13 +88,8 @@ export default function ReviewQueuePage() {
     setStep('reviewing');
   };
 
-  // Removes a question from local state only — no DELETE request. Shared by
-  // handleDeleteQuestion (which also tells the server) and handleSelect's
-  // graduation case below (where the server has already deleted the row
-  // itself, via record_correct_review reaching the interval cap — telling
-  // it again would be a no-op, but skipping this local update entirely left
-  // a graduated question sitting in the UI as if it were still queued, only
-  // resolving on a full reload).
+  // Removes a question from local state only — no DELETE request; the
+  // delete handlers below tell the server separately.
   //
   // Deleting a DIFFERENT question than the one currently being viewed must
   // not move the viewer — the old code kept currentIndex as a raw number, so
@@ -147,26 +142,10 @@ export default function ReviewQueuePage() {
 
     const wasCorrect = optionIndex === questions[currentIndex].correct_answer;
     if (wasCorrect) setCorrectCount(c => c + 1);
-    const answeredQuestionId = questions[currentIndex].id;
-    logResponses([responseEntry(questions[currentIndex], optionIndex, 'review', dwellRef.current.elapsedMs(answeredQuestionId))]);
-
-    authFetch('/api/review-queue', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        guestId,
-        questionId: answeredQuestionId,
-        wasCorrect,
-      }),
-    }).then(async res => {
-      if (!res.ok) return;
-      // A correct answer at the interval cap graduates the question out of
-      // the queue server-side — reflect that locally now instead of leaving
-      // it shown as still-queued until a full reload re-fetches.
-      const data = await res.json().catch(() => null) as { action?: string } | null;
-      if (data?.action === 'graduated') removeQuestionLocally(answeredQuestionId);
-    }).catch(() => {});
-  }, [showResult, currentIndex, questions, guestId, removeQuestionLocally]);
+    // Logging the answer is the review: the server grades it and updates
+    // the concept's FSRS card (src/lib/srs.ts), rescheduling it.
+    logResponses([responseEntry(questions[currentIndex], optionIndex, 'review', dwellRef.current.elapsedMs(questions[currentIndex].id))]);
+  }, [showResult, currentIndex, questions]);
 
   const handleNext = useCallback(() => {
     if (currentIndex < questions.length - 1) {

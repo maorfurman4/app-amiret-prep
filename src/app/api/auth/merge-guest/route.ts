@@ -17,7 +17,7 @@ function sanitizeIds(raw: unknown): string[] {
 /**
  * POST /api/auth/merge-guest  { vocabKnown?: string[], vocabFavorites?: string[] }
  * Called once after login: moves everything the user accumulated as a guest
- * (exam sessions, review queue, seen-question/passage history, activity/streak
+ * (exam sessions, spaced-repetition cards, seen-question/passage history, activity/streak
  * log, response log) onto their account, then recomputes user_stats + leaderboard from the
  * merged history. Also unions in the guest's locally-known/favorited vocab
  * word ids passed in the body — those tables have a hard FK to auth.users,
@@ -57,13 +57,18 @@ export async function POST(req: Request) {
   //    a bearer token, so merged in-progress sessions stay accessible)
   await supabase.from('exam_sessions').update({ user_id: user.id }).eq('user_id', guestId);
 
-  // 2. Review queue — drop guest rows that duplicate the account, move the rest
-  const { data: mine } = await supabase.from('review_queue').select('question_id').eq('user_id', user.id);
-  const mineIds = (mine ?? []).map(r => r.question_id as string);
-  if (mineIds.length > 0) {
-    await supabase.from('review_queue').delete().eq('guest_id', guestId).in('question_id', mineIds);
+  // 2. Spaced-repetition cards — a concept the account already has a card
+  //    for keeps the account's memory state (the guest duplicate is
+  //    dropped); every other guest card moves over as-is.
+  const { data: mine } = await supabase.from('srs_cards').select('concept_key')
+    .eq('owner_type', 'user').eq('owner_id', user.id);
+  const mineKeys = (mine ?? []).map(r => r.concept_key as string);
+  if (mineKeys.length > 0) {
+    await supabase.from('srs_cards').delete()
+      .eq('owner_type', 'guest').eq('owner_id', guestId).in('concept_key', mineKeys);
   }
-  await supabase.from('review_queue').update({ user_id: user.id, guest_id: null }).eq('guest_id', guestId);
+  await supabase.from('srs_cards').update({ owner_id: user.id, owner_type: 'user' })
+    .eq('owner_type', 'guest').eq('owner_id', guestId);
 
   // 3. Seen-question / seen-passage history (cross-session dedup keys)
   const { data: myQ } = await supabase.from('user_question_history').select('question_id').eq('user_key', user.id);
@@ -81,7 +86,7 @@ export async function POST(req: Request) {
   await supabase.from('user_passage_history').update({ user_key: user.id }).eq('user_key', guestId);
 
   // 4. Activity log (drives the streak) — same dedupe-then-move pattern as
-  //    review_queue above: a day the account already has activity for wins,
+  //    the SRS cards above: a day the account already has activity for wins,
   //    any other guest-only day is carried over so the streak reflects the
   //    full merged history, not just what happened after signup.
   const { data: myDays } = await supabase.from('activity_log').select('activity_date').eq('user_id', user.id);

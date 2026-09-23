@@ -130,18 +130,9 @@ export default function TodaySessionPage() {
     if (correct) setCorrectCount(c => c + 1);
     setTotalAnswered(t => t + 1);
     // Due reviews are review data; fresh weak-area questions are practice.
+    // Either way the server feeds the answer to its concept's FSRS card.
     logResponses([responseEntry(currentQuestion, optionIndex, phase === 'review' ? 'review' : 'practice',
       dwellRef.current.elapsedMs(currentQuestion.id))]);
-    const guestId = localStorage.getItem('amiret_guest_id') ?? 'guest';
-    // Every answer feeds the same spaced-repetition review queue the rest
-    // of the app uses — right extends the interval, wrong schedules it due
-    // immediately, whether this was already a due review or a fresh weak-
-    // area question that just turned out to be a mistake.
-    authFetch('/api/review-queue', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ guestId, questionId: currentQuestion.id, wasCorrect: correct }),
-    }).catch(() => {});
   };
 
   const nextFromQuestionPhase = () => {

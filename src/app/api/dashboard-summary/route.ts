@@ -52,11 +52,13 @@ export async function GET() {
   const now = new Date().toISOString();
   const today = todayLocalStr();
 
-  let reviewQuery = supabase
-    .from('review_queue')
+  // Due FSRS concept cards (one per concept, however many questions test it).
+  const reviewQuery = supabase
+    .from('srs_cards')
     .select('id', { count: 'exact', head: true })
-    .lte('next_review_at', now);
-  reviewQuery = user ? reviewQuery.eq('user_id', user.id) : reviewQuery.eq('guest_id', guestId!);
+    .eq('owner_type', user ? 'user' : 'guest')
+    .eq('owner_id', owner)
+    .lte('due_at', now);
 
   // Vocab spaced-repetition only exists for signed-in users (user_vocab_known
   // has no guest_id column — guest known/favorites are localStorage-only).

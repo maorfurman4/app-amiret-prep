@@ -1,23 +1,33 @@
 import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 
+/** A concept this stable (≈ 3 weeks until recall drops to 90%) is treated
+ * as learned and leaves the list. */
+const MASTERED_STABILITY_DAYS = 21;
+
 /**
- * GET /api/my-words?guestId=xxx
- * Personal vocabulary built from the user's own mistakes:
- * every sentence-completion question they got wrong (tracked in
- * review_queue) contributes its correct word as a flashcard.
- * Graduating a question out of the review queue removes the word — mastered.
+ * GET /api/my-words
+ * Personal vocabulary built from the user's own mistakes: every
+ * sentence-completion word they have a spaced-repetition card for (i.e.
+ * got wrong at least once) becomes a flashcard, shown via the question
+ * that created the card. Words whose FSRS stability passes
+ * MASTERED_STABILITY_DAYS drop off — learned.
  */
 export async function GET() {
   const { supabase, user, guestId } = await getServerClients();
-  if (!user && !guestId) return NextResponse.json({ words: [] });
+  const ownerId = user?.id ?? guestId;
+  if (!ownerId) return NextResponse.json({ words: [] });
 
-  let q = supabase.from('review_queue').select('question_id, times_wrong');
-  q = user ? q.eq('user_id', user.id) : q.eq('guest_id', guestId!);
-  const { data: queue } = await q;
-  if (!queue || queue.length === 0) return NextResponse.json({ words: [] });
+  const { data: cards } = await supabase
+    .from('srs_cards')
+    .select('anchor_question_id, lapses')
+    .eq('owner_type', user ? 'user' : 'guest')
+    .eq('owner_id', ownerId)
+    .eq('item_type', 'sentence_completion')
+    .lt('stability', MASTERED_STABILITY_DAYS);
+  if (!cards || cards.length === 0) return NextResponse.json({ words: [] });
 
-  const wrongCount = Object.fromEntries(queue.map(r => [r.question_id as string, r.times_wrong as number]));
+  const wrongCount = Object.fromEntries(cards.map(r => [r.anchor_question_id as string, r.lapses as number]));
   const { data: questions } = await supabase
     .from('questions')
     .select('id, text, options, correct_answer, explanation, difficulty_level')

@@ -8,6 +8,7 @@ import {
   planUnseenRCQuestions,
 } from '@/lib/question-history';
 import { buildExamResponseRows } from '@/lib/responses';
+import { applyResponsesToSrs } from '@/lib/srs';
 
 /**
  * POST /api/exam/answer
@@ -159,7 +160,6 @@ export async function POST(req: NextRequest) {
   let seenPassageId: string | null = null;
   let activityDate: string | null = null;
   let activitySource: string | null = null;
-  let wrongQuestionIds: string[] = [];
 
   if (isLastSection) {
     // Exam complete — no more sections to fetch.
@@ -185,13 +185,6 @@ export async function POST(req: NextRequest) {
 
     activityDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
     activitySource = session.is_practice ? 'practice_exam' : 'exam';
-    // Real exam answers are never sent back to the client (anti-cheat), so
-    // wrong questions are queued transactionally at completion.
-    wrongQuestionIds = allResults.flatMap(sr =>
-      (sr.questions as Question[])
-        .filter((q, i) => (sr.answers as (number | null)[])[i] !== q.correct_answer)
-        .map(q => q.id)
-    );
   } else {
     // ── Step 2: Derive next difficulty from updated θ ──────────────────────────
     const nextDifficulty = routeNextDifficulty(newTheta);
@@ -297,7 +290,9 @@ export async function POST(req: NextRequest) {
     p_seen_passage_id: seenPassageId,
     p_activity_date: activityDate,
     p_activity_source: activitySource,
-    p_wrong_question_ids: wrongQuestionIds,
+    // Spaced repetition no longer goes through review_queue — see the FSRS
+    // step after the commit below.
+    p_wrong_question_ids: [],
     p_review_owner_type: user ? 'user' : 'guest',
     p_responses: responseRows,
   });
@@ -307,6 +302,28 @@ export async function POST(req: NextRequest) {
   }
   if (!updated) {
     return NextResponse.json({ error: 'Section already submitted' }, { status: 409 });
+  }
+
+  // Spaced repetition runs once, at completion: real exam answers are never
+  // revealed mid-exam (anti-cheat), and an abandoned exam schedules nothing.
+  // Every scored answer — right or wrong — feeds its concept's FSRS card,
+  // read back from the response rows the commit above just logged, with
+  // their real latencies and timestamps. The exam itself is already safely
+  // committed, so a scheduling failure is logged, not surfaced.
+  if (isLastSection) {
+    const { data: logged, error: logErr } = await supabase
+      .from('responses')
+      .select('item_id, correct, latency_ms, created_at')
+      .eq('session_id', body.sessionId);
+    const srs = logErr
+      ? { error: logErr.message }
+      : await applyResponsesToSrs(
+          supabase,
+          { id: userKey, type: user ? 'user' : 'guest' },
+          ((logged ?? []) as { item_id: string; correct: boolean; latency_ms: number | null; created_at: string }[])
+            .map(r => ({ itemId: r.item_id, correct: r.correct, latencyMs: r.latency_ms, at: new Date(r.created_at) })),
+        ).catch((e: unknown) => ({ error: String(e) }));
+    if (srs.error) console.error('[exam/answer] SRS update failed:', srs.error);
   }
 
   return NextResponse.json({

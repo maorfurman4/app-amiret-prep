@@ -33,6 +33,11 @@ export interface Question {
   b: number;
   c: number;
   difficulty_level: DifficultyLevel;
+  /** Concept tags (see migration 20260923160000). Stripped from live-exam
+   * payloads: for sentence completion target_lemma is the answer. */
+  skill?: string | null;
+  target_lemma?: string | null;
+  concept_key?: string;
   /** Present only on practice/review payloads whose options were shuffled
    * for display: option_order[displayIndex] = stored (canonical) index. */
   option_order?: number[];

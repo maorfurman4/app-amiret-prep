@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mocks = vi.hoisted(() => ({ getServerClients: vi.fn() }));
+const mocks = vi.hoisted(() => ({ getServerClients: vi.fn(), applyResponsesToSrs: vi.fn() }));
 vi.mock('@/lib/supabase-server', () => ({ getServerClients: mocks.getServerClients }));
+vi.mock('@/lib/srs', () => ({ applyResponsesToSrs: mocks.applyResponsesToSrs }));
 
 import { POST } from './route';
 
@@ -34,7 +35,10 @@ const entry = (overrides: Record<string, unknown> = {}) => ({
 });
 
 describe('POST /api/responses', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.applyResponsesToSrs.mockResolvedValue({ created: 0, reviewed: 0, cleared: 0, error: null });
+  });
 
   it('requires an identity', async () => {
     const db = createSupabase();
@@ -71,7 +75,7 @@ describe('POST /api/responses', () => {
     ] }));
 
     expect(res.status).toBe(200);
-    await expect(res.json()).resolves.toEqual({ ok: true, recorded: 3 });
+    await expect(res.json()).resolves.toMatchObject({ ok: true, recorded: 3 });
     expect(db.insert).toHaveBeenCalledWith([
       expect.objectContaining({ owner_id: 'guest-1', owner_type: 'guest', item_id: ITEM_A, correct: true, chosen_option: 2, latency_ms: 4200, context: 'practice' }),
       expect.objectContaining({ item_id: ITEM_B, correct: false, chosen_option: 3, latency_ms: 900, context: 'review' }),
@@ -92,8 +96,29 @@ describe('POST /api/responses', () => {
     const db = createSupabase();
     mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'guest-1' });
     const res = await POST(request({ responses: [entry({ itemId: UNKNOWN }), entry()] }));
-    await expect(res.json()).resolves.toEqual({ ok: true, recorded: 1 });
+    await expect(res.json()).resolves.toMatchObject({ ok: true, recorded: 1 });
     expect(db.insert.mock.calls[0][0]).toHaveLength(1);
+  });
+
+  it('feeds the server-graded rows (never client claims) to the SRS engine', async () => {
+    const db = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: 'user-1' }, guestId: null });
+    await POST(request({ responses: [
+      entry({ itemId: ITEM_A, chosenOption: 1, correct: true, latencyMs: 700 }),
+      entry({ itemId: UNKNOWN }),
+    ] }));
+    expect(mocks.applyResponsesToSrs).toHaveBeenCalledWith(db.supabase, { id: 'user-1', type: 'user' }, [
+      { itemId: ITEM_A, correct: false, latencyMs: 700, confidence: null },
+    ]);
+  });
+
+  it('still reports the answers as logged when scheduling throws', async () => {
+    const db = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'guest-1' });
+    mocks.applyResponsesToSrs.mockRejectedValue(new Error('db down'));
+    const res = await POST(request({ responses: [entry()] }));
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({ ok: true, recorded: 1 });
   });
 
   it('reports a write failure instead of claiming success', async () => {

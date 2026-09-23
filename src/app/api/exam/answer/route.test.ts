@@ -6,7 +6,9 @@ const mocks = vi.hoisted(() => ({
   getServerClients: vi.fn(),
   planUnseenQuestions: vi.fn(),
   planUnseenRCQuestions: vi.fn(),
+  applyResponsesToSrs: vi.fn(),
 }));
+vi.mock('@/lib/srs', () => ({ applyResponsesToSrs: mocks.applyResponsesToSrs }));
 
 vi.mock('@/lib/supabase-server', () => ({ getServerClients: mocks.getServerClients }));
 vi.mock('@/lib/question-history', () => ({
@@ -58,6 +60,7 @@ function session(overrides: Record<string, unknown> = {}) {
 function createSupabase(
   sessionResult = session(),
   updateResult: { data: boolean; error: unknown } = { data: true, error: null },
+  loggedResponses: Record<string, unknown>[] = [],
 ) {
   const fetchEq = vi.fn();
   const fetchSingle = vi.fn().mockResolvedValue({ data: sessionResult, error: null });
@@ -65,12 +68,15 @@ function createSupabase(
   fetchEq.mockReturnValue(fetchChain);
 
   const select = vi.fn().mockReturnValue(fetchChain);
-  const from = vi.fn().mockReturnValue({ select });
+  const responsesEq = vi.fn().mockResolvedValue({ data: loggedResponses, error: null });
+  const from = vi.fn((table: string) => (table === 'responses'
+    ? { select: () => ({ eq: responsesEq }) }
+    : { select }));
   const rpc = vi.fn().mockResolvedValue(updateResult);
 
   return {
     supabase: { from, rpc },
-    spies: { from, fetchEq, rpc },
+    spies: { from, fetchEq, rpc, responsesEq },
     getUpdatePayload: () => rpc.mock.calls[0]?.[1]?.p_update as Record<string, unknown> | undefined,
   };
 }
@@ -202,6 +208,49 @@ describe('POST /api/exam/answer', () => {
     mocks.getServerClients.mockResolvedValue({ supabase: practice.supabase, user: null, guestId: 'owner-id' });
     await POST(request(validBody()));
     expect(practice.spies.rpc.mock.calls[0][1].p_responses.every((r: { context: string }) => r.context === 'practice')).toBe(true);
+  });
+
+  it('does not schedule spaced repetition mid-exam', async () => {
+    const db = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    await POST(request(validBody()));
+    expect(mocks.applyResponsesToSrs).not.toHaveBeenCalled();
+    expect(db.spies.rpc.mock.calls[0][1].p_wrong_question_ids).toEqual([]);
+  });
+
+  it('at completion, feeds every logged exam answer (right and wrong) to FSRS with its real latency and time', async () => {
+    const logged = [
+      { item_id: 'question-1', correct: true, latency_ms: 21000, created_at: '2026-09-23T10:00:00.000Z' },
+      { item_id: 'question-2', correct: false, latency_ms: 64000, created_at: '2026-09-23T10:00:00.000Z' },
+    ];
+    const db = createSupabase(
+      session({ current_section_index: 7, questions_by_section: { 7: questions }, current_section_expires_at: '2999-01-01T00:00:00.000Z' }),
+      { data: true, error: null },
+      logged,
+    );
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: 'account-id' } });
+    mocks.applyResponsesToSrs.mockResolvedValue({ created: 1, reviewed: 0, cleared: 0, error: null });
+
+    const response = await POST(request(validBody({ sectionIndex: 7 })));
+
+    expect(response.status).toBe(200);
+    expect((await response.json()).isComplete).toBe(true);
+    expect(db.spies.responsesEq).toHaveBeenCalledWith('session_id', 'session-id');
+    expect(mocks.applyResponsesToSrs).toHaveBeenCalledWith(db.supabase, { id: 'account-id', type: 'user' }, [
+      { itemId: 'question-1', correct: true, latencyMs: 21000, at: new Date('2026-09-23T10:00:00.000Z') },
+      { itemId: 'question-2', correct: false, latencyMs: 64000, at: new Date('2026-09-23T10:00:00.000Z') },
+    ]);
+  });
+
+  it('a scheduling failure never un-completes an already committed exam', async () => {
+    const db = createSupabase(
+      session({ current_section_index: 7, questions_by_section: { 7: questions }, current_section_expires_at: '2999-01-01T00:00:00.000Z' }),
+    );
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    mocks.applyResponsesToSrs.mockRejectedValue(new Error('boom'));
+    const response = await POST(request(validBody({ sectionIndex: 7 })));
+    expect(response.status).toBe(200);
+    expect((await response.json()).isComplete).toBe(true);
   });
 
   it('commits question-history changes in the same RPC as the section', async () => {

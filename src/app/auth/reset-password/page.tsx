@@ -184,7 +184,7 @@ export default function ResetPasswordPage() {
   })();
 
   return (
-    <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <KeyRound className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />

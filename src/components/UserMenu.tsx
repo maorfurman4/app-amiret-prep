@@ -212,7 +212,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
     return (
       <Link
         href="/auth/login"
-        className="text-sm font-medium text-exam-ink-soft hover:text-exam-ink px-3 py-1.5 rounded-sm hover:bg-exam-paper-alt transition-colors"
+        className="hit-44 text-sm font-medium text-exam-ink-soft hover:text-exam-ink px-3 py-1.5 rounded-sm hover:bg-exam-paper-alt transition-colors"
       >
         כניסה
       </Link>
@@ -421,7 +421,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
       <button
         ref={triggerRef}
         onClick={() => (open ? close() : (setPanel('menu'), setOpen(true)))}
-        className={`flex items-center rounded-full transition-[box-shadow,transform] duration-300 ease-spring hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-exam-accent/50 ${open ? 'ring-2 ring-exam-accent/60' : ''}`}
+        className={`hit-44 flex items-center rounded-full transition-[box-shadow,transform] duration-300 ease-spring hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-exam-accent/50 ${open ? 'ring-2 ring-exam-accent/60' : ''}`}
         aria-label="תפריט משתמש"
         aria-haspopup="menu"
         aria-expanded={open}

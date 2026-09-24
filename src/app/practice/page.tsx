@@ -370,7 +370,7 @@ function PracticeContent() {
 
   if (step === 'pick-type') {
     return (
-      <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg">
@@ -432,7 +432,7 @@ function PracticeContent() {
 
   if (step === 'pick-difficulty') {
     return (
-      <div className="min-h-screen bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
         <div className="w-full max-w-lg">
           <button
             onClick={() => {
@@ -480,7 +480,7 @@ function PracticeContent() {
 
   if (step === 'pick-count') {
     return (
-      <div className="min-h-screen bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
         <div className="w-full max-w-lg">
           <button onClick={() => setStep('pick-difficulty')} className="text-exam-ink-soft text-sm mb-6 hover:text-exam-ink">
             ← חזרה
@@ -551,9 +551,9 @@ function PracticeContent() {
     const isLast = currentIndex === questions.length - 1;
 
     return (
-      <div className="min-h-screen bg-exam-paper" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper" dir="rtl">
         {/* Header */}
-        <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
+        <header className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
           <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="min-w-0">
               <div className="text-sm font-bold text-exam-ink flex items-center gap-2 flex-wrap">
@@ -642,7 +642,7 @@ function PracticeContent() {
             <div className="mt-6 flex items-center justify-between gap-3">
               <button
                 onClick={handlePrevQuestion}
-                className="px-4 py-2 rounded-xl border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,transform] duration-300 ease-spring will-change-transform text-sm"
+                className="hit-44 px-4 py-2 rounded-xl border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,transform] duration-300 ease-spring will-change-transform text-sm"
               >
                 {currentIndex === 0 ? '← לרמת קושי' : 'קודם ›'}
               </button>
@@ -722,7 +722,7 @@ function PracticeContent() {
     );
 
     return (
-      <div className="min-h-screen bg-exam-paper px-4 py-8" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
         <div className="max-w-2xl mx-auto">
           {/* Score summary */}
           <div className="text-center space-y-4 mb-10">
@@ -863,7 +863,7 @@ function PracticeContent() {
 
   // Loading / error fallback
   return (
-    <div className="min-h-screen bg-exam-paper flex items-center justify-center" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
       {loading
         ? <div className="text-exam-ink-soft">טוען שאלות...</div>
         : <div className="text-center">

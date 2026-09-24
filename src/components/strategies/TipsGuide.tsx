@@ -32,7 +32,7 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
   const time = TIME_BY_TYPE[type];
 
   return (
-    <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
       <BackNav backHref="/tips" backLabel="אסטרטגיות" />
       <div className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-2xl space-y-8">

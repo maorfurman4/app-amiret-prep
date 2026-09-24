@@ -129,9 +129,9 @@ export default function StatsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-exam-paper" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex flex-col items-center justify-center h-[calc(100vh-3rem)] text-center px-4">
+        <div className="flex flex-col items-center justify-center h-[calc(100dvh-3rem)] text-center px-4">
           <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-exam-wrong" strokeWidth={1.5} aria-hidden />
           <p className="text-exam-ink-soft mb-6">לא הצלחנו לטעון את הסטטיסטיקה. בדוק את החיבור ונסה שוב.</p>
           <button
@@ -147,18 +147,18 @@ export default function StatsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-exam-paper" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex items-center justify-center h-[calc(100vh-3rem)] text-exam-ink-soft">טוען...</div>
+        <div className="flex items-center justify-center h-[calc(100dvh-3rem)] text-exam-ink-soft">טוען...</div>
       </div>
     );
   }
 
   if (!stats || stats.total_exams === 0) {
     return (
-      <div className="min-h-screen bg-exam-paper" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex flex-col items-center justify-center h-[calc(100vh-3rem)] text-center px-4">
+        <div className="flex flex-col items-center justify-center h-[calc(100dvh-3rem)] text-center px-4">
           <BarChart3 className="w-14 h-14 mx-auto mb-4 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
           <h1 className="text-2xl font-bold text-exam-ink mb-2">אין עדיין נתונים</h1>
           <p className="text-exam-ink-soft mb-6">סיים לפחות מבחן אחד כדי לראות סטטיסטיקות</p>
@@ -177,7 +177,7 @@ export default function StatsPage() {
   const weakestType = weakness ? findWeakestType(weakness.byType) : null;
 
   return (
-    <div className="min-h-screen bg-exam-paper" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
       <div className="max-w-2xl mx-auto space-y-6 py-8 px-4">
         <h1 className="text-2xl font-bold text-exam-ink">הסטטיסטיקה שלי</h1>

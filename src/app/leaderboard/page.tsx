@@ -23,7 +23,7 @@ export default async function LeaderboardPage() {
   const entries = (data ?? []) as LeaderboardEntry[];
 
   return (
-    <div className="min-h-screen bg-exam-paper" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
       <div className="py-8 px-4">
       <div className="max-w-2xl mx-auto">

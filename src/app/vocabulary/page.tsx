@@ -809,14 +809,14 @@ function VocabularyContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-exam-paper flex items-center justify-center" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
         <div className="text-exam-ink-soft text-lg">טוען מילים...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-exam-paper" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
 
       <div className="max-w-lg mx-auto px-4 pt-4 pb-32">
@@ -833,7 +833,7 @@ function VocabularyContent() {
           <h1 className="text-2xl font-bold text-exam-ink flex items-center gap-2"><BookOpen className="w-6 h-6" strokeWidth={1.5} aria-hidden />אוצר מילים</h1>
           <button
             onClick={() => setShowFavoritesList(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-sm bg-exam-wrong-bg border border-exam-wrong/40 text-exam-wrong font-semibold text-sm hover:opacity-80 transition-opacity"
+            className="hit-44 flex items-center gap-1.5 px-3 py-2 rounded-sm bg-exam-wrong-bg border border-exam-wrong/40 text-exam-wrong font-semibold text-sm hover:opacity-80 transition-opacity"
           >
             <Heart className="w-4 h-4" aria-hidden />
             <span>מועדפים</span>
@@ -849,7 +849,7 @@ function VocabularyContent() {
         {showFavoritesList && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowFavoritesList(false)}>
             <div
-              className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[80vh] flex flex-col"
+              className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[80dvh] flex flex-col pb-safe"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
@@ -943,7 +943,7 @@ function VocabularyContent() {
             <button
               key={m.id}
               onClick={() => changeMode(m.id)}
-              className={`flex-1 py-2 rounded-xl text-sm font-semibold transition-[background-color,color,box-shadow,transform] duration-300 ease-spring active:scale-[0.96] ${mode === m.id ? 'bg-exam-surface text-exam-ink shadow-surface' : 'text-exam-ink-soft hover:text-exam-ink'}`}
+              className={`hit-44 flex-1 py-2 rounded-xl text-sm font-semibold transition-[background-color,color,box-shadow,transform] duration-300 ease-spring active:scale-[0.96] ${mode === m.id ? 'bg-exam-surface text-exam-ink shadow-surface' : 'text-exam-ink-soft hover:text-exam-ink'}`}
             >{m.label}</button>
           ))}
         </div>
@@ -960,7 +960,7 @@ function VocabularyContent() {
               <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => setShowFilterDrawer(true)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold shadow-surface hover:shadow-raised active:shadow-pressed active:scale-[0.96] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ${hasActive ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
+                  className={`hit-44 flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold shadow-surface hover:shadow-raised active:shadow-pressed active:scale-[0.96] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ${hasActive ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
                 >
                   <Search className="inline w-4 h-4 ml-1" strokeWidth={1.75} aria-hidden />סינון{activeCount > 0 ? ` (${activeCount})` : ''}
                 </button>
@@ -985,7 +985,7 @@ function VocabularyContent() {
                 {search.trim() && (
                   <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-sage-bg text-exam-sage-strong rounded-sm text-xs font-medium max-w-[140px]">
                     <span className="truncate">&ldquo;{search}&rdquo;</span>
-                    <button onClick={() => setSearch('')} className="hover:text-exam-sage-strong font-bold leading-none flex-shrink-0">×</button>
+                    <button onClick={() => setSearch('')} aria-label="ניקוי החיפוש" className="hit-44 hover:text-exam-sage-strong font-bold leading-none flex-shrink-0">×</button>
                   </span>
                 )}
               </div>
@@ -996,7 +996,7 @@ function VocabularyContent() {
         {/* ── Filter drawer ─────────────────────────────────────────────────── */}
         {showFilterDrawer && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowFilterDrawer(false)}>
-            <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[85dvh] flex flex-col pb-safe" onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
                 <span className="font-bold text-exam-ink text-lg">סינון מילים</span>
                 <div className="flex items-center gap-4">

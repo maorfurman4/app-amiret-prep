@@ -184,7 +184,7 @@ export default function StrategiesPage() {
   const [topic, setTopic] = useState<TopicId | null>(null);
 
   return (
-    <div className="min-h-screen bg-exam-paper pb-24" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper pb-24" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
 
       {/* Header */}

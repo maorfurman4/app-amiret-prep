@@ -106,7 +106,7 @@ export default function DiagnosticPage() {
   /* ── Intro ── */
   if (phase === 'intro') {
     return (
-      <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/" backLabel="דף הבית" />
         <div className="flex-1 flex items-center justify-center px-4 py-10">
           <div className="w-full max-w-lg text-center space-y-6 animate-fade-up">
@@ -136,7 +136,7 @@ export default function DiagnosticPage() {
 
   if (phase === 'error') {
     return (
-      <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center space-y-3">
           <div className="text-exam-wrong">שגיאה בטעינת השאלה הבאה</div>
           <button onClick={() => step(answers)} disabled={pending} className="text-exam-accent underline text-sm">
@@ -156,8 +156,8 @@ export default function DiagnosticPage() {
   const progressPct = Math.round((state?.progress ?? 0) * 100);
   const isLastPossible = answers.length + 1 >= DIAGNOSTIC.maxItems;
   return (
-    <div className="min-h-screen bg-exam-paper" dir="rtl">
-      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
+    <div className="min-h-dvh bg-exam-paper" dir="rtl">
+      <header className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-2xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
@@ -231,7 +231,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
   ];
 
   return (
-    <div className="min-h-screen bg-exam-paper px-4 py-8" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
       <div className="max-w-lg mx-auto space-y-5">
         <div className="text-center animate-fade-up">
           <Sparkles className="w-9 h-9 mx-auto mb-2 text-exam-accent animate-check-pop" strokeWidth={1.5} aria-hidden />

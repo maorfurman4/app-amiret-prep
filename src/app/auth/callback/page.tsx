@@ -109,7 +109,7 @@ function CallbackHandler() {
 
   if (mergeFailed) {
     return (
-      <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center space-y-4 max-w-sm">
           <AlertCircle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
           <h2 className="text-xl font-bold text-exam-ink">ההתחברות הצליחה</h2>
@@ -135,7 +135,7 @@ function CallbackHandler() {
   }
 
   return (
-    <div className="min-h-screen bg-exam-paper flex items-center justify-center">
+    <div className="min-h-dvh bg-exam-paper flex items-center justify-center">
       <div className="text-exam-ink text-center space-y-4">
         <div className="w-10 h-10 border-2 border-exam-border border-t-exam-accent rounded-full animate-spin mx-auto" />
         <p className="text-exam-ink-soft">מתחבר...</p>
@@ -147,7 +147,7 @@ function CallbackHandler() {
 export default function CallbackPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-exam-paper flex items-center justify-center">
+      <div className="min-h-dvh bg-exam-paper flex items-center justify-center">
         <div className="text-exam-ink">טוען...</div>
       </div>
     }>

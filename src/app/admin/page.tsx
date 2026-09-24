@@ -85,7 +85,7 @@ export default function AdminPage() {
   if (gate !== 'allowed') return null;
 
   return (
-    <div className="min-h-screen bg-exam-paper py-10 px-4" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper py-10 px-4" dir="rtl">
       <div className="max-w-xl mx-auto space-y-6">
         <h1 className="text-2xl font-bold text-exam-ink flex items-center gap-2"><Settings className="w-6 h-6" aria-hidden />פאנל אדמין</h1>
         <p className="text-exam-ink-soft text-sm">

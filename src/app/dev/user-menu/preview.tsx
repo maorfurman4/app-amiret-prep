@@ -20,7 +20,7 @@ const MOCK_USER = {
  */
 export function UserMenuPreview() {
   return (
-    <div className="min-h-screen bg-exam-paper flex flex-col items-center px-4 pt-4 pb-8 text-exam-ink" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper flex flex-col items-center px-4 pt-4 pb-8 text-exam-ink" dir="rtl">
       <div className="w-full max-w-lg space-y-7">
         <div className="flex items-center justify-end gap-2 animate-fade-up [&_a]:text-exam-ink-soft [&_a:hover]:text-exam-ink [&_a:hover]:bg-exam-paper-alt">
           <div className="ml-auto text-sm font-bold">/dev/user-menu</div>

@@ -190,7 +190,7 @@ export default function TodaySessionPage() {
 
   if (phase === 'loading') {
     return (
-      <div className="min-h-screen bg-exam-paper flex items-center justify-center" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
         <div className="text-exam-ink-soft">בונה את הסשן שלך...</div>
       </div>
     );
@@ -198,7 +198,7 @@ export default function TodaySessionPage() {
 
   if (phase === 'error') {
     return (
-      <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center space-y-4">
           <AlertTriangle className="w-10 h-10 mx-auto text-exam-wrong" strokeWidth={1.5} aria-hidden />
           <p className="text-exam-ink-soft text-sm">לא הצלחנו לבנות את הסשן. נסה שוב.</p>
@@ -212,7 +212,7 @@ export default function TodaySessionPage() {
 
   if (phase === 'empty') {
     return (
-      <div className="min-h-screen bg-exam-paper" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper" dir="rtl">
         <BackNav backHref="/" backLabel="דף הבית" />
         <div className="max-w-lg mx-auto px-4 py-16 text-center space-y-4">
           <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
@@ -237,7 +237,7 @@ export default function TodaySessionPage() {
     ].filter(Boolean) as { icon: typeof RotateCcw; label: string; sub: string }[];
 
     return (
-      <div className="min-h-screen bg-exam-paper" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper" dir="rtl">
         <BackNav backHref="/" backLabel="דף הבית" />
         <div className="max-w-lg mx-auto px-4 py-10">
           <div className="text-center mb-8">
@@ -272,8 +272,8 @@ export default function TodaySessionPage() {
   if ((phase === 'review' || phase === 'weak') && currentQuestion) {
     const phaseLabel = phase === 'review' ? 'חזרה על טעויות' : 'תרגול ממוקד';
     return (
-      <div className="min-h-screen bg-exam-paper" dir="rtl">
-        <div className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
+      <div className="min-h-dvh bg-exam-paper" dir="rtl">
+        <div className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
           <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
             <span className="text-sm font-bold text-exam-ink">{phaseLabel}</span>
             <span className="text-xs text-exam-ink-soft">{idx + 1} / {currentQuestions.length}</span>
@@ -311,8 +311,8 @@ export default function TodaySessionPage() {
 
   if (phase === 'vocab' && currentWord && data) {
     return (
-      <div className="min-h-screen bg-exam-paper" dir="rtl">
-        <div className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
+      <div className="min-h-dvh bg-exam-paper" dir="rtl">
+        <div className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
           <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
             <span className="text-sm font-bold text-exam-ink">מילים לחזרה</span>
             <span className="text-xs text-exam-ink-soft">{idx + 1} / {data.vocabWords.length}</span>
@@ -364,7 +364,7 @@ export default function TodaySessionPage() {
   if (phase === 'done') {
     const pct = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : null;
     return (
-      <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center max-w-sm space-y-4">
           <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
           <h1 className="text-2xl font-bold text-exam-ink">סיימת את הסשן של היום!</h1>

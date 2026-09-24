@@ -285,13 +285,13 @@ function LoginForm() {
       <div className="flex rounded-sm bg-exam-paper-alt p-1 gap-1">
         <button
           onClick={() => { setTab('login'); setError(null); }}
-          className={`flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'login' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
+          className={`hit-44 flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'login' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
         >
           כניסה
         </button>
         <button
           onClick={() => { setTab('signup'); setError(null); }}
-          className={`flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'signup' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
+          className={`hit-44 flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'signup' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
         >
           הרשמה
         </button>
@@ -314,7 +314,7 @@ function LoginForm() {
               <button
                 type="button"
                 onClick={() => { setShowForgot(true); setError(null); }}
-                className="float-left text-xs text-exam-accent hover:underline font-normal"
+                className="hit-44 float-left text-xs text-exam-accent hover:underline font-normal"
               >
                 שכחת סיסמה?
               </button>
@@ -351,7 +351,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
       <div className="w-full max-w-sm">
         {/* Header */}
         <div className="text-center mb-8">

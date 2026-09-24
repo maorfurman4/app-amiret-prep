@@ -54,7 +54,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
 
   if (fetchError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-exam-paper" dir="rtl">
+      <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
           <div className="text-exam-wrong text-xl mb-3">שגיאה בטעינת השאלות</div>
           <button onClick={() => { setFetchError(false); setLoadToken(t => t + 1); }} className="text-exam-accent underline text-sm">נסה שוב</button>
@@ -65,7 +65,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
 
   if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-exam-paper">
+      <div className="min-h-dvh flex items-center justify-center bg-exam-paper">
         <div className="text-exam-ink-soft">טוען שאלות...</div>
       </div>
     );
@@ -96,9 +96,9 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
   const SectionIcon = TYPE_ICONS[question.sectionType] ?? FileText;
 
   return (
-    <div className="min-h-screen bg-exam-paper" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
+      <header className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <div>
@@ -142,7 +142,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
       <div className="max-w-3xl mx-auto px-4 py-6 flex gap-6">
         {/* Question number sidebar — desktop */}
         <aside className="hidden md:block w-20 flex-shrink-0">
-          <div className="sticky top-32 space-y-1 max-h-[calc(100vh-10rem)] overflow-y-auto">
+          <div className="sticky top-32 space-y-1 max-h-[calc(100dvh-10rem)] overflow-y-auto">
             {filteredIndices.map((flatIdx, pos) => {
               const isCorrect = selectedAnswers[flatIdx] === questions[flatIdx].correct_answer;
               return (

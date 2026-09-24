@@ -103,6 +103,45 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Safe areas (notch / home bar / landscape sensor housing). Non-zero only
+   because the viewport sets viewport-fit=cover (src/app/layout.tsx). */
+@utility pt-safe { padding-top: env(safe-area-inset-top); }
+@utility pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+@utility px-safe {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+/* Sticky headers stick just below the status-bar scrim, not under the notch. */
+@utility top-safe { top: env(safe-area-inset-top); }
+@utility h-safe-top { height: env(safe-area-inset-top); }
+/* Tap target ≥ 44×44 without changing layout: an invisible, centered
+   pseudo-element extends the hit area of a visually smaller control. */
+@utility hit-44 {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+/* Room for the fixed mobile BottomNav, including its home-bar padding. */
+@utility pb-nav { padding-bottom: calc(6rem + env(safe-area-inset-bottom)); }
+
+/* iOS Safari zooms the page when a focused field's text is under 16px, and
+   stays zoomed (which reads as horizontal scrolling). Touch devices only, so
+   desktop keeps its compact field styles. */
+@media (pointer: coarse) {
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
+}
+
 /* Streak badge animation — entrance pop + idle flame flicker (StreakBadge.tsx) */
 @theme {
   --animate-streak-pop: streak-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;

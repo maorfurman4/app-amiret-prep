@@ -17,7 +17,7 @@ export default function ErrorBoundary({ error, reset }: { error: Error & { diges
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-exam-paper flex items-center justify-center px-4" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
       <div className="text-center max-w-sm space-y-4">
         <AlertTriangle className="w-12 h-12 mx-auto text-exam-wrong" strokeWidth={1.5} aria-hidden />
         <h1 className="text-xl font-bold text-exam-ink">משהו השתבש</h1>

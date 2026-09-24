@@ -26,14 +26,14 @@ export function BackNav({ backHref = '/', backLabel = 'דף הבית', title }: 
 
   return (
     <nav
-      className="sticky top-0 z-30 bg-exam-surface border-b border-exam-border"
+      className="sticky top-safe z-30 bg-exam-surface border-b border-exam-border"
       dir="rtl"
     >
       {/* Top row: back + title */}
       <div className="flex items-center gap-3 px-4 py-2.5">
         <Link
           href={backHref}
-          className="flex items-center gap-1.5 text-exam-accent hover:opacity-80 text-sm font-medium transition-opacity flex-shrink-0"
+          className="hit-44 flex items-center gap-1.5 text-exam-accent hover:opacity-80 text-sm font-medium transition-opacity flex-shrink-0"
         >
           <ArrowRight className="w-4 h-4" aria-hidden />
           <span>{backLabel}</span>

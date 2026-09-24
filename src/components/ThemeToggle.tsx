@@ -24,7 +24,7 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={isDark ? 'מעבר למצב בהיר' : 'מעבר למצב כהה'}
-      className="w-9 h-9 rounded-full bg-exam-surface border border-exam-border flex items-center justify-center text-base hover:bg-exam-paper-alt transition-colors"
+      className="hit-44 w-9 h-9 rounded-full bg-exam-surface border border-exam-border flex items-center justify-center text-base hover:bg-exam-paper-alt transition-colors"
     >
       {isDark ? <Sun className="w-4 h-4" aria-hidden /> : <Moon className="w-4 h-4" aria-hidden />}
     </button>

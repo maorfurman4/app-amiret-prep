@@ -9,7 +9,7 @@ const CARDS = QUESTION_GUIDES.map(g => ({ href: g.tipsHref, icon: g.icon, title:
 
 export default function TipsIndexPage() {
   return (
-    <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
       <div className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-2xl">

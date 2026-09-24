@@ -291,7 +291,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-exam-paper" dir="rtl">
+      <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
           <div className="text-exam-wrong text-xl mb-4 font-sans">{error}</div>
           <button onClick={loadSession} className="text-exam-ink underline font-sans">נסה שוב</button>
@@ -302,7 +302,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   if (!session || currentQuestions.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-exam-paper" dir="rtl">
+      <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-exam-ink-soft text-lg font-sans">טוען מבחן...</div>
       </div>
     );
@@ -311,9 +311,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const question = currentQuestions[currentQuestionIndex];
 
   return (
-    <div className="min-h-screen bg-exam-paper font-sans" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper font-sans" dir="rtl">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
+      <header className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <button

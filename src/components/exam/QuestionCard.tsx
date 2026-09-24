@@ -156,7 +156,7 @@ export function QuestionCard({
           {!hintVisible ? (
             <button
               onClick={() => setHintQuestionId(question.id)}
-              className="text-sm text-exam-alt hover:opacity-80 flex items-center gap-1.5 transition-opacity"
+              className="hit-44 text-sm text-exam-alt hover:opacity-80 flex items-center gap-1.5 transition-opacity"
             >
               <Lightbulb className="w-4 h-4" aria-hidden />
               <span>רמז — כיוון לפתרון</span>

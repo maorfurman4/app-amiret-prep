@@ -4,8 +4,8 @@
   "description": "134+ — תרגול ומבחני הכנה אדפטיביים לאמירנט, בדרך לפטור",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#2563eb",
+  "background_color": "#FAF8F2",
+  "theme_color": "#FAF8F2",
   "lang": "he",
   "dir": "rtl",
   "icons": [

@@ -245,7 +245,7 @@ export default function ReviewQueuePage() {
 
   if (step === 'loading') {
     return (
-      <div className="min-h-screen bg-exam-paper flex items-center justify-center" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
         <div className="text-exam-ink-soft text-lg">טוען שאלות לחזרה...</div>
       </div>
     );
@@ -253,7 +253,7 @@ export default function ReviewQueuePage() {
 
   if (step === 'error') {
     return (
-      <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-4">
@@ -274,7 +274,7 @@ export default function ReviewQueuePage() {
 
   if (step === 'empty') {
     return (
-      <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-6">
@@ -298,7 +298,7 @@ export default function ReviewQueuePage() {
     const order = sortedCategories(groups);
 
     return (
-      <div className="min-h-screen bg-exam-paper flex flex-col" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex-1 px-4 py-8">
           <div className="w-full max-w-lg mx-auto space-y-6">
@@ -362,7 +362,7 @@ export default function ReviewQueuePage() {
     const color = pct >= 80 ? 'text-exam-sage-strong' : pct >= 60 ? 'text-exam-alt' : 'text-exam-wrong';
 
     return (
-      <div className="min-h-screen bg-exam-paper flex flex-col items-center justify-center px-4" dir="rtl">
+      <div className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4" dir="rtl">
         <div className="w-full max-w-sm text-center space-y-6">
           {pct >= 80 ? <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden /> : pct >= 60 ? <ThumbsUp className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden /> : <BookOpen className="w-14 h-14 mx-auto text-exam-ink-soft" strokeWidth={1.5} aria-hidden />}
           <div>
@@ -408,7 +408,7 @@ export default function ReviewQueuePage() {
 
   const questionPicker = (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowQuestionPicker(false)}>
-      <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[70vh] flex flex-col" onClick={e => e.stopPropagation()}>
+      <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[70dvh] flex flex-col pb-safe" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
           <span className="font-bold text-exam-ink text-lg">בחר שאלה</span>
           <div className="flex items-center gap-3">
@@ -491,10 +491,10 @@ export default function ReviewQueuePage() {
   const isLast = currentIndex === questions.length - 1;
 
   return (
-    <div className="min-h-screen bg-exam-paper" dir="rtl">
+    <div className="min-h-dvh bg-exam-paper" dir="rtl">
       {showQuestionPicker && questionPicker}
 
-      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
+      <header className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">

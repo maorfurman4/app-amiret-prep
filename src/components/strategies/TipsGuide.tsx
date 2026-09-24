@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { AlertTriangle, X } from 'lucide-react';
 import { BackNav } from '@/components/BackNav';
 import { RichText } from '@/components/strategies/RichText';
+import { ProgressiveRuleCard } from '@/components/strategies/ProgressiveRuleCard';
 import { GUIDE_BY_ID, TIME_BY_TYPE, type CtaTone, type QuestionTypeId } from '@/data/strategies';
 
 const CTA_CLASS: Record<CtaTone, { box: string; icon: string }> = {
@@ -73,6 +74,18 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
               </ol>
             </Card>
           )}
+
+          {deep.layered?.map(section => (
+            <section key={section.title} aria-label={section.title}>
+              <h2 className="text-lg font-bold text-exam-ink mb-1">{section.title}</h2>
+              {section.intro && <p className="text-exam-ink-soft text-sm leading-relaxed mb-4">{section.intro}</p>}
+              <div className={`space-y-3 ${section.intro ? '' : 'mt-3'}`}>
+                {section.rules.map((rule, i) => (
+                  <ProgressiveRuleCard key={rule.id} rule={rule} index={i + 1} />
+                ))}
+              </div>
+            </section>
+          ))}
 
           {deep.questionKinds && (
             <Card title={deep.questionKinds.title}>
@@ -170,7 +183,7 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
           ))}
 
           <div className="text-center pb-4">
-            <Link href="/tips" className="text-sm text-exam-accent hover:opacity-80 transition-opacity">
+            <Link href="/tips" className="hit-44 text-sm text-exam-accent hover:opacity-80 transition-opacity">
               ← חזרה לכל האסטרטגיות
             </Link>
           </div>

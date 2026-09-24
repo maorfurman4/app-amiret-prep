@@ -39,16 +39,29 @@ describe('layered rules (rule → why → example)', () => {
     }
   });
 
+  it('highlights phrases that actually occur in each sentence', () => {
+    for (const r of LAYERED) {
+      if (r.example.kind !== 'pair') continue;
+      const { source, correct, trap, highlight } = r.example;
+      const sentences = { source, correct, trap };
+      for (const key of ['source', 'correct', 'trap'] as const) {
+        expect(highlight[key].length, `${r.id}.${key}`).toBeGreaterThan(0);
+        for (const phrase of highlight[key]) expect(sentences[key], `${r.id}.${key}`).toContain(phrase);
+      }
+    }
+  });
+
   it('cites a source for the empirical answer-changing claim', () => {
     expect(CHANGE_ANSWER_RULE.source).toMatch(/Kruger/);
   });
 });
 
 describe('rendered content derives from the layered rules', () => {
-  it('lists all eight guards on the restatement deep-dive page', () => {
-    const tips = GUIDE_BY_ID.restatement.deep.tips!.items;
-    expect(tips).toHaveLength(RESTATEMENT_GUARDS.length);
-    RESTATEMENT_GUARDS.forEach((g, i) => expect(tips[i].tip).toContain(g.rule));
+  it('renders all eight guards and both precision rules as layered cards on the restatement page', () => {
+    const sections = GUIDE_BY_ID.restatement.deep.layered!;
+    expect(sections[0].rules).toBe(RESTATEMENT_GUARDS);
+    expect(sections[1].rules).toEqual([TOO_SIMILAR_RULE, CHANGE_ANSWER_RULE]);
+    expect(GUIDE_BY_ID.restatement.deep.tips).toBeUndefined();
   });
 
   it('uses the softened similarity rule, not the old "too similar = trap" heuristic', () => {

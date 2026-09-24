@@ -118,6 +118,12 @@ export interface MinimalPair {
   trap: string;
   /** What the trap changed — the one thing to notice. */
   note: string;
+  /**
+   * The exact phrases to highlight in each sentence — authored, not diffed:
+   * a faithful paraphrase changes many words, but only these carry the guard.
+   * Each phrase must appear verbatim in its sentence (strategies.test.ts).
+   */
+  highlight: { source: string[]; correct: string[]; trap: string[] };
 }
 
 /** A decision scenario, for rules that are about behavior rather than wording. */
@@ -156,6 +162,7 @@ export const RESTATEMENT_GUARDS: LayeredRule[] = [
       correct: 'The majority of participants said that their sleep had improved.',
       trap: 'All of the participants said that their sleep had improved.',
       note: 'most → the majority שומר על הכמות; all מכליל את הטענה על כולם.',
+      highlight: { source: ['Most'], correct: ['The majority'], trap: ['All'] },
     },
   },
   {
@@ -169,6 +176,7 @@ export const RESTATEMENT_GUARDS: LayeredRule[] = [
       correct: "The committee's decision was, to some extent, predictable.",
       trap: "Everyone knew in advance exactly what the committee would decide.",
       note: 'הכיוון נכון (צפוי), אבל "everyone knew exactly" מגזים — לשון המעטה אינה ודאות.',
+      highlight: { source: ['not unexpected'], correct: ['to some extent, predictable'], trap: ['Everyone knew in advance exactly'] },
     },
   },
   {
@@ -182,6 +190,7 @@ export const RESTATEMENT_GUARDS: LayeredRule[] = [
       correct: 'Traffic returned to normal only after the bridge had been repaired.',
       trap: 'Traffic returned to normal before the repairs to the bridge were finished.',
       note: '"Not until X did Y" = Y רק אחרי X. ה-trap מקדים את Y ל-X.',
+      highlight: { source: ['Not until'], correct: ['only after'], trap: ['before'] },
     },
   },
   {
@@ -195,6 +204,7 @@ export const RESTATEMENT_GUARDS: LayeredRule[] = [
       correct: "Falling demand for its products led to the factory's closure.",
       trap: 'Demand for its products fell because the factory closed.',
       note: 'אותם שני אירועים, חץ סיבתי הפוך.',
+      highlight: { source: ['because demand for its products fell'], correct: ['Falling demand', 'led to'], trap: ['because the factory closed'] },
     },
   },
   {
@@ -207,7 +217,8 @@ export const RESTATEMENT_GUARDS: LayeredRule[] = [
       source: 'The new drug may reduce the risk of heart disease.',
       correct: 'The new drug could possibly lower the risk of heart disease.',
       trap: 'The new drug will reduce the risk of heart disease.',
-      note: 'may (אפשרות) → will (ודאות). אותו נושא, אותו כיוון, עוצמה אחרת.',
+      note: 'may (אפשרות) הפך ל-will (ודאות). אותו נושא, אותו כיוון — עוצמה אחרת.',
+      highlight: { source: ['may'], correct: ['could possibly'], trap: ['will'] },
     },
   },
   {
@@ -221,6 +232,7 @@ export const RESTATEMENT_GUARDS: LayeredRule[] = [
       correct: 'The company failed to invest in safety, and as a result the accident was not prevented.',
       trap: 'The company invested in safety, so the accident was prevented.',
       note: 'ה-trap הופך את התנאי ההיפותטי לעובדה — בדיוק ההפך מהמקור.',
+      highlight: { source: ['Had the company invested'], correct: ['failed to invest'], trap: ['The company invested'] },
     },
   },
   {
@@ -234,6 +246,7 @@ export const RESTATEMENT_GUARDS: LayeredRule[] = [
       correct: 'Jupiter is the largest planet in the solar system.',
       trap: 'Jupiter is about the same size as the other planets in the solar system.',
       note: '"No other … as large as" = הכי גדול. ה-trap הופך יתרון לשוויון.',
+      highlight: { source: ['No other planet', 'as large as'], correct: ['the largest'], trap: ['about the same size as'] },
     },
   },
   {
@@ -247,6 +260,7 @@ export const RESTATEMENT_GUARDS: LayeredRule[] = [
       correct: 'Some students who studied abroad did not improve their English.',
       trap: 'None of the students who studied abroad improved their English.',
       note: '"Not every" = חלק לא; "None" = אף אחד. שלילה חלקית הפכה למוחלטת.',
+      highlight: { source: ['Not every'], correct: ['Some', 'did not'], trap: ['None'] },
     },
   },
 ];
@@ -263,6 +277,7 @@ export const TOO_SIMILAR_RULE: LayeredRule = {
     correct: 'The budget was approved by the manager after a long discussion.',
     trap: 'The manager approved the budget before the discussion began.',
     note: 'הנכונה כמעט זהה למקור (רק סביל). פסילה בגלל דמיון הייתה טעות; ה-trap נופל בשומר הזמן.',
+    highlight: { source: ['after'], correct: ['was approved by'], trap: ['before'] },
   },
 };
 
@@ -281,12 +296,6 @@ export const CHANGE_ANSWER_RULE: LayeredRule = {
 /** The shared "rescue protocol" step every question type ends with. */
 const CHANGE_ANSWER_STEP = { step: 'רוצה לשנות תשובה?', detail: CHANGE_ANSWER_RULE.rule };
 
-function pairText(example: LayeredRule['example']): string {
-  return example.kind === 'pair'
-    ? `מקור: "${example.source}" ✓ "${example.correct}" ✗ "${example.trap}" — ${example.note}`
-    : example.text;
-}
-
 /* ─── שיטות עבודה לכל סוג שאלה ─────────────────────────────────────────────── */
 
 export type CtaTone = 'accent' | 'alt' | 'sage';
@@ -299,6 +308,8 @@ export interface DeepGuide {
   whatItTests?: { title: string; body: string };
   method?: { title: string; intro?: string; steps: { title: string; body: string }[]; numbered: boolean };
   tips?: { title: string; items: { tip: string; example: string }[] };
+  /** Interactive rule cards (rule → why → example), rendered with progressive disclosure. */
+  layered?: { title: string; intro?: string; rules: LayeredRule[] }[];
   traps?: { title: string; items: { trap: string; detail: string }[] };
   questionKinds?: {
     title: string;
@@ -539,10 +550,17 @@ export const QUESTION_GUIDES: QuestionGuide[] = [
           },
         ],
       },
-      tips: {
-        title: 'שמונת השומרים — מה המסיח משנה בשקט',
-        items: RESTATEMENT_GUARDS.map(g => ({ tip: `${g.title}: ${g.rule}`, example: `${g.why} ${pairText(g.example)}` })),
-      },
+      layered: [
+        {
+          title: 'שמונת השומרים — מה המסיח משנה בשקט',
+          intro: 'כל מסיח טוב משאיר את הנושא ואת רוב הניסוח, ומשנה בשקט אחד מהשומרים האלה. הקש על כלל כדי לראות למה הוא עובד, ושוב כדי לראות דוגמה.',
+          rules: RESTATEMENT_GUARDS,
+        },
+        {
+          title: 'כללי דיוק',
+          rules: [TOO_SIMILAR_RULE, CHANGE_ANSWER_RULE],
+        },
+      ],
       traps: {
         title: 'מלכודות נפוצות — ולמה הן עובדות',
         items: [

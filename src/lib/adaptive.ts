@@ -119,31 +119,50 @@ export function estimateThetaMLE(
  * Used as fallback when MLE would diverge (all correct / all wrong in first section).
  */
 export function estimateThetaEAP(items: IrtParams[], responses: number[]): number {
+  return posteriorEAP(items, responses).theta;
+}
+
+/**
+ * The full EAP posterior summary: mean (θ̂, clamped ±3) and posterior SD.
+ * The SD is the diagnostic's measure of certainty — unlike 1/√information
+ * it includes the prior, so it is finite (≈1) before any answers and
+ * shrinks as evidence accumulates.
+ */
+export function posteriorEAP(
+  items: IrtParams[],
+  responses: number[],
+  prior: { mean: number; sd: number } = { mean: 0, sd: 1 },
+): { theta: number; sd: number } {
   const POINTS = 41;
   const MIN = -3;
   const MAX = 3;
   const step = (MAX - MIN) / (POINTS - 1);
 
-  let numerator = 0;
-  let denominator = 0;
+  let m0 = 0;
+  let m1 = 0;
+  let m2 = 0;
 
   for (let i = 0; i < POINTS; i++) {
     const t = MIN + i * step;
-    const prior = Math.exp(-0.5 * t * t); // N(0,1) unnormalized
-    let likelihood = 1;
+    const z = (t - prior.mean) / prior.sd;
+    let weight = Math.exp(-0.5 * z * z); // normal prior, unnormalized
 
     for (let j = 0; j < items.length; j++) {
       const p = irtProbability(t, items[j]);
-      likelihood *= responses[j] === 1 ? p : 1 - p;
+      weight *= responses[j] === 1 ? p : 1 - p;
     }
 
-    const weight = likelihood * prior;
-    numerator += t * weight;
-    denominator += weight;
+    m0 += weight;
+    m1 += t * weight;
+    m2 += t * t * weight;
   }
 
-  if (denominator < 1e-15) return 0;
-  return Math.max(-3, Math.min(3, numerator / denominator));
+  if (m0 < 1e-15) return { theta: 0, sd: 1 };
+  const mean = m1 / m0;
+  return {
+    theta: Math.max(-3, Math.min(3, mean)),
+    sd: Math.sqrt(Math.max(0, m2 / m0 - mean * mean)),
+  };
 }
 
 // ─── Section Routing ──────────────────────────────────────────────────────────

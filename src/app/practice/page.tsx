@@ -16,7 +16,7 @@ import { pickContextualTip } from '@/lib/strategy-tip';
 import { ContextualStrategyCard } from '@/components/strategies/ContextualStrategyCard';
 import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon } from 'lucide-react';
 
-type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
+type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'starting' | 'practicing' | 'done';
 type Difficulty = 1 | 2 | 3 | 4 | 5 | 'random';
 // A real question type, or the UI-only "mixed" option that interleaves all
 // of them in one session (see /api/practice/questions' `mixed` branch).
@@ -76,10 +76,14 @@ function PracticeContent() {
   const initialDiff: Difficulty | null = initialType && requestedDiff
     ? requestedDiff === 'random' ? 'random' : Math.max(1, Math.min(5, parseInt(requestedDiff, 10) || 3)) as Difficulty
     : null;
+  // start=1 (e.g. the diagnostic's "Start here"): type + level are already
+  // decided, so skip the count picker and go straight into a default
+  // 5-question learn-mode session.
+  const autoStart = params.get('start') === '1' && initialType !== null && initialType !== 'mixed' && initialDiff !== null;
   const router = useRouter();
   const { setInProgress } = useActivityGuard();
 
-  const [step, setStep]               = useState<Step>(initialType ? initialDiff ? 'pick-count' : 'pick-difficulty' : 'pick-type');
+  const [step, setStep]               = useState<Step>(autoStart ? 'starting' : initialType ? initialDiff ? 'pick-count' : 'pick-difficulty' : 'pick-type');
   const [selectedType, setType]       = useState<PracticeType | null>(initialType);
   const [selectedDiff, setDiff]       = useState<Difficulty | null>(initialDiff);
   const [selectedCount, setCount]     = useState<5 | 10>(5);
@@ -91,7 +95,7 @@ function PracticeContent() {
   // backgrounded tab) instead of a naive per-second decrement.
   const [sectionExpiresAt, setSectionExpiresAt] = useState<number | null>(null);
 
-  const [loading, setLoading]         = useState(false);
+  const [loading, setLoading]         = useState(autoStart);
   const [error, setError]             = useState<string | null>(null);
   const [questions, setQuestions]     = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -211,6 +215,17 @@ function PracticeContent() {
       setLoading(false);
     }
   };
+
+  // Deferred a microtask so the fetch's own state updates land outside the
+  // effect body (loading already starts true for an auto-start). The ref
+  // keeps a re-run effect (StrictMode) from fetching — and marking seen —
+  // a second batch.
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (!autoStart || autoStartedRef.current) return;
+    autoStartedRef.current = true;
+    Promise.resolve().then(() => fetchQuestions());
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Learn mode only: back to the previous question (re-shown as already
   // answered, read-only), or to the difficulty picker from question 1 —

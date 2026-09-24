@@ -121,7 +121,7 @@ export default function ExamModePage() {
               <Stethoscope className="w-8 h-8 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
               <div>
                 <div className="text-lg font-bold text-exam-ink">אבחון רמה מהיר</div>
-                <div className="text-sm text-exam-ink-soft leading-relaxed">12 שאלות אדפטיביות בכ-10 דקות — גלה את הרמה שלך ומאיפה להתחיל</div>
+                <div className="text-sm text-exam-ink-soft leading-relaxed">6–10 שאלות אדפטיביות בכ-5 דקות — גלה את הרמה שלך ומאיפה להתחיל</div>
               </div>
             </div>
           </Link>

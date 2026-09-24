@@ -36,8 +36,8 @@ describe('three learning rings', () => {
     expect(render({ sim: true })).toContain('בוצעה');
   });
 
-  it('only celebrates when all three rings are closed', () => {
-    const pop = 'check-pop';
+  it('only marks completion when all three rings are closed', () => {
+    const pop = 'כל טבעות הלמידה הושלמו';
     expect(render({ effort: 15, done: 3, due: 0, sim: false })).not.toContain(pop);
     expect(render({ effort: 14, done: 3, due: 0, sim: true })).not.toContain(pop);
     expect(render({ effort: 15, done: 3, due: 0, sim: true })).toContain(pop);

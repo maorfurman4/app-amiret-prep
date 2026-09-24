@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { todayLocalStr } from '@/lib/date-local';
+import { AchievementGlow, useIncrease } from './AchievementMotion';
 import { Check } from 'lucide-react';
 import { ringProgress, type Rings } from '@/lib/rings';
 
@@ -34,7 +37,7 @@ function Ring({ r, ratio, fill, track }: { r: number; ratio: number; fill: strin
       <circle cx={c} cy={c} r={r} strokeWidth={STROKE} className={track} fill="none" />
       <circle
         cx={c} cy={c} r={r} strokeWidth={STROKE} fill="none"
-        className={`${fill} transition-[stroke-dashoffset] duration-700 ease-spring-soft`}
+        className={`${fill} transition-[stroke-dashoffset,stroke] duration-[900ms] ease-spring-soft motion-reduce:transition-none`}
         strokeLinecap="round"
         strokeDasharray={circumference}
         strokeDashoffset={circumference * (1 - ratio)}
@@ -44,29 +47,40 @@ function Ring({ r, ratio, fill, track }: { r: number; ratio: number; fill: strin
   );
 }
 
-export function DailyRings({ rings }: { rings: Rings }) {
+export function DailyRings({ rings, persistCelebration = true }: { rings: Rings; persistCelebration?: boolean }) {
   const progress = ringProgress(rings);
   const ratios = [progress.effort, progress.retention, progress.simulation];
   const allClosed = ratios.every(r => r >= 1);
+  const closure = useIncrease(allClosed ? 1 : 0);
+  const [arrivalReward, setArrivalReward] = useState(false);
+  useEffect(() => {
+    if (!allClosed || !persistCelebration) return;
+    const key = 'amiret_ring_celebration_seen_date';
+    const today = todayLocalStr();
+    try { if (localStorage.getItem(key) === today) return; } catch { /* Optional persistence. */ }
+    const timer = setTimeout(() => {
+      try { localStorage.setItem(key, today); } catch { /* Session-only reward. */ }
+      setArrivalReward(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [allClosed, persistCelebration]);
+  const celebrate = allClosed && (closure.increased || arrivalReward);
   const reviewsCaughtUp = rings.retention.due === 0;
   const retentionTarget = rings.retention.done + rings.retention.due;
 
   return (
     <div className="flex items-center gap-4 px-3" dir="rtl" role="group" aria-label="ההתקדמות שלך היום">
-      <div className="relative shrink-0">
-        {/* Ambient glow behind the rings — quiet spatial depth, not a spotlight */}
-        <div className="absolute inset-0 -z-10 rounded-full bg-exam-sage/20 blur-lg animate-ambient-glow motion-reduce:animate-none" aria-hidden />
+      <div className="relative isolate shrink-0">
+        {celebrate && <AchievementGlow key={closure.revision} delay={720} />}
         <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} className="-scale-x-100" aria-hidden>
           {RADII.map((r, i) => (
             <Ring key={i} r={r} ratio={ratios[i]} fill={RING_STYLES[i].fill} track={RING_STYLES[i].track} />
           ))}
         </svg>
         {allClosed && (
-          // All three closed: a one-shot spring pop, then a slow rewarding
-          // glow pulse once it settles.
           <span
-            className="absolute inset-0 m-auto flex size-7 items-center justify-center rounded-full bg-exam-sage-bg text-exam-sage-strong shadow-progress"
-            style={{ animation: 'check-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both, ring-glow 2.2s ease-in-out 0.6s infinite' }}
+            role="img" aria-label="כל טבעות הלמידה הושלמו"
+            className={`absolute inset-0 m-auto flex size-7 items-center justify-center rounded-full bg-exam-sage-bg text-exam-sage-strong shadow-progress ${celebrate ? 'ring-closure-check' : ''}`}
           >
             <Check className="size-4" strokeWidth={2.5} aria-hidden="true" />
           </span>

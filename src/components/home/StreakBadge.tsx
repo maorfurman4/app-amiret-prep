@@ -1,19 +1,10 @@
 'use client';
 
+import { AchievementGlow, RollingNumber, StreakShockwave, isStreakMilestone, useIncrease } from './AchievementMotion';
 import { Flame } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 import { isEveningLocal } from '@/lib/date-local';
 
-/**
- * Small daily-streak flame for the home page. Hidden until a streak
- * exists. Just idles with a gentle flicker — the "big" once-a-day
- * celebration moment lives in StreakCelebration.tsx instead, so this
- * stays quiet and doesn't double-announce the same thing.
- *
- * "At risk" variant: once it's evening and today has no activity yet, the
- * flame switches to an outlined/unfilled state — a quiet, honest nudge
- * that the streak needs today, with no extra copy or popup.
- */
 export function StreakBadge() {
   const { data } = useDashboardSummary();
   const streak = data?.streak ?? 0;
@@ -22,20 +13,21 @@ export function StreakBadge() {
 
   const atRisk = data != null && !data.hasActivityToday && isEveningLocal();
 
+  return <StreakDisplay streak={streak} atRisk={atRisk} />;
+}
+
+export function StreakDisplay({ streak, atRisk = false }: { streak: number; atRisk?: boolean }) {
+  const motion = useIncrease(streak);
   return (
-    <div className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-sm border ${atRisk ? 'bg-transparent border-exam-alt/40' : 'bg-exam-alt-bg border-exam-alt/40'}`}>
-      {/* Continuous, organic breathing glow behind the flame — a separate,
-          slower rhythm from the icon's own flicker, so it reads as "alive"
-          at rest rather than mid-flicker at every frame */}
-      {!atRisk && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 size-4 -z-10 rounded-full bg-exam-alt/50 blur-sm animate-flame-breathe motion-reduce:animate-none" aria-hidden />
-      )}
-      <Flame
-        className="w-4 h-4 text-exam-alt animate-streak-flicker motion-reduce:animate-none"
-        fill={atRisk ? 'none' : 'currentColor'}
-        aria-hidden
-      />
-      <span className="text-sm font-bold text-exam-alt tabular-nums">{streak}</span>
+    <div key={motion.revision} className={`${motion.increased ? 'achievement-pulse' : ''} relative isolate flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-exam-alt/40 transition-[background-color,border-color,box-shadow] duration-500 ease-spring-soft ${atRisk ? 'bg-transparent' : 'bg-exam-alt-bg'}`}>
+      {motion.increased && isStreakMilestone(streak) && <AchievementGlow key={motion.revision} tone="amber" />}
+      <span className="inline-flex items-center gap-1.5">
+        <span className="relative isolate inline-flex">
+          {motion.increased && <StreakShockwave />}
+        <Flame className="w-4 h-4 text-exam-alt transition-[fill,color] duration-500 ease-spring-soft" fill={atRisk ? 'none' : 'currentColor'} aria-hidden />
+        </span>
+        <span className="text-sm font-bold text-exam-alt tabular-nums"><RollingNumber value={streak} from={motion.from} /></span>
+      </span>
       <span className="text-xs text-exam-alt">{streak === 1 ? 'יום רצוף' : 'ימים רצופים'}</span>
     </div>
   );

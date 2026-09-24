@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Sparkles, Play, LifeBuoy } from 'lucide-react';
+import { Sparkles, LifeBuoy } from 'lucide-react';
 import type { ContextualTip } from '@/lib/strategy-tip';
 import { RichText } from '@/components/strategies/RichText';
 
@@ -11,8 +11,8 @@ const TONE: Record<'blue' | 'purple' | 'green', { badge: string; glow: string; i
 
 /**
  * Post-practice "Pro Tip": one step of the rescue protocol for the question
- * type this session exposed as weakest (see pickContextualTip), plus a 16:9
- * slot reserved for a future explainer clip and a link to the full method.
+ * type this session exposed as weakest (see pickContextualTip), and a link
+ * to the full method.
  */
 export function ContextualStrategyCard({ tip: { guide, tip, errors, total } }: { tip: ContextualTip }) {
   const tone = TONE[guide.color];
@@ -23,7 +23,7 @@ export function ContextualStrategyCard({ tip: { guide, tip, errors, total } }: {
   return (
     <section
       aria-labelledby="pro-tip-title"
-      className="group relative overflow-hidden rounded-2xl border border-exam-border bg-exam-surface text-right shadow-raised hover:shadow-overlay hover:-translate-y-0.5 transition-[box-shadow,transform] duration-500 ease-spring animate-fade-up"
+      className="relative overflow-hidden rounded-2xl border border-exam-border bg-exam-surface text-right shadow-raised hover:shadow-overlay hover:-translate-y-0.5 transition-[box-shadow,transform] duration-500 ease-spring animate-fade-up"
     >
       <div aria-hidden className={`pointer-events-none absolute -top-24 -left-24 h-56 w-56 rounded-full bg-radial ${tone.glow} to-transparent to-70% blur-2xl`} />
 
@@ -45,24 +45,7 @@ export function ContextualStrategyCard({ tip: { guide, tip, errors, total } }: {
           <LifeBuoy className={`w-4.5 h-4.5 mt-0.5 flex-shrink-0 ${tone.icon}`} strokeWidth={1.75} aria-hidden />
           <span><RichText text={tip.step} /></span>
         </h3>
-        <p className="text-sm text-exam-ink-soft leading-relaxed mb-4"><RichText text={tip.detail} /></p>
-
-        {/* Reserved slot for a short explainer video/GIF — decorative until one exists. */}
-        <div
-          role="img"
-          aria-label="סרטון הסבר קצר — בקרוב"
-          className="relative mb-5 aspect-video w-full overflow-hidden rounded-xl border border-exam-border bg-gradient-to-br from-exam-paper-alt via-exam-surface to-exam-paper-alt"
-        >
-          <div aria-hidden className="absolute inset-0 opacity-[0.07] [background-image:radial-gradient(currentColor_1px,transparent_1px)] [background-size:14px_14px] text-exam-ink" />
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-exam-surface/90 shadow-raised ring-1 ring-exam-border transition-transform duration-500 ease-spring group-hover:scale-110">
-              <Play className={`w-6 h-6 translate-x-[-1px] ${tone.icon}`} fill="currentColor" strokeWidth={0} aria-hidden />
-            </span>
-            <span className="rounded-full bg-exam-surface/80 px-2.5 py-0.5 text-[11px] font-semibold text-exam-ink-soft">
-              Play Tip · סרטון הסבר בקרוב
-            </span>
-          </div>
-        </div>
+        <p className="text-sm text-exam-ink-soft leading-relaxed mb-5"><RichText text={tip.detail} /></p>
 
         <Link
           href={guide.tipsHref}

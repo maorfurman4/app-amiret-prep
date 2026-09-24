@@ -49,10 +49,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  // Lets content extend into the safe areas so env(safe-area-inset-*) reports
-  // real values — required for the BottomNav home-bar padding and the
-  // status-bar scrim below (the app runs with a black-translucent status bar).
-  viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#FAF8F2' },
     { media: '(prefers-color-scheme: dark)', color: '#171E25' },
@@ -65,12 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t;try{t=localStorage.getItem('theme')}catch(e){}if(t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}})()` }} />
       </head>
-      <body className="min-h-full flex flex-col bg-exam-paper pt-safe px-safe pb-nav md:pb-0">
-        {/* Status-bar scrim: with a black-translucent status bar the page runs
-            under the notch, and iOS draws white status text — keep a dark strip
-            behind it so the text stays legible and content never scrolls
-            beneath it. Zero height wherever there is no top inset. */}
-        <div aria-hidden className="fixed top-0 inset-x-0 h-safe-top z-[45] bg-exam-accent dark:bg-exam-paper" />
+      <body className="min-h-full flex flex-col bg-exam-paper pb-24 md:pb-0">
         <ActivityGuardProvider>
           {children}
           <BottomNav />

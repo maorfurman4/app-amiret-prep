@@ -157,7 +157,7 @@ export default function DiagnosticPage() {
   const isLastPossible = answers.length + 1 >= DIAGNOSTIC.maxItems;
   return (
     <div className="min-h-dvh bg-exam-paper" dir="rtl">
-      <header className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
+      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-2xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">

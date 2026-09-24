@@ -26,7 +26,7 @@ export function BackNav({ backHref = '/', backLabel = 'דף הבית', title }: 
 
   return (
     <nav
-      className="sticky top-safe z-30 bg-exam-surface border-b border-exam-border"
+      className="sticky top-0 z-30 bg-exam-surface border-b border-exam-border"
       dir="rtl"
     >
       {/* Top row: back + title */}

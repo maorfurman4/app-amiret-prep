@@ -47,7 +47,7 @@ function BottomNavContent({ pathname }: { pathname: string }) {
     <nav
       className="fixed bottom-0 inset-x-0 z-40 bg-exam-surface border-t border-exam-border md:hidden transform-gpu"
       dir="rtl"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)', WebkitTransform: 'translateZ(0)' }}
+      style={{ WebkitTransform: 'translateZ(0)' }}
     >
       <div className="flex">
         {TABS.map(tab => {

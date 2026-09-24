@@ -273,7 +273,7 @@ export default function TodaySessionPage() {
     const phaseLabel = phase === 'review' ? 'חזרה על טעויות' : 'תרגול ממוקד';
     return (
       <div className="min-h-dvh bg-exam-paper" dir="rtl">
-        <div className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
+        <div className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
           <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
             <span className="text-sm font-bold text-exam-ink">{phaseLabel}</span>
             <span className="text-xs text-exam-ink-soft">{idx + 1} / {currentQuestions.length}</span>
@@ -312,7 +312,7 @@ export default function TodaySessionPage() {
   if (phase === 'vocab' && currentWord && data) {
     return (
       <div className="min-h-dvh bg-exam-paper" dir="rtl">
-        <div className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
+        <div className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
           <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
             <span className="text-sm font-bold text-exam-ink">מילים לחזרה</span>
             <span className="text-xs text-exam-ink-soft">{idx + 1} / {data.vocabWords.length}</span>

@@ -408,7 +408,7 @@ export default function ReviewQueuePage() {
 
   const questionPicker = (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowQuestionPicker(false)}>
-      <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[70dvh] flex flex-col pb-safe" onClick={e => e.stopPropagation()}>
+      <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[70dvh] flex flex-col" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
           <span className="font-bold text-exam-ink text-lg">בחר שאלה</span>
           <div className="flex items-center gap-3">
@@ -494,7 +494,7 @@ export default function ReviewQueuePage() {
     <div className="min-h-dvh bg-exam-paper" dir="rtl">
       {showQuestionPicker && questionPicker}
 
-      <header className="sticky top-safe z-10 bg-exam-surface border-b border-exam-border">
+      <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">

@@ -849,7 +849,7 @@ function VocabularyContent() {
         {showFavoritesList && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowFavoritesList(false)}>
             <div
-              className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[80dvh] flex flex-col pb-safe"
+              className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[80dvh] flex flex-col"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
@@ -996,7 +996,7 @@ function VocabularyContent() {
         {/* ── Filter drawer ─────────────────────────────────────────────────── */}
         {showFilterDrawer && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowFilterDrawer(false)}>
-            <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[85dvh] flex flex-col pb-safe" onClick={e => e.stopPropagation()}>
+            <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[85dvh] flex flex-col" onClick={e => e.stopPropagation()}>
               <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
                 <span className="font-bold text-exam-ink text-lg">סינון מילים</span>
                 <div className="flex items-center gap-4">

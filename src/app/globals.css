@@ -55,6 +55,16 @@
   --color-exam-alt-bg: var(--exam-alt-bg);
   --color-exam-accent: var(--exam-accent);
   --color-exam-accent-ink: var(--exam-accent-ink);
+  /* Popover menus: a solid white sheet in BOTH themes, so a menu always
+     stands clear of the page (see UserMenu). */
+  --color-menu-surface: var(--menu-surface);
+  --color-menu-ink: var(--menu-ink);
+  --color-menu-ink-soft: var(--menu-ink-soft);
+  --color-menu-border: var(--menu-border);
+  --color-menu-hover: var(--menu-hover);
+  --color-menu-accent: var(--menu-accent);
+  --color-menu-danger: var(--menu-danger);
+  --color-menu-danger-bg: var(--menu-danger-bg);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -239,6 +249,14 @@
 
 /* Resolve aliases on both theme roots so primitives and legacy screens agree. */
 :root, .dark {
+  --menu-surface: #FFFFFF;
+  --menu-ink: #202C38;
+  --menu-ink-soft: #586573;
+  --menu-border: #DCDDD5;
+  --menu-hover: #F0EDE5;
+  --menu-accent: #283F5A;
+  --menu-danger: #9C3E36;
+  --menu-danger-bg: #FBECE7;
   --background: var(--exam-paper);
   --foreground: var(--exam-ink);
   --card: var(--exam-surface);

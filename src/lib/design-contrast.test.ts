@@ -29,3 +29,19 @@ for (const selector of [':root', '.dark']) {
     });
   });
 }
+
+// The popover menu palette is theme-independent (a white sheet in both themes).
+{
+  const block = css.slice(css.indexOf(':root, .dark {')).split('}')[0];
+  const tokens = Object.fromEntries([...block.matchAll(/--([\w-]+):\s*(#[a-f\d]{6})/gi)].map(m => [m[1], m[2]]));
+  const pairs = [
+    ...['menu-surface', 'menu-hover'].flatMap(bg => ['menu-ink', 'menu-ink-soft', 'menu-accent', 'menu-danger'].map(fg => [fg, bg])),
+    ['menu-danger', 'menu-danger-bg'],
+  ];
+  describe('menu text contrast', () => {
+    it.each(pairs)('%s on %s meets 4.5:1', (fg, bg) => {
+      const a = luminance(tokens[fg]), b = luminance(tokens[bg]);
+      expect((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)).toBeGreaterThanOrEqual(4.5);
+    });
+  });
+}

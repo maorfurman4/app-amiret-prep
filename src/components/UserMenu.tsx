@@ -1,23 +1,37 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import { authFetch } from '@/lib/auth-fetch';
 import { clearGuestIdentity } from '@/lib/guest';
-import { BarChart3, ImageIcon, PenLine, Lock } from 'lucide-react';
+import { BarChart3, ImageIcon, PenLine, Lock, Settings, LogOut, ChevronLeft, ArrowRight, X } from 'lucide-react';
 
-type Panel = 'menu' | 'name' | 'password' | 'avatar';
+type Panel = 'menu' | 'settings' | 'name' | 'password' | 'avatar';
 
-export function UserMenu() {
+const MENU_WIDTH = 288;
+const VIEWPORT_GUTTER = 8;
+
+/* Fixed-palette classes (menu-* tokens are identical in light and dark). */
+const ITEM = 'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-right text-sm font-semibold text-menu-ink hover:bg-menu-hover focus-visible:bg-menu-hover focus-visible:outline-none transition-colors';
+const ITEM_ICON = 'w-[18px] h-[18px] flex-shrink-0 text-menu-accent';
+const INPUT = 'w-full px-3 py-2 rounded-lg border border-menu-border bg-menu-surface text-sm text-menu-ink placeholder:text-menu-ink-soft focus:outline-none focus:ring-2 focus:ring-menu-accent/30';
+const PRIMARY = 'w-full py-2.5 rounded-xl bg-menu-accent text-white text-sm font-bold shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:shadow-pressed transition-[transform,box-shadow,opacity] duration-300 ease-spring disabled:opacity-50';
+
+/** `previewUser` is for the dev-only /dev/user-menu preview: it skips the auth subscription. */
+export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
   const supabase = createClient();
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(previewUser ?? null);
   const [open, setOpen] = useState(false);
   const [panel, setPanel] = useState<Panel>('menu');
   const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState<{ top: number; left: number; width: number } | null>(null);
 
   const [displayName, setDisplayName] = useState('');
   const [nameInput, setNameInput] = useState('');
@@ -36,6 +50,7 @@ export function UserMenu() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (previewUser) return;
     // onAuthStateChange fires INITIAL_SESSION on mount with the persisted session
     // This covers both cold load and post-OAuth redirect without a separate getSession() race
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -54,17 +69,59 @@ export function UserMenu() {
       });
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Close dropdown on outside click
+  const close = useCallback((restoreFocus = false) => {
+    setOpen(false);
+    setPanel('menu');
+    if (restoreFocus) triggerRef.current?.focus();
+  }, []);
+
+  // The menu is portaled to <body> with fixed positioning: rendered in place,
+  // it was trapped in whatever stacking context its header created (e.g. the
+  // home page's animated top bar), so later page content could paint over it
+  // regardless of z-index. Anchor it under the avatar, clamped to the viewport.
+  const place = useCallback(() => {
+    const r = triggerRef.current?.getBoundingClientRect();
+    if (!r) return;
+    const width = Math.min(MENU_WIDTH, window.innerWidth - VIEWPORT_GUTTER * 2);
+    const left = Math.min(Math.max(VIEWPORT_GUTTER, r.left), window.innerWidth - width - VIEWPORT_GUTTER);
+    setPosition({ top: r.bottom + 10, left, width });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    place();
+    window.addEventListener('resize', place);
+    window.addEventListener('scroll', place, true);
+    return () => {
+      window.removeEventListener('resize', place);
+      window.removeEventListener('scroll', place, true);
+    };
+  }, [open, place]);
+
+  // Close on outside click (the panel lives outside menuRef, in the portal)
+  // and on Escape.
   useEffect(() => {
+    if (!open) return;
     function handleClick(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpen(false);
-        setPanel('menu');
-      }
+      const t = e.target as Node;
+      if (menuRef.current?.contains(t) || panelRef.current?.contains(t)) return;
+      close();
+    }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') close(true);
     }
     document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('keydown', handleKey);
+    };
+  }, [open, close]);
+
+  // Move focus into the menu when it opens or changes panel, for keyboard users.
+  useEffect(() => {
+    if (open && position) panelRef.current?.querySelector<HTMLElement>('[data-autofocus]')?.focus();
+  }, [open, position, panel]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -86,7 +143,7 @@ export function UserMenu() {
       const data = await res.json();
       if (!res.ok) { setNameError(data.error ?? 'שגיאה בשמירה'); return; }
       setDisplayName(data.displayName);
-      setPanel('menu');
+      setPanel('settings');
     } catch {
       setNameError('שגיאת רשת');
     } finally {
@@ -105,7 +162,7 @@ export function UserMenu() {
       setPwSuccess(true);
       setNewPassword('');
       setConfirmPassword('');
-      setTimeout(() => { setPwSuccess(false); setPanel('menu'); }, 1500);
+      setTimeout(() => { setPwSuccess(false); setPanel('settings'); }, 1500);
     } catch {
       setPwError('שגיאת רשת');
     } finally {
@@ -168,6 +225,190 @@ export function UserMenu() {
     : (user.user_metadata?.avatar_url as string | undefined);
   const canChangePassword = user.app_metadata?.provider === 'email';
 
+  const avatar = (size: 'sm' | 'lg') => {
+    // The trigger follows the page theme; inside the always-white menu the
+    // avatar uses the fixed menu palette.
+    const cls = size === 'sm'
+      ? 'w-8 h-8 text-sm bg-exam-accent text-exam-accent-ink'
+      : 'w-12 h-12 text-lg bg-menu-accent text-white';
+    return avatarUrl ? (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={avatarUrl} alt="" className={`${cls} rounded-full object-cover`} referrerPolicy="no-referrer" />
+    ) : (
+      <div className={`${cls} rounded-full flex items-center justify-center font-bold select-none`} aria-hidden>
+        {initial}
+      </div>
+    );
+  };
+
+  const subHeader = (title: string, back: Panel) => (
+    <div className="flex items-center gap-2 px-2 pb-2 mb-1 border-b border-menu-border">
+      <button
+        data-autofocus
+        onClick={() => setPanel(back)}
+        className="w-8 h-8 rounded-full flex items-center justify-center text-menu-ink-soft hover:bg-menu-hover hover:text-menu-ink transition-colors"
+        aria-label="חזרה"
+      >
+        <ArrowRight className="w-4 h-4" aria-hidden />
+      </button>
+      <span className="text-sm font-bold text-menu-ink flex-1">{title}</span>
+      <button
+        onClick={() => close(true)}
+        className="w-8 h-8 rounded-full flex items-center justify-center text-menu-ink-soft hover:bg-menu-hover hover:text-menu-ink transition-colors"
+        aria-label="סגירה"
+      >
+        <X className="w-4 h-4" aria-hidden />
+      </button>
+    </div>
+  );
+
+  const sheet = open && position && createPortal(
+    <div
+      ref={panelRef}
+      id="user-menu"
+      role="menu"
+      aria-label="תפריט משתמש"
+      dir="rtl"
+      style={{ top: position.top, left: position.left, width: position.width }}
+      className="fixed z-[1000] origin-top-left rounded-2xl border border-menu-border bg-menu-surface p-2 text-menu-ink shadow-raised ring-1 ring-black/5 animate-in fade-in-0 zoom-in-95 slide-in-from-top-1 duration-200 ease-spring-soft"
+    >
+      {panel === 'menu' && (
+        <>
+          {/* Profile picture + name */}
+          <div className="flex items-center gap-3 px-2 pt-1 pb-3 mb-1 border-b border-menu-border">
+            {avatar('lg')}
+            <div className="min-w-0 flex-1">
+              <p className="text-[15px] font-bold text-menu-ink truncate">{displayName || 'הגדר שם תצוגה'}</p>
+              <p className="text-xs text-menu-ink-soft truncate" dir="ltr">{user.email}</p>
+            </div>
+          </div>
+
+          <Link data-autofocus role="menuitem" href="/stats" onClick={() => close()} className={ITEM}>
+            <BarChart3 className={ITEM_ICON} aria-hidden />
+            <span className="flex-1">סטטיסטיקה</span>
+          </Link>
+          <button role="menuitem" onClick={() => setPanel('settings')} className={ITEM}>
+            <Settings className={ITEM_ICON} aria-hidden />
+            <span className="flex-1">הגדרות</span>
+            <ChevronLeft className="w-4 h-4 text-menu-ink-soft" aria-hidden />
+          </button>
+
+          <div className="my-1.5 border-t border-menu-border" />
+
+          <button
+            role="menuitem"
+            onClick={handleSignOut}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-right text-sm font-bold text-menu-danger hover:bg-menu-danger-bg focus-visible:bg-menu-danger-bg focus-visible:outline-none transition-colors"
+          >
+            <LogOut className="w-[18px] h-[18px] flex-shrink-0" aria-hidden />
+            <span className="flex-1">התנתקות</span>
+          </button>
+        </>
+      )}
+
+      {panel === 'settings' && (
+        <>
+          {subHeader('הגדרות', 'menu')}
+          <button role="menuitem" onClick={() => { setAvatarError(null); setPanel('avatar'); }} className={ITEM}>
+            <ImageIcon className={ITEM_ICON} aria-hidden />
+            <span className="flex-1">תמונת פרופיל</span>
+            <ChevronLeft className="w-4 h-4 text-menu-ink-soft" aria-hidden />
+          </button>
+          <button role="menuitem" onClick={() => { setNameInput(displayName); setNameError(null); setPanel('name'); }} className={ITEM}>
+            <PenLine className={ITEM_ICON} aria-hidden />
+            <span className="flex-1">שם תצוגה</span>
+            <ChevronLeft className="w-4 h-4 text-menu-ink-soft" aria-hidden />
+          </button>
+          {canChangePassword && (
+            <button role="menuitem" onClick={() => { setPwError(null); setPwSuccess(false); setPanel('password'); }} className={ITEM}>
+              <Lock className={ITEM_ICON} aria-hidden />
+              <span className="flex-1">שינוי סיסמה</span>
+              <ChevronLeft className="w-4 h-4 text-menu-ink-soft" aria-hidden />
+            </button>
+          )}
+        </>
+      )}
+
+      {panel === 'avatar' && (
+        <div className="space-y-3">
+          {subHeader('תמונת פרופיל', 'settings')}
+          <div className="flex justify-center py-1">{avatar('lg')}</div>
+          {avatarError && <p className="text-xs text-menu-danger text-center">{avatarError}</p>}
+          <div className="px-1 space-y-2">
+            <button onClick={handlePickAvatar} disabled={avatarSaving} className={PRIMARY}>
+              {avatarSaving ? 'מעלה...' : 'בחר תמונה מהגלריה'}
+            </button>
+            {avatarUrl && (
+              <button
+                onClick={handleRemoveAvatar}
+                disabled={avatarSaving}
+                className="w-full py-2 rounded-xl text-sm font-semibold text-menu-danger hover:bg-menu-danger-bg transition-colors disabled:opacity-50"
+              >
+                הסר תמונה
+              </button>
+            )}
+            <p className="text-[11px] text-menu-ink-soft text-center pb-1">JPG, PNG, WEBP או GIF · עד 3MB</p>
+          </div>
+        </div>
+      )}
+
+      {panel === 'name' && (
+        <div className="space-y-2">
+          {subHeader('שם תצוגה', 'settings')}
+          <div className="px-1 pb-1 space-y-2">
+            <input
+              type="text"
+              value={nameInput}
+              onChange={e => setNameInput(e.target.value)}
+              maxLength={40}
+              placeholder="איך שיוצג בלוח המובילים"
+              className={INPUT}
+            />
+            {nameError && <p className="text-xs text-menu-danger">{nameError}</p>}
+            <button onClick={handleSaveName} disabled={nameSaving} className={PRIMARY}>
+              {nameSaving ? 'שומר...' : 'שמור'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {panel === 'password' && (
+        <div className="space-y-2">
+          {subHeader('שינוי סיסמה', 'settings')}
+          <div className="px-1 pb-1 space-y-2">
+            {pwSuccess ? (
+              <p className="text-sm text-[#14563E] font-semibold py-2">הסיסמה עודכנה בהצלחה</p>
+            ) : (
+              <>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)}
+                  placeholder="סיסמה חדשה"
+                  autoComplete="new-password"
+                  className={INPUT}
+                />
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  placeholder="אימות סיסמה"
+                  autoComplete="new-password"
+                  className={INPUT}
+                />
+                {pwError && <p className="text-xs text-menu-danger">{pwError}</p>}
+                <button onClick={handleChangePassword} disabled={pwSaving} className={PRIMARY}>
+                  {pwSaving ? 'מעדכן...' : 'עדכן סיסמה'}
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>,
+    document.body,
+  );
+
   return (
     <div className="relative" ref={menuRef}>
       <input
@@ -178,166 +419,17 @@ export function UserMenu() {
         onChange={handleAvatarSelected}
       />
       <button
-        onClick={() => { setOpen(!open); setPanel('menu'); }}
-        className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-exam-accent/40"
+        ref={triggerRef}
+        onClick={() => (open ? close() : (setPanel('menu'), setOpen(true)))}
+        className={`flex items-center rounded-full transition-[box-shadow,transform] duration-300 ease-spring hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-exam-accent/50 ${open ? 'ring-2 ring-exam-accent/60' : ''}`}
         aria-label="תפריט משתמש"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={open ? 'user-menu' : undefined}
       >
-        {avatarUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={avatarUrl} alt={initial} className="w-8 h-8 rounded-full object-cover" referrerPolicy="no-referrer" />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-exam-accent text-exam-accent-ink flex items-center justify-center text-sm font-bold select-none">
-            {initial}
-          </div>
-        )}
+        {avatar('sm')}
       </button>
-
-      {open && (
-        <div className="absolute left-0 mt-2 w-64 bg-exam-surface border border-exam-border rounded-md py-1 z-50" dir="rtl" style={{ left: 0, right: 'auto' }}>
-          {panel === 'menu' && (
-            <>
-              <div className="px-3 py-2 border-b border-exam-border">
-                <p className="text-sm font-semibold text-exam-ink truncate">{displayName || 'הגדר שם תצוגה'}</p>
-                <p className="text-xs text-exam-ink-soft truncate">{user.email}</p>
-              </div>
-              <Link
-                href="/stats"
-                onClick={() => setOpen(false)}
-                className="block w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
-              >
-                <span className="inline-flex items-center gap-2"><BarChart3 className="w-4 h-4" aria-hidden />הסטטיסטיקה שלי</span>
-              </Link>
-              <button
-                onClick={() => { setAvatarError(null); setPanel('avatar'); }}
-                className="w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
-              >
-                <span className="inline-flex items-center gap-2"><ImageIcon className="w-4 h-4" aria-hidden />תמונת פרופיל</span>
-              </button>
-              <button
-                onClick={() => { setNameInput(displayName); setNameError(null); setPanel('name'); }}
-                className="w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
-              >
-                <span className="inline-flex items-center gap-2"><PenLine className="w-4 h-4" aria-hidden />ערוך שם תצוגה</span>
-              </button>
-              {canChangePassword && (
-                <button
-                  onClick={() => { setPwError(null); setPwSuccess(false); setPanel('password'); }}
-                  className="w-full text-right px-3 py-2 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors"
-                >
-                  <span className="inline-flex items-center gap-2"><Lock className="w-4 h-4" aria-hidden />שנה סיסמה</span>
-                </button>
-              )}
-              <button
-                onClick={handleSignOut}
-                className="w-full text-right px-3 py-2 text-sm text-exam-wrong hover:bg-exam-paper-alt transition-colors border-t border-exam-border mt-1"
-              >
-                יציאה
-              </button>
-            </>
-          )}
-
-          {panel === 'avatar' && (
-            <div className="px-3 py-3 space-y-3">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-bold text-exam-ink">תמונת פרופיל</span>
-                <button onClick={() => setPanel('menu')} className="text-exam-ink-soft hover:text-exam-ink text-lg leading-none">×</button>
-              </div>
-              <div className="flex items-center justify-center">
-                {avatarUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={avatarUrl} alt={initial} className="w-16 h-16 rounded-full object-cover" referrerPolicy="no-referrer" />
-                ) : (
-                  <div className="w-16 h-16 rounded-full bg-exam-accent text-exam-accent-ink flex items-center justify-center text-2xl font-bold select-none">
-                    {initial}
-                  </div>
-                )}
-              </div>
-              {avatarError && <p className="text-xs text-exam-wrong text-center">{avatarError}</p>}
-              <button
-                onClick={handlePickAvatar}
-                disabled={avatarSaving}
-                className="w-full py-2 bg-exam-accent text-exam-accent-ink rounded-sm text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-              >
-                {avatarSaving ? 'מעלה...' : 'בחר תמונה מהגלריה'}
-              </button>
-              {avatarUrl && (
-                <button
-                  onClick={handleRemoveAvatar}
-                  disabled={avatarSaving}
-                  className="w-full py-2 text-exam-wrong rounded-sm text-sm font-medium hover:bg-exam-wrong-bg transition-colors disabled:opacity-50"
-                >
-                  הסר תמונה
-                </button>
-              )}
-              <p className="text-[11px] text-exam-ink-soft text-center">JPG, PNG, WEBP או GIF · עד 3MB</p>
-            </div>
-          )}
-
-          {panel === 'name' && (
-            <div className="px-3 py-3 space-y-2">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-bold text-exam-ink">שם תצוגה</span>
-                <button onClick={() => setPanel('menu')} className="text-exam-ink-soft hover:text-exam-ink text-lg leading-none">×</button>
-              </div>
-              <input
-                type="text"
-                value={nameInput}
-                onChange={e => setNameInput(e.target.value)}
-                maxLength={40}
-                placeholder="איך שיוצג בלוח המובילים"
-                className="w-full px-3 py-2 rounded-sm border border-exam-border bg-exam-surface text-sm text-exam-ink"
-              />
-              {nameError && <p className="text-xs text-exam-wrong">{nameError}</p>}
-              <button
-                onClick={handleSaveName}
-                disabled={nameSaving}
-                className="w-full py-2 bg-exam-accent text-exam-accent-ink rounded-sm text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-              >
-                {nameSaving ? 'שומר...' : 'שמור'}
-              </button>
-            </div>
-          )}
-
-          {panel === 'password' && (
-            <div className="px-3 py-3 space-y-2">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-bold text-exam-ink">שינוי סיסמה</span>
-                <button onClick={() => setPanel('menu')} className="text-exam-ink-soft hover:text-exam-ink text-lg leading-none">×</button>
-              </div>
-              {pwSuccess ? (
-                <p className="text-sm text-exam-sage-strong font-medium py-2">הסיסמה עודכנה בהצלחה</p>
-              ) : (
-                <>
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={e => setNewPassword(e.target.value)}
-                    placeholder="סיסמה חדשה"
-                    autoComplete="new-password"
-                    className="w-full px-3 py-2 rounded-sm border border-exam-border bg-exam-surface text-sm text-exam-ink"
-                  />
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    placeholder="אימות סיסמה"
-                    autoComplete="new-password"
-                    className="w-full px-3 py-2 rounded-sm border border-exam-border bg-exam-surface text-sm text-exam-ink"
-                  />
-                  {pwError && <p className="text-xs text-exam-wrong">{pwError}</p>}
-                  <button
-                    onClick={handleChangePassword}
-                    disabled={pwSaving}
-                    className="w-full py-2 bg-exam-accent text-exam-accent-ink rounded-sm text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-                  >
-                    {pwSaving ? 'מעדכן...' : 'עדכן סיסמה'}
-                  </button>
-                </>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+      {sheet}
     </div>
   );
 }

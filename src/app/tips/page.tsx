@@ -1,29 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { PenLine, RotateCcw, BookOpen, Sparkles, type LucideIcon } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { BackNav } from '@/components/BackNav';
+import { QUESTION_GUIDES } from '@/data/strategies';
 
-const CARDS: { href: string; icon: LucideIcon; title: string; desc: string }[] = [
-  {
-    href: '/tips/sentence-completion',
-    icon: PenLine,
-    title: 'השלמת משפטים',
-    desc: 'שיטה ב-5 שלבים לבחירת המילה הנכונה בהקשר',
-  },
-  {
-    href: '/tips/restatement',
-    icon: RotateCcw,
-    title: 'ניסוח מחדש',
-    desc: 'כיצד למצוא את המשפט בעל המשמעות הזהה במהירות',
-  },
-  {
-    href: '/tips/reading-comprehension',
-    icon: BookOpen,
-    title: 'הבנת הנקרא',
-    desc: 'אסטרטגיית קריאה חכמה וניהול זמן לפסקאות',
-  },
-];
+const CARDS = QUESTION_GUIDES.map(g => ({ href: g.tipsHref, icon: g.icon, title: g.titleHe, desc: g.deep.cardDesc }));
 
 export default function TipsIndexPage() {
   return (

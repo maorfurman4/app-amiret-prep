@@ -12,6 +12,8 @@ import { ensureGuestIdentity } from '@/lib/guest';
 import { useActivityGuard } from '@/lib/activity-guard';
 import { useCountdown } from '@/lib/use-countdown';
 import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
+import { pickContextualTip } from '@/lib/strategy-tip';
+import { ContextualStrategyCard } from '@/components/strategies/ContextualStrategyCard';
 import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon } from 'lucide-react';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'practicing' | 'done';
@@ -700,6 +702,9 @@ function PracticeContent() {
     const diagScore = diagTheta !== null ? thetaToScore(diagTheta) : null;
     const diagLevel = diagTheta !== null ? routeNextDifficulty(diagTheta) : null;
     const diagClass = diagScore !== null ? classifyScore(diagScore) : null;
+    const strategyTip = pickContextualTip(
+      questions.map((q, i) => ({ id: q.id, type: q.type, correct: isCorrectAnswer(q, answers[i]) })),
+    );
 
     return (
       <div className="min-h-screen bg-exam-paper px-4 py-8" dir="rtl">
@@ -755,6 +760,9 @@ function PracticeContent() {
                 </p>
               </div>
             )}
+
+            {strategyTip && <ContextualStrategyCard tip={strategyTip} />}
+
             <div className="space-y-3">
               <button
                 onClick={handleRestart}

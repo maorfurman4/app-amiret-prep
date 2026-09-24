@@ -46,6 +46,8 @@ export class DwellTimer {
 export type ClientResponseContext = 'practice' | 'review' | 'diagnostic';
 
 export interface ResponseLogEntry {
+  /** Client-generated id, so an error-cause tag can find this row later (the log never returns row ids). */
+  clientRef: string;
   itemId: string;
   context: ClientResponseContext;
   chosenOption: number | null;
@@ -72,6 +74,7 @@ export function responseEntry(
   extra: { thetaBefore?: number | null; sectionIndex?: number | null; confidence?: number | null } = {},
 ): ResponseLogEntry {
   return {
+    clientRef: crypto.randomUUID(),
     itemId: question.id,
     context,
     chosenOption: toCanonicalOption(question, displayIndex),

@@ -65,5 +65,21 @@ export async function GET(req: NextRequest) {
     offset += count;
   }
 
-  return NextResponse.json({ questions, selectedAnswers, sectionBreaks, sectionResults });
+  // Per-item latency and any error-cause tag already given, from the
+  // responses log. Before the 20260924120000 migration error_cause does not
+  // exist yet — fall back to latency only rather than fail the review.
+  type ResponseRow = { item_id: string; latency_ms: number | null; error_cause?: string | null };
+  const readResponses = (columns: string) => supabase
+    .from('responses')
+    .select(columns)
+    .eq('session_id', sessionId)
+    .eq('owner_id', sessionOwner);
+  const withCause = await readResponses('item_id, latency_ms, error_cause');
+  const rows = withCause.error ? (await readResponses('item_id, latency_ms')).data : withCause.data;
+  const responses = Object.fromEntries(((rows ?? []) as unknown as ResponseRow[]).map(r => [
+    r.item_id,
+    { latencyMs: r.latency_ms, errorCause: r.error_cause ?? null },
+  ]));
+
+  return NextResponse.json({ questions, selectedAnswers, sectionBreaks, sectionResults, responses });
 }

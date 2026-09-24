@@ -6,6 +6,8 @@ import { PenLine, RotateCcw, BookOpen, FileText, PartyPopper, ClipboardList } fr
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import type { Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
+import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
+import type { ErrorCause } from '@/lib/error-cause';
 
 type Filter = 'all' | 'wrong' | 'correct';
 
@@ -24,6 +26,8 @@ interface ReviewData {
   questions: ReviewQuestion[];
   selectedAnswers: (number | null)[];
   sectionBreaks: SectionBreak[];
+  /** Per item id: latency and any error-cause tag already given. */
+  responses?: Record<string, { latencyMs: number | null; errorCause: ErrorCause | null }>;
 }
 
 const TYPE_ICONS: Record<string, typeof PenLine> = {
@@ -193,6 +197,15 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                   showResult={true}
                   hideHeader
                 />
+                {selectedAnswer !== question.correct_answer && (
+                  <ErrorCauseTagger
+                    key={question.id}
+                    target={{ sessionId, itemId: question.id }}
+                    questionType={question.type}
+                    latencyMs={data?.responses?.[question.id]?.latencyMs}
+                    initialCause={data?.responses?.[question.id]?.errorCause ?? null}
+                  />
+                )}
               </div>
 
               {/* Navigation */}

@@ -19,9 +19,9 @@ const START_THETA = 0;
  */
 export async function POST(req: NextRequest) {
   const { supabase, user, guestId } = await getServerClients();
-  let body: { mode?: ExamMode; isPractice?: boolean; guestId?: string };
+  let body: { mode?: ExamMode; isPractice?: boolean; guestId?: string; paceHint?: boolean };
   try {
-    body = await req.json() as { mode?: ExamMode; isPractice?: boolean; guestId?: string };
+    body = await req.json() as { mode?: ExamMode; isPractice?: boolean; guestId?: string; paceHint?: boolean };
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
@@ -63,24 +63,31 @@ export async function POST(req: NextRequest) {
 
   const section1QuestionIds = section1Questions.map((q: Question) => q.id);
 
-  const { data: session, error: insertError } = await supabase
-    .from('exam_sessions')
-    .insert({
-      user_id: userKey,
-      mode,
-      is_practice: isPractice,
-      current_section_index: 1,
-      current_section_expires_at: isPractice ? null : expiresAt,
-      theta: 0,
-      theta_history: [],
-      questions_by_section: questionsBySection,
-      answers_by_section: {},
-      section_results: [],
-      used_question_ids: section1QuestionIds,
-      used_passage_ids: [],
-    })
-    .select()
-    .single();
+  const row = {
+    user_id: userKey,
+    mode,
+    is_practice: isPractice,
+    current_section_index: 1,
+    current_section_expires_at: isPractice ? null : expiresAt,
+    theta: 0,
+    theta_history: [],
+    questions_by_section: questionsBySection,
+    answers_by_section: {},
+    section_results: [],
+    used_question_ids: section1QuestionIds,
+    used_passage_ids: [],
+  };
+  // Whether the pace gauge was on at the start ("real exam mode" hides it),
+  // for measuring its effect. Only recorded when the client says.
+  const paceHint = typeof body.paceHint === 'boolean' ? { pace_hint_enabled: body.paceHint } : {};
+  const insertSession = (values: object) => supabase.from('exam_sessions').insert(values).select().single();
+
+  let { data: session, error: insertError } = await insertSession({ ...row, ...paceHint });
+  // Rollout safety: before the 20260924120000 migration the column does not
+  // exist (PGRST204) — start the exam without recording it.
+  if (insertError?.code === 'PGRST204' && insertError.message.includes('pace_hint_enabled')) {
+    ({ data: session, error: insertError } = await insertSession(row));
+  }
 
   if (insertError || !session) {
     return NextResponse.json({ error: 'Failed to create session' }, { status: 500 });

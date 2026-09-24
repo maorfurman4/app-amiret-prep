@@ -13,6 +13,7 @@ const MAX_RESPONSES = 25;
 const MAX_LATENCY_MS = 3_600_000;
 
 const responseSchema = z.object({
+  clientRef: z.uuid().optional(),
   itemId: z.uuid(),
   // 'exam' is deliberately absent: exam responses are written server-side,
   // atomically with the section commit (see /api/exam/answer).

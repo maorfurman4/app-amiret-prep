@@ -1,11 +1,5 @@
 import type { QuestionType } from '@/types/exam';
-import { GUIDE_BY_ID, type QuestionGuide, type QuestionTypeId } from '@/data/strategies';
-
-const TYPE_TO_GUIDE: Partial<Record<QuestionType, QuestionTypeId>> = {
-  sentence_completion: 'sentence-completion',
-  restatement: 'restatement',
-  reading_comprehension: 'reading-comprehension',
-};
+import { GUIDE_BY_ID, GUIDE_ID_BY_QUESTION_TYPE as TYPE_TO_GUIDE, type QuestionGuide, type QuestionTypeId } from '@/data/strategies';
 
 export interface SessionItem {
   id?: string | number | null;

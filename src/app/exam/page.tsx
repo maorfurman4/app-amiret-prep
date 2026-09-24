@@ -7,6 +7,7 @@ import { Target, BookOpen, Search, Stethoscope, Sparkles, type LucideIcon } from
 import type { ExamMode } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
+import { readPaceHint } from '@/lib/pace-preference';
 
 const MODES: { mode: ExamMode; title: string; desc: string; icon: LucideIcon; isPractice?: boolean }[] = [
   {
@@ -63,7 +64,7 @@ export default function ExamModePage() {
       const res = await authFetch('/api/exam/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode, isPractice, guestId }),
+        body: JSON.stringify({ mode, isPractice, guestId, paceHint: readPaceHint() }),
       });
 
       if (!res.ok) {

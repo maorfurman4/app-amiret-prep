@@ -67,6 +67,18 @@ export interface TimeBudgetRow {
   perQ: string;
   stuckCap: string;
   note: string;
+  /**
+   * The same budget as numbers — the single source for the simulation's pace
+   * gauge (src/lib/pace.ts) and the error-tag time suggestion. Keep them in
+   * step with the copy above.
+   */
+  plan: {
+    /** Up-front reading before the first answer is due (RC passage). */
+    readingSec: number;
+    perQuestionSec: number;
+    /** Past this on one question, "stuck" — guess, flag, move on. */
+    stuckCapSec: number;
+  };
 }
 
 export const TIME_BUDGET: TimeBudgetRow[] = [
@@ -76,6 +88,7 @@ export const TIME_BUDGET: TimeBudgetRow[] = [
     total: '4 דק׳ / 4 שאלות',
     perQ: '~60 שניות',
     stuckCap: 'עד 90 שניות',
+    plan: { readingSec: 0, perQuestionSec: 60, stuckCapSec: 90 },
     note:
       'זהו הפרק הכי "יקר לדקה" — כל שאלה שקולה ל-25% מהפרק כולו, וכל אחת עומדת בפני עצמה, כך שזמן שנשרף על אחת נלקח ישירות מהאחרות. בגלל זה תקציב התקיעה קצר יחסית: שאלה שלא נפתרה תוך דקה וחצי כנראה לא תיפתר גם בעוד דקה נוספת. ' +
       'ברגע שעוברים את דקה וחצי — פוסלים מה שאפשר בזריזות, מנחשים, ומתקדמים בלי חרטה.',
@@ -86,6 +99,7 @@ export const TIME_BUDGET: TimeBudgetRow[] = [
     total: '6 דק׳ / 3 שאלות',
     perQ: '~2 דקות',
     stuckCap: 'עד 2.5 דקות',
+    plan: { readingSec: 0, perQuestionSec: 120, stuckCapSec: 150 },
     note:
       'כ-2 דקות לשאלה — פי שניים מהשלמת משפטים, ובערך אותו זמן לשאלה שנשאר בהבנת הנקרא אחרי הקריאה. הזמן הזה לא מקרי: משפטי המקור בניסוח מחדש דורשים פירוק מדוקדק (שמונת "השומרים" שמופיעים בנושא ניסוח מחדש), וזה תהליך שדורש קריאה חוזרת. ' +
       'נצל אותו: זה הפרק שבו כדאי להשוות שיטתית כל מסיח מול משפט המקור, ולא רק לבחור לפי "הרגשה".',
@@ -96,6 +110,7 @@ export const TIME_BUDGET: TimeBudgetRow[] = [
     total: '15 דק׳ / 5 שאלות',
     perQ: '~4 דק׳ קריאה + ~2 דק׳ לשאלה',
     stuckCap: 'עד 3 דקות — רק בסבב השני',
+    plan: { readingSec: 240, perQuestionSec: 120, stuckCapSec: 180 },
     note:
       'החשבון צפוף: 4 דקות קריאה + 5 שאלות × 2 דקות = 14 דקות, כלומר נשארת רק כדקה של מרווח. לכן הקריאה הראשונית חייבת להיות מהירה, ואין מקום להיתקע על שאלה מוקדם. ' +
       'מה שכן גמיש כאן: שאלות פרט נפתרות לרוב בפחות מ-2 דקות (הקטע כבר מוכר לך), והזמן שנחסך בהן מצטבר בתוך הפרק. זה התקציב היחיד לשאלה תקועה — ולכן דוחים אותה לסבב שני, אחרי שכל השאר קיבלו תשובה.',
@@ -104,6 +119,13 @@ export const TIME_BUDGET: TimeBudgetRow[] = [
 
 export const TIME_BY_TYPE: Record<QuestionTypeId, TimeBudgetRow> =
   Object.fromEntries(TIME_BUDGET.map(r => [r.id, r])) as Record<QuestionTypeId, TimeBudgetRow>;
+
+/** Exam question types (src/types/exam.ts) → strategy guide ids. Types without a guide (esra) are absent. */
+export const GUIDE_ID_BY_QUESTION_TYPE: Partial<Record<string, QuestionTypeId>> = {
+  sentence_completion: 'sentence-completion',
+  restatement: 'restatement',
+  reading_comprehension: 'reading-comprehension',
+};
 
 /* ─── כללים בשלוש שכבות: כלל → למה → דוגמה ──────────────────────────────────
    Progressive disclosure lives in the data: the UI shows `rule` by default,

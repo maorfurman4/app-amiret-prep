@@ -14,6 +14,9 @@ import { useCountdown } from '@/lib/use-countdown';
 import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
 import { pickContextualTip } from '@/lib/strategy-tip';
 import { ContextualStrategyCard } from '@/components/strategies/ContextualStrategyCard';
+import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
+import { PaceGauge } from '@/components/exam/PaceGauge';
+import type { ResponseLogEntry } from '@/lib/response-log-client';
 import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon } from 'lucide-react';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'starting' | 'practicing' | 'done';
@@ -102,6 +105,13 @@ function PracticeContent() {
   const [answers, setAnswers]         = useState<(number | null)[]>([]);
   const [showResult, setShowResult]   = useState(false);
   const [reviewCount, setReviewCount] = useState<number | null>(null);
+  // Logged entries by question id — the client ref lets a later error-cause
+  // tag find its row (see ErrorCauseTagger).
+  const [logged, setLogged] = useState<Record<string, Pick<ResponseLogEntry, 'clientRef' | 'latencyMs'>>>({});
+  const logAnswers = useCallback((entries: ResponseLogEntry[]) => {
+    logResponses(entries);
+    setLogged(prev => ({ ...prev, ...Object.fromEntries(entries.map(e => [e.itemId, { clientRef: e.clientRef, latencyMs: e.latencyMs }])) }));
+  }, []);
 
   // Per-question time on screen, for the responses log's latency.
   const dwellRef = useRef(new DwellTimer());
@@ -263,18 +273,18 @@ function PracticeContent() {
     }
     // Logging the answer also feeds spaced repetition (server-side).
     const answered = questions[currentIndex];
-    if (answered) logResponses([responseEntry(answered, optionIndex, 'practice', dwellRef.current.elapsedMs(answered.id))]);
-  }, [showResult, sectionMode, examMode, answers, currentIndex, questions]);
+    if (answered) logAnswers([responseEntry(answered, optionIndex, 'practice', dwellRef.current.elapsedMs(answered.id))]);
+  }, [showResult, sectionMode, examMode, answers, currentIndex, questions, logAnswers]);
 
   // Section mode: submit the whole section (manually or on timeout)
   const finishSection = useCallback(() => {
     // Every question in the section is logged, blanks included — same as a
     // real exam section, where an unanswered item was still presented.
     // Logging also feeds spaced repetition (server-side).
-    logResponses(questions.map((q, i) =>
+    logAnswers(questions.map((q, i) =>
       responseEntry(q, answers[i], 'practice', dwellRef.current.elapsedMs(q.id))));
     setStep('done');
-  }, [questions, answers]);
+  }, [questions, answers, logAnswers]);
 
   // Section mode: one hard countdown for the whole section, like the real
   // exam — auto-submits via onExpire once, the same wall-clock-accurate
@@ -305,7 +315,7 @@ function PracticeContent() {
     // still presented, so it's logged as a blank.
     const leaving = questions[currentIndex];
     if (examMode && !sectionMode && leaving && answers[currentIndex] === null) {
-      logResponses([responseEntry(leaving, null, 'practice', dwellRef.current.elapsedMs(leaving.id))]);
+      logAnswers([responseEntry(leaving, null, 'practice', dwellRef.current.elapsedMs(leaving.id))]);
     }
     if (currentIndex < questions.length - 1) {
       // Learn mode's "prev" can land on an already-answered question; moving
@@ -320,7 +330,7 @@ function PracticeContent() {
     } else {
       setStep('done');
     }
-  }, [currentIndex, questions, answers, examMode, sectionMode, selectedType]);
+  }, [currentIndex, questions, answers, examMode, sectionMode, selectedType, logAnswers]);
 
   // Exam mode: per-question countdown, reset to a fresh deadline whenever
   // the question changes (questionExpiresAt is set both on first load and
@@ -572,6 +582,18 @@ function PracticeContent() {
               <div className="text-xs text-exam-ink-soft">
                 שאלה {currentIndex + 1} מתוך {questions.length}
               </div>
+              {sectionMode && selectedType && sectionExpiresAt !== null && (
+                <div className="mt-1 h-6 flex items-center">
+                  {/* Height reserved up front: the gauge appears mid-section without shifting the page. */}
+                  <PaceGauge
+                    type={selectedType}
+                    durationSec={SECTION_FORMAT[selectedType].seconds}
+                    expiresAt={new Date(sectionExpiresAt).toISOString()}
+                    answered={answers.filter(a => a !== null).length}
+                    total={questions.length}
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-3">
@@ -636,6 +658,15 @@ function PracticeContent() {
             hideHeader
             premium
           />
+
+          {!examMode && !sectionMode && showResult && !isCorrectAnswer(question, answers[currentIndex] ?? null) && logged[question.id] && (
+            <ErrorCauseTagger
+              key={question.id}
+              target={{ clientRef: logged[question.id].clientRef }}
+              questionType={question.type}
+              latencyMs={logged[question.id].latencyMs}
+            />
+          )}
 
           {/* Normal (learn) mode: back to previous question / picker + next */}
           {!examMode && !sectionMode && (
@@ -834,6 +865,15 @@ function PracticeContent() {
                         hideHeader
                         premium
                       />
+                      {!isCorrect && logged[q.id] && (
+                        <div className="px-4 pb-4">
+                          <ErrorCauseTagger
+                            target={{ clientRef: logged[q.id].clientRef }}
+                            questionType={q.type}
+                            latencyMs={logged[q.id].latencyMs}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 );

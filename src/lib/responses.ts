@@ -79,6 +79,8 @@ export interface GradedResponse {
 
 /** A response as reported by a client surface (practice / review / diagnostic). */
 export interface ClientResponseInput {
+  /** Client-generated row id — how /api/responses/tag finds the row later. */
+  clientRef?: string;
   itemId: string;
   context: Exclude<ResponseContext, 'exam'>;
   /** Canonical option index (see toCanonicalOption), null = left blank. */
@@ -133,11 +135,23 @@ export async function recordClientResponses(
         theta_before: r.thetaBefore ?? theta,
         p_correct: Number.isFinite(key.b) ? predictCorrect(theta, key) : null,
         section_index: r.sectionIndex ?? null,
+        ...(r.clientRef ? { client_ref: r.clientRef } : {}),
       };
     });
   if (rows.length === 0) return { recorded: 0, graded: [], error: null };
 
-  const { data: inserted, error } = await supabase.from('responses').insert(rows).select('id');
+  let { data: inserted, error } = await supabase.from('responses').insert(rows).select('id');
+  // Rollout safety: until the 20260924120000 migration adds responses.client_ref,
+  // PostgREST rejects the unknown column (PGRST204). Log the answers without
+  // it rather than lose them — only error-cause tagging degrades.
+  if (error?.code === 'PGRST204' && error.message.includes('client_ref')) {
+    const withoutRef = rows.map(r => {
+      const copy: Record<string, unknown> = { ...r };
+      delete copy.client_ref;
+      return copy;
+    });
+    ({ data: inserted, error } = await supabase.from('responses').insert(withoutRef).select('id'));
+  }
   if (error) return { recorded: 0, graded: [], error: error.message };
   // PostgREST returns inserted rows in insert order.
   const ids = ((inserted ?? []) as { id: number }[]).map(r => r.id);

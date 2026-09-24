@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, Check } from 'lucide-react';
 import { ExamTimer } from '@/components/exam/ExamTimer';
+import { PaceGauge } from '@/components/exam/PaceGauge';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { SectionProgress } from '@/components/exam/SectionProgress';
 import { SECTION_CONFIGS, type Question } from '@/types/exam';
@@ -334,6 +335,21 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
                   <span className="mr-1 px-1.5 py-0.5 rounded-sm bg-exam-alt-bg text-exam-alt font-semibold">תרגול חלופי</span>
                 )}
               </span>
+              {!session.is_practice && currentCfg && (
+                <div className="mt-1 h-6 flex items-center">
+                  {/* Height reserved up front: the gauge appears mid-section without shifting the page. */}
+                  {/* Keyed by section: a new section starts with a clean slate. */}
+                  <PaceGauge
+                    key={currentSection}
+                    type={currentCfg.type}
+                    durationSec={currentCfg.durationSeconds}
+                    expiresAt={session.current_section_expires_at}
+                    clockSkewMs={clockSkewMs}
+                    answered={answers.filter(a => a !== null).length}
+                    total={currentQuestions.length}
+                  />
+                </div>
+              )}
             </div>
             <ExamTimer
               expiresAt={session.current_section_expires_at}

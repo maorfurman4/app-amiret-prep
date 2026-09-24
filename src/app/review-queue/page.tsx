@@ -7,7 +7,8 @@ import type { Question } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
 import { PenLine, RotateCcw, BookOpen, Languages, HelpCircle, AlertTriangle, PartyPopper, Trash2, Target, ThumbsUp, Check, X, type LucideIcon } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
-import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
+import { DwellTimer, logResponses, responseEntry, type ResponseLogEntry } from '@/lib/response-log-client';
+import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 
 type Step = 'loading' | 'empty' | 'error' | 'overview' | 'reviewing' | 'done';
 
@@ -52,6 +53,8 @@ export default function ReviewQueuePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [showResult, setShowResult] = useState(false);
+  // Logged entries by question id — the client ref lets an error-cause tag find its row.
+  const [logged, setLogged] = useState<Record<string, Pick<ResponseLogEntry, 'clientRef' | 'latencyMs'>>>({});
   const [correctCount, setCorrectCount] = useState(0);
   const [showQuestionPicker, setShowQuestionPicker] = useState(false);
 
@@ -144,7 +147,9 @@ export default function ReviewQueuePage() {
     if (wasCorrect) setCorrectCount(c => c + 1);
     // Logging the answer is the review: the server grades it and updates
     // the concept's FSRS card (src/lib/srs.ts), rescheduling it.
-    logResponses([responseEntry(questions[currentIndex], optionIndex, 'review', dwellRef.current.elapsedMs(questions[currentIndex].id))]);
+    const entry = responseEntry(questions[currentIndex], optionIndex, 'review', dwellRef.current.elapsedMs(questions[currentIndex].id));
+    logResponses([entry]);
+    setLogged(prev => ({ ...prev, [entry.itemId]: { clientRef: entry.clientRef, latencyMs: entry.latencyMs } }));
   }, [showResult, currentIndex, questions]);
 
   const handleNext = useCallback(() => {
@@ -550,6 +555,15 @@ export default function ReviewQueuePage() {
           hideHeader
           premium
         />
+
+        {showResult && answers[currentIndex] !== question.correct_answer && logged[question.id] && (
+          <ErrorCauseTagger
+            key={question.id}
+            target={{ clientRef: logged[question.id].clientRef }}
+            questionType={question.type}
+            latencyMs={logged[question.id].latencyMs}
+          />
+        )}
 
         <div className="mt-6 flex items-center justify-between gap-3">
           {/* Delete current question */}

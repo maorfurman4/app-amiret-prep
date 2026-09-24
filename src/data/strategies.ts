@@ -87,7 +87,7 @@ export const TIME_BUDGET: TimeBudgetRow[] = [
     perQ: '~2 דקות',
     stuckCap: 'עד 2.5 דקות',
     note:
-      'כ-2 דקות לשאלה — פי שניים מהשלמת משפטים, ובערך אותו זמן לשאלה שנשאר בהבנת הנקרא אחרי הקריאה. הזמן הזה לא מקרי: משפטי המקור בניסוח מחדש דורשים פירוק מדוקדק ("ארבעת השומרים" שמופיעים בנושא ניסוח מחדש), וזה תהליך שדורש קריאה חוזרת. ' +
+      'כ-2 דקות לשאלה — פי שניים מהשלמת משפטים, ובערך אותו זמן לשאלה שנשאר בהבנת הנקרא אחרי הקריאה. הזמן הזה לא מקרי: משפטי המקור בניסוח מחדש דורשים פירוק מדוקדק (שמונת "השומרים" שמופיעים בנושא ניסוח מחדש), וזה תהליך שדורש קריאה חוזרת. ' +
       'נצל אותו: זה הפרק שבו כדאי להשוות שיטתית כל מסיח מול משפט המקור, ולא רק לבחור לפי "הרגשה".',
   },
   {
@@ -104,6 +104,188 @@ export const TIME_BUDGET: TimeBudgetRow[] = [
 
 export const TIME_BY_TYPE: Record<QuestionTypeId, TimeBudgetRow> =
   Object.fromEntries(TIME_BUDGET.map(r => [r.id, r])) as Record<QuestionTypeId, TimeBudgetRow>;
+
+/* ─── כללים בשלוש שכבות: כלל → למה → דוגמה ──────────────────────────────────
+   Progressive disclosure lives in the data: the UI shows `rule` by default,
+   reveals `why` on demand, and `example` as the deepest layer. Keep `rule` to
+   one short line — it is the only part many students will ever read. */
+
+/** A minimal pair: source, a faithful restatement, and a distractor that differs in exactly one respect. */
+export interface MinimalPair {
+  kind: 'pair';
+  source: string;
+  correct: string;
+  trap: string;
+  /** What the trap changed — the one thing to notice. */
+  note: string;
+}
+
+/** A decision scenario, for rules that are about behavior rather than wording. */
+export interface Scenario {
+  kind: 'scenario';
+  text: string;
+}
+
+export interface LayeredRule {
+  id: string;
+  /** Short label (chip / list title). */
+  title: string;
+  /** Layer 1 — the rule itself, one line. */
+  rule: string;
+  /** Layer 2 — why it holds and how the exam exploits it. */
+  why: string;
+  /** Layer 3 — a worked minimal pair or scenario. */
+  example: MinimalPair | Scenario;
+  /** Where an empirical claim in `why` comes from. */
+  source?: string;
+}
+
+/**
+ * The restatement "guards": the dimensions a distractor changes while keeping
+ * topic and most of the wording. A faithful restatement preserves all eight.
+ */
+export const RESTATEMENT_GUARDS: LayeredRule[] = [
+  {
+    id: 'quantifier',
+    title: 'כמת',
+    rule: 'all / most / some / few / none — כמת ששונה הוא משפט אחר.',
+    why: 'הכמת קובע על כמה מהנושא הטענה חלה. מסיח טיפוסי משאיר את כל המשפט כמו שהוא ומחליף רק את הכמת — "רוב" הופך ל"כולם", "מעטים" ל"אף אחד". מילים נרדפות לכמת (most = the majority) כשרות; כמת בעוצמה אחרת — לא.',
+    example: {
+      kind: 'pair',
+      source: 'Most of the participants reported improved sleep.',
+      correct: 'The majority of participants said that their sleep had improved.',
+      trap: 'All of the participants said that their sleep had improved.',
+      note: 'most → the majority שומר על הכמות; all מכליל את הטענה על כולם.',
+    },
+  },
+  {
+    id: 'negation',
+    title: 'שלילה',
+    rule: 'ספור את השלילות — ואז בדוק גם את העוצמה.',
+    why: 'שלילה מופיעה לא רק ב-not ו-never, אלא גם בתחיליות (un-, in-, dis-) ובמילים כמו hardly, rarely, fail to. שתי שלילות הופכות את הכיוון בחזרה, אבל לא משחזרות את העוצמה: "not unexpected" פירושו "צפוי במידה מסוימת", לא "צפוי לחלוטין".',
+    example: {
+      kind: 'pair',
+      source: "The committee's decision was not unexpected.",
+      correct: "The committee's decision was, to some extent, predictable.",
+      trap: "Everyone knew in advance exactly what the committee would decide.",
+      note: 'הכיוון נכון (צפוי), אבל "everyone knew exactly" מגזים — לשון המעטה אינה ודאות.',
+    },
+  },
+  {
+    id: 'time',
+    title: 'זמן ורצף',
+    rule: 'before / after / until / since — מה קרה קודם?',
+    why: 'ניסוח מחדש משנה לעיתים קרובות את סדר המילים בלי לשנות את סדר האירועים ("Only after X did Y" = Y קרה אחרי X). המסיח עושה את ההפך: שומר על סדר המילים ומחליף את סדר האירועים, או הופך פעולה שהסתיימה לפעולה שעדיין נמשכת.',
+    example: {
+      kind: 'pair',
+      source: 'Not until the bridge was repaired did traffic return to normal.',
+      correct: 'Traffic returned to normal only after the bridge had been repaired.',
+      trap: 'Traffic returned to normal before the repairs to the bridge were finished.',
+      note: '"Not until X did Y" = Y רק אחרי X. ה-trap מקדים את Y ל-X.',
+    },
+  },
+  {
+    id: 'direction',
+    title: 'כיוון הקשר',
+    rule: 'מה גרם למה, ומה קרה למרות מה? הכיוון חייב להישמר.',
+    why: 'שני האירועים יכולים להופיע במסיח בדיוק כמו במקור — ורק החץ ביניהם מתהפך: הסיבה הופכת לתוצאה, או ניגוד (despite) הופך לסיבה (because). unless הוא תנאי שלילי מוסתר: = if … not.',
+    example: {
+      kind: 'pair',
+      source: 'The factory closed because demand for its products fell.',
+      correct: "Falling demand for its products led to the factory's closure.",
+      trap: 'Demand for its products fell because the factory closed.',
+      note: 'אותם שני אירועים, חץ סיבתי הפוך.',
+    },
+  },
+  {
+    id: 'modality',
+    title: 'מודאליות',
+    rule: 'may ≠ will ≠ must — שמור על עוצמת הוודאות.',
+    why: 'פעלים מודאליים ומילות הסתייגות (may, might, could, likely, suggests, is believed to) קובעים עד כמה הטענה ודאית. מסיח שהופך "עשוי" ל"יקרה" או "מרמז" ל"מוכיח" שומר על הנושא ועל הכיוון — ולכן קל לפספס אותו. זו מלכודת קלאסית במשפטים בסגנון אקדמי.',
+    example: {
+      kind: 'pair',
+      source: 'The new drug may reduce the risk of heart disease.',
+      correct: 'The new drug could possibly lower the risk of heart disease.',
+      trap: 'The new drug will reduce the risk of heart disease.',
+      note: 'may (אפשרות) → will (ודאות). אותו נושא, אותו כיוון, עוצמה אחרת.',
+    },
+  },
+  {
+    id: 'counterfactual',
+    title: 'תנאי שלא התקיים',
+    rule: 'Had X… / If X had… would have — פירושו ש-X לא קרה.',
+    why: 'תנאי בעבר שלא התקיים מתאר את ההפך מהמציאות: גם התנאי וגם התוצאה לא קרו. "Had the company invested…" = החברה לא השקיעה. המסיח לוקח את התנאי כעובדה. אותו עיקרון בהווה: "If he were taller" = הוא לא גבוה.',
+    example: {
+      kind: 'pair',
+      source: 'Had the company invested in safety, the accident would have been prevented.',
+      correct: 'The company failed to invest in safety, and as a result the accident was not prevented.',
+      trap: 'The company invested in safety, so the accident was prevented.',
+      note: 'ה-trap הופך את התנאי ההיפותטי לעובדה — בדיוק ההפך מהמקור.',
+    },
+  },
+  {
+    id: 'comparison',
+    title: 'השוואה',
+    rule: 'יותר / פחות / הכי / כמו — מי גדול ממי?',
+    why: 'השוואה אפשר לנסח מחדש בהיפוך ("A older than B" = "B younger than A") או במעבר בין מבנים ("No other X is as big as Z" = "Z is the biggest X"). המסיח הופך את כיוון ההשוואה, או הופך יתרון לשוויון.',
+    example: {
+      kind: 'pair',
+      source: 'No other planet in the solar system is as large as Jupiter.',
+      correct: 'Jupiter is the largest planet in the solar system.',
+      trap: 'Jupiter is about the same size as the other planets in the solar system.',
+      note: '"No other … as large as" = הכי גדול. ה-trap הופך יתרון לשוויון.',
+    },
+  },
+  {
+    id: 'negation-scope',
+    title: 'היקף השלילה',
+    rule: 'not all ≠ none — על מה בדיוק חלה השלילה?',
+    why: '"Not all X are Y" אומר שחלק מ-X אינם Y — וייתכן שחלק כן. "No X are Y" אומר שאף אחד לא. המסיח הופך שלילה חלקית לשלילה מוחלטת (או להפך), וזה נראה כמו אותה טענה במבט מהיר.',
+    example: {
+      kind: 'pair',
+      source: 'Not every student who studied abroad improved their English.',
+      correct: 'Some students who studied abroad did not improve their English.',
+      trap: 'None of the students who studied abroad improved their English.',
+      note: '"Not every" = חלק לא; "None" = אף אחד. שלילה חלקית הפכה למוחלטת.',
+    },
+  },
+];
+
+/** Precision rules for answering — replaces over-general heuristics. */
+export const TOO_SIMILAR_RULE: LayeredRule = {
+  id: 'too-similar',
+  title: 'דמיון למקור',
+  rule: 'תשובה שדומה מאוד למקור — סימן לבדוק, לא סיבה לפסול.',
+  why: 'מסיחים רבים מעתיקים את רוב הניסוח ומשנים שומר אחד, ולכן דמיון גבוה מצדיק מעבר שיטתי על השומרים. אבל גם התשובה הנכונה יכולה להישאר קרובה למקור — למשל כשרק הקול (פעיל/סביל) השתנה. ההכרעה היא תמיד בדיקת השומרים, אף פעם לא מידת הדמיון.',
+  example: {
+    kind: 'pair',
+    source: 'The manager approved the budget after a long discussion.',
+    correct: 'The budget was approved by the manager after a long discussion.',
+    trap: 'The manager approved the budget before the discussion began.',
+    note: 'הנכונה כמעט זהה למקור (רק סביל). פסילה בגלל דמיון הייתה טעות; ה-trap נופל בשומר הזמן.',
+  },
+};
+
+export const CHANGE_ANSWER_RULE: LayeredRule = {
+  id: 'change-answer',
+  title: 'שינוי תשובה',
+  rule: 'שנה תשובה כשמצאת סיבה קונקרטית — לא בגלל תחושה.',
+  why: 'העצה "תמיד להישאר עם האינטואיציה הראשונה" לא נתמכת במחקר: במבחני בחירה מרובה נמצא שבערך מחצית משינויי התשובה היו מתשובה שגויה לנכונה, ורק כרבע מנכונה לשגויה. הסיכון האמיתי הוא שינוי מתוך חרדה. לכן הכלל: אם בבדיקה שנייה זיהית מילה, שומר או שורה בקטע שפוסלים את מה שסימנת — שנה. אם זו רק אי-נוחות — השאר.',
+  example: {
+    kind: 'scenario',
+    text: 'בסבב השני אתה רואה שבחרת "will reduce" כשהמקור אמר "may reduce" — זו סיבה קונקרטית (שומר המודאליות): משנים. לעומת זאת, אם תשובה אחרת פשוט "נשמעת עכשיו טוב יותר" ולא מצאת מה פסול בזו שבחרת — נשארים.',
+  },
+  source: 'Kruger, Wirtz & Miller (2005), "Counterfactual thinking and the first instinct fallacy", Journal of Personality and Social Psychology 88(5).',
+};
+
+/** The shared "rescue protocol" step every question type ends with. */
+const CHANGE_ANSWER_STEP = { step: 'רוצה לשנות תשובה?', detail: CHANGE_ANSWER_RULE.rule };
+
+function pairText(example: LayeredRule['example']): string {
+  return example.kind === 'pair'
+    ? `מקור: "${example.source}" ✓ "${example.correct}" ✗ "${example.trap}" — ${example.note}`
+    : example.text;
+}
 
 /* ─── שיטות עבודה לכל סוג שאלה ─────────────────────────────────────────────── */
 
@@ -169,6 +351,7 @@ export const QUESTION_GUIDES: QuestionGuide[] = [
       { step: 'לא מכיר את המילים בתשובות?', detail: 'פרק אותן לשורש ותחילית: un-/dis-/mis- = שלילה, re- = שוב, bene- = טוב, mal- = רע. לרוב זה מספיק כדי לדעת אם המילה "חיובית" או "שלילית" — ולפסול לפי הטון.' },
       { step: 'לא מבין את המשפט עצמו?', detail: 'זהה רק את הטון: האם הסוף "טוב" או "רע"? מילת הקישור + טון = בחירה מושכלת גם בלי להבין הכל.' },
       { step: 'נשארו שתי תשובות שקולות?', detail: 'בדוק איזו מהן "מתחברת" למבנה שאחרי הפער (protect ‎from, rely ‎on, advise ‎to). עדיין תיקו? בחר ועבור הלאה — 50% זה מצוין.' },
+      CHANGE_ANSWER_STEP,
       { step: 'עברו 90 שניות?', detail: 'עצור. נחש מבין מה שנשאר, סמן, והתקדם. שאלה אחת לא שווה את שלוש האחרות.' },
     ],
     tipsHref: '/tips/sentence-completion',
@@ -301,13 +484,14 @@ export const QUESTION_GUIDES: QuestionGuide[] = [
       { step: 'קרא את משפט המקור פעמיים', detail: 'יש לך זמן (2 דקות לשאלה). קריאה שנייה חוסכת טעויות הבנה שעולות ביוקר.' },
       { step: 'חלץ את הגרעין — בעברית', detail: 'סכם לעצמך: מי עשה? מה קרה? ומה הקשר הלוגי (ניגוד / סיבה / תנאי / זמן)? זה "תעודת הזהות" של המשפט.' },
       { step: 'עבור מסיח-מסיח מול הגרעין', detail: 'לכל תשובה שאל: אותו מי? אותו מה? אותו כיוון? כל סטייה — פסילה מיידית.' },
-      { step: 'בדוק את "ארבעת השומרים"', detail: 'כמתים (all/some/most), שלילה (not, never), זמן הפועל, וכיוון סיבה-תוצאה. אחד מהם השתנה = תשובה שגויה.' },
-      { step: 'חשוד בתשובה שדומה מדי למקור', detail: 'תשובה שמעתיקה 80% מהמילים היא מלכודת קלאסית — לרוב היא מחליפה בשקט את הכיוון או הכמת. הנכונה בדרך כלל נשמעת אחרת לגמרי.' },
+      { step: 'עבור על שמונת השומרים', detail: `${RESTATEMENT_GUARDS.map(g => g.title).join(' · ')}. שומר אחד שהשתנה = תשובה שגויה.` },
+      { step: TOO_SIMILAR_RULE.title, detail: TOO_SIMILAR_RULE.rule },
     ],
     stuck: [
       { step: 'לא מבין את משפט המקור?', detail: 'אל תנסה לתרגם מילה-מילה. זהה רק את השלד: מילת קישור + מי + פועל. גם הבנה חלקית מספיקה לפסול שני מסיחים.' },
       { step: 'שתי תשובות נראות נכונות?', detail: 'אחת מהן כמעט תמיד סוטה באחד "השומרים" — השווה אותן זו לזו (לא רק למקור) ומצא במה הן נבדלות. ההבדל הזה הוא המבחן.' },
       { step: 'מבנה מוזר (No sooner... / Had the...)?', detail: 'אלו היפוכים ספרותיים. תרגם לסדר רגיל: "No sooner had X than Y" = מיד אחרי X קרה Y; "Had X been" = If X had been.' },
+      CHANGE_ANSWER_STEP,
       { step: 'עברו 2.5 דקות?', detail: 'פסול את מה שברור, בחר מהנותר, סמן והתקדם. עדיף לשמור דקה לשאלה השלישית.' },
     ],
     tipsHref: '/tips/restatement',
@@ -334,7 +518,7 @@ export const QUESTION_GUIDES: QuestionGuide[] = [
       whatItTests: {
         title: 'מה הסעיף בודק — ולמה זו לא בדיקת אוצר מילים',
         body:
-          'מוצג לך משפט מקור, ועליך לבחור מבין 4 אפשרויות את זו שמבטאת **אותה משמעות בדיוק** — במבנה לשוני שונה לחלוטין. זו בדיוק הסיבה שהתשובה הנכונה כמעט אף פעם לא "נראית" הכי דומה למקור: תשובה שמעתיקה 80% מהמילים המקוריות היא בדרך כלל מלכודת שמחליפה בשקט פרט קריטי (כיוון, כמות, שלילה). ' +
+          'מוצג לך משפט מקור, ועליך לבחור מבין 4 אפשרויות את זו שמבטאת **אותה משמעות בדיוק** — במבנה לשוני שונה לחלוטין. מסיחים רבים מעתיקים את רוב הניסוח ומחליפים בשקט פרט אחד קריטי (כמות, כיוון, ודאות) — ולכן דמיון למקור הוא סימן לבדוק, לא סימן לתשובה נכונה או שגויה. ' +
           'המבחן בודק אם הבנת את **הלוגיקה** של המשפט, לא אם זיהית מילים מוכרות בתוכו.',
       },
       method: {
@@ -356,34 +540,8 @@ export const QUESTION_GUIDES: QuestionGuide[] = [
         ],
       },
       tips: {
-        title: '5 טיפים מרכזיים',
-        items: [
-          {
-            tip: 'תרגם מבנים ספרותיים — בלי לאבד את הדגש',
-            example:
-              '"It was not until Monday that the results were announced" = "The results were announced only on Monday" (ולא לפני כן). מבנה ההדגשה ("It was not until…") מוסיף מידע: לא לפני יום שני. תשובה שאומרת רק "on Monday" קרובה אך מאבדת את הדגש, ותשובה שאומרת "before Monday" — הפוכה. תרגם למבנה פשוט בראש, אבל שמור על המילה "רק".',
-          },
-          {
-            tip: 'בדוק כמתים בקפידה: all / some / most / none',
-            example:
-              '"All students passed" ≠ "Most students passed" — שינוי כמת הוא שינוי משמעות מלא, גם אם שאר המשפט זהה. תשובה שמחליפה "all" ב"some" תמיד שגויה, לא משנה כמה שהיא נשמעת דומה.',
-          },
-          {
-            tip: 'שלילה כפולה — לא תמיד מתבטלת',
-            example:
-              '"He is not unhappy" ≠ "He is happy" — זו לשון המעטה: "הוא לא אומלל", כלומר מרוצה במידה, לא שמח במיוחד. תשובה כמו "He is very happy" מגזימה ושגויה; "He is reasonably content" קרובה הרבה יותר. ספור את השלילות (not + un-), ואז בדוק גם את **העוצמה** — לא רק את הכיוון.',
-          },
-          {
-            tip: 'פעיל מול סביל — המשמעות לא משתנה',
-            example:
-              '"The manager approved the plan" = "The plan was approved by the manager" — שינוי מבנה תחבירי (active/passive) לא משנה מי עשה מה למי. אל תיפול על תשובה שנפסלת רק כי היא בקול סביל.',
-          },
-          {
-            tip: 'בדוק כיוון יחסים — סיבה, תוצאה, תנאי',
-            example:
-              '"Unless it rains, the game will be played" = "The game will be played if it does not rain" — unless הוא תנאי שלילי מוסתר (ראה מדריך מילות הקישור). היפוך הכיוון כאן היא בדיוק סוג הטעות שתשובות מסיחות מנצלות.',
-          },
-        ],
+        title: 'שמונת השומרים — מה המסיח משנה בשקט',
+        items: RESTATEMENT_GUARDS.map(g => ({ tip: `${g.title}: ${g.rule}`, example: `${g.why} ${pairText(g.example)}` })),
       },
       traps: {
         title: 'מלכודות נפוצות — ולמה הן עובדות',
@@ -433,6 +591,7 @@ export const QUESTION_GUIDES: QuestionGuide[] = [
       { step: 'לא מוצא את התשובה בקטע?', detail: 'קח מילת מפתח מהשאלה (שם, מספר, מונח) וסרוק את הקטע רק כדי לאתר אותה — אל תקרא הכל מחדש. התשובה תמיד בסביבת מילת המפתח.' },
       { step: 'שאלת הסקה ("ניתן להבין ש...") תקועה?', detail: 'פסול כל תשובה שמשתמשת בידע חיצוני או מגזימה. הנכונה היא תמיד צעד אחד קטן מהטקסט — לא קפיצה.' },
       { step: 'מילה קריטית לא מוכרת בשאלת אוצר מילים?', detail: 'קרא את המשפט שסביבה ושאל מה הגיוני שיהיה שם. אלו שאלות הקשר, לא מילון — הפירוש המילולי הוא לרוב המלכודת.' },
+      CHANGE_ANSWER_STEP,
       { step: 'הזמן נגמר ונשארו שאלות?', detail: 'בדקה האחרונה: מלא תשובה לכל שאלה שנותרה לפי "האמצעית והמאוזנת" מבין המסיחים. ריק = 0%, ניחוש מושכל = הרבה יותר.' },
     ],
     tipsHref: '/tips/reading-comprehension',

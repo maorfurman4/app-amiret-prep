@@ -98,7 +98,7 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
                       <span className="w-5 h-5 rounded-full bg-exam-accent text-exam-accent-ink text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                         {i + 1}
                       </span>
-                      <span className="font-bold text-exam-ink text-sm">{t.tip}</span>
+                      <span className="font-bold text-exam-ink text-sm"><RichText text={t.tip} /></span>
                     </div>
                     <p className="text-exam-ink-soft text-xs leading-relaxed pr-7 italic"><RichText text={t.example} /></p>
                   </div>

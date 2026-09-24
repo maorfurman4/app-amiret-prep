@@ -22,7 +22,7 @@ export default function ErrorBoundary({ error, reset }: { error: Error & { diges
         <AlertTriangle className="w-12 h-12 mx-auto text-exam-wrong" strokeWidth={1.5} aria-hidden />
         <h1 className="text-xl font-bold text-exam-ink">משהו השתבש</h1>
         <p className="text-exam-ink-soft text-sm leading-relaxed">
-          קרתה שגיאה לא צפויה בטעינת העמוד. אפשר לנסות שוב, או לחזור לדף הבית.
+          העמוד לא נטען בגלל שגיאה לא צפויה. אפשר לנסות שוב או לחזור לדף הבית.
         </p>
         <div className="flex flex-col gap-2 pt-2">
           <button

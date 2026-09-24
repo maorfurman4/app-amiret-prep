@@ -56,7 +56,7 @@ const COLOR_MAP: Record<string, { bg: string; border: string; badge: string; hea
 
 const TAKEAWAY_MARKERS = [
   'המסקנה המעשית:', 'המסקנה החד-משמעית:', 'המסקנה:',
-  'הכלל הזהב:', 'הטריק:', 'שימו לב:', 'זכרו:', 'תרגיל מהיר שעובד תמיד:',
+  'כלל הזהב:', 'הטריק:', 'שימו לב:', 'זכרו:', 'תרגיל מהיר שעובד תמיד:',
 ];
 
 function splitIntoSentences(text: string): string[] {
@@ -191,7 +191,7 @@ export default function StrategiesPage() {
       <div className="bg-exam-surface border-b border-exam-border px-4 py-5">
         <h1 className="text-2xl font-bold text-exam-ink flex items-center gap-2"><Brain className="w-6 h-6" aria-hidden />המדריך המלא לפתרון האמירנ&quot;ט</h1>
         <p className="text-sm text-exam-ink-soft mt-1">
-          בחר נושא — כל נושא ממוקד ומהיר לגלילה
+          בחר נושא — כל אחד קצר וממוקד
         </p>
       </div>
 

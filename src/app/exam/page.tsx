@@ -13,13 +13,13 @@ const MODES: { mode: ExamMode; title: string; desc: string; icon: LucideIcon; is
   {
     mode: 'full',
     title: 'סימולציית פרקי הליבה',
-    desc: '6 פרקי הליבה בזמנים הרשמיים ובמבנה אדפטיבי, ולאחריהם תרגול חלופי. אינו מדמה עדיין את סוגי הפרקים הניסיוניים או הכתיבה',
+    desc: '6 פרקי הליבה בזמנים הרשמיים ובמבנה אדפטיבי, ובסופם תרגול חלופי. הפרקים הניסיוניים והכתיבה עוד לא כלולים',
     icon: Target,
   },
   {
     mode: 'practice',
-    title: 'מוד תרגול',
-    desc: 'ללא טיימר, ניתן לראות הסברים מיד — לתרגול נינוח ובקצב שלך',
+    title: 'מצב תרגול',
+    desc: 'בלי טיימר, עם הסבר מיד אחרי כל תשובה — בקצב שלך',
     icon: BookOpen,
     isPractice: true,
   },
@@ -75,7 +75,7 @@ export default function ExamModePage() {
       const { sessionId } = await res.json() as { sessionId: string };
       router.push(`/exam/${sessionId}`);
     } catch {
-      setError('שגיאת רשת. בדוק חיבור אינטרנט.');
+      setError('אין חיבור לאינטרנט. בדוק את החיבור ונסה שוב.');
     } finally {
       setLoading(false);
     }

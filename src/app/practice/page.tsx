@@ -27,9 +27,9 @@ type PracticeType = QuestionType | 'mixed';
 
 const TYPE_OPTIONS: { type: PracticeType; label: string; desc: string; icon: LucideIcon }[] = [
   { type: 'sentence_completion', label: 'השלמת משפטים', desc: 'בחר את המילה החסרה במשפט', icon: PenLine },
-  { type: 'restatement',        label: 'ניסוח מחדש',   desc: 'זהה את המשמעות הזהה במשפט', icon: RotateCcw },
+  { type: 'restatement',        label: 'ניסוח מחדש',   desc: 'מצא את המשפט שאומר אותו הדבר', icon: RotateCcw },
   { type: 'reading_comprehension', label: 'הבנת הנקרא', desc: 'קרא קטע וענה על שאלות הבנה', icon: BookOpen },
-  { type: 'mixed', label: 'מעורב סוגים', desc: 'שילוב של כל סוגי השאלות באותו תרגול — הכי קרוב לאיך שהמבחן עובד', icon: Shuffle },
+  { type: 'mixed', label: 'מעורב סוגים', desc: 'כל סוגי השאלות באותו תרגול — הכי קרוב למבחן האמיתי', icon: Shuffle },
 ];
 
 const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; sublabel: string; range: string }[] = [
@@ -220,7 +220,7 @@ function PracticeContent() {
       }
       setStep('practicing');
     } catch {
-      setError('שגיאת רשת. בדוק חיבור אינטרנט.');
+      setError('אין חיבור לאינטרנט. בדוק את החיבור ונסה שוב.');
     } finally {
       setLoading(false);
     }
@@ -419,7 +419,7 @@ function PracticeContent() {
                     <span className="px-2 py-0.5 bg-exam-alt text-on-amber text-xs font-bold rounded-sm">{reviewCount}</span>
                   )}
                 </div>
-                <div className="text-sm text-exam-alt leading-relaxed">חזור על שאלות שטעית בהן — מערכת חזרה מרווחת</div>
+                <div className="text-sm text-exam-alt leading-relaxed">שאלות שטעית בהן חוזרות אליך במרווחים שמותאמים לזיכרון</div>
               </div>
             </button>
           </div>
@@ -765,7 +765,7 @@ function PracticeContent() {
             )}
             <div>
               <div className={`text-5xl font-bold ${color}`}>{correctCount}/{questions.length}</div>
-              <div className="text-exam-ink-soft mt-1 text-lg">{pct}% נכון</div>
+              <div className="text-exam-ink-soft mt-1 text-lg">{pct}% תשובות נכונות</div>
             </div>
             <div className="bg-exam-surface rounded-2xl shadow-surface border border-exam-border p-4 text-sm text-exam-ink-soft">
               {pct >= 80 && 'מצוין! אתה שולט בחומר הזה.'}
@@ -773,7 +773,7 @@ function PracticeContent() {
               {pct < 60 && 'כדאי לחזור על החומר הזה ולתרגל שוב.'}
               {questions.length - correctCount > 0 && (
                 <div className="mt-2 text-exam-ink-soft text-xs">
-                  {questions.length - correctCount} טעויות מתוך {questions.length} שאלות
+                  טעית ב-{questions.length - correctCount} מתוך {questions.length} שאלות
                 </div>
               )}
             </div>
@@ -795,14 +795,14 @@ function PracticeContent() {
                   </div>
                   <div className="text-left">
                     <div className="text-sm text-exam-ink-soft">אומדן פנימי</div>
-                    <div className={`text-2xl font-bold ${diagClass.color}`}>~{diagScore}</div>
+                    <div className={`text-2xl font-bold ${diagClass.color}`}><bdi dir="ltr">~{diagScore}</bdi></div>
                     <div className={`text-xs font-semibold ${diagClass.color}`}>{diagClass.label}</div>
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-exam-ink-soft">
-                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר — מבוססת על {questions.length} שאלות בלבד ואינה ציון רשמי של מאל&quot;ו.
-                  {selectedDiff !== 'random' && ' לאומדן רחב יותר, תרגל ברמה מעורבת או בצע את סימולציית פרקי הליבה.'}
-                  {' '}סף הפטור/הרמה עצמו נקבע בנפרד בכל מוסד — {diagClass.label} הוא הטווח הנפוץ, לא תקן מחייב אחיד.
+                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר, על סמך {questions.length} שאלות בלבד — לא ציון רשמי של מאל&quot;ו.
+                  {selectedDiff !== 'random' && ' לאומדן מדויק יותר, תרגל ברמה מעורבת או עשה סימולציה של פרקי הליבה.'}
+                  {' '}כל מוסד קובע בעצמו את הסף לפטור ולכל רמה; {diagClass.label} הוא הטווח הנפוץ.
                 </p>
               </div>
             )}
@@ -850,7 +850,7 @@ function PracticeContent() {
                       {isCorrect ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : <X className="w-3.5 h-3.5" strokeWidth={3} aria-hidden />}
                       <span>שאלה {i + 1}</span>
                       {answers[i] === null && (
-                        <span className="text-exam-ink-soft font-normal">(לא נענתה — פג הזמן)</span>
+                        <span className="text-exam-ink-soft font-normal">(לא ענית — הזמן נגמר)</span>
                       )}
                     </div>
                     <div className="bg-exam-surface">

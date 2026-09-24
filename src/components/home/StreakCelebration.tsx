@@ -80,7 +80,7 @@ export function StreakReward({ streak, onDismiss, hold = false }: { streak: numb
         </div>
         <div className="neon-copy">
           <h2 id="neon-streak-title"><span className="neon-count">{ready ? <RollingNumber value={streak} from={hold ? streak : streak - 1} /> : streak}</span><span className="neon-label">{streak === 1 ? 'יום ראשון ברצף' : 'ימים ברצף'}</span></h2>
-          <p>צעד קטן בכל יום. אנרגיה שרק גדלה.</p>
+          <p>צעד קטן כל יום — וזה מצטבר.</p>
           <div className="neon-stage-label">{stage === 1 ? 'ניצוץ · תחילת הדרך' : stage === 2 ? 'להבה · שבוע ומעלה' : 'אנרגיה · חודש ומעלה'}</div>
         </div>
       </div>

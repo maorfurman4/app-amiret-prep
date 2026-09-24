@@ -68,7 +68,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     const requestStartedAt = Date.now();
     return authFetch(`/api/exam/state?sessionId=${sessionId}`).then(async res => {
     if (res.status === 429) { setError('יותר מדי בקשות בזמן קצר — חכה כדקה ולחץ "נסה שוב".'); return; }
-    if (!res.ok) { setError('לא ניתן לטעון את המבחן'); return; }
+    if (!res.ok) { setError('לא הצלחנו לטעון את המבחן'); return; }
     const data = await res.json() as { session: SessionState; serverNow?: string };
 
     if (data.serverNow) {
@@ -99,7 +99,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     prevIndexRef.current = 0;
 
     }).catch(() => {
-      setError('לא ניתן להתחבר. בדוק את החיבור ונסה שוב.');
+      setError('לא הצלחנו להתחבר. בדוק את החיבור ונסה שוב.');
     });
   }, [sessionId, router, readDraft]);
 
@@ -266,7 +266,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     // only the timer moves you on. Practice mode stays free.
     if (unanswered > 0 && !session.is_practice) {
       setSubmitWarning(
-        `נותרו ${unanswered} שאלות ללא מענה. כמו במבחן האמיתי, אי אפשר לסיים פרק לפני שעונים על כולן — ואם לא יודעים, כדאי לנחש.`
+        `נשארו ${unanswered} שאלות שלא ענית עליהן. כמו במבחן האמיתי, אי אפשר לסיים פרק לפני שעונים על כולן — ואם לא יודעים, מנחשים.`
       );
       return;
     }
@@ -373,7 +373,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         {exitConfirm && (
           <div className="mb-6 p-4 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm" dir="rtl">
             <p className="text-exam-wrong text-sm font-semibold mb-3">
-              בטוח שברצונך לצאת? ההתקדמות במבחן הנוכחי לא נשמרת, אז תוכל פשוט להתחיל מבחן חדש כשתהיה מוכן.
+              לצאת מהמבחן? ההתקדמות בו לא תישמר, ותוכל להתחיל מבחן חדש מתי שתרצה.
             </p>
             <div className="flex gap-2">
               <button
@@ -396,7 +396,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
         {lateNotice && (
           <div className="mb-6 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt flex items-center justify-between gap-3" dir="rtl">
-            <span>הפרק הקודם נשלח אחרי שנגמר הזמן — כמו במבחן האמיתי, הוא נחשב כלא נענה.</span>
+            <span>הפרק הקודם נשלח אחרי שהזמן נגמר, ולכן — כמו במבחן האמיתי — התשובות בו לא נספרו.</span>
             <button onClick={() => setLateNotice(false)} className="text-xs underline flex-shrink-0">הבנתי</button>
           </div>
         )}
@@ -461,7 +461,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
                 key={i}
                 onClick={() => { if (!isSubmitting) setCurrentQuestionIndex(i); }}
                 disabled={isSubmitting}
-                aria-label={`שאלה ${i + 1}${answers[i] === null ? ' — לא נענתה' : ''}`}
+                aria-label={`שאלה ${i + 1}${answers[i] === null ? ' — עוד לא ענית' : ''}`}
                 className={`w-8 h-8 rounded-sm text-xs font-bold transition-colors disabled:opacity-40 border ${
                   i === currentQuestionIndex ? 'bg-exam-accent border-exam-accent text-exam-accent-ink' :
                   answers[i] !== null ? 'bg-exam-paper-alt border-exam-border text-exam-ink' :
@@ -497,7 +497,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         {/* Official AMIRNET guidance */}
         {!session.is_practice && (
           <p className="mt-6 text-center text-xs text-exam-ink-soft">
-            שאלה ללא מענה נחשבת לתשובה שגויה — אם אינך בטוח, כדאי לנחש. אין קנס על טעות.
+            שאלה שלא ענית עליה נספרת כטעות, ואין קנס על טעות — אז אם אינך בטוח, נחש.
           </p>
         )}
       </main>

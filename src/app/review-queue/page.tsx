@@ -264,7 +264,7 @@ export default function ReviewQueuePage() {
           <div className="w-full max-w-sm text-center space-y-4">
             <AlertTriangle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
             <h1 className="text-xl font-bold text-exam-ink">שגיאה בטעינה</h1>
-            <p className="text-exam-ink-soft text-sm">לא ניתן לטעון את השאלות. בדוק חיבור אינטרנט.</p>
+            <p className="text-exam-ink-soft text-sm">לא הצלחנו לטעון את השאלות. בדוק את החיבור לאינטרנט.</p>
             <button
               onClick={() => fetchDueQuestions(guestId)}
               className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
@@ -285,7 +285,7 @@ export default function ReviewQueuePage() {
           <div className="w-full max-w-sm text-center space-y-6">
             <PartyPopper className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
             <h1 className="text-2xl font-bold text-exam-ink">כל הכבוד!</h1>
-            <p className="text-exam-ink-soft">אין שאלות לחזרה כרגע. בוא שוב מחר</p>
+            <p className="text-exam-ink-soft">אין כרגע שאלות לחזרה. חזור מחר</p>
             <button
               onClick={() => router.push('/exam')}
               className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
@@ -310,7 +310,7 @@ export default function ReviewQueuePage() {
             <div className="text-center">
               <RotateCcw className="w-9 h-9 mx-auto mb-2 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
               <h1 className="text-2xl font-bold text-exam-ink">חזרה על טעויות</h1>
-              <p className="text-exam-ink-soft mt-1">{allQuestions.length} שאלות ממתינות, מחולקות לפי קטגוריה</p>
+              <p className="text-exam-ink-soft mt-1">{allQuestions.length} שאלות מחכות לך, לפי סוג</p>
             </div>
 
             <div className="space-y-3">
@@ -372,7 +372,7 @@ export default function ReviewQueuePage() {
           {pct >= 80 ? <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden /> : pct >= 60 ? <ThumbsUp className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden /> : <BookOpen className="w-14 h-14 mx-auto text-exam-ink-soft" strokeWidth={1.5} aria-hidden />}
           <div>
             <div className={`text-5xl font-bold ${color}`}>{correctCount}/{questions.length}</div>
-            <div className="text-exam-ink-soft mt-1 text-lg">{pct}% נכון בחזרה</div>
+            <div className="text-exam-ink-soft mt-1 text-lg">ענית נכון על {pct}% מהשאלות</div>
           </div>
           <div className="bg-exam-surface rounded-2xl shadow-surface border border-exam-border p-4 text-sm text-exam-ink-soft">
             {pct >= 80 && 'מצוין! אתה שולט בשאלות האלה.'}
@@ -384,13 +384,13 @@ export default function ReviewQueuePage() {
               onClick={handleRestartSession}
               className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
             >
-              חזרה על אותן שאלות מחדש
+              לחזור שוב על אותן שאלות
             </button>
             <button
               onClick={() => fetchDueQuestions(guestId)}
               className="w-full py-3 bg-exam-alt text-on-amber rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
             >
-              חזרה לרשימת קטגוריות
+              חזרה לרשימה
             </button>
             <button
               onClick={() => router.push('/exam')}
@@ -421,7 +421,7 @@ export default function ReviewQueuePage() {
               onClick={handleRestartSession}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-exam-accent/10 text-exam-accent rounded-sm text-sm font-semibold hover:bg-exam-accent/20 transition-colors"
             >
-              <RotateCcw className="w-3.5 h-3.5" aria-hidden /> ריסטרט
+              <RotateCcw className="w-3.5 h-3.5" aria-hidden /> מההתחלה
             </button>
             <button
               onClick={handleClearAll}
@@ -534,8 +534,8 @@ export default function ReviewQueuePage() {
             <button
               onClick={handleRestartSession}
               className="p-1.5 rounded-sm text-exam-ink-soft hover:text-exam-accent hover:bg-exam-accent/10 transition-colors text-lg"
-              title="ריסטרט — חזרה לשאלה ראשונה"
-              aria-label="ריסטרט — חזרה לשאלה ראשונה"
+              title="חזרה לשאלה הראשונה"
+              aria-label="חזרה לשאלה הראשונה"
             >
               <RotateCcw className="w-4 h-4 mx-auto" aria-hidden />
             </button>

@@ -132,7 +132,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             </div>
             {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
               <div className="text-xs text-exam-ink-soft mt-1 animate-fade-up [animation-delay:460ms]">
-                כולל תרגול חלופי — הוא אינו חלק מהדמיית פרקי הליבה וטעויות בו לא הורידו את האומדן
+                כולל התרגול החלופי, שאינו חלק מפרקי הליבה — טעויות בו לא הורידו לך את האומדן
               </div>
             )}
           </div>
@@ -156,7 +156,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:140ms]">
           <h2 className="font-bold text-exam-ink mb-1">סקאלת ציונים</h2>
           <p className="text-xs text-exam-ink-soft mb-4">
-            הסף המדויק לפטור/רמה נקבע בנפרד על ידי כל מוסד לימודים — הטווחים כאן הם הנפוצים ביותר בפועל, לא תקן מחייב אחיד.
+            כל מוסד לימודים קובע בעצמו את הסף המדויק לפטור ולכל רמה. הטווחים כאן הם הנפוצים ביותר, לא תקן אחיד.
           </p>
           {[
             { range: '134–150', label: 'פטור מלא', color: 'bg-exam-sage-strong', min: 134, max: 150 },
@@ -260,7 +260,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:260ms]">
               <h2 className="font-bold text-exam-ink mb-1 flex items-center gap-1.5"><Clock className="w-4 h-4" aria-hidden />ניתוח קצב</h2>
               <p className="text-xs text-exam-ink-soft mb-4">
-                כמה זמן השקעת בכל פרק ביחס לזמן המוקצב — ניהול זמן עוזר להשלים את הפרק
+                כמה זמן השקעת בכל פרק, לעומת הזמן שהוקצב לו
               </p>
               <div className="space-y-3 mb-4">
                 {withTimings.map(sr => {
@@ -288,7 +288,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                         />
                       </div>
                       <div className="text-[11px] text-exam-ink-soft mt-0.5">
-                        נוצלו {Math.round(used)} מתוך {budget} שניות ({pctUsed}%)
+                        השתמשת ב-{Math.round(used)} מתוך {budget} שניות ({pctUsed}%)
                       </div>
                     </div>
                   );
@@ -301,7 +301,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                     {overCap.length} שאלות חרגו מ&quot;תקציב התקיעה&quot;
                   </div>
                   <div className="text-xs text-exam-alt leading-relaxed">
-                    {overCap.slice(0, 4).map(x => `פרק ${x.section} שאלה ${x.q}: ${Math.round(x.t)} שנ׳${x.wrong ? ' (וגם שגויה — נחש ותתקדם!)' : ''}`).join(' · ')}
+                    {overCap.slice(0, 4).map(x => `פרק ${x.section} שאלה ${x.q}: ${Math.round(x.t)} שנ׳${x.wrong ? ' (ועוד טעית בה — עדיף לנחש ולהתקדם)' : ''}`).join(' · ')}
                     {overCap.length > 4 && ` · ועוד ${overCap.length - 4}`}
                   </div>
                 </div>
@@ -321,7 +321,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             <BookOpen className="w-8 h-8 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
             <div>
               <div className="font-bold text-exam-ink">עבור על כל השאלות ולמד מהטעויות</div>
-              <div className="text-exam-ink-soft text-sm">ראה הסברים מפורטים לכל שאלה עם שלבי שלילה</div>
+              <div className="text-exam-ink-soft text-sm">הסבר מפורט לכל שאלה, כולל פסילת המסיחים</div>
             </div>
             <div className="mr-auto text-exam-ink-soft text-xl">›</div>
           </div>

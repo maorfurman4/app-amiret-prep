@@ -63,7 +63,7 @@ export function ExamDateCard() {
         <CalendarClock className="w-6 h-6 text-exam-accent flex-shrink-0" strokeWidth={1.75} aria-hidden />
         <div className="flex-1">
           <div className="font-semibold text-sm">מתי המבחן שלך?</div>
-          <div className="text-exam-ink-soft text-xs">התחבר כדי לקבוע תאריך — והחזרות יתוזמנו כך שהזיכרון יגיע לשיא ביום המבחן</div>
+          <div className="text-exam-ink-soft text-xs">התחבר כדי לקבוע תאריך, ונתזמן את החזרות כך שהזיכרון שלך יהיה בשיא ביום המבחן</div>
         </div>
         <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
       </Link>
@@ -122,7 +122,7 @@ export function ExamDateCard() {
           aria-describedby={error ? `${inputId}-error` : undefined}
         />
         <p className="text-xs text-exam-ink-soft">
-          החזרות יתוזמנו כך שהחזרה האחרונה על כל נושא תיפול 1–3 ימים לפני המבחן, והמרווחים יתקצרו ככל שהוא מתקרב.
+          נתזמן את החזרות כך שהחזרה האחרונה על כל נושא תהיה 1–3 ימים לפני המבחן, והמרווחים יתקצרו ככל שהוא מתקרב.
         </p>
         {error && <p id={`${inputId}-error`} role="alert" className="text-xs font-semibold text-exam-wrong">{error}</p>}
         <div className="flex items-center gap-2">
@@ -186,7 +186,7 @@ export function ExamDateCard() {
       <CalendarClock className="w-6 h-6 text-exam-accent flex-shrink-0" strokeWidth={1.75} aria-hidden />
       <div className="flex-1">
         <div className="font-semibold text-sm">{hadPastDate ? 'תאריך המבחן עבר — מתי המבחן הבא?' : 'מתי המבחן שלך?'}</div>
-        <div className="text-exam-ink-soft text-xs">קבע תאריך, והחזרות יתוזמנו כך שהזיכרון יגיע לשיא ביום המבחן</div>
+        <div className="text-exam-ink-soft text-xs">קבע תאריך, ונתזמן את החזרות כך שהזיכרון שלך יהיה בשיא ביום המבחן</div>
       </div>
       <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
     </button>

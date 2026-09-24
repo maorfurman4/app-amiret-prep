@@ -17,8 +17,8 @@ const TONE: Record<'blue' | 'purple' | 'green', { badge: string; glow: string; i
 export function ContextualStrategyCard({ tip: { guide, tip, errors, total } }: { tip: ContextualTip }) {
   const tone = TONE[guide.color];
   const reason = errors > 0
-    ? `${errors} מתוך ${total} שאלות ${guide.titleHe} לא נפתרו בסשן הזה — הנה הכלי שהכי יעזור שם.`
-    : `כל שאלות ${guide.titleHe} נפתרו נכון — הנה כלי לשמור עליהן גם כשהן נהיות קשות.`;
+    ? `טעית ב-${errors} מתוך ${total} שאלות ${guide.titleHe} בתרגול הזה. הכלי הזה יעזור לך שם יותר מכל דבר אחר.`
+    : `ענית נכון על כל שאלות ${guide.titleHe}. הכלי הזה יעזור לך לשמור על זה גם כשהשאלות יהיו קשות יותר.`;
 
   return (
     <section

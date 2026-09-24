@@ -32,8 +32,8 @@ describe('three learning rings', () => {
   });
 
   it('marks the weekly simulation', () => {
-    expect(render({ sim: false })).toContain('טרם השבוע');
-    expect(render({ sim: true })).toContain('בוצעה');
+    expect(render({ sim: false })).toContain('עוד לא השבוע');
+    expect(render({ sim: true })).toContain('עשית השבוע');
   });
 
   it('only marks completion when all three rings are closed', () => {

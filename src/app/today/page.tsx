@@ -191,7 +191,7 @@ export default function TodaySessionPage() {
   if (phase === 'loading') {
     return (
       <div className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
-        <div className="text-exam-ink-soft">בונה את הסשן שלך...</div>
+        <div className="text-exam-ink-soft">מכין את האימון שלך...</div>
       </div>
     );
   }
@@ -201,7 +201,7 @@ export default function TodaySessionPage() {
       <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center space-y-4">
           <AlertTriangle className="w-10 h-10 mx-auto text-exam-wrong" strokeWidth={1.5} aria-hidden />
-          <p className="text-exam-ink-soft text-sm">לא הצלחנו לבנות את הסשן. נסה שוב.</p>
+          <p className="text-exam-ink-soft text-sm">לא הצלחנו להכין את האימון. נסה שוב.</p>
           <button onClick={() => { setPhase('loading'); load(); }} className="px-6 py-2.5 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity">
             נסה שוב
           </button>
@@ -218,7 +218,7 @@ export default function TodaySessionPage() {
           <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
           <h1 className="text-2xl font-bold text-exam-ink">הכל מעודכן!</h1>
           <p className="text-exam-ink-soft">
-            אין כרגע שאלות או מילים שממתינות לחזרה, ואין עדיין מספיק נתונים לזהות נקודת חולשה. סיים עוד תרגול או מבחן ותחזור לכאן.
+            אין כרגע שאלות או מילים לחזרה, ועוד אין מספיק נתונים כדי לזהות נקודת חולשה. תרגל עוד קצת או עשה מבחן, וחזור לכאן.
           </p>
           <div className="flex gap-3 pt-2">
             <Link href="/practice" className="flex-1 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold text-center hover:opacity-90 transition-opacity">לתרגול ממוקד</Link>
@@ -232,7 +232,7 @@ export default function TodaySessionPage() {
   if (phase === 'intro' && data) {
     const items = [
       data.reviewQuestions.length > 0 && { icon: RotateCcw, label: `${data.reviewQuestions.length} שאלות לחזרה`, sub: 'טעויות ישנות שהגיע זמנן' },
-      data.vocabWords.length > 0 && { icon: BookOpen, label: `${data.vocabWords.length} מילים לחזרה`, sub: 'מילים שסימנת כידועות, לרענון' },
+      data.vocabWords.length > 0 && { icon: BookOpen, label: `${data.vocabWords.length} מילים לחזרה`, sub: 'מילים שסימנת שאתה יודע — לרענון' },
       data.weakQuestions.length > 0 && { icon: Target, label: `${data.weakQuestions.length} שאלות תרגול ממוקד`, sub: data.weakType ? `${TYPE_LABELS[data.weakType] ?? data.weakType} — נקודת החולשה שלך` : 'תרגול טרי' },
     ].filter(Boolean) as { icon: typeof RotateCcw; label: string; sub: string }[];
 
@@ -242,8 +242,8 @@ export default function TodaySessionPage() {
         <div className="max-w-lg mx-auto px-4 py-10">
           <div className="text-center mb-8">
             <Sparkles className="w-12 h-12 mx-auto mb-3 text-exam-accent" strokeWidth={1.5} aria-hidden />
-            <h1 className="text-2xl font-bold text-exam-ink">הסשן של היום</h1>
-            <p className="text-exam-ink-soft text-sm mt-1">בנוי בשבילך — לחיצה אחת, בלי לבחור כלום</p>
+            <h1 className="text-2xl font-bold text-exam-ink">האימון של היום</h1>
+            <p className="text-exam-ink-soft text-sm mt-1">מותאם לך: לחיצה אחת, בלי לבחור כלום</p>
           </div>
 
           <div className="space-y-2.5 mb-8">
@@ -367,13 +367,13 @@ export default function TodaySessionPage() {
       <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center max-w-sm space-y-4">
           <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
-          <h1 className="text-2xl font-bold text-exam-ink">סיימת את הסשן של היום!</h1>
+          <h1 className="text-2xl font-bold text-exam-ink">סיימת את האימון של היום!</h1>
           <div className="flex items-center justify-center gap-6 text-sm text-exam-ink-soft">
-            {pct !== null && <div><div className="text-2xl font-bold text-exam-ink">{pct}%</div>שאלות נכונות</div>}
-            {vocabKnownCount > 0 && <div><div className="text-2xl font-bold text-exam-ink">{vocabKnownCount}</div>מילים אושרו</div>}
+            {pct !== null && <div><div className="text-2xl font-bold text-exam-ink">{pct}%</div>תשובות נכונות</div>}
+            {vocabKnownCount > 0 && <div><div className="text-2xl font-bold text-exam-ink">{vocabKnownCount}</div>מילים שזכרת</div>}
           </div>
           <div className="flex items-center justify-center gap-1.5 text-exam-ink-soft text-sm">
-            <ThumbsUp className="w-4 h-4" aria-hidden />תחזור מחר לסשן הבא
+            <ThumbsUp className="w-4 h-4" aria-hidden />נתראה מחר באימון הבא
           </div>
           <div className="flex gap-3 pt-2">
             <Link href="/" className="flex-1 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold text-center hover:opacity-90 transition-opacity">חזרה לדף הבית</Link>

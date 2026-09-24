@@ -120,7 +120,7 @@ export function OfficialScorePrompt() {
           כל ציון רשמי מכייל את האומדנים של האתר מול המציאות — גם לתלמידים הבאים.
         </p>
         {!exempt && (
-          <p className="mt-2 text-xs text-exam-ink-soft">כשתקבע את המועד הבא, החזרות יתוזמנו מחדש לקראתו.</p>
+          <p className="mt-2 text-xs text-exam-ink-soft">כשתקבע את המועד הבא, נתזמן את החזרות מחדש לקראתו.</p>
         )}
         <button
           type="button"
@@ -147,7 +147,7 @@ export function OfficialScorePrompt() {
               איך הלך המבחן ב-{formatDate(testDate)}?
             </label>
             <p className="text-xs text-exam-ink-soft mt-0.5">
-              קיבלת ציון מנית&quot;ה? שיתוף הציון מכייל את האומדנים של האתר מול ציונים אמיתיים. נשמר בחשבון שלך בלבד.
+              קיבלת ציון מנית&quot;ה? הציון שלך עוזר לכייל את האומדנים של האתר מול ציונים אמיתיים. הוא נשמר בחשבון שלך בלבד.
             </p>
           </div>
         </div>

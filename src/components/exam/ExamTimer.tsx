@@ -30,7 +30,7 @@ export function ExamTimer({ expiresAt, isPractice, onExpire, clockSkewMs }: Exam
     return (
       <div className="flex items-center gap-2 px-3 py-1 rounded-sm border border-exam-border bg-exam-paper-alt text-exam-ink-soft text-sm font-medium">
         <span className="text-base">⏸</span>
-        מוד תרגול
+        מצב תרגול
       </div>
     );
   }
@@ -51,7 +51,7 @@ export function ExamTimer({ expiresAt, isPractice, onExpire, clockSkewMs }: Exam
       {isWarning && !isExpired && (
         <div className="text-xs font-bold text-exam-wrong flex items-center gap-1">
           <AlertTriangle className="w-3.5 h-3.5" aria-hidden />
-          ענה מהר! הזמן עומד לפוג
+          הזמן עומד להיגמר!
         </div>
       )}
       <div className={`text-2xl font-semibold tabular-nums ${isWarning ? 'text-exam-wrong' : ''}`}>

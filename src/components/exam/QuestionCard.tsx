@@ -179,7 +179,7 @@ export function QuestionCard({
           <div className="p-4 bg-exam-sage-bg border border-exam-sage/40 rounded-sm">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle2 className="w-4 h-4 text-exam-sage-strong" aria-hidden />
-              <span className="font-bold text-exam-sage-strong text-sm">מדוע התשובה הנכונה נכונה</span>
+              <span className="font-bold text-exam-sage-strong text-sm">למה זו התשובה הנכונה</span>
             </div>
             <p className="text-exam-ink text-sm leading-relaxed">{explanation.correct_reason}</p>
           </div>
@@ -188,7 +188,7 @@ export function QuestionCard({
             <div className="p-4 bg-exam-surface border border-exam-border rounded-sm">
               <div className="font-bold text-exam-ink text-sm mb-3 flex items-center gap-1.5">
                 <ListChecks className="w-4 h-4" aria-hidden />
-                שלבי שלילה:
+                פסילת המסיחים:
               </div>
               <div className="space-y-2">
                 {question.options.map((opt, i) => {
@@ -201,8 +201,8 @@ export function QuestionCard({
                       <span className={`font-bold text-xs mt-0.5 flex-shrink-0 flex items-center gap-1 ${correct ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}
                         style={{ minWidth: '4.5rem' }}>
                         {correct
-                          ? <><CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" aria-hidden />{`שלב ${i+1}: בחר`}</>
-                          : <><XCircle className="w-3.5 h-3.5 flex-shrink-0" aria-hidden />{`שלב ${i+1}: שלל`}</>}
+                          ? <><CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" aria-hidden />{`שלב ${i+1}: בוחרים`}</>
+                          : <><XCircle className="w-3.5 h-3.5 flex-shrink-0" aria-hidden />{`שלב ${i+1}: פוסלים`}</>}
                       </span>
                       <div dir="ltr" lang="en" className="flex-1">
                         <span className="font-serif font-medium text-exam-ink">{opt.text}</span>

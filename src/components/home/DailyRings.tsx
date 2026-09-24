@@ -110,10 +110,10 @@ export function DailyRings({ rings, persistCelebration = true }: { rings: Rings;
           {rings.simulation.done ? (
             <span className="inline-flex items-center gap-0.5 font-semibold text-exam-sage-strong">
               <Check className="size-3.5" strokeWidth={3} aria-hidden />
-              בוצעה
+              עשית השבוע
             </span>
           ) : (
-            <span className="font-semibold text-exam-ink">טרם השבוע</span>
+            <span className="font-semibold text-exam-ink">עוד לא השבוע</span>
           )}
         </li>
       </ul>

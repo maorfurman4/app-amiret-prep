@@ -20,9 +20,9 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
     <html lang="he" dir="rtl" className="h-full">
       <body className="min-h-full flex items-center justify-center bg-exam-paper px-4">
         <div className="text-center max-w-sm space-y-4">
-          <h1 className="text-xl font-bold text-exam-ink">האתר נתקל בשגיאה</h1>
+          <h1 className="text-xl font-bold text-exam-ink">משהו השתבש</h1>
           <p className="text-exam-ink-soft text-sm leading-relaxed">
-            קרתה שגיאה שמנעה מהעמוד לטעון. אפשר לנסות לרענן.
+            העמוד לא נטען בגלל שגיאה. נסה לרענן את הדף.
           </p>
           <button
             onClick={reset}

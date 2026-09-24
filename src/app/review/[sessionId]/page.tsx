@@ -125,7 +125,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
             {([
               { value: 'all', label: `הכל (${questions.length})` },
               { value: 'wrong', label: `טעויות (${wrongCount})` },
-              { value: 'correct', label: `נכון (${correctCount})` },
+              { value: 'correct', label: `נכונות (${correctCount})` },
             ] as { value: Filter; label: string }[]).map(opt => (
               <button
                 key={opt.value}

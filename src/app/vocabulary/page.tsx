@@ -51,7 +51,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   connectors:  'מחברים',
   nouns:       'שמות עצם',
   advanced:    'מתקדם',
-  adjectives:  'תואר שם',
+  adjectives:  'שמות תואר',
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -823,7 +823,7 @@ function VocabularyContent() {
         {syncFailed && (
           <div className="mb-4 flex items-center gap-2 px-3 py-2.5 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt">
             <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
-            <span className="flex-1">שינוי אחרון לא נשמר לחשבון (השינוי עצמו נשמר במכשיר הזה). בדוק חיבור אינטרנט.</span>
+            <span className="flex-1">השינוי האחרון נשמר במכשיר הזה, אבל עוד לא בחשבון. בדוק את החיבור לאינטרנט.</span>
             <button onClick={() => setSyncFailed(false)} className="flex-shrink-0 hover:opacity-70" aria-label="סגור">
               <X className="w-4 h-4" aria-hidden />
             </button>
@@ -1651,7 +1651,7 @@ function VocabularyContent() {
                   <div className="text-center">
                     <div className={`text-lg font-bold flex items-center justify-center gap-1.5 ${timedCorrect ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}>
                       {timedSelected === -1
-                        ? <><Clock className="w-4 h-4" aria-hidden />פג הזמן!</>
+                        ? <><Clock className="w-4 h-4" aria-hidden />נגמר הזמן!</>
                         : timedCorrect
                         ? <><Check className="w-4 h-4" strokeWidth={3} aria-hidden />נכון!</>
                         : <><X className="w-4 h-4" strokeWidth={3} aria-hidden />לא נכון</>}

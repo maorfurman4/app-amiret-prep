@@ -227,7 +227,7 @@ function LoginForm() {
         <div>
           <h2 className="text-lg font-bold text-exam-ink mb-1">שכחת סיסמה?</h2>
           <p className="text-exam-ink-soft text-sm">
-            הכנס את האימייל שלך ונשלח לך קישור לאיפוס
+            הזן את כתובת האימייל שלך, ונשלח לך קישור לאיפוס הסיסמה
           </p>
         </div>
         <div className="space-y-1">
@@ -370,9 +370,9 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-exam-ink-soft text-xs mt-6">
-          ניתן להמשיך{' '}
-          <Link href="/" className="text-exam-ink-soft hover:text-exam-ink underline">ללא חשבון</Link>
-          {' '}— ההתקדמות זמינה בדפדפן זה. מחיקת נתוני האתר עלולה לאבד את הגישה אליה
+          אפשר גם להמשיך{' '}
+          <Link href="/" className="text-exam-ink-soft hover:text-exam-ink underline">בלי חשבון</Link>
+          {' '}— ההתקדמות תישמר רק בדפדפן הזה, ותימחק אם תנקה את נתוני האתר.
         </p>
       </div>
     </div>

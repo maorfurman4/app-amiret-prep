@@ -204,7 +204,7 @@ export default function DiagnosticPage() {
           </button>
         </div>
         <p className="mt-6 text-center text-xs text-exam-ink-soft">
-          אין כאן נכון/לא נכון מיידי — ענה לפי תחושת הבטן, בדיוק כמו במבחן. השאלה הבאה נבחרת לפי התשובה הזו.
+          לא תראה כאן מיד אם צדקת. ענה לפי תחושת הבטן, בדיוק כמו במבחן — השאלה הבאה נבחרת לפי התשובה שלך.
         </p>
       </main>
     </div>
@@ -225,7 +225,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
       href: plan.secondary.href,
     },
     ...(plan.suggestVocabulary
-      ? [{ icon: BookOpen, text: '10 דקות אוצר מילים ביום — הבסיס שמרים את כל השאר', href: '/vocabulary' }]
+      ? [{ icon: BookOpen, text: '10 דקות של אוצר מילים ביום — הבסיס לכל השאר', href: '/vocabulary' }]
       : []),
     { icon: Stethoscope, text: 'אחרי כמה ימי תרגול — סימולציית פרקי הליבה', href: '/exam' },
   ];
@@ -251,7 +251,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
           </h2>
           <p className="text-sm text-exam-ink-soft leading-relaxed mb-4">
             {plan.split
-              ? `כאן מצאנו את הפער הכי ברור — ובדיוק כאן תרגול משתלם הכי הרבה.`
+              ? `כאן הפער הכי ברור — ולכן כאן התרגול ישתלם לך הכי הרבה.`
               : `5 שאלות בלי טיימר, עם הסבר אחרי כל תשובה. זו רמה שמאתגרת אותך בלי לתסכל.`}
           </p>
           <Link href={plan.primary.href} className={`flex w-full items-center justify-center gap-2 py-3.5 text-base ${TACTILE_PRIMARY}`}>
@@ -269,7 +269,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
             </div>
             <div className="text-left">
               <div className="text-sm text-exam-ink-soft">אומדן פנימי</div>
-              <div className={`text-xl font-bold ${band.color}`}>~{plan.score}</div>
+              <div className={`text-xl font-bold ${band.color}`}><bdi dir="ltr">~{plan.score}</bdi></div>
             </div>
           </div>
           <div className="flex gap-1.5 mb-2" aria-label={`הטווח הסביר: רמות ${lo} עד ${hi}`}>
@@ -291,8 +291,8 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
           <p className="text-xs text-exam-ink-soft leading-relaxed">
             {lo === hi ? `הטווח הסביר: רמה ${lo}.` : `הטווח הסביר: רמות ${lo}–${hi}.`}{' '}
             {plan.split
-              ? `מצאנו הבדל מובהק בין סוגי השאלות, ולכן כל סוג מקבל רמה משלו.`
-              : `ההבדלים בין סוגי השאלות (${typeLine}) בתוך טווח הרעש של אבחון קצר, ולכן רמה אחת לשניהם.`}{' '}
+              ? `מצאנו הבדל ברור בין סוגי השאלות, ולכן לכל סוג יש רמה משלו.`
+              : `ההבדל בין סוגי השאלות (${typeLine}) קטן מכדי להסיק ממנו משהו באבחון קצר, ולכן קיבלת רמה אחת לשניהם.`}{' '}
             המערכת ממשיכה לכייל את הרמה ברקע בכל תרגול. זו הערכה פנימית, לא ציון רשמי.
           </p>
         </section>

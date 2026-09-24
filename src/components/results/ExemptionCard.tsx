@@ -165,7 +165,7 @@ export function ExemptionCard({ measurement, heading, basis, score }: ExemptionC
 
         <p className="mt-3 pt-3 border-t border-exam-border text-[11px] leading-relaxed text-exam-ink-soft">
           אומדן על הסקאלה הפנימית של האתר, לפי דיוק המדידה בפועל — לא תחזית רשמית של נית&quot;ה.
-          הסף לפטור נקבע בכל מוסד לימודים בנפרד.
+          כל מוסד לימודים קובע בעצמו את הסף לפטור.
         </p>
       </section>
     </div>

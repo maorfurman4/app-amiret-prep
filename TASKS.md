@@ -30,7 +30,7 @@
 # Visual QA audit (`fix/visual-qa-audit`)
 
 - [x] Sentence breaking: new polish rule 5 — "ENG = עברית" opening a sentence becomes "ENG (עברית)" for a short gloss, "עברית (ENG)" for an explanation, and "ENG (gloss): reason" when a reason follows (17 tests). Dry run: 4,601 rows, 0 problems
-- [ ] **Approval** to run the rule on production (`--apply`)
+- [x] Applied rule 5 on production: 4,601 rows updated, 0 failed; backup `backups/explanations-2026-09-25T07-01-54-095Z.json`; a second dry run finds 0 rows left
 - [x] Victory chart: X-axis dates render RTL ("7 ביולי"); three states — reached / steady (no "0 ימים", no "+-0.0") / rising with a readable rate ("כ-1.2 נק׳ ביום", per week when tiny)
 - [x] Score classification descriptions: no semicolons ("טווח נפוץ. את הסיווג בפועל קובע המוסד"); stats shows label and description on separate lines instead of a dash
 - [x] Tildes: estimated scores already isolated (`~102`); strategy time budget "~60 שניות" → "כ-60 שניות"

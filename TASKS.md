@@ -90,6 +90,6 @@
 - [x] Old categories corrected on the way: -ly words filed under "connectors"/"descriptive" are adverbs (primarily, largely, apparently…); "integrity", "consensus", "defiance" are nouns; linking phrases (despite, owing to, what is more) are connectors
 - [x] `scripts/backfill-part-of-speech.ts`: dry run by default; `--apply` refuses on any mismatch, writes `backups/part-of-speech-<ts>.json`, updates only `part_of_speech`, re-reads to verify
 - [x] App: filter "חלקי דיבר" reads `part_of_speech` (falls back to the old category until the backfill), new chip "תוארי פועל"; the card shows grammar and theme as separate tags ("שם עצם" + "אקדמי")
-- [ ] **Approval** to apply the migration on production
+- [x] Migration applied on production (column empty, check constraint in place, no new security advisor findings); dry run: 1,158 rows to fill, 0 problems
 - [ ] **Approval** to run the backfill with `--apply`
 - [ ] Deploy the app change (push) after the backfill

@@ -1,0 +1,5007 @@
+[
+  {
+    "id": "001dbdec-dc56-4031-9672-0fd12a66734f",
+    "word": "deplete",
+    "category": "verbs"
+  },
+  {
+    "id": "004d0620-6980-476f-8c3e-f2efcb8692da",
+    "word": "paramount",
+    "category": "descriptive"
+  },
+  {
+    "id": "007e1962-ea45-4b88-ac36-c4f7dc1811f1",
+    "word": "assumption",
+    "category": "nouns"
+  },
+  {
+    "id": "00af9ce8-246f-4f1b-9f6e-5f19d6d5791e",
+    "word": "transform",
+    "category": "verbs"
+  },
+  {
+    "id": "01883f03-80db-4fd9-a5f6-d92ec9870046",
+    "word": "calculate",
+    "category": "verbs"
+  },
+  {
+    "id": "01ad0be0-93da-457b-afc3-5d6d6c7aff80",
+    "word": "concede",
+    "category": "verbs"
+  },
+  {
+    "id": "0233ff7d-4d11-4c19-bc20-619b927fa75b",
+    "word": "munificent",
+    "category": "advanced"
+  },
+  {
+    "id": "023f9c89-3060-46d7-9e35-860f2880b67c",
+    "word": "in general",
+    "category": "connectors"
+  },
+  {
+    "id": "0259a3e0-457c-4530-90a4-207bf7bb6c81",
+    "word": "learn",
+    "category": "verbs"
+  },
+  {
+    "id": "029d925a-bdd5-4313-a502-1fd6384428ec",
+    "word": "test",
+    "category": "verbs"
+  },
+  {
+    "id": "02a511ba-0be3-469f-986e-33ee0526c235",
+    "word": "to a large extent",
+    "category": "connectors"
+  },
+  {
+    "id": "03521eaf-f291-467c-8b2c-8550d3d669ea",
+    "word": "vehement",
+    "category": "advanced"
+  },
+  {
+    "id": "035fb3aa-ed47-4ff3-95b6-a05bc376d6c5",
+    "word": "effect",
+    "category": "academic"
+  },
+  {
+    "id": "0376a60c-2056-4bc9-99ef-4bcf164d29bc",
+    "word": "impractical",
+    "category": "adjectives"
+  },
+  {
+    "id": "03cab853-4c29-4ac6-beee-167e274e11e3",
+    "word": "purpose",
+    "category": "nouns"
+  },
+  {
+    "id": "04671973-f10b-4e14-a875-192d49db5ec5",
+    "word": "generally",
+    "category": "connectors"
+  },
+  {
+    "id": "04cea5c0-dd23-419c-9bfa-21bbd7155d37",
+    "word": "mostly",
+    "category": "connectors"
+  },
+  {
+    "id": "0540dea0-e292-4e9e-882f-de7b7ca30e13",
+    "word": "gradual",
+    "category": "adjectives"
+  },
+  {
+    "id": "0550962e-7875-49fc-b027-8a1cd407949f",
+    "word": "organized",
+    "category": "descriptive"
+  },
+  {
+    "id": "0569e92a-0abd-4b46-b5a0-80adae72c51d",
+    "word": "by contrast",
+    "category": "connectors"
+  },
+  {
+    "id": "05c9e3c4-dece-4a6d-bd28-7b4f09484d46",
+    "word": "magnitude",
+    "category": "nouns"
+  },
+  {
+    "id": "05fa95b5-e0bf-4839-939d-e563d2445bc2",
+    "word": "that is",
+    "category": "connectors"
+  },
+  {
+    "id": "06037c8c-9ca9-4319-84ff-c10562edba2a",
+    "word": "predominantly",
+    "category": "connectors"
+  },
+  {
+    "id": "061e26d2-d61d-45c5-a581-b778b6cb7b0f",
+    "word": "devote",
+    "category": "verbs"
+  },
+  {
+    "id": "06592d17-e60c-4b7d-842f-d2b7c915e60e",
+    "word": "ramification",
+    "category": "nouns"
+  },
+  {
+    "id": "06b26122-d427-43bd-8579-18a1e0580778",
+    "word": "eliminate",
+    "category": "verbs"
+  },
+  {
+    "id": "06ca45f4-badc-47da-9e39-3e2d641c1de8",
+    "word": "unequivocal",
+    "category": "advanced"
+  },
+  {
+    "id": "06ef2f8f-fb6e-4801-9246-6d8290bb287d",
+    "word": "tenuous",
+    "category": "advanced"
+  },
+  {
+    "id": "06f77b1e-c000-498e-9114-d543c9ce5c5e",
+    "word": "manage",
+    "category": "verbs"
+  },
+  {
+    "id": "07700358-c48f-4d4c-be60-b994329b24c7",
+    "word": "egregious",
+    "category": "advanced"
+  },
+  {
+    "id": "0779393a-c28e-44b8-a005-aab5c7008a89",
+    "word": "tendency",
+    "category": "nouns"
+  },
+  {
+    "id": "07edf7ef-436c-4db6-ae3f-3892f5a77b32",
+    "word": "modification",
+    "category": "nouns"
+  },
+  {
+    "id": "07ee42a2-9853-4da0-bdfe-91a695102ac4",
+    "word": "prolific",
+    "category": "adjectives"
+  },
+  {
+    "id": "0833f845-f2eb-4985-94c3-0f13f4ac88b2",
+    "word": "promote",
+    "category": "verbs"
+  },
+  {
+    "id": "08679ba6-1ee8-4aa8-a559-278025ff4440",
+    "word": "systematic",
+    "category": "adjectives"
+  },
+  {
+    "id": "0881b6df-b273-4646-a835-dc396393fd25",
+    "word": "futile",
+    "category": "adjectives"
+  },
+  {
+    "id": "088ce5c4-5fd6-4cce-80f3-bbd2b889721c",
+    "word": "beneficial",
+    "category": "adjectives"
+  },
+  {
+    "id": "08d1c4a4-9600-4bf6-bb26-f31a8abd2872",
+    "word": "aid",
+    "category": "verbs"
+  },
+  {
+    "id": "09817c71-1c2f-455c-9393-fc4bc943c66c",
+    "word": "sequentially",
+    "category": "descriptive"
+  },
+  {
+    "id": "0987db94-58fb-4138-8f67-36d4f369205d",
+    "word": "endorse",
+    "category": "verbs"
+  },
+  {
+    "id": "09b073bb-a6f1-499e-b0a8-c3d64beae4b2",
+    "word": "signify",
+    "category": "verbs"
+  },
+  {
+    "id": "09d318c5-1029-4785-b679-dfdd0c522aa3",
+    "word": "ubiquitous",
+    "category": "advanced"
+  },
+  {
+    "id": "0a3aab74-ad9f-44e2-b931-3f67c0e47d58",
+    "word": "discern",
+    "category": "verbs"
+  },
+  {
+    "id": "0a4d4890-6734-49f4-a8b8-296461c20dbd",
+    "word": "as long as",
+    "category": "connectors"
+  },
+  {
+    "id": "0a50860e-bf7d-40ba-a8c1-3e7ada25158f",
+    "word": "since",
+    "category": "connectors"
+  },
+  {
+    "id": "0a55d02d-939a-4ad2-811f-5fc5706dd00c",
+    "word": "equivocate",
+    "category": "advanced"
+  },
+  {
+    "id": "0b5227a9-ae2e-407e-be2e-e63457f16d92",
+    "word": "instead",
+    "category": "connectors"
+  },
+  {
+    "id": "0bd25c88-421e-4586-9b53-07b045fb5ab2",
+    "word": "venal",
+    "category": "advanced"
+  },
+  {
+    "id": "0c1fe1f2-b67d-4af2-a925-4d42aefa63e9",
+    "word": "in short",
+    "category": "connectors"
+  },
+  {
+    "id": "0c37a7e3-7a0e-4ddc-a75b-8d3ccd82f106",
+    "word": "neutral",
+    "category": "adjectives"
+  },
+  {
+    "id": "0c4907f5-9762-48e2-81b0-7ae7be9d0a46",
+    "word": "granted",
+    "category": "connectors"
+  },
+  {
+    "id": "0c5a7241-4f36-437e-b7ce-d920653e76e7",
+    "word": "vapid",
+    "category": "advanced"
+  },
+  {
+    "id": "0c63df6c-95ef-4136-9f1e-1624a0e645ba",
+    "word": "flexible",
+    "category": "adjectives"
+  },
+  {
+    "id": "0c992e85-2797-4667-b626-c5dfb6919438",
+    "word": "strengthen",
+    "category": "verbs"
+  },
+  {
+    "id": "0d155e6e-67a4-4ca9-b2e3-362d5bc1566e",
+    "word": "exert",
+    "category": "verbs"
+  },
+  {
+    "id": "0d24e975-5b8f-4851-b4ff-3226eed0997e",
+    "word": "motivated",
+    "category": "descriptive"
+  },
+  {
+    "id": "0d8c1a3c-e701-40dc-896b-679b98a3834e",
+    "word": "inherently",
+    "category": "connectors"
+  },
+  {
+    "id": "0da58f85-c0b2-414b-8338-9c7e65845e3d",
+    "word": "confine",
+    "category": "verbs"
+  },
+  {
+    "id": "0dbbbe4d-5a26-4a5e-8726-c5ee6e2eb5d3",
+    "word": "clarify",
+    "category": "verbs"
+  },
+  {
+    "id": "0e0f150f-84dc-43eb-89a4-18000d8e3ebc",
+    "word": "respectively",
+    "category": "connectors"
+  },
+  {
+    "id": "0e7dfad3-89a1-4135-8aa4-9fbad385112e",
+    "word": "structurally",
+    "category": "descriptive"
+  },
+  {
+    "id": "0ea6ae4a-3d3e-46d9-b8ab-c0b363433637",
+    "word": "owing to",
+    "category": "connectors"
+  },
+  {
+    "id": "0ee51c4b-5e45-4032-9e08-a0ecfedaba6e",
+    "word": "sufficiently",
+    "category": "connectors"
+  },
+  {
+    "id": "0f2c77fa-bb77-4724-98bb-bb41a11c8104",
+    "word": "encapsulate",
+    "category": "verbs"
+  },
+  {
+    "id": "0f49f22d-e4e8-4edb-b324-a4fe88bbaeff",
+    "word": "integrity",
+    "category": "descriptive"
+  },
+  {
+    "id": "0f6d4a48-fb2b-4561-aad3-15b191459d9f",
+    "word": "specious",
+    "category": "advanced"
+  },
+  {
+    "id": "0f85bec9-dadf-43f1-b4ce-14763b1b895b",
+    "word": "evaluate",
+    "category": "verbs"
+  },
+  {
+    "id": "0f85f095-cdda-4e3f-a7b3-d953139b60db",
+    "word": "thorough",
+    "category": "descriptive"
+  },
+  {
+    "id": "0fb1ff97-334b-401f-b367-7c5154bafe86",
+    "word": "unless",
+    "category": "connectors"
+  },
+  {
+    "id": "0fc7e8ad-38ef-41b6-a3ab-383ad8bcbbec",
+    "word": "virtual",
+    "category": "adjectives"
+  },
+  {
+    "id": "0fd63a0a-a5ad-4111-9492-e744ac9e7464",
+    "word": "consistently",
+    "category": "connectors"
+  },
+  {
+    "id": "0fff96cd-a491-4567-bb06-5664e309a1ac",
+    "word": "crucial",
+    "category": "adjectives"
+  },
+  {
+    "id": "1016a582-68cd-42fb-ac44-a348d5196f35",
+    "word": "redundant",
+    "category": "adjectives"
+  },
+  {
+    "id": "10489684-1bb4-4697-96f0-0454bdbb3b65",
+    "word": "exacerbate",
+    "category": "verbs"
+  },
+  {
+    "id": "1051bcf3-ffe9-4b26-a35b-3f1c0abfb743",
+    "word": "antiquated",
+    "category": "adjectives"
+  },
+  {
+    "id": "1055fb95-502a-4ea6-a5c2-ee33060e1a08",
+    "word": "address",
+    "category": "verbs"
+  },
+  {
+    "id": "10748105-6c46-4af5-99ea-4fb8930a07c7",
+    "word": "notably",
+    "category": "connectors"
+  },
+  {
+    "id": "113388be-0556-417b-ba68-41b065bbcc70",
+    "word": "prerequisite",
+    "category": "nouns"
+  },
+  {
+    "id": "1189da6d-3f54-4937-ad3f-fcfb39081c81",
+    "word": "covet",
+    "category": "advanced"
+  },
+  {
+    "id": "11b49d8a-f84b-40a1-b55b-ac0a92383962",
+    "word": "scientifically",
+    "category": "descriptive"
+  },
+  {
+    "id": "11cac07c-9fc7-43f5-b3db-5d3ddb401a71",
+    "word": "significance",
+    "category": "nouns"
+  },
+  {
+    "id": "1240ee1f-3f3d-4831-b16c-0509f5cf77bd",
+    "word": "by comparison",
+    "category": "connectors"
+  },
+  {
+    "id": "125e6987-a7ee-43e8-bf28-c346b714ce6e",
+    "word": "encourage",
+    "category": "verbs"
+  },
+  {
+    "id": "126abd12-09da-45c7-b273-1dd175200387",
+    "word": "on the other hand",
+    "category": "connectors"
+  },
+  {
+    "id": "126d0198-6f91-422e-9e9e-f98aad5ddac1",
+    "word": "diverse",
+    "category": "descriptive"
+  },
+  {
+    "id": "12874508-5830-4fa2-8518-87c05d2b8fbd",
+    "word": "update",
+    "category": "verbs"
+  },
+  {
+    "id": "1289d8c6-d43f-4f09-98c6-c9fb3ce1a4c1",
+    "word": "emulate",
+    "category": "verbs"
+  },
+  {
+    "id": "129479eb-16c2-4197-bcbe-7e4ff22f9355",
+    "word": "proclivity",
+    "category": "advanced"
+  },
+  {
+    "id": "12a4e5f3-d149-4c82-ae9f-0f860c3f3b6b",
+    "word": "evident",
+    "category": "adjectives"
+  },
+  {
+    "id": "12c23d49-04ea-4020-affc-144d66065b46",
+    "word": "formulation",
+    "category": "nouns"
+  },
+  {
+    "id": "12d798f6-a72f-454e-8f30-bc8d4df8ce2b",
+    "word": "rarely",
+    "category": "connectors"
+  },
+  {
+    "id": "12e3e19c-1d78-47c7-b78f-3da13903079d",
+    "word": "presumably",
+    "category": "connectors"
+  },
+  {
+    "id": "13418f67-78f9-4edc-9486-98bc7fbb8886",
+    "word": "provide",
+    "category": "verbs"
+  },
+  {
+    "id": "1353b2e7-be18-42f8-a67f-5178b7479035",
+    "word": "compatible",
+    "category": "adjectives"
+  },
+  {
+    "id": "1373f3a0-2e4a-4ff7-88e5-023e97aa3e28",
+    "word": "as well as",
+    "category": "connectors"
+  },
+  {
+    "id": "13db1c29-f446-40fd-bcd4-68898c10d50b",
+    "word": "exhaustive",
+    "category": "advanced"
+  },
+  {
+    "id": "13fe4f85-e746-405e-8c47-5e06e7bd12d5",
+    "word": "admonish",
+    "category": "verbs"
+  },
+  {
+    "id": "14ebc784-efc2-451c-a4eb-839ba9de7485",
+    "word": "dominate",
+    "category": "verbs"
+  },
+  {
+    "id": "15056d92-ea5e-4258-b441-39bf575db043",
+    "word": "hierarchical",
+    "category": "adjectives"
+  },
+  {
+    "id": "15462c2f-412d-4f0c-aeeb-ebdc2b492069",
+    "word": "maintain",
+    "category": "verbs"
+  },
+  {
+    "id": "15d54689-2686-4ca8-a18d-90a84b88498e",
+    "word": "measure",
+    "category": "verbs"
+  },
+  {
+    "id": "1615d03c-ad9d-40a1-9fba-2fb75c64933a",
+    "word": "anticipate",
+    "category": "verbs"
+  },
+  {
+    "id": "16217af8-e884-4a84-89b9-f29452f8921e",
+    "word": "logically",
+    "category": "descriptive"
+  },
+  {
+    "id": "165064c0-df2b-4fa5-823e-aa0351caf466",
+    "word": "characteristic",
+    "category": "nouns"
+  },
+  {
+    "id": "165c68da-07d3-4010-98b4-0b1eb236df6d",
+    "word": "static",
+    "category": "adjectives"
+  },
+  {
+    "id": "16a1eea9-124b-4dc5-b410-64797bb654d3",
+    "word": "balance",
+    "category": "verbs"
+  },
+  {
+    "id": "16ed463f-8149-4ee8-899e-fd68a590b027",
+    "word": "coordinate",
+    "category": "verbs"
+  },
+  {
+    "id": "16f00c7a-576f-42cb-ab38-114e80a0a8df",
+    "word": "in addition to",
+    "category": "connectors"
+  },
+  {
+    "id": "17094afe-3ea4-435e-ae67-00a9550ef104",
+    "word": "descend",
+    "category": "verbs"
+  },
+  {
+    "id": "17137523-9a7c-492e-96f3-de0d45ee7949",
+    "word": "complement",
+    "category": "verbs"
+  },
+  {
+    "id": "174cfd74-0348-4e98-a3a5-f90bbd2516fb",
+    "word": "yield",
+    "category": "verbs"
+  },
+  {
+    "id": "1766254e-46fa-429f-9930-876a1acfcf7e",
+    "word": "alternatively",
+    "category": "connectors"
+  },
+  {
+    "id": "1860e7e3-218d-4f48-af29-492bcb918748",
+    "word": "regulation",
+    "category": "nouns"
+  },
+  {
+    "id": "194027a6-3992-42de-994f-cd6af1dca0bb",
+    "word": "identification",
+    "category": "nouns"
+  },
+  {
+    "id": "1961470e-995e-46c5-9d92-cb005a0699c7",
+    "word": "reticent",
+    "category": "advanced"
+  },
+  {
+    "id": "19634028-f7bb-4113-a427-4971929f8811",
+    "word": "dubious",
+    "category": "adjectives"
+  },
+  {
+    "id": "199b36b3-d41b-44b3-a38c-bb4596829e97",
+    "word": "vague",
+    "category": "descriptive"
+  },
+  {
+    "id": "19bf53fa-bd6c-4be0-a18a-a873dab36799",
+    "word": "resolution",
+    "category": "nouns"
+  },
+  {
+    "id": "19e3ab9a-6339-4e0d-8706-a9f2bda9c2d7",
+    "word": "regardless of",
+    "category": "connectors"
+  },
+  {
+    "id": "1a03dba2-40e2-48ba-9e38-4e64cbc088c6",
+    "word": "zealous",
+    "category": "descriptive"
+  },
+  {
+    "id": "1a2d9d54-42c2-4660-911c-1a410d027f4b",
+    "word": "at last",
+    "category": "connectors"
+  },
+  {
+    "id": "1a4fdfe8-a48b-4d6e-87d4-f4f7f232c57e",
+    "word": "collaborative",
+    "category": "descriptive"
+  },
+  {
+    "id": "1a85f71b-c08a-44af-b806-5560ff569b8d",
+    "word": "uniform",
+    "category": "adjectives"
+  },
+  {
+    "id": "1aaf63d3-bc9c-4381-b87e-b4e8276e0dc8",
+    "word": "similarly",
+    "category": "connectors"
+  },
+  {
+    "id": "1ab4c26b-183c-4c07-892f-405427c64eaf",
+    "word": "practically",
+    "category": "descriptive"
+  },
+  {
+    "id": "1ac50e4d-00ba-4e4b-8c8d-edcfc291dac9",
+    "word": "banal",
+    "category": "adjectives"
+  },
+  {
+    "id": "1ac5c6f1-b738-4acc-9a9f-9b3b95e0f5a8",
+    "word": "pragmatic",
+    "category": "academic"
+  },
+  {
+    "id": "1aca1ea0-da91-4460-b680-94cf98c27c55",
+    "word": "frequent",
+    "category": "adjectives"
+  },
+  {
+    "id": "1af2d284-50aa-42f0-9103-e6dff85b0553",
+    "word": "equivocal",
+    "category": "advanced"
+  },
+  {
+    "id": "1bf97e23-33cc-4d3a-a53c-e9f9bc5e5b56",
+    "word": "contribute",
+    "category": "verbs"
+  },
+  {
+    "id": "1c452b1d-5d82-4985-bcfc-f81ecb8bbdf5",
+    "word": "resolve",
+    "category": "verbs"
+  },
+  {
+    "id": "1c4a85a0-4d02-4bd8-8663-4c74ff1313a3",
+    "word": "eccentric",
+    "category": "adjectives"
+  },
+  {
+    "id": "1cb21fd7-546c-4f78-a7e8-6a69c3278a08",
+    "word": "distribution",
+    "category": "nouns"
+  },
+  {
+    "id": "1cca92d5-0cfd-44f1-9345-788dde77d4ad",
+    "word": "convoluted",
+    "category": "advanced"
+  },
+  {
+    "id": "1d27360d-2c67-4529-83ce-1c40407fddf7",
+    "word": "trigger",
+    "category": "verbs"
+  },
+  {
+    "id": "1d52d303-06eb-4b8f-8ebc-25f374bb2bad",
+    "word": "presumption",
+    "category": "nouns"
+  },
+  {
+    "id": "1d86c34e-cc85-4ce7-8c81-ab928e4744fc",
+    "word": "cognitive",
+    "category": "adjectives"
+  },
+  {
+    "id": "1d877a5a-434f-49c8-ae00-c4d8d987c6eb",
+    "word": "by the same token",
+    "category": "connectors"
+  },
+  {
+    "id": "1e08092b-719a-4256-b953-85fde4918fa1",
+    "word": "formal",
+    "category": "adjectives"
+  },
+  {
+    "id": "1e2c690d-ef59-4d8c-8877-e8821a188dfa",
+    "word": "select",
+    "category": "verbs"
+  },
+  {
+    "id": "1eb33bd1-7635-426f-8fbe-c64784fbce1f",
+    "word": "parameter",
+    "category": "nouns"
+  },
+  {
+    "id": "1f34b34e-77c0-4463-828e-7f0682f66a59",
+    "word": "expose",
+    "category": "verbs"
+  },
+  {
+    "id": "1f6fc8f9-d5af-49dc-a953-7840f93ae444",
+    "word": "paradox",
+    "category": "nouns"
+  },
+  {
+    "id": "1fee2a77-51fa-4de0-8547-87b441796921",
+    "word": "ultimately",
+    "category": "connectors"
+  },
+  {
+    "id": "20abab97-0360-43d7-b80e-fea09b84bbdd",
+    "word": "circumvent",
+    "category": "verbs"
+  },
+  {
+    "id": "20c8215c-90b9-4c4a-9f52-094027973e6f",
+    "word": "foster",
+    "category": "verbs"
+  },
+  {
+    "id": "20fd6928-16c0-462d-af90-4d6bf4979162",
+    "word": "what is more",
+    "category": "connectors"
+  },
+  {
+    "id": "21ef8486-114e-459d-89ac-f7fc9525b8db",
+    "word": "trepidation",
+    "category": "advanced"
+  },
+  {
+    "id": "221ba091-5e61-406a-a93b-566006af2c95",
+    "word": "enable",
+    "category": "verbs"
+  },
+  {
+    "id": "224bb2dd-d3d5-4f14-bb43-f12d3a4d5e38",
+    "word": "ardent",
+    "category": "advanced"
+  },
+  {
+    "id": "22a3c1a5-1828-4298-8380-1da0bef66364",
+    "word": "decisive",
+    "category": "adjectives"
+  },
+  {
+    "id": "22a7248d-9aef-4188-8abc-58b9148c076d",
+    "word": "up to a point",
+    "category": "connectors"
+  },
+  {
+    "id": "22be0720-e278-45b3-b5a5-392145e9fd2c",
+    "word": "immune",
+    "category": "academic"
+  },
+  {
+    "id": "22ee3b0f-9263-4345-9aeb-00b22565198f",
+    "word": "stable",
+    "category": "adjectives"
+  },
+  {
+    "id": "230abe02-739a-4847-918e-0610ca8c8b05",
+    "word": "laconic",
+    "category": "advanced"
+  },
+  {
+    "id": "23bd8af4-698e-4f68-b7b6-a95b6dee1708",
+    "word": "procedure",
+    "category": "nouns"
+  },
+  {
+    "id": "246bd718-1c1f-45e8-b278-1b425f4fe843",
+    "word": "remedy",
+    "category": "nouns"
+  },
+  {
+    "id": "24b1e13f-3a2e-4eb9-bb27-4062b57240e2",
+    "word": "proportion",
+    "category": "nouns"
+  },
+  {
+    "id": "24f96898-c909-4c69-8f3b-e3362c296b23",
+    "word": "allegedly",
+    "category": "connectors"
+  },
+  {
+    "id": "252dac9b-a5c4-4ad0-a1c1-0ae6b0fb4d16",
+    "word": "deduce",
+    "category": "verbs"
+  },
+  {
+    "id": "25317efd-5474-4e38-b918-eae22126e1e1",
+    "word": "notwithstanding",
+    "category": "connectors"
+  },
+  {
+    "id": "256c5c61-d411-40a9-90ae-9e19c5dbedf3",
+    "word": "simultaneous",
+    "category": "adjectives"
+  },
+  {
+    "id": "258fc62b-66c8-4835-bab5-8a34b4ddf907",
+    "word": "adversity",
+    "category": "academic"
+  },
+  {
+    "id": "2601b2e3-3bf9-416c-b398-060816cd3a71",
+    "word": "in the same way",
+    "category": "connectors"
+  },
+  {
+    "id": "26035c8e-0452-4eb6-b46e-9fc24f4218b4",
+    "word": "meager",
+    "category": "descriptive"
+  },
+  {
+    "id": "26247db8-0e36-4dd6-9b45-a9cea3aa21d9",
+    "word": "candid",
+    "category": "descriptive"
+  },
+  {
+    "id": "268ad6f8-1ca0-4937-9b72-469708f8fe6a",
+    "word": "demise",
+    "category": "nouns"
+  },
+  {
+    "id": "26f06910-0512-4216-9d0c-aa08fe479ec9",
+    "word": "version",
+    "category": "nouns"
+  },
+  {
+    "id": "2708adcb-8b56-4850-b336-42e328577d48",
+    "word": "record",
+    "category": "verbs"
+  },
+  {
+    "id": "273c143c-75d8-40ad-83b3-2838e1a83c3e",
+    "word": "indeed",
+    "category": "connectors"
+  },
+  {
+    "id": "276e5c17-108b-476e-8914-013decf53269",
+    "word": "decide",
+    "category": "verbs"
+  },
+  {
+    "id": "27892d22-7b4d-46a9-aad6-ed3b836f52de",
+    "word": "function",
+    "category": "verbs"
+  },
+  {
+    "id": "27ab8c43-65f9-420b-ae97-5d2708c1af00",
+    "word": "inspirational",
+    "category": "descriptive"
+  },
+  {
+    "id": "27e558d3-c516-41e4-b805-0b8a70042cae",
+    "word": "challenge",
+    "category": "verbs"
+  },
+  {
+    "id": "2803ba25-5089-4440-ad46-aae5f815606b",
+    "word": "precedent",
+    "category": "nouns"
+  },
+  {
+    "id": "280508b6-64d2-492b-bba0-76ef6d9c52d9",
+    "word": "synthesis",
+    "category": "nouns"
+  },
+  {
+    "id": "2805acb1-eefd-4503-b352-a74daba52fc4",
+    "word": "benign",
+    "category": "adjectives"
+  },
+  {
+    "id": "28499499-c0cc-49b2-b843-dca31a62c253",
+    "word": "mendacious",
+    "category": "advanced"
+  },
+  {
+    "id": "28569bce-bdd5-45f4-9740-b80eb8318a19",
+    "word": "prioritize",
+    "category": "verbs"
+  },
+  {
+    "id": "2887ce10-e185-417e-984f-361914476a62",
+    "word": "persist",
+    "category": "verbs"
+  },
+  {
+    "id": "28b3f99e-bf90-465e-a61d-822fd0ede120",
+    "word": "circumspect",
+    "category": "advanced"
+  },
+  {
+    "id": "294916f9-e729-431d-8790-9a26442195ea",
+    "word": "valid",
+    "category": "adjectives"
+  },
+  {
+    "id": "2960bbf8-9a2c-42d9-a43e-e667a6fce512",
+    "word": "astute",
+    "category": "descriptive"
+  },
+  {
+    "id": "296ccdbd-2307-42a9-a8fb-e47c4b3ce558",
+    "word": "excel",
+    "category": "verbs"
+  },
+  {
+    "id": "29984e2c-518f-44d1-b04c-5c473093de79",
+    "word": "all in all",
+    "category": "connectors"
+  },
+  {
+    "id": "29b624f7-b390-4da6-b6c4-05abc714b232",
+    "word": "inimical",
+    "category": "advanced"
+  },
+  {
+    "id": "2a136eba-ed0c-4ca0-a7b7-76f81c82cc9f",
+    "word": "novice",
+    "category": "nouns"
+  },
+  {
+    "id": "2a40b78e-37d3-41a1-b8c8-d5f98c66d68d",
+    "word": "aside from",
+    "category": "connectors"
+  },
+  {
+    "id": "2ade688a-83db-4fb6-93b6-36325d3cb160",
+    "word": "dedicate",
+    "category": "verbs"
+  },
+  {
+    "id": "2b119354-da98-4d73-9edc-a3c598c8ec48",
+    "word": "parallel",
+    "category": "adjectives"
+  },
+  {
+    "id": "2b87a77e-24bc-47de-8e1a-6b3c5d1936d1",
+    "word": "imminent",
+    "category": "adjectives"
+  },
+  {
+    "id": "2b8999c0-ff73-44fc-bcc6-78b7f622c94d",
+    "word": "convey",
+    "category": "verbs"
+  },
+  {
+    "id": "2c1041bf-0856-4677-be63-2ef262f40f45",
+    "word": "detect",
+    "category": "verbs"
+  },
+  {
+    "id": "2c71356f-31a8-4c47-9a41-b0d44512b9e9",
+    "word": "innate",
+    "category": "descriptive"
+  },
+  {
+    "id": "2c7547cb-c23a-48a4-bdd4-02ee3367801e",
+    "word": "adapt",
+    "category": "verbs"
+  },
+  {
+    "id": "2cd14c35-2fc5-48ba-b6a6-57f653dbaea0",
+    "word": "contextually",
+    "category": "connectors"
+  },
+  {
+    "id": "2d356573-f0f1-4795-91d6-05f6873d1017",
+    "word": "dimension",
+    "category": "nouns"
+  },
+  {
+    "id": "2dd91885-e40a-47b2-bc64-6773d248b1af",
+    "word": "inhibit",
+    "category": "verbs"
+  },
+  {
+    "id": "2dfff259-3218-4289-a11b-ec6ddac1072f",
+    "word": "increasingly",
+    "category": "connectors"
+  },
+  {
+    "id": "2e46a199-6935-4e0f-b5f1-f450b5f9ab7d",
+    "word": "in essence",
+    "category": "connectors"
+  },
+  {
+    "id": "2f65efe2-66b2-4897-810a-3ff52f4f0348",
+    "word": "launch",
+    "category": "verbs"
+  },
+  {
+    "id": "2fbf9ada-3fba-4313-baa6-e177598a9723",
+    "word": "abstain",
+    "category": "verbs"
+  },
+  {
+    "id": "2fe7ea35-0c6f-4e67-8fd1-39b96d4707f2",
+    "word": "interpretation",
+    "category": "nouns"
+  },
+  {
+    "id": "30065809-cbfa-4478-afff-53bba17b1cd4",
+    "word": "intuitive",
+    "category": "adjectives"
+  },
+  {
+    "id": "30ab60be-8c68-4643-94fc-236e7bdcf72e",
+    "word": "fastidious",
+    "category": "advanced"
+  },
+  {
+    "id": "30dccdbf-ed00-46ca-8027-3dcbefa9320d",
+    "word": "distort",
+    "category": "verbs"
+  },
+  {
+    "id": "30e0247b-a6c7-4709-8fd8-be7b6a6a2d3f",
+    "word": "as a result",
+    "category": "connectors"
+  },
+  {
+    "id": "3116d754-faec-4382-abe5-9bcd3219d37f",
+    "word": "vitriolic",
+    "category": "advanced"
+  },
+  {
+    "id": "319481bb-98ca-4ca1-be59-0b3534386ff9",
+    "word": "reliable",
+    "category": "adjectives"
+  },
+  {
+    "id": "31b21d41-32db-4dec-a2e4-7c56ea294b64",
+    "word": "negate",
+    "category": "verbs"
+  },
+  {
+    "id": "31c70ece-203d-416c-84c1-a9bf8c35238a",
+    "word": "relationship",
+    "category": "nouns"
+  },
+  {
+    "id": "32086558-7e5d-4472-a693-44bf69864867",
+    "word": "concept",
+    "category": "nouns"
+  },
+  {
+    "id": "3219120f-0edd-4aae-8e45-cc334cd67f1e",
+    "word": "environment",
+    "category": "nouns"
+  },
+  {
+    "id": "326f9feb-7c2b-40c3-929c-9b0a4d7f3b15",
+    "word": "complexity",
+    "category": "nouns"
+  },
+  {
+    "id": "32c7b132-10ef-478b-8742-f94e9430311d",
+    "word": "prediction",
+    "category": "nouns"
+  },
+  {
+    "id": "32f822af-925a-430b-85e4-043c16cd2545",
+    "word": "however",
+    "category": "connectors"
+  },
+  {
+    "id": "33285f72-557e-47fe-b221-17e38eb7d27b",
+    "word": "implication",
+    "category": "nouns"
+  },
+  {
+    "id": "332ca568-bbc8-46c6-985f-97217811907a",
+    "word": "no matter",
+    "category": "connectors"
+  },
+  {
+    "id": "333c1c35-46b7-4b9a-86b9-f70cae25361d",
+    "word": "operation",
+    "category": "nouns"
+  },
+  {
+    "id": "33e66cac-7d74-446d-8b45-9b5f15c1b7d9",
+    "word": "identify",
+    "category": "verbs"
+  },
+  {
+    "id": "34250723-25bc-482d-86e2-3d13647f734e",
+    "word": "replicate",
+    "category": "verbs"
+  },
+  {
+    "id": "34334eef-de58-4592-84ae-84ce9d392aa2",
+    "word": "entity",
+    "category": "nouns"
+  },
+  {
+    "id": "34763b47-dd63-472a-b969-4333198ab444",
+    "word": "ostentatious",
+    "category": "advanced"
+  },
+  {
+    "id": "347ef9c5-a4c9-4771-8cd5-6ad27892aae3",
+    "word": "theory",
+    "category": "nouns"
+  },
+  {
+    "id": "34cbba65-c716-4646-9d90-5d3fefaf5415",
+    "word": "improve",
+    "category": "verbs"
+  },
+  {
+    "id": "34ceb573-f936-49ed-9ae7-b75765cd53f3",
+    "word": "adhere",
+    "category": "verbs"
+  },
+  {
+    "id": "34d8e328-d0e9-426d-954b-4823fe59b835",
+    "word": "biased",
+    "category": "adjectives"
+  },
+  {
+    "id": "34f13886-9bcf-4de8-b200-c350e451fee7",
+    "word": "above all",
+    "category": "connectors"
+  },
+  {
+    "id": "34f16fcc-ce03-46b5-8062-96dce3641d2b",
+    "word": "scope",
+    "category": "nouns"
+  },
+  {
+    "id": "3529ec7b-3ab5-44c1-803f-7ad3bc1ca467",
+    "word": "due to",
+    "category": "connectors"
+  },
+  {
+    "id": "354ac0c7-4438-4d44-9c6e-5fb68e0434f5",
+    "word": "plethora",
+    "category": "advanced"
+  },
+  {
+    "id": "3558002a-9a94-4e85-9790-13fdb91ca9db",
+    "word": "alleviate",
+    "category": "verbs"
+  },
+  {
+    "id": "35bf80e6-f1d0-4525-a49d-7967b9181150",
+    "word": "realistic",
+    "category": "adjectives"
+  },
+  {
+    "id": "35ee66bd-9d4c-4f10-af4c-5ca2e01c73cf",
+    "word": "construct",
+    "category": "verbs"
+  },
+  {
+    "id": "361edaf9-ce13-4b38-8ba3-bf6612ea73c6",
+    "word": "progressively",
+    "category": "descriptive"
+  },
+  {
+    "id": "3632337a-e029-419a-a5e4-87d4c6984188",
+    "word": "advocate",
+    "category": "verbs"
+  },
+  {
+    "id": "365172a6-dd41-4c2b-8c24-9cfdc80e34cb",
+    "word": "research",
+    "category": "verbs"
+  },
+  {
+    "id": "3686b1cb-5047-407c-b5bf-150c0fd6b7d8",
+    "word": "linear",
+    "category": "adjectives"
+  },
+  {
+    "id": "36948428-380b-4a39-9c70-9131d0c50aa4",
+    "word": "in fact",
+    "category": "connectors"
+  },
+  {
+    "id": "369ba292-5063-42c0-ab1e-20a0f25e5e1e",
+    "word": "identical",
+    "category": "adjectives"
+  },
+  {
+    "id": "36c2c349-f3eb-4b40-a44c-195e6d2c3ca3",
+    "word": "criterion",
+    "category": "nouns"
+  },
+  {
+    "id": "36e14a88-31ce-4850-b800-01539d622168",
+    "word": "relevant",
+    "category": "adjectives"
+  },
+  {
+    "id": "375767e9-f6f4-421d-9915-95ff58808623",
+    "word": "remnant",
+    "category": "academic"
+  },
+  {
+    "id": "377215b5-fdeb-4f72-a572-9ebdcb00250a",
+    "word": "sufficient",
+    "category": "descriptive"
+  },
+  {
+    "id": "37a53355-037b-4388-a13f-522289bdf6f0",
+    "word": "apparently",
+    "category": "connectors"
+  },
+  {
+    "id": "37c197ad-2cd0-434e-b028-e07d5b4fbc9e",
+    "word": "adept",
+    "category": "descriptive"
+  },
+  {
+    "id": "37c9712f-5d58-40c2-bcff-5434bf26831a",
+    "word": "context",
+    "category": "nouns"
+  },
+  {
+    "id": "37e5e2eb-a1c7-45fd-be91-d3961af5018d",
+    "word": "data",
+    "category": "nouns"
+  },
+  {
+    "id": "37ffad33-ac80-4b3c-98df-b0e925b22a3f",
+    "word": "obsequious",
+    "category": "advanced"
+  },
+  {
+    "id": "3810495c-841b-47ce-a426-cb57c417d10a",
+    "word": "validity",
+    "category": "nouns"
+  },
+  {
+    "id": "3837a211-9d93-48b4-a63e-74b45f3e98aa",
+    "word": "undoubtedly",
+    "category": "connectors"
+  },
+  {
+    "id": "3889d6c0-e6ae-4dcf-b99c-1fd71844cde4",
+    "word": "motivation",
+    "category": "nouns"
+  },
+  {
+    "id": "38bed146-8a28-4526-be9c-53d2c06eb12f",
+    "word": "still",
+    "category": "connectors"
+  },
+  {
+    "id": "3991d1e1-a1f5-485b-8cba-87af9700ca29",
+    "word": "compelling",
+    "category": "adjectives"
+  },
+  {
+    "id": "3a129204-fccf-4a3c-8bdc-4ac841be4677",
+    "word": "pedantic",
+    "category": "advanced"
+  },
+  {
+    "id": "3a5ea7b2-9f72-419a-a5a5-8fc52cd05a95",
+    "word": "independent",
+    "category": "adjectives"
+  },
+  {
+    "id": "3a696c43-511c-4288-96a7-6cc11630d287",
+    "word": "decline",
+    "category": "verbs"
+  },
+  {
+    "id": "3a907a58-aa72-457f-879c-de4848ae148d",
+    "word": "enigmatic",
+    "category": "advanced"
+  },
+  {
+    "id": "3b5ff3ec-076a-4ef9-a1b6-87bc94218472",
+    "word": "exhaust",
+    "category": "verbs"
+  },
+  {
+    "id": "3b6a1a12-de45-416b-9a65-bbe0bdb51b32",
+    "word": "distinguish",
+    "category": "verbs"
+  },
+  {
+    "id": "3bd0efe0-8dc1-4a49-9952-9f4f1b091d58",
+    "word": "obtain",
+    "category": "verbs"
+  },
+  {
+    "id": "3cc43eb4-ad03-4c65-8730-3058c159c14a",
+    "word": "theoretically",
+    "category": "connectors"
+  },
+  {
+    "id": "3ce39801-0bc9-492b-864c-37304061f3f9",
+    "word": "increase",
+    "category": "verbs"
+  },
+  {
+    "id": "3d01ea18-d400-4b60-ad08-74720b347731",
+    "word": "so as to",
+    "category": "connectors"
+  },
+  {
+    "id": "3d0c2c72-886c-4067-8e4a-24239d74ad48",
+    "word": "trustworthy",
+    "category": "descriptive"
+  },
+  {
+    "id": "3d3492fa-f10d-4b56-840d-9fa286053864",
+    "word": "deliberate",
+    "category": "descriptive"
+  },
+  {
+    "id": "3d457811-58d6-4592-8835-1c0ec35632cb",
+    "word": "paradoxical",
+    "category": "adjectives"
+  },
+  {
+    "id": "3e4db4e5-0fa2-439b-b971-e1a2a77b915d",
+    "word": "limitation",
+    "category": "nouns"
+  },
+  {
+    "id": "3e4f2dcc-ed7b-4c5c-8b60-5439569d010c",
+    "word": "consequently",
+    "category": "connectors"
+  },
+  {
+    "id": "3e5ca35a-dbb8-4f47-a0b5-af1956bba076",
+    "word": "specify",
+    "category": "verbs"
+  },
+  {
+    "id": "3eba1da0-f04d-4798-89e1-fb81b13961f5",
+    "word": "activate",
+    "category": "verbs"
+  },
+  {
+    "id": "3ed7c9a5-ac61-44a8-ae67-d60f5ae43d54",
+    "word": "provided that",
+    "category": "connectors"
+  },
+  {
+    "id": "3f21a6c3-2ac8-4a2b-a3d2-864e08be1df1",
+    "word": "affect",
+    "category": "verbs"
+  },
+  {
+    "id": "3f48ba3b-15b2-402d-95aa-c8176a199e5d",
+    "word": "distribute",
+    "category": "verbs"
+  },
+  {
+    "id": "3f8d592f-428b-4b5f-b831-94a70b208108",
+    "word": "substantially",
+    "category": "connectors"
+  },
+  {
+    "id": "3f9cfe30-8f5a-46c9-8bc9-8932efec2277",
+    "word": "catalyst",
+    "category": "nouns"
+  },
+  {
+    "id": "3fd5e8d7-f22c-4a2d-8b86-70b8349c2cca",
+    "word": "elaborate",
+    "category": "descriptive"
+  },
+  {
+    "id": "40219d48-0a71-4489-9ac6-f4fd6e7f02d3",
+    "word": "perceive",
+    "category": "verbs"
+  },
+  {
+    "id": "404b997d-3a0c-483f-b6e1-591b42b8389a",
+    "word": "support",
+    "category": "verbs"
+  },
+  {
+    "id": "405dc11c-d826-4927-ad53-f2a318dd52ab",
+    "word": "fluctuate",
+    "category": "verbs"
+  },
+  {
+    "id": "40cbc1f4-2282-4c63-8b6a-6ba013af33cf",
+    "word": "original",
+    "category": "adjectives"
+  },
+  {
+    "id": "40fb47fa-b0e5-4515-8ea3-fcd57e027b3b",
+    "word": "instill",
+    "category": "verbs"
+  },
+  {
+    "id": "41e94635-9601-480b-8f15-db883afb7d25",
+    "word": "relate",
+    "category": "verbs"
+  },
+  {
+    "id": "41f69eb8-bc3b-451f-8429-084132ae03d4",
+    "word": "tenacious",
+    "category": "adjectives"
+  },
+  {
+    "id": "426b663e-82f3-4a7e-9c66-04c9d14bcb2e",
+    "word": "durable",
+    "category": "adjectives"
+  },
+  {
+    "id": "426e662e-866f-47be-81d3-092553f441c4",
+    "word": "apart from",
+    "category": "connectors"
+  },
+  {
+    "id": "42ae7110-d253-4037-8351-0a0bd7f54e94",
+    "word": "innovate",
+    "category": "verbs"
+  },
+  {
+    "id": "42da33dc-10ec-44b9-8e2c-57fd0c158692",
+    "word": "indispensable",
+    "category": "descriptive"
+  },
+  {
+    "id": "42fa2871-7f50-4a2f-b048-6ee6ea7a9182",
+    "word": "stoic",
+    "category": "advanced"
+  },
+  {
+    "id": "435f18fd-6e60-496d-9f1e-7a2c5bb96867",
+    "word": "emergence",
+    "category": "nouns"
+  },
+  {
+    "id": "43b0634a-9138-4854-86c1-4de0022bfe68",
+    "word": "fundamentally",
+    "category": "connectors"
+  },
+  {
+    "id": "43b53296-c4ed-4640-bda6-04c0bef12a4d",
+    "word": "predominant",
+    "category": "adjectives"
+  },
+  {
+    "id": "43c02eda-f4c4-4358-be2c-4ec167c4140f",
+    "word": "initiate",
+    "category": "verbs"
+  },
+  {
+    "id": "43f2a218-6184-4738-9426-2d26109dffa2",
+    "word": "querulous",
+    "category": "advanced"
+  },
+  {
+    "id": "441ca9d9-0f5f-4980-b4ad-b1f6746f29e7",
+    "word": "verbose",
+    "category": "advanced"
+  },
+  {
+    "id": "448b59b9-5ac2-4c62-adb1-69950343c442",
+    "word": "discord",
+    "category": "nouns"
+  },
+  {
+    "id": "44a3b90a-9220-4711-9abf-377a14a72c4c",
+    "word": "exemplify",
+    "category": "verbs"
+  },
+  {
+    "id": "44eb7fa8-3b31-49a4-8e32-a0d34fae6ca9",
+    "word": "summarize",
+    "category": "verbs"
+  },
+  {
+    "id": "45265dc8-c43c-4d20-aa31-6f3c252ee700",
+    "word": "navigate",
+    "category": "verbs"
+  },
+  {
+    "id": "4551b81c-310b-4931-baac-4640968fa09e",
+    "word": "concentrate",
+    "category": "verbs"
+  },
+  {
+    "id": "45bd0134-14e8-45f6-bf85-0e81da891605",
+    "word": "analytically",
+    "category": "descriptive"
+  },
+  {
+    "id": "45ca2319-e432-4178-999e-dc8ec406e3e3",
+    "word": "lethargic",
+    "category": "advanced"
+  },
+  {
+    "id": "45d66cfc-99f9-480a-b4db-d3d51a9a0b7b",
+    "word": "competitive",
+    "category": "descriptive"
+  },
+  {
+    "id": "45ef7ac0-e9f1-4a88-8fcb-c4e41cffe3dc",
+    "word": "dynamic",
+    "category": "adjectives"
+  },
+  {
+    "id": "45f4fc27-a64c-420c-8333-03cc1f449488",
+    "word": "as for",
+    "category": "connectors"
+  },
+  {
+    "id": "461e79e5-ca7d-428a-9d19-a6c97cef93b0",
+    "word": "specification",
+    "category": "nouns"
+  },
+  {
+    "id": "465a496c-c0ae-48f3-97be-ca1b1dbf8883",
+    "word": "precipitous",
+    "category": "advanced"
+  },
+  {
+    "id": "46a97757-362e-44ff-8a5c-5b251071e914",
+    "word": "anachronism",
+    "category": "advanced"
+  },
+  {
+    "id": "46bcf591-b2e5-47db-9083-15014a49ca8d",
+    "word": "feasible",
+    "category": "academic"
+  },
+  {
+    "id": "4743f71c-8e10-4496-8ce5-2a1ac47cb5ac",
+    "word": "nonchalant",
+    "category": "advanced"
+  },
+  {
+    "id": "476b6ec0-dfc0-46b4-8dd9-0d351ba74ffb",
+    "word": "accumulate",
+    "category": "verbs"
+  },
+  {
+    "id": "477369d6-0bfe-4049-a7e9-0dbb7412b94b",
+    "word": "criteria",
+    "category": "nouns"
+  },
+  {
+    "id": "479fffe0-e4d0-4981-877e-77a9e6bd88f3",
+    "word": "generate",
+    "category": "verbs"
+  },
+  {
+    "id": "47de759c-f3b9-4eb6-a356-1504b49905c0",
+    "word": "dominant",
+    "category": "adjectives"
+  },
+  {
+    "id": "47f35e59-6d3a-4410-9c90-657c051116f2",
+    "word": "sycophant",
+    "category": "advanced"
+  },
+  {
+    "id": "48168c3d-e926-44b9-b8cb-c8e4def029e0",
+    "word": "adroit",
+    "category": "advanced"
+  },
+  {
+    "id": "4893af0a-ff1b-4d9c-9bfd-18176e375523",
+    "word": "extensive",
+    "category": "adjectives"
+  },
+  {
+    "id": "48971b7f-5137-42c6-ac4a-d5e9d8b865ec",
+    "word": "invaluable",
+    "category": "adjectives"
+  },
+  {
+    "id": "493b627b-70c8-4983-b465-0bb32860ffac",
+    "word": "indifferent",
+    "category": "descriptive"
+  },
+  {
+    "id": "49571e66-c9b6-4ea7-ac71-e38fb96364bf",
+    "word": "eloquence",
+    "category": "nouns"
+  },
+  {
+    "id": "498379af-ded5-4145-a250-f8763a985b37",
+    "word": "traditionally",
+    "category": "connectors"
+  },
+  {
+    "id": "499f53d4-50fb-4220-892f-dcef6f650bbe",
+    "word": "once",
+    "category": "connectors"
+  },
+  {
+    "id": "49e88f78-d6bd-4d7d-a31c-919a761c1311",
+    "word": "require",
+    "category": "verbs"
+  },
+  {
+    "id": "49fe5749-4216-4b1b-b3f8-b2b9f4f773e8",
+    "word": "adopt",
+    "category": "verbs"
+  },
+  {
+    "id": "49fe6ff2-477c-4a91-baa6-6bf40e4c8ade",
+    "word": "collect",
+    "category": "verbs"
+  },
+  {
+    "id": "4a1caf7b-311c-435b-82c2-227e9cfa4291",
+    "word": "consent",
+    "category": "nouns"
+  },
+  {
+    "id": "4ab98a80-9870-4638-8c62-e97d016cd42e",
+    "word": "lucid",
+    "category": "advanced"
+  },
+  {
+    "id": "4abc086f-6d59-4f60-9070-f35ab3e6ee05",
+    "word": "lenient",
+    "category": "advanced"
+  },
+  {
+    "id": "4acdf71e-b647-4e67-9828-11f704f3928e",
+    "word": "in theory",
+    "category": "connectors"
+  },
+  {
+    "id": "4b4811b4-f1ad-4e31-a7f6-b566f056352d",
+    "word": "effective",
+    "category": "adjectives"
+  },
+  {
+    "id": "4babea56-bf0c-49b3-9b22-420d4b7634d5",
+    "word": "presumptuous",
+    "category": "advanced"
+  },
+  {
+    "id": "4bd22c9a-865a-40d8-b8c0-8ce442324ada",
+    "word": "neglect",
+    "category": "verbs"
+  },
+  {
+    "id": "4bddb471-9c81-4d25-8806-19d94e1c1fc5",
+    "word": "preliminary",
+    "category": "adjectives"
+  },
+  {
+    "id": "4beebc42-c4cf-4c19-ae8c-4095943048d5",
+    "word": "collaborate",
+    "category": "verbs"
+  },
+  {
+    "id": "4c516675-ca21-4cbd-9def-7e1cf5a04a46",
+    "word": "structural",
+    "category": "adjectives"
+  },
+  {
+    "id": "4c76aff2-c881-4d66-b49a-642f948ad949",
+    "word": "prevalent",
+    "category": "adjectives"
+  },
+  {
+    "id": "4c9d0398-4929-42e9-a919-fb07fddde9e0",
+    "word": "indefatigable",
+    "category": "advanced"
+  },
+  {
+    "id": "4cb4177d-9cdd-4cfd-b8f1-c4e4821e0d62",
+    "word": "rigid",
+    "category": "adjectives"
+  },
+  {
+    "id": "4ce72a47-4e1f-4ad0-bde7-6ac8edc82f14",
+    "word": "proactive",
+    "category": "descriptive"
+  },
+  {
+    "id": "4d6989e4-9d2f-4dbb-b6cd-917ff7f0f731",
+    "word": "profound",
+    "category": "descriptive"
+  },
+  {
+    "id": "4e22d9db-4f60-4f7f-9986-3ba90e5cbc5d",
+    "word": "spurious",
+    "category": "advanced"
+  },
+  {
+    "id": "4e410cd7-ebcd-41c5-a86a-d313bc1ed39c",
+    "word": "for this reason",
+    "category": "connectors"
+  },
+  {
+    "id": "4e89bac1-d675-439b-a1e4-f9297b517a77",
+    "word": "until",
+    "category": "connectors"
+  },
+  {
+    "id": "4e8bf2cc-7894-43f2-9847-c15471337c67",
+    "word": "contrast",
+    "category": "nouns"
+  },
+  {
+    "id": "4e9335b4-eeb0-4017-8775-36337ff8285e",
+    "word": "outcome",
+    "category": "nouns"
+  },
+  {
+    "id": "4ea2c9b0-a8df-41ac-a0b2-89a010e3a384",
+    "word": "diminish",
+    "category": "verbs"
+  },
+  {
+    "id": "4ead8f42-2a88-4f48-b3bd-a11b1f685be0",
+    "word": "accurately",
+    "category": "descriptive"
+  },
+  {
+    "id": "4eb55de7-e0b9-40c1-83c3-8e8c0c6bb55b",
+    "word": "hinder",
+    "category": "verbs"
+  },
+  {
+    "id": "4f0d2e8a-89f8-4594-8a1d-d731378da2bc",
+    "word": "comprehend",
+    "category": "verbs"
+  },
+  {
+    "id": "4f35cb2e-a1e7-4346-9dcb-b4df47bc8ca6",
+    "word": "autonomous",
+    "category": "adjectives"
+  },
+  {
+    "id": "4f562554-3213-4cd7-8012-2b05e03b4358",
+    "word": "approximate",
+    "category": "verbs"
+  },
+  {
+    "id": "4fd56216-6d94-4956-b7d2-e0590daccaea",
+    "word": "isolated",
+    "category": "adjectives"
+  },
+  {
+    "id": "4fe835b0-76cc-412b-8ace-8f607b9b7d39",
+    "word": "cogent",
+    "category": "advanced"
+  },
+  {
+    "id": "501f8eac-cbb8-4e20-9d85-adfccdb2c6f5",
+    "word": "acrimony",
+    "category": "advanced"
+  },
+  {
+    "id": "505699c2-ea7b-49d3-897f-cb849b47d18a",
+    "word": "comparatively",
+    "category": "connectors"
+  },
+  {
+    "id": "50cdc097-6e1e-42f6-b8a5-8d41d647d3bc",
+    "word": "atrocity",
+    "category": "nouns"
+  },
+  {
+    "id": "50da2053-8e19-4e2a-8ec1-f844afff901b",
+    "word": "timid",
+    "category": "advanced"
+  },
+  {
+    "id": "50f9ed1a-9fd5-4398-a2ef-999844f8f739",
+    "word": "allocate",
+    "category": "verbs"
+  },
+  {
+    "id": "51e8f8d5-6a03-48b3-8bae-898414f4732d",
+    "word": "controversy",
+    "category": "nouns"
+  },
+  {
+    "id": "51f4d841-4a8c-499d-872c-45bae6dd789a",
+    "word": "augment",
+    "category": "verbs"
+  },
+  {
+    "id": "52145ceb-a970-4e04-bd5b-04cab9b5a545",
+    "word": "impartial",
+    "category": "adjectives"
+  },
+  {
+    "id": "525c8cfb-7431-4bba-8ad0-2c9964beddcb",
+    "word": "excessive",
+    "category": "adjectives"
+  },
+  {
+    "id": "5262ece6-85fe-4adc-b27a-22b2e09b9768",
+    "word": "technique",
+    "category": "nouns"
+  },
+  {
+    "id": "52ba922e-1372-42dc-bc50-194175d045dc",
+    "word": "highlight",
+    "category": "verbs"
+  },
+  {
+    "id": "52bb074b-6ad2-4b87-8566-e87487974ec0",
+    "word": "consensus",
+    "category": "nouns"
+  },
+  {
+    "id": "5320ab57-9ab0-472d-ac4b-67de9a92e5b0",
+    "word": "specifically",
+    "category": "connectors"
+  },
+  {
+    "id": "533f22fd-ecb5-4092-8eb8-6161bc2ca35d",
+    "word": "insinuate",
+    "category": "advanced"
+  },
+  {
+    "id": "53afd919-a344-4852-bebf-6846a459dedf",
+    "word": "perspective",
+    "category": "nouns"
+  },
+  {
+    "id": "53bd13c1-9f02-4de1-89bc-19a15f1bfe85",
+    "word": "interactive",
+    "category": "adjectives"
+  },
+  {
+    "id": "53f74d95-54ed-43e7-8c41-5c2e83ec55a6",
+    "word": "irrelevant",
+    "category": "adjectives"
+  },
+  {
+    "id": "540c0523-3175-4cfb-bac1-3ab17d6bf0dc",
+    "word": "spontaneous",
+    "category": "descriptive"
+  },
+  {
+    "id": "5448dadf-5d87-4600-bc60-5c7080a252d3",
+    "word": "recommend",
+    "category": "verbs"
+  },
+  {
+    "id": "5486b0e4-20e6-4142-a078-cd7946402387",
+    "word": "process",
+    "category": "nouns"
+  },
+  {
+    "id": "551f0e3d-16b0-43ec-a39c-cccfbc2d6913",
+    "word": "hypocritical",
+    "category": "advanced"
+  },
+  {
+    "id": "5572068d-86cc-449a-9734-eecf06e68672",
+    "word": "prepare",
+    "category": "verbs"
+  },
+  {
+    "id": "562594e1-a766-4334-96f0-6928ab25489c",
+    "word": "pernicious",
+    "category": "advanced"
+  },
+  {
+    "id": "56433099-7163-4bda-aee4-446f848f3562",
+    "word": "expedite",
+    "category": "verbs"
+  },
+  {
+    "id": "566fde6a-bfd2-4013-8f97-1fa56834ebfe",
+    "word": "despite",
+    "category": "connectors"
+  },
+  {
+    "id": "5693793c-4ede-4054-aa8c-029d17dca85d",
+    "word": "refute",
+    "category": "verbs"
+  },
+  {
+    "id": "578cbeae-81c4-4ff3-9c45-745591ad1488",
+    "word": "condition",
+    "category": "nouns"
+  },
+  {
+    "id": "57fd4d64-7aa3-42b0-b4c9-7924ed191f0f",
+    "word": "deferential",
+    "category": "advanced"
+  },
+  {
+    "id": "5928139d-95e3-4259-a39a-5566f1c4abd9",
+    "word": "compassionate",
+    "category": "adjectives"
+  },
+  {
+    "id": "592d6791-b7ad-4215-b715-b82cb29784f9",
+    "word": "reluctant",
+    "category": "descriptive"
+  },
+  {
+    "id": "59526adb-3b33-44f0-89f6-c4cb27ad4410",
+    "word": "unique",
+    "category": "adjectives"
+  },
+  {
+    "id": "5969ce20-1a6b-4002-a120-f1e0fd8272b6",
+    "word": "formidable",
+    "category": "descriptive"
+  },
+  {
+    "id": "598df967-d45c-4c22-ab23-d9efceb2ee0d",
+    "word": "wary",
+    "category": "descriptive"
+  },
+  {
+    "id": "5a326fa5-7761-4bf1-9c99-827790e78905",
+    "word": "delineate",
+    "category": "advanced"
+  },
+  {
+    "id": "5a5c961c-8ea3-439f-95ac-8a8dccf15530",
+    "word": "therefore",
+    "category": "connectors"
+  },
+  {
+    "id": "5a6e7cff-f5dd-41f2-afaf-d08b0255eadf",
+    "word": "credible",
+    "category": "descriptive"
+  },
+  {
+    "id": "5ad8646e-41e1-432d-8cc5-c49c0d661f5e",
+    "word": "investigate",
+    "category": "verbs"
+  },
+  {
+    "id": "5af96f7b-80da-4638-ad77-0f91cce8ac36",
+    "word": "undermine",
+    "category": "verbs"
+  },
+  {
+    "id": "5b3a4b77-4a12-43bc-a85e-3fd733f9922f",
+    "word": "represent",
+    "category": "verbs"
+  },
+  {
+    "id": "5b5e1ee4-7f82-4584-9030-4770a42bc3dd",
+    "word": "exorbitant",
+    "category": "advanced"
+  },
+  {
+    "id": "5b6eb71d-66ca-4b5b-92c6-b1229a4140bf",
+    "word": "prohibit",
+    "category": "verbs"
+  },
+  {
+    "id": "5b8a0c31-d15d-4b73-9501-f7f7f31e2c72",
+    "word": "explanation",
+    "category": "nouns"
+  },
+  {
+    "id": "5c4750e6-c30d-42a2-8e85-18d2677c26ec",
+    "word": "furthermore",
+    "category": "connectors"
+  },
+  {
+    "id": "5d624286-3cba-4a8e-8005-02a51109aa41",
+    "word": "altogether",
+    "category": "connectors"
+  },
+  {
+    "id": "5d80bc64-1da1-4a24-bb7b-8e36b6e3254f",
+    "word": "basis",
+    "category": "nouns"
+  },
+  {
+    "id": "5db74938-3f3f-4cf1-850d-4764ee83c749",
+    "word": "complacent",
+    "category": "descriptive"
+  },
+  {
+    "id": "5dd6e399-807e-44f3-84ee-c255506588be",
+    "word": "amplify",
+    "category": "verbs"
+  },
+  {
+    "id": "5de02572-bcce-4bfa-84f9-1c51dfad0a4d",
+    "word": "inconsistency",
+    "category": "nouns"
+  },
+  {
+    "id": "5de8fcdd-8a12-4a3a-bcde-1fbaae4a5149",
+    "word": "marginal",
+    "category": "adjectives"
+  },
+  {
+    "id": "5e000d06-f3fe-4f1b-9a15-5608be54640e",
+    "word": "scrutinize",
+    "category": "verbs"
+  },
+  {
+    "id": "5e2687ee-7167-47b6-bae6-9c6b7477118d",
+    "word": "extraneous",
+    "category": "advanced"
+  },
+  {
+    "id": "5e33bae3-f33a-4ffd-b939-9f5b589901e2",
+    "word": "likewise",
+    "category": "connectors"
+  },
+  {
+    "id": "5e73bc6f-d71a-4b2d-856c-efca91725d1a",
+    "word": "incorporate",
+    "category": "verbs"
+  },
+  {
+    "id": "5edf9f21-f8ed-4d3c-8627-581389d8be25",
+    "word": "benefit",
+    "category": "verbs"
+  },
+  {
+    "id": "5ee934fc-fa5e-4ff6-99f3-938d760bc6d6",
+    "word": "rather",
+    "category": "connectors"
+  },
+  {
+    "id": "5f04d989-6b09-4538-924f-568916f8dc70",
+    "word": "examine",
+    "category": "verbs"
+  },
+  {
+    "id": "5f3d0cd5-6835-431a-9d79-14a395af5ce3",
+    "word": "sustain",
+    "category": "verbs"
+  },
+  {
+    "id": "5f7eae8c-22c0-413a-9045-509a72773802",
+    "word": "ethical",
+    "category": "adjectives"
+  },
+  {
+    "id": "5fc6052e-a89d-4ddf-8599-faacc3174acf",
+    "word": "conjecture",
+    "category": "nouns"
+  },
+  {
+    "id": "60012d19-5ae7-43e9-b846-d485bf547cfe",
+    "word": "meanwhile",
+    "category": "connectors"
+  },
+  {
+    "id": "615ff63e-ef96-43b9-917b-516c19f6ffb5",
+    "word": "significant",
+    "category": "adjectives"
+  },
+  {
+    "id": "61908352-a34c-45c2-9468-98072aa3ac5a",
+    "word": "as soon as",
+    "category": "connectors"
+  },
+  {
+    "id": "619d1650-8ffb-431e-b452-2c4324489e74",
+    "word": "equivalent",
+    "category": "adjectives"
+  },
+  {
+    "id": "61a726ed-d012-4793-95ce-96b963adb011",
+    "word": "allegiance",
+    "category": "nouns"
+  },
+  {
+    "id": "61f1b8f0-bafe-4a58-b1f5-5fee17df4b8f",
+    "word": "gregarious",
+    "category": "descriptive"
+  },
+  {
+    "id": "61f3d317-5ada-4819-b57d-5e495e267d9b",
+    "word": "concise",
+    "category": "adjectives"
+  },
+  {
+    "id": "6271503f-809a-4267-9830-c4e8c396e535",
+    "word": "derive",
+    "category": "verbs"
+  },
+  {
+    "id": "62b3ea45-039c-425e-a920-fe7f9f8edeef",
+    "word": "arise",
+    "category": "verbs"
+  },
+  {
+    "id": "62d27773-0782-4f4c-8446-bbf789534151",
+    "word": "thanks to",
+    "category": "connectors"
+  },
+  {
+    "id": "62fea668-df52-4054-92d5-81e434339546",
+    "word": "distinction",
+    "category": "nouns"
+  },
+  {
+    "id": "6352d47d-ec4d-429d-9842-68dd3e284f4a",
+    "word": "perception",
+    "category": "nouns"
+  },
+  {
+    "id": "64027a93-b2e4-4725-b5a5-d08ed1367efe",
+    "word": "comply",
+    "category": "verbs"
+  },
+  {
+    "id": "6402ebf8-97c8-47e7-bef2-796f65e9f343",
+    "word": "plausible",
+    "category": "academic"
+  },
+  {
+    "id": "64581529-f1e6-4ee7-a207-9b3ff18cfd0f",
+    "word": "needless to say",
+    "category": "connectors"
+  },
+  {
+    "id": "64730dd7-3af3-49b9-a8b3-5bbadc48421c",
+    "word": "guide",
+    "category": "verbs"
+  },
+  {
+    "id": "64c3bd44-c39f-4115-903b-9ab32fb3c957",
+    "word": "selective",
+    "category": "adjectives"
+  },
+  {
+    "id": "64d28a27-6902-4f9c-9773-68d90a3eb453",
+    "word": "avoid",
+    "category": "verbs"
+  },
+  {
+    "id": "651f756c-a7e8-4631-84c3-c1208cacb0e5",
+    "word": "with respect to",
+    "category": "connectors"
+  },
+  {
+    "id": "65205208-a366-4ac9-bca2-963d351da306",
+    "word": "reciprocally",
+    "category": "descriptive"
+  },
+  {
+    "id": "65889282-e03c-4f09-a5a3-386ad3046286",
+    "word": "mercurial",
+    "category": "advanced"
+  },
+  {
+    "id": "659c3a15-b6e2-4e64-a5a3-def60b4099f1",
+    "word": "consolidate",
+    "category": "verbs"
+  },
+  {
+    "id": "65d34613-e819-4642-bf15-8668684f9366",
+    "word": "acquire",
+    "category": "verbs"
+  },
+  {
+    "id": "662cfc1b-6835-43a2-96ff-e9f32789569d",
+    "word": "inevitable",
+    "category": "adjectives"
+  },
+  {
+    "id": "664aa7e8-ec82-4b38-814b-c326430fc2f3",
+    "word": "transient",
+    "category": "advanced"
+  },
+  {
+    "id": "66a9decb-bd48-4c3e-9848-feab6dd10fcd",
+    "word": "ephemeral",
+    "category": "advanced"
+  },
+  {
+    "id": "66af7898-0a26-493a-b832-5afaaa8af64d",
+    "word": "accelerate",
+    "category": "verbs"
+  },
+  {
+    "id": "67297418-1366-4ecd-b28e-c67acc737d52",
+    "word": "culpable",
+    "category": "advanced"
+  },
+  {
+    "id": "681167f1-f7ac-4925-b564-03e07fe7cf24",
+    "word": "overall",
+    "category": "connectors"
+  },
+  {
+    "id": "68902f71-1f33-4af7-a956-a6d2bb4ed66d",
+    "word": "decipher",
+    "category": "verbs"
+  },
+  {
+    "id": "68c1b6c5-7fad-4d77-b14b-a39a62b18759",
+    "word": "compel",
+    "category": "verbs"
+  },
+  {
+    "id": "68e8dede-128e-4c00-a676-99918011b73f",
+    "word": "perfidious",
+    "category": "advanced"
+  },
+  {
+    "id": "693458c8-36e4-4ca1-8467-9e6a7a6bbccf",
+    "word": "concerning",
+    "category": "connectors"
+  },
+  {
+    "id": "69357c5b-9fe2-428c-af81-5977da28b3a1",
+    "word": "nonetheless",
+    "category": "connectors"
+  },
+  {
+    "id": "6a0b4893-eafe-4121-9022-97254026714f",
+    "word": "because of",
+    "category": "connectors"
+  },
+  {
+    "id": "6a0e9ef3-fdd3-4178-8d46-bd28c224a1d8",
+    "word": "not only",
+    "category": "connectors"
+  },
+  {
+    "id": "6a76e469-0a4c-420f-a02f-d9cf91b8570d",
+    "word": "in terms of",
+    "category": "connectors"
+  },
+  {
+    "id": "6a97b77d-7881-4e55-88a8-3637d159c4bc",
+    "word": "patient",
+    "category": "descriptive"
+  },
+  {
+    "id": "6ad86b1c-aed1-48a1-a096-8af6b18ab940",
+    "word": "intransigent",
+    "category": "advanced"
+  },
+  {
+    "id": "6b2bc41b-5df7-447e-84f9-0c495aa6c252",
+    "word": "ambivalent",
+    "category": "descriptive"
+  },
+  {
+    "id": "6b5599dc-0b09-4fbe-9374-7253ec776bba",
+    "word": "indicate",
+    "category": "verbs"
+  },
+  {
+    "id": "6bc6cb86-c8ce-4af7-b7e8-ad07b4d35de1",
+    "word": "compensate",
+    "category": "verbs"
+  },
+  {
+    "id": "6be23ca3-8e2d-4af5-806b-87620360fcaf",
+    "word": "intrinsic",
+    "category": "adjectives"
+  },
+  {
+    "id": "6c3e0203-ef4c-4ae8-9d2b-ea503607df24",
+    "word": "interpret",
+    "category": "verbs"
+  },
+  {
+    "id": "6c56ce8f-026c-4ceb-a39d-19028c90317a",
+    "word": "adjust",
+    "category": "verbs"
+  },
+  {
+    "id": "6c70c79e-6c0a-4c5e-9032-8272dbfd6ae0",
+    "word": "produce",
+    "category": "verbs"
+  },
+  {
+    "id": "6c8a82f6-abe0-4473-9829-b62bfb96dd18",
+    "word": "contradict",
+    "category": "verbs"
+  },
+  {
+    "id": "6cae829b-d868-462e-8fbd-4b99763ae615",
+    "word": "fragment",
+    "category": "nouns"
+  },
+  {
+    "id": "6ced2c61-b0e6-447c-b450-631233fa56cb",
+    "word": "broadly",
+    "category": "descriptive"
+  },
+  {
+    "id": "6d04c06e-aadf-4ccc-bfc5-7f6fe4c9433e",
+    "word": "communicate",
+    "category": "verbs"
+  },
+  {
+    "id": "6d1812f0-c6bb-4d4b-939f-6b2ff2c9369e",
+    "word": "steadfast",
+    "category": "descriptive"
+  },
+  {
+    "id": "6d5f7047-4971-49f4-b90f-8d1a6966075c",
+    "word": "positive",
+    "category": "adjectives"
+  },
+  {
+    "id": "6d6177b2-1c1f-4ed3-867f-3748ef216e90",
+    "word": "variation",
+    "category": "nouns"
+  },
+  {
+    "id": "6d9d404e-155d-4561-b3c9-8aa735ef0119",
+    "word": "recalcitrant",
+    "category": "advanced"
+  },
+  {
+    "id": "6e0aca50-215e-4bc8-ae1f-bed6f643f4e9",
+    "word": "differentiate",
+    "category": "verbs"
+  },
+  {
+    "id": "6e5b8363-f82a-46cd-84a2-eb35b11ddfcc",
+    "word": "dramatic",
+    "category": "adjectives"
+  },
+  {
+    "id": "6e9f1ece-c35e-463d-8111-e5b6438c8c1e",
+    "word": "efficiently",
+    "category": "connectors"
+  },
+  {
+    "id": "6eb8709e-2983-4a14-ac1a-526a90a90ef1",
+    "word": "exception",
+    "category": "nouns"
+  },
+  {
+    "id": "6f21a61c-347b-4173-991e-94d5af46306a",
+    "word": "definition",
+    "category": "nouns"
+  },
+  {
+    "id": "6f670190-80a5-4b9d-a6a3-e97b221c960a",
+    "word": "aspiration",
+    "category": "nouns"
+  },
+  {
+    "id": "6f767c79-84c9-4b92-86eb-b56d2f6781d9",
+    "word": "subjective",
+    "category": "academic"
+  },
+  {
+    "id": "6f925454-c187-423d-8653-ef79398c5311",
+    "word": "critically",
+    "category": "descriptive"
+  },
+  {
+    "id": "6fa47c7d-d323-49e5-a32b-19fd7602e251",
+    "word": "minimal",
+    "category": "adjectives"
+  },
+  {
+    "id": "6fc0228b-4c61-43b4-a8db-1952ceafa42c",
+    "word": "motivate",
+    "category": "verbs"
+  },
+  {
+    "id": "6fd365ce-3cef-4221-94f5-f664af29637f",
+    "word": "abate",
+    "category": "verbs"
+  },
+  {
+    "id": "7066179c-600e-4690-b83a-b60abd8a7d00",
+    "word": "articulate",
+    "category": "adjectives"
+  },
+  {
+    "id": "70e2ffb8-089a-44d0-bd63-e6cbb5b4ffae",
+    "word": "structure",
+    "category": "nouns"
+  },
+  {
+    "id": "712ca29e-dfa2-4da3-a522-41ae4b663e7d",
+    "word": "affluent",
+    "category": "adjectives"
+  },
+  {
+    "id": "7130b288-d324-4546-9916-75f8a407fc37",
+    "word": "esoteric",
+    "category": "advanced"
+  },
+  {
+    "id": "7230c962-ea7a-43cd-a2c3-edd5e096e4c7",
+    "word": "reduce",
+    "category": "verbs"
+  },
+  {
+    "id": "729b3262-cbb0-4d31-bf2a-507267ec2292",
+    "word": "phlegmatic",
+    "category": "advanced"
+  },
+  {
+    "id": "73149ac8-a08b-4f6d-9235-87e3c695f6de",
+    "word": "symbolic",
+    "category": "adjectives"
+  },
+  {
+    "id": "73218f79-f0a1-4f8a-aa63-7ed9554c5d98",
+    "word": "nevertheless",
+    "category": "connectors"
+  },
+  {
+    "id": "734ccf83-3af0-4263-9850-e9d0af8b1e16",
+    "word": "arguably",
+    "category": "connectors"
+  },
+  {
+    "id": "738bae8e-2024-49e6-bb47-18ba9f6f040c",
+    "word": "including",
+    "category": "connectors"
+  },
+  {
+    "id": "738d20bf-c0b8-43e3-b7c1-8a68ca537d78",
+    "word": "voluntary",
+    "category": "adjectives"
+  },
+  {
+    "id": "73c311e0-90d1-4a13-8e71-41f0b7d3e822",
+    "word": "finally",
+    "category": "connectors"
+  },
+  {
+    "id": "73e2cdd3-3a1b-47fd-b285-86b0e6eeec86",
+    "word": "condescend",
+    "category": "advanced"
+  },
+  {
+    "id": "73e87032-cf89-44d7-b886-83ed9ae4277c",
+    "word": "politically",
+    "category": "descriptive"
+  },
+  {
+    "id": "741f029e-f940-4b5f-9089-34e334c5ac87",
+    "word": "paradoxically",
+    "category": "connectors"
+  },
+  {
+    "id": "74904569-76b2-46e3-902d-d3b949d48549",
+    "word": "overlook",
+    "category": "verbs"
+  },
+  {
+    "id": "74a1fccb-7f48-493c-b8c9-f8f6cea69697",
+    "word": "mitigate",
+    "category": "verbs"
+  },
+  {
+    "id": "74a7b9f4-8883-47b1-828f-fc3ec25bcacc",
+    "word": "adequately",
+    "category": "descriptive"
+  },
+  {
+    "id": "7595dfe2-a6e2-4619-9c41-2eded5cfdb08",
+    "word": "literature",
+    "category": "nouns"
+  },
+  {
+    "id": "76012d0d-85ad-4b2e-8759-77bdbce80c87",
+    "word": "extreme",
+    "category": "adjectives"
+  },
+  {
+    "id": "768fe64b-2232-4d9a-9ea8-0600f62aa702",
+    "word": "inherent",
+    "category": "adjectives"
+  },
+  {
+    "id": "76ca61c1-bc38-414f-bbe6-d7afbac49fc4",
+    "word": "tangible",
+    "category": "academic"
+  },
+  {
+    "id": "76e0329e-b922-4c75-b98c-1958ac5ae82f",
+    "word": "engender",
+    "category": "verbs"
+  },
+  {
+    "id": "76f22c90-1c27-49c4-ab7a-c05bb7c3181c",
+    "word": "alternative",
+    "category": "adjectives"
+  },
+  {
+    "id": "77d91a5b-833c-4925-bfda-831bda7c14c8",
+    "word": "primary",
+    "category": "adjectives"
+  },
+  {
+    "id": "7800679a-4a5b-492a-a331-5f575ccddff0",
+    "word": "utilize",
+    "category": "verbs"
+  },
+  {
+    "id": "78462044-b978-4031-bf9f-7211c0c4bcb0",
+    "word": "renounce",
+    "category": "verbs"
+  },
+  {
+    "id": "785efb09-2047-4847-b61e-c527419ae581",
+    "word": "observation",
+    "category": "nouns"
+  },
+  {
+    "id": "78701cdb-f6a6-45f8-83d4-6a083af93827",
+    "word": "albeit",
+    "category": "connectors"
+  },
+  {
+    "id": "789b670b-c1c0-4b4f-9751-c3ba185038d5",
+    "word": "whenever",
+    "category": "connectors"
+  },
+  {
+    "id": "78b081e1-eab8-426b-b12a-ba63e0ab5d86",
+    "word": "argue",
+    "category": "verbs"
+  },
+  {
+    "id": "795f127a-dbe9-4746-b952-bdee63e99fd3",
+    "word": "volume",
+    "category": "nouns"
+  },
+  {
+    "id": "79bae31b-1b8f-43d1-875c-9725f5f0d1ea",
+    "word": "in addition",
+    "category": "connectors"
+  },
+  {
+    "id": "7a0bf276-278f-4d60-afe9-17fc9f37739f",
+    "word": "simplify",
+    "category": "verbs"
+  },
+  {
+    "id": "7a1f6aa8-d4c5-4661-ad9e-e2c9bf8eea1d",
+    "word": "as a consequence",
+    "category": "connectors"
+  },
+  {
+    "id": "7a341268-67bc-4e40-9ca4-5ca4c4f8682b",
+    "word": "assemble",
+    "category": "verbs"
+  },
+  {
+    "id": "7a518e35-4c34-45cf-a7ed-610bd01494a1",
+    "word": "moderate",
+    "category": "adjectives"
+  },
+  {
+    "id": "7a5a05e3-3e9e-4972-9cec-32a134f30c95",
+    "word": "evoke",
+    "category": "verbs"
+  },
+  {
+    "id": "7a644d54-9252-494b-9354-5dfee5720580",
+    "word": "legitimate",
+    "category": "adjectives"
+  },
+  {
+    "id": "7a727990-836e-44dd-a923-c52dedbc9d7b",
+    "word": "except",
+    "category": "connectors"
+  },
+  {
+    "id": "7ae6921e-e877-4520-836b-7fec6c3eee7a",
+    "word": "negative",
+    "category": "adjectives"
+  },
+  {
+    "id": "7b33dfcb-807c-4063-8dbe-cf4f3d26acd6",
+    "word": "didactic",
+    "category": "advanced"
+  },
+  {
+    "id": "7ba35d62-b135-4753-803d-8017add92f9f",
+    "word": "resilient",
+    "category": "descriptive"
+  },
+  {
+    "id": "7be23ad8-5594-4f87-a887-ba8b79879758",
+    "word": "auspicious",
+    "category": "adjectives"
+  },
+  {
+    "id": "7c12ef26-d99e-4eba-80dd-f30e5f9b2d37",
+    "word": "proportionally",
+    "category": "connectors"
+  },
+  {
+    "id": "7c5ac4d6-ed64-40cd-ab9e-1c0a4d1a0ed9",
+    "word": "colloquial",
+    "category": "adjectives"
+  },
+  {
+    "id": "7c6efa99-7135-41bb-a66e-d24fdee5066e",
+    "word": "characterize",
+    "category": "verbs"
+  },
+  {
+    "id": "7c75fb94-b4a3-44a0-99ae-9c2ba5f8b5c1",
+    "word": "logical",
+    "category": "adjectives"
+  },
+  {
+    "id": "7c76a360-ee5f-49a6-8dfd-d8f57631fe6a",
+    "word": "convention",
+    "category": "nouns"
+  },
+  {
+    "id": "7ccc80a3-e704-454b-9535-f6560148a217",
+    "word": "initial",
+    "category": "adjectives"
+  },
+  {
+    "id": "7cd25806-1d3e-4d1d-8035-30fcb91ad89e",
+    "word": "at first",
+    "category": "connectors"
+  },
+  {
+    "id": "7d189197-0608-4951-beda-5b9de3f593a4",
+    "word": "accommodate",
+    "category": "verbs"
+  },
+  {
+    "id": "7d407cc8-73a8-4a4c-a713-fa7142a0c9a5",
+    "word": "allude",
+    "category": "verbs"
+  },
+  {
+    "id": "7d50ee31-8b74-4e95-b20a-6ffc6a36cd0c",
+    "word": "merge",
+    "category": "verbs"
+  },
+  {
+    "id": "7e0caa58-f268-49ba-af22-87f96bfca859",
+    "word": "in spite of",
+    "category": "connectors"
+  },
+  {
+    "id": "7e45da35-8922-4a93-b547-a70c292d82fe",
+    "word": "perform",
+    "category": "verbs"
+  },
+  {
+    "id": "7e6509c7-7aaf-4630-98b2-012431666eb0",
+    "word": "aloof",
+    "category": "adjectives"
+  },
+  {
+    "id": "7e6887c6-8fb0-4dc6-a5f7-d8d179bab0ca",
+    "word": "mainly",
+    "category": "connectors"
+  },
+  {
+    "id": "7e7e9d3b-ecfb-4f3b-9d84-e1c3a1485a66",
+    "word": "trend",
+    "category": "nouns"
+  },
+  {
+    "id": "7ebbc253-db02-457f-9e5d-b38981e76699",
+    "word": "representation",
+    "category": "nouns"
+  },
+  {
+    "id": "7ec12824-3380-4e70-a7be-8e72eebf5d99",
+    "word": "alacrity",
+    "category": "advanced"
+  },
+  {
+    "id": "7f2fa660-5bc0-4fc1-8a71-d94a04466164",
+    "word": "instance",
+    "category": "nouns"
+  },
+  {
+    "id": "7f860703-6efd-4e86-b455-878ece566c35",
+    "word": "even if",
+    "category": "connectors"
+  },
+  {
+    "id": "7f8d572b-403c-4582-81e8-9cfd35bc7076",
+    "word": "clemency",
+    "category": "advanced"
+  },
+  {
+    "id": "7f95d4e6-3020-44ea-9098-aba400a973c0",
+    "word": "moreover",
+    "category": "connectors"
+  },
+  {
+    "id": "8067932a-7860-4471-8728-68611a24fbf6",
+    "word": "depict",
+    "category": "verbs"
+  },
+  {
+    "id": "80ae8194-90f2-4342-91e8-52a19d1eb281",
+    "word": "contentious",
+    "category": "academic"
+  },
+  {
+    "id": "81a393a1-a67b-4c5a-905a-fd0b9117da6f",
+    "word": "obsolete",
+    "category": "academic"
+  },
+  {
+    "id": "81a66174-7cc5-4418-804c-475fbfdadc47",
+    "word": "manipulate",
+    "category": "verbs"
+  },
+  {
+    "id": "81b8e407-bb6a-4174-b5f3-478afe4f9867",
+    "word": "debilitate",
+    "category": "verbs"
+  },
+  {
+    "id": "81f7689c-b564-4f0f-abe9-e5e07fde4790",
+    "word": "erroneous",
+    "category": "descriptive"
+  },
+  {
+    "id": "82022780-001b-440a-8dee-1a9f6174c027",
+    "word": "vigilant",
+    "category": "advanced"
+  },
+  {
+    "id": "8205f638-b015-44dc-95fd-239cc05d2f95",
+    "word": "supportive",
+    "category": "descriptive"
+  },
+  {
+    "id": "820ca00f-ce0a-4daf-b2b4-c86b706682ba",
+    "word": "emphasize",
+    "category": "verbs"
+  },
+  {
+    "id": "823b6a3a-b6c5-4b84-920a-f9feec78f113",
+    "word": "contend",
+    "category": "verbs"
+  },
+  {
+    "id": "823ef876-0069-4e7b-8f63-7cc1b6733729",
+    "word": "infer",
+    "category": "verbs"
+  },
+  {
+    "id": "82d9ba51-44b6-47d9-a198-be10a20c6fee",
+    "word": "cynical",
+    "category": "adjectives"
+  },
+  {
+    "id": "82fc1ad3-eb56-4166-a94a-90c0bb0eb139",
+    "word": "propose",
+    "category": "verbs"
+  },
+  {
+    "id": "83638478-92f2-4223-9906-b2e8396e78e0",
+    "word": "mutually",
+    "category": "descriptive"
+  },
+  {
+    "id": "84609947-76c7-437f-a027-e56bb8ed65ce",
+    "word": "perfunctory",
+    "category": "advanced"
+  },
+  {
+    "id": "84a44b36-a247-4e51-a14a-7d82d8dd9cbd",
+    "word": "economically",
+    "category": "descriptive"
+  },
+  {
+    "id": "854a0c80-dcc4-4977-adaf-a832a47d35cd",
+    "word": "specific",
+    "category": "adjectives"
+  },
+  {
+    "id": "85b9363e-0e8b-480f-aa48-60bf990a483a",
+    "word": "initialize",
+    "category": "verbs"
+  },
+  {
+    "id": "85e1d5f7-2ebc-4699-b298-e7d441e30753",
+    "word": "normalize",
+    "category": "verbs"
+  },
+  {
+    "id": "86345eb3-e75f-43f2-96a7-da504f2add22",
+    "word": "universal",
+    "category": "adjectives"
+  },
+  {
+    "id": "864eb13d-b306-48ab-afe8-583489f825a8",
+    "word": "transparent",
+    "category": "adjectives"
+  },
+  {
+    "id": "86c30edf-f0b5-48a7-b273-bac239b41952",
+    "word": "administer",
+    "category": "verbs"
+  },
+  {
+    "id": "874480a7-a861-4f6c-a7fa-e911fecc40d9",
+    "word": "precise",
+    "category": "adjectives"
+  },
+  {
+    "id": "87aca9f8-aed4-4072-bbdb-52b982cdd699",
+    "word": "obfuscate",
+    "category": "advanced"
+  },
+  {
+    "id": "87ef5892-37a6-4025-bf87-b0fba5bee4cb",
+    "word": "cognizant",
+    "category": "adjectives"
+  },
+  {
+    "id": "8825a807-0bd6-4d64-9843-f5333ef1f709",
+    "word": "track",
+    "category": "verbs"
+  },
+  {
+    "id": "8873189d-14d5-4dd3-b4a1-fb4f7b8e69b4",
+    "word": "factor",
+    "category": "nouns"
+  },
+  {
+    "id": "88a2fdf9-8e81-4a3d-a0c6-56b73447db12",
+    "word": "justification",
+    "category": "nouns"
+  },
+  {
+    "id": "88a9f4e1-da07-4233-a327-5ebbc69af266",
+    "word": "disciplined",
+    "category": "descriptive"
+  },
+  {
+    "id": "88add9c5-ff1b-43a8-b7ae-f9e452dd67ff",
+    "word": "let alone",
+    "category": "connectors"
+  },
+  {
+    "id": "88b23bc4-01e3-4f76-b3df-bbe16cecad47",
+    "word": "corroborate",
+    "category": "verbs"
+  },
+  {
+    "id": "88ba9afd-7792-49dc-8808-91b767f5a0c8",
+    "word": "grievance",
+    "category": "nouns"
+  },
+  {
+    "id": "88e22db3-135e-47ef-aef4-6b50c370daa8",
+    "word": "defiance",
+    "category": "nouns"
+  },
+  {
+    "id": "88eef07d-ac46-4391-bf10-d071bc5b6a89",
+    "word": "typically",
+    "category": "connectors"
+  },
+  {
+    "id": "88f230dc-2573-4a0b-929e-e9629e224643",
+    "word": "otherwise",
+    "category": "connectors"
+  },
+  {
+    "id": "88f849c1-25e4-4927-b521-d3f039e5e9cd",
+    "word": "admittedly",
+    "category": "connectors"
+  },
+  {
+    "id": "8986c316-3d62-4777-becf-e370460bc69f",
+    "word": "elicit",
+    "category": "verbs"
+  },
+  {
+    "id": "8a32d4cd-c3c2-4c7c-8470-6459779ea8b7",
+    "word": "widespread",
+    "category": "adjectives"
+  },
+  {
+    "id": "8a344874-66e6-4a73-87e4-97375fc539ab",
+    "word": "mutual",
+    "category": "adjectives"
+  },
+  {
+    "id": "8a80df10-2e78-4f02-ad22-6e94dc74c095",
+    "word": "thereby",
+    "category": "connectors"
+  },
+  {
+    "id": "8a87a3fe-af20-4d92-b1c0-dd369131c7ae",
+    "word": "substantial",
+    "category": "adjectives"
+  },
+  {
+    "id": "8b562ab1-5cfd-497f-b988-0857de118248",
+    "word": "encompass",
+    "category": "verbs"
+  },
+  {
+    "id": "8bd0c5aa-6e9c-414b-ae91-1055cd9682c5",
+    "word": "replenish",
+    "category": "verbs"
+  },
+  {
+    "id": "8c3934f8-3f73-45a1-af96-09fcf411b5fd",
+    "word": "dispute",
+    "category": "nouns"
+  },
+  {
+    "id": "8c767d72-898c-4efc-859b-061ddfcc6a37",
+    "word": "essentially",
+    "category": "connectors"
+  },
+  {
+    "id": "8cb0312a-98f9-41a1-98aa-36293c8ded02",
+    "word": "mundane",
+    "category": "descriptive"
+  },
+  {
+    "id": "8cd2dcae-7b93-424d-9727-0d1e0dfe9a03",
+    "word": "individually",
+    "category": "descriptive"
+  },
+  {
+    "id": "8cf6cabc-2bca-47f2-99ec-fe835e414d44",
+    "word": "alter",
+    "category": "verbs"
+  },
+  {
+    "id": "8d21e4f9-a16f-412c-bdee-f4869cda5af3",
+    "word": "conversely",
+    "category": "connectors"
+  },
+  {
+    "id": "8d36fa98-c7d1-4144-ac63-50a82a122014",
+    "word": "notion",
+    "category": "nouns"
+  },
+  {
+    "id": "8da221b2-d93b-413c-a800-be7d46f3910c",
+    "word": "assiduous",
+    "category": "advanced"
+  },
+  {
+    "id": "8daffa5e-0a5c-4154-a9c1-25050fb8db53",
+    "word": "framework",
+    "category": "nouns"
+  },
+  {
+    "id": "8dbc1776-ce37-4eaf-8557-c1ac2c1f5d2f",
+    "word": "on balance",
+    "category": "connectors"
+  },
+  {
+    "id": "8dfdf150-b975-45bd-8142-97a5c7075781",
+    "word": "outline",
+    "category": "verbs"
+  },
+  {
+    "id": "8e983afc-137f-40fb-a792-520dae5575a7",
+    "word": "empathetic",
+    "category": "descriptive"
+  },
+  {
+    "id": "8ea695d6-5812-4b1d-acf9-2685ef7bb145",
+    "word": "impetuous",
+    "category": "advanced"
+  },
+  {
+    "id": "8eb68b19-4b3d-4901-98a0-d40edd43a3a4",
+    "word": "in turn",
+    "category": "connectors"
+  },
+  {
+    "id": "8eddd2d3-12bf-47eb-9eff-9c3a3d8b4307",
+    "word": "in particular",
+    "category": "connectors"
+  },
+  {
+    "id": "8efb0d2c-bbd9-4034-b60d-6a6ae5f977cc",
+    "word": "evidently",
+    "category": "connectors"
+  },
+  {
+    "id": "8f02bb19-02c4-40c8-869f-92c70fd6c005",
+    "word": "impose",
+    "category": "verbs"
+  },
+  {
+    "id": "90084be7-924b-4c34-972e-97c641249a53",
+    "word": "extend",
+    "category": "verbs"
+  },
+  {
+    "id": "9079a115-eb23-40dd-8cf4-9bc03262edaa",
+    "word": "subjectively",
+    "category": "descriptive"
+  },
+  {
+    "id": "9096fa03-fc37-4065-8aac-3ae080c34e7f",
+    "word": "yet",
+    "category": "connectors"
+  },
+  {
+    "id": "90de0243-924d-47f9-adaf-55c0cde89b37",
+    "word": "antipathy",
+    "category": "advanced"
+  },
+  {
+    "id": "90f8d2d6-6ef3-4abe-b8b2-f330ca479960",
+    "word": "progressive",
+    "category": "adjectives"
+  },
+  {
+    "id": "918546ec-4776-41b7-8a45-360727569981",
+    "word": "vacuous",
+    "category": "advanced"
+  },
+  {
+    "id": "91a2ee32-badd-412d-abf1-030b70f99450",
+    "word": "gratitude",
+    "category": "nouns"
+  },
+  {
+    "id": "91ca89d5-74d7-4ae0-bd13-b40c33948927",
+    "word": "frequently",
+    "category": "connectors"
+  },
+  {
+    "id": "9245ad81-f4e7-4658-9101-afd036bf9877",
+    "word": "simultaneously",
+    "category": "connectors"
+  },
+  {
+    "id": "924d1db4-89e1-464f-b9ef-986d644a4ed5",
+    "word": "culturally",
+    "category": "descriptive"
+  },
+  {
+    "id": "925850b6-dde6-4431-99bd-c0266b4cf756",
+    "word": "reinforce",
+    "category": "verbs"
+  },
+  {
+    "id": "92b4129b-65b4-4f92-a5b1-e84cef6b104b",
+    "word": "prompt",
+    "category": "adjectives"
+  },
+  {
+    "id": "930d5583-17df-45b4-8ffe-7e8d16f15502",
+    "word": "explore",
+    "category": "verbs"
+  },
+  {
+    "id": "933420a7-129a-4f9a-835a-6fd2717c4331",
+    "word": "exploit",
+    "category": "verbs"
+  },
+  {
+    "id": "93cab867-6b4e-442d-ab0a-08ff11c71b6d",
+    "word": "ideological",
+    "category": "adjectives"
+  },
+  {
+    "id": "93f3919c-a9fd-4409-a6ac-88689c5044b9",
+    "word": "sensitive",
+    "category": "adjectives"
+  },
+  {
+    "id": "9404fe67-6b62-4951-8f3f-1817254bbf0f",
+    "word": "rational",
+    "category": "adjectives"
+  },
+  {
+    "id": "94a1c53d-b10d-4ec9-8d05-c0f4b6e9634d",
+    "word": "culminate",
+    "category": "verbs"
+  },
+  {
+    "id": "95b21e9a-e69f-460f-9efa-3f6a53ae935f",
+    "word": "brevity",
+    "category": "academic"
+  },
+  {
+    "id": "95e75027-c5b4-4be1-b602-100a417e72a8",
+    "word": "introduce",
+    "category": "verbs"
+  },
+  {
+    "id": "960c7a30-84ee-4c16-ada4-b85d7c133472",
+    "word": "ignominious",
+    "category": "advanced"
+  },
+  {
+    "id": "96250217-07c5-46c0-ae32-ff14051ff0d0",
+    "word": "estimate",
+    "category": "verbs"
+  },
+  {
+    "id": "962f0294-6fd7-4df5-bd6a-00426306b355",
+    "word": "curtail",
+    "category": "verbs"
+  },
+  {
+    "id": "96300432-8be5-475c-ab74-59ed6a234e90",
+    "word": "interdependent",
+    "category": "adjectives"
+  },
+  {
+    "id": "9637457a-c675-4236-9963-8d98b50ca92b",
+    "word": "classify",
+    "category": "verbs"
+  },
+  {
+    "id": "96417de5-1059-40f0-9d5c-39659943221e",
+    "word": "assess",
+    "category": "verbs"
+  },
+  {
+    "id": "96bded49-4038-4313-aef3-aa138667b76f",
+    "word": "accomplish",
+    "category": "verbs"
+  },
+  {
+    "id": "96c22f3c-b689-4a26-89bd-7352461456ba",
+    "word": "deliver",
+    "category": "verbs"
+  },
+  {
+    "id": "9715a905-896e-41fc-9064-3ae9041117d2",
+    "word": "robust",
+    "category": "adjectives"
+  },
+  {
+    "id": "9751027f-a049-47e1-a814-5a678bc03ff2",
+    "word": "meticulous",
+    "category": "descriptive"
+  },
+  {
+    "id": "97b9d6e1-adb7-417d-83eb-b3209b06f995",
+    "word": "oppose",
+    "category": "verbs"
+  },
+  {
+    "id": "97e9a2b6-80a8-4630-aa40-095e39205d4f",
+    "word": "assert",
+    "category": "verbs"
+  },
+  {
+    "id": "97efa21e-1fb4-4e0b-a25a-029f5a4b87d7",
+    "word": "largely",
+    "category": "connectors"
+  },
+  {
+    "id": "986256a1-4fdc-440f-8b94-3ddd327420c0",
+    "word": "evolution",
+    "category": "nouns"
+  },
+  {
+    "id": "987839e6-7761-4d07-9897-6547f11aec13",
+    "word": "vociferous",
+    "category": "advanced"
+  },
+  {
+    "id": "98c51f65-c879-4ed7-87f0-2b2970c65e68",
+    "word": "connotation",
+    "category": "nouns"
+  },
+  {
+    "id": "98cb678d-7869-40b1-9dd0-d2cda9b72fe4",
+    "word": "consistent",
+    "category": "adjectives"
+  },
+  {
+    "id": "98fb333e-5ca5-4cb5-9839-0abfcef65769",
+    "word": "circuitous",
+    "category": "advanced"
+  },
+  {
+    "id": "9912d411-1142-4838-ac85-d3aacd399035",
+    "word": "quixotic",
+    "category": "advanced"
+  },
+  {
+    "id": "99309919-db03-45c6-85fe-e0f5ed5fa1fe",
+    "word": "contradictory",
+    "category": "adjectives"
+  },
+  {
+    "id": "9962f94f-195d-4179-9f17-21cd17cbae64",
+    "word": "efficient",
+    "category": "academic"
+  },
+  {
+    "id": "99da9dd9-009c-45cc-82c0-2310ea4fe003",
+    "word": "latent",
+    "category": "adjectives"
+  },
+  {
+    "id": "9a180708-bf5f-406b-89bd-f8e5cf589f12",
+    "word": "garrulous",
+    "category": "advanced"
+  },
+  {
+    "id": "9a6084bd-429b-4906-8d33-26fd2c61da01",
+    "word": "verify",
+    "category": "verbs"
+  },
+  {
+    "id": "9ad56b46-9796-48da-88ee-c6e0a86f46c4",
+    "word": "grandiose",
+    "category": "advanced"
+  },
+  {
+    "id": "9b2d0830-87ca-414d-90d8-84a72c252595",
+    "word": "collectively",
+    "category": "descriptive"
+  },
+  {
+    "id": "9b38f86a-8e08-478a-896d-da3dc608f35b",
+    "word": "strategy",
+    "category": "nouns"
+  },
+  {
+    "id": "9b6384e5-6a4a-4b04-b136-93b29cba2b6f",
+    "word": "establish",
+    "category": "verbs"
+  },
+  {
+    "id": "9be64ee5-cf15-43e1-adad-447f95d59068",
+    "word": "intangible",
+    "category": "adjectives"
+  },
+  {
+    "id": "9c459523-4a8e-448c-91ce-8123c961ed38",
+    "word": "on the contrary",
+    "category": "connectors"
+  },
+  {
+    "id": "9c6d64a3-f82e-41e3-904d-99090f864f5a",
+    "word": "fallacious",
+    "category": "advanced"
+  },
+  {
+    "id": "9c749050-8b65-403c-86ee-cabc7c1b3c12",
+    "word": "comprehensively",
+    "category": "connectors"
+  },
+  {
+    "id": "9c86e301-daa5-416c-aa99-480fe861a7a1",
+    "word": "develop",
+    "category": "academic"
+  },
+  {
+    "id": "9ce0580a-f2a0-4ac4-8650-f0c7cde7cfe7",
+    "word": "on the whole",
+    "category": "connectors"
+  },
+  {
+    "id": "9d1f4c35-620f-42ab-b505-86d459592713",
+    "word": "dilemma",
+    "category": "nouns"
+  },
+  {
+    "id": "9d237214-77b5-46a4-b8cd-b12589910cbc",
+    "word": "solve",
+    "category": "verbs"
+  },
+  {
+    "id": "9d6e3a40-3d95-4625-a450-4c0228eaa8b1",
+    "word": "realistically",
+    "category": "descriptive"
+  },
+  {
+    "id": "9dbfcb21-081c-45df-be25-c736f399f5db",
+    "word": "accordingly",
+    "category": "connectors"
+  },
+  {
+    "id": "9dd71d87-6fc6-419b-96a5-f802f686061e",
+    "word": "describe",
+    "category": "verbs"
+  },
+  {
+    "id": "9e706a1e-ab79-4253-8c8d-348cf92ba8ce",
+    "word": "acrimonious",
+    "category": "adjectives"
+  },
+  {
+    "id": "9ea96a47-b2a1-48a7-8a7d-b796f4a7ffac",
+    "word": "domain",
+    "category": "nouns"
+  },
+  {
+    "id": "9eb26164-c234-41c4-ad54-d7f79297a4f1",
+    "word": "visualize",
+    "category": "verbs"
+  },
+  {
+    "id": "9fdee380-df45-4f33-8b31-0627c761ddeb",
+    "word": "detrimental",
+    "category": "descriptive"
+  },
+  {
+    "id": "a060e04f-d4ef-42a6-b5c3-3398731b72cc",
+    "word": "precisely",
+    "category": "connectors"
+  },
+  {
+    "id": "a0ba2e48-154c-4919-abc8-231b403f7a13",
+    "word": "socially",
+    "category": "descriptive"
+  },
+  {
+    "id": "a0bdee24-077d-4415-9fa6-dfa17a04d629",
+    "word": "superfluous",
+    "category": "advanced"
+  },
+  {
+    "id": "a193461f-ff90-4c4f-a845-5926bca71766",
+    "word": "credulous",
+    "category": "advanced"
+  },
+  {
+    "id": "a1d5c4b5-0b2a-42b9-98b6-680bf70fcca7",
+    "word": "censure",
+    "category": "verbs"
+  },
+  {
+    "id": "a26c69ee-9815-43fd-b4a9-c6ed14584ea3",
+    "word": "visionary",
+    "category": "descriptive"
+  },
+  {
+    "id": "a2ca20b4-2b15-4fb7-8dea-9d4b3117d4e4",
+    "word": "arrange",
+    "category": "verbs"
+  },
+  {
+    "id": "a3fc19d0-8931-44b1-a695-f563d03cf498",
+    "word": "altruistic",
+    "category": "advanced"
+  },
+  {
+    "id": "a474c69f-260a-4ed7-81c9-8d91372b1190",
+    "word": "rationale",
+    "category": "nouns"
+  },
+  {
+    "id": "a4780ac0-79d1-4651-8ee1-127af1c931b8",
+    "word": "dogmatic",
+    "category": "adjectives"
+  },
+  {
+    "id": "a4850e1f-4ae3-485b-b133-f984728d1cfb",
+    "word": "novel",
+    "category": "adjectives"
+  },
+  {
+    "id": "a48a4555-485d-4c79-8e93-e96c06735a90",
+    "word": "norm",
+    "category": "nouns"
+  },
+  {
+    "id": "a4d0d9db-4f7b-4ee2-b16a-6326a3262f6f",
+    "word": "by and large",
+    "category": "connectors"
+  },
+  {
+    "id": "a4dc69be-89be-4bf4-b84e-6dbfb1e3b330",
+    "word": "primarily",
+    "category": "connectors"
+  },
+  {
+    "id": "a5796328-c22b-4c5a-a30b-cc69499026cd",
+    "word": "truculent",
+    "category": "advanced"
+  },
+  {
+    "id": "a57c4e8a-a73d-4080-a519-38a5f00925e4",
+    "word": "in any case",
+    "category": "connectors"
+  },
+  {
+    "id": "a5b9c33c-cbe6-4783-af06-dceee0f44ea1",
+    "word": "exhibit",
+    "category": "verbs"
+  },
+  {
+    "id": "a5dcba68-8da0-42de-80bb-f6bba4f9ac14",
+    "word": "evidence",
+    "category": "nouns"
+  },
+  {
+    "id": "a64509d1-b0b0-4e1c-85a7-c1feba8787af",
+    "word": "daunting",
+    "category": "descriptive"
+  },
+  {
+    "id": "a64cc632-38a3-48ca-a548-12ec4f5096ae",
+    "word": "propitious",
+    "category": "advanced"
+  },
+  {
+    "id": "a68d086d-9855-4373-ba7b-2741627ae190",
+    "word": "apparent",
+    "category": "adjectives"
+  },
+  {
+    "id": "a6a11d95-66af-4acb-a3c7-7b7979c24057",
+    "word": "gradually",
+    "category": "connectors"
+  },
+  {
+    "id": "a7252416-b66d-40ce-bd63-5ff61be0476c",
+    "word": "cite",
+    "category": "verbs"
+  },
+  {
+    "id": "a765d688-d1ac-4752-90a8-b031d22946df",
+    "word": "overview",
+    "category": "nouns"
+  },
+  {
+    "id": "a796e5ea-08db-42dd-bfe1-746d3f69881f",
+    "word": "constraint",
+    "category": "nouns"
+  },
+  {
+    "id": "a8491524-236f-4dc5-bfeb-42a3ab8b8e0f",
+    "word": "inference",
+    "category": "nouns"
+  },
+  {
+    "id": "a8ad620a-62a3-442f-a853-a328a6df523c",
+    "word": "historically",
+    "category": "descriptive"
+  },
+  {
+    "id": "a92371cd-5897-47f7-9237-aff9c38b0bf2",
+    "word": "hence",
+    "category": "connectors"
+  },
+  {
+    "id": "a93412ae-1c2e-4e09-a377-73f1c735e86a",
+    "word": "frugal",
+    "category": "adjectives"
+  },
+  {
+    "id": "a9a63040-5b6a-45f7-b225-0da0d957117e",
+    "word": "loquacious",
+    "category": "advanced"
+  },
+  {
+    "id": "a9af1a88-aa67-4a01-b6e5-7cf2172f7230",
+    "word": "falsify",
+    "category": "verbs"
+  },
+  {
+    "id": "a9aff85b-3dbb-4877-89f1-6c51367b2d3f",
+    "word": "comprehensive",
+    "category": "adjectives"
+  },
+  {
+    "id": "a9d0d82a-2bfe-4d65-9e28-709a95680979",
+    "word": "priority",
+    "category": "nouns"
+  },
+  {
+    "id": "aad62a4f-7bc7-407e-8a84-9d424e9f62c9",
+    "word": "standard",
+    "category": "nouns"
+  },
+  {
+    "id": "aad7e31f-2be2-4b36-80e3-890a19aa33de",
+    "word": "change",
+    "category": "verbs"
+  },
+  {
+    "id": "abb83178-9dae-4b9c-82b7-ef11ea6a2140",
+    "word": "generic",
+    "category": "adjectives"
+  },
+  {
+    "id": "abc25525-25e8-46e0-b8da-a593ae1aca25",
+    "word": "systematically",
+    "category": "connectors"
+  },
+  {
+    "id": "abdeaa85-8e23-4645-9e30-d19c7d5a248f",
+    "word": "hypothetical",
+    "category": "adjectives"
+  },
+  {
+    "id": "abfba198-6c3b-46a5-a68c-4b0f292cb3ef",
+    "word": "capacity",
+    "category": "nouns"
+  },
+  {
+    "id": "ad0eb6d2-7c04-4d05-85ce-4ef95dffb002",
+    "word": "review",
+    "category": "verbs"
+  },
+  {
+    "id": "adf6f976-87fd-447d-af0b-11883797f5e3",
+    "word": "arduous",
+    "category": "adjectives"
+  },
+  {
+    "id": "ae72a2b7-2116-4951-929f-22606dab725e",
+    "word": "finite",
+    "category": "adjectives"
+  },
+  {
+    "id": "ae7ac59d-39bb-426d-9cff-5fd8691ea8a5",
+    "word": "include",
+    "category": "verbs"
+  },
+  {
+    "id": "aec62746-21ca-416b-8c73-2b4a98f55791",
+    "word": "incite",
+    "category": "advanced"
+  },
+  {
+    "id": "aed3153b-4234-453f-8f01-8a88f39883a1",
+    "word": "technically",
+    "category": "descriptive"
+  },
+  {
+    "id": "aefd9ffd-454b-415a-ae25-63504db581f4",
+    "word": "to some extent",
+    "category": "connectors"
+  },
+  {
+    "id": "af3abf12-3c0e-4af6-a164-2af1c9befa58",
+    "word": "denounce",
+    "category": "verbs"
+  },
+  {
+    "id": "afa987d1-fe9b-406d-8bb0-b2eb9e55e13a",
+    "word": "directly",
+    "category": "connectors"
+  },
+  {
+    "id": "afc229fc-9293-44cf-8c7f-c4951c296a5b",
+    "word": "adequate",
+    "category": "adjectives"
+  },
+  {
+    "id": "b059f1b0-857d-46ca-b1db-cd8db5505db9",
+    "word": "pompous",
+    "category": "advanced"
+  },
+  {
+    "id": "b07d0304-864f-4bac-a43a-2ec10b9a3a08",
+    "word": "simulate",
+    "category": "verbs"
+  },
+  {
+    "id": "b0a7e0a0-8cbd-4eaf-90e2-352be2e9216d",
+    "word": "impede",
+    "category": "verbs"
+  },
+  {
+    "id": "b0aa1133-acdf-4297-9748-70371fd7f18b",
+    "word": "withdrawal",
+    "category": "academic"
+  },
+  {
+    "id": "b1050425-faf6-4c85-afad-9631b95f0240",
+    "word": "retain",
+    "category": "verbs"
+  },
+  {
+    "id": "b10619bc-b8c9-4ca3-98ba-f8b9cf658c38",
+    "word": "subtle",
+    "category": "descriptive"
+  },
+  {
+    "id": "b15ae7fe-e368-4d0c-85fe-bdd1515fc143",
+    "word": "in contrast",
+    "category": "connectors"
+  },
+  {
+    "id": "b1a0fb73-5448-4420-8401-195c3ceed93e",
+    "word": "hypothesize",
+    "category": "verbs"
+  },
+  {
+    "id": "b1a87d16-d224-4120-acb8-c7e09bd944a3",
+    "word": "facilitate",
+    "category": "verbs"
+  },
+  {
+    "id": "b20bc202-2d05-4900-8a78-d204151e0191",
+    "word": "recondite",
+    "category": "advanced"
+  },
+  {
+    "id": "b23462c1-8ac8-48aa-bbe4-8354c3cef621",
+    "word": "expand",
+    "category": "verbs"
+  },
+  {
+    "id": "b2445595-9c46-4327-8c62-fc3fa1eca83c",
+    "word": "hostile",
+    "category": "adjectives"
+  },
+  {
+    "id": "b2aa5836-cef8-45fc-925e-941c3fc4c7d3",
+    "word": "temporal",
+    "category": "adjectives"
+  },
+  {
+    "id": "b2e48aad-14e6-4cb4-ad5e-88938d567f46",
+    "word": "versatile",
+    "category": "adjectives"
+  },
+  {
+    "id": "b36c92b8-4fd8-46f8-a285-cfad9dd453f5",
+    "word": "inform",
+    "category": "verbs"
+  },
+  {
+    "id": "b37b721b-2d7a-47d5-af6d-e51c93cdd098",
+    "word": "compare",
+    "category": "verbs"
+  },
+  {
+    "id": "b40c0d77-b6b3-4d5c-a075-f96b7a89489e",
+    "word": "intense",
+    "category": "adjectives"
+  },
+  {
+    "id": "b50215d0-1155-489b-b1da-5826ce07748c",
+    "word": "unlike",
+    "category": "connectors"
+  },
+  {
+    "id": "b50a8ef3-def7-4286-a2e0-465c7f415959",
+    "word": "divert",
+    "category": "verbs"
+  },
+  {
+    "id": "b5494b2d-6d7b-4e21-9660-c3b0d463dd15",
+    "word": "persistent",
+    "category": "descriptive"
+  },
+  {
+    "id": "b5679c65-666d-4193-b106-1f3908420352",
+    "word": "affirm",
+    "category": "verbs"
+  },
+  {
+    "id": "b56da870-e2c1-481d-85ab-d23f2cbf6bc3",
+    "word": "approximately",
+    "category": "connectors"
+  },
+  {
+    "id": "b585beb1-4233-4e22-bb37-e5ca795014c2",
+    "word": "even though",
+    "category": "connectors"
+  },
+  {
+    "id": "b5b9d427-fed8-489d-ab36-993aca18bbd0",
+    "word": "categorize",
+    "category": "verbs"
+  },
+  {
+    "id": "b63b4c9f-f077-4517-9404-0f956d539a65",
+    "word": "literal",
+    "category": "adjectives"
+  },
+  {
+    "id": "b6859ce7-8f83-4573-afce-5a56709efe95",
+    "word": "consequence",
+    "category": "nouns"
+  },
+  {
+    "id": "b6a1722f-a912-4d21-8808-0205991288aa",
+    "word": "jubilant",
+    "category": "descriptive"
+  },
+  {
+    "id": "b7018672-5c9e-4fb1-95f0-f21f9b88bc20",
+    "word": "requirement",
+    "category": "nouns"
+  },
+  {
+    "id": "b762c546-0337-43b2-83ca-ae5e6db2679c",
+    "word": "although",
+    "category": "connectors"
+  },
+  {
+    "id": "b7725d7d-53ad-44ab-83fb-fb00ab98af50",
+    "word": "determine",
+    "category": "academic"
+  },
+  {
+    "id": "b78ce862-aac5-4d4b-a3d0-c574129afd2d",
+    "word": "impact",
+    "category": "nouns"
+  },
+  {
+    "id": "b7ea1014-e9ba-4025-8498-69a123d9116d",
+    "word": "causation",
+    "category": "nouns"
+  },
+  {
+    "id": "b7efbeda-2487-4e4b-999f-a19d9da2d3b5",
+    "word": "coerce",
+    "category": "verbs"
+  },
+  {
+    "id": "b892b0a1-90d9-4330-8e54-f35d5f773b33",
+    "word": "virtually",
+    "category": "connectors"
+  },
+  {
+    "id": "b9c0f5dd-deda-47e2-9c84-2d2217c005e0",
+    "word": "handle",
+    "category": "verbs"
+  },
+  {
+    "id": "ba79ff11-2f69-4ba5-9e83-e0156d0b4819",
+    "word": "manifest",
+    "category": "verbs"
+  },
+  {
+    "id": "bab70e59-dd26-41cc-928c-36d0a7efee84",
+    "word": "engage",
+    "category": "verbs"
+  },
+  {
+    "id": "bb287e64-3a29-4e64-8fbb-bb94b03427ec",
+    "word": "definitive",
+    "category": "adjectives"
+  },
+  {
+    "id": "bb2c408c-c06c-4de4-995c-672f2c5b99ef",
+    "word": "gratuitous",
+    "category": "advanced"
+  },
+  {
+    "id": "bb4a758c-ec72-4747-b7ff-baece258dc85",
+    "word": "empower",
+    "category": "verbs"
+  },
+  {
+    "id": "bb7854b1-64dd-483c-bce6-0d41eb9f612f",
+    "word": "amiable",
+    "category": "advanced"
+  },
+  {
+    "id": "bbdc2a28-55d4-46f3-94ed-b15a751e9dd6",
+    "word": "convert",
+    "category": "verbs"
+  },
+  {
+    "id": "bbe9ef8e-685f-4395-8441-948991bbc2b1",
+    "word": "in conclusion",
+    "category": "connectors"
+  },
+  {
+    "id": "bcad513a-616a-4917-9321-924f69f414c3",
+    "word": "benevolent",
+    "category": "descriptive"
+  },
+  {
+    "id": "bcee081d-e522-41bc-ad78-4ac16253bb44",
+    "word": "eventually",
+    "category": "connectors"
+  },
+  {
+    "id": "bd572ef2-e921-4deb-a938-75b4326327e9",
+    "word": "seldom",
+    "category": "connectors"
+  },
+  {
+    "id": "bd67dc48-cbd2-4149-97c6-97a9ab87d497",
+    "word": "in order to",
+    "category": "connectors"
+  },
+  {
+    "id": "be528980-35d6-4877-bc9c-c09c46825cea",
+    "word": "elucidate",
+    "category": "verbs"
+  },
+  {
+    "id": "be97e9fd-f8b7-42c6-a7fe-e0e2b17e386d",
+    "word": "unctuous",
+    "category": "advanced"
+  },
+  {
+    "id": "beaeb1ae-abb5-4dc4-9eae-371b5a4838b2",
+    "word": "evasive",
+    "category": "advanced"
+  },
+  {
+    "id": "bed66319-feae-4057-83eb-003ac234175f",
+    "word": "interdisciplinary",
+    "category": "adjectives"
+  },
+  {
+    "id": "bee91136-ff2f-444f-965a-cc878ec29a2c",
+    "word": "prominent",
+    "category": "adjectives"
+  },
+  {
+    "id": "bee97fc5-6c93-489f-a5c3-14d78de8714f",
+    "word": "thus",
+    "category": "connectors"
+  },
+  {
+    "id": "bf408ee1-9cb5-4e60-90c8-d2cfbb0f7e45",
+    "word": "abundant",
+    "category": "descriptive"
+  },
+  {
+    "id": "bff51587-fc73-407e-9d61-86548ed5460e",
+    "word": "scrutiny",
+    "category": "advanced"
+  },
+  {
+    "id": "c03d1f19-da76-46aa-84a8-808598494e99",
+    "word": "circumstance",
+    "category": "nouns"
+  },
+  {
+    "id": "c06c0cf4-aa20-4575-ac4a-bdd02a9048eb",
+    "word": "antagonize",
+    "category": "verbs"
+  },
+  {
+    "id": "c0c79f8f-0af8-43b0-938f-a4f2f15acad2",
+    "word": "aversion",
+    "category": "advanced"
+  },
+  {
+    "id": "c0d22f6a-bb23-4121-a547-5a551304d518",
+    "word": "for the most part",
+    "category": "connectors"
+  },
+  {
+    "id": "c1947d45-003c-4e06-9ab0-f81ebbc8e341",
+    "word": "deceit",
+    "category": "nouns"
+  },
+  {
+    "id": "c1f55d5d-181f-4ad0-81f9-c747e9ab06c4",
+    "word": "supplement",
+    "category": "verbs"
+  },
+  {
+    "id": "c1f5e851-b1f4-4392-ad40-0f9b4e2fcfd4",
+    "word": "stimulate",
+    "category": "verbs"
+  },
+  {
+    "id": "c1f6aa5b-8f29-46d7-95d4-c7e599465dba",
+    "word": "after all",
+    "category": "connectors"
+  },
+  {
+    "id": "c1f7e0df-ef76-4777-a09a-630778b8edb1",
+    "word": "optimal",
+    "category": "adjectives"
+  },
+  {
+    "id": "c1f85d64-849e-4b6f-8c4f-70584aa314bf",
+    "word": "fervent",
+    "category": "advanced"
+  },
+  {
+    "id": "c208d2dd-9d77-4853-8baa-2eeedb70fd53",
+    "word": "cryptic",
+    "category": "adjectives"
+  },
+  {
+    "id": "c2e5c27a-bfdc-43d4-a52a-cc5dc79fa609",
+    "word": "at any rate",
+    "category": "connectors"
+  },
+  {
+    "id": "c33d9e7a-2e89-404d-8589-b9fcb5a25866",
+    "word": "predict",
+    "category": "verbs"
+  },
+  {
+    "id": "c3570179-6de7-4f0e-a064-192afadbe23a",
+    "word": "obscure",
+    "category": "descriptive"
+  },
+  {
+    "id": "c3acf70f-7078-4810-b6d8-32ccbe5dba78",
+    "word": "malleable",
+    "category": "advanced"
+  },
+  {
+    "id": "c41aa6cf-4012-463d-917b-46bf23205f48",
+    "word": "signal",
+    "category": "verbs"
+  },
+  {
+    "id": "c4616798-2deb-4537-a3a3-60235d5bc90c",
+    "word": "contemplate",
+    "category": "verbs"
+  },
+  {
+    "id": "c48c290d-0a25-44cd-b5e0-8dad17a3e072",
+    "word": "conclude",
+    "category": "verbs"
+  },
+  {
+    "id": "c4ab916e-09d9-4c72-a7aa-2d2f67c76a19",
+    "word": "responsible",
+    "category": "descriptive"
+  },
+  {
+    "id": "c4ff5250-4a73-4548-9dc8-de98bc504339",
+    "word": "in other words",
+    "category": "connectors"
+  },
+  {
+    "id": "c5a97e40-85a5-4702-abf8-10ad5afea6d5",
+    "word": "potential",
+    "category": "adjectives"
+  },
+  {
+    "id": "c5e88dd5-142c-4844-8adc-77589aa5e2c6",
+    "word": "appease",
+    "category": "advanced"
+  },
+  {
+    "id": "c61bacad-4c46-40c4-bb67-63cd4afbec0c",
+    "word": "cumulative",
+    "category": "adjectives"
+  },
+  {
+    "id": "c67a8578-c6d6-4f97-824d-a2e5a5b54df1",
+    "word": "abhor",
+    "category": "verbs"
+  },
+  {
+    "id": "c77896f8-f6ac-4c4e-abf0-f3c8d27ee4a2",
+    "word": "transfer",
+    "category": "verbs"
+  },
+  {
+    "id": "c8385d78-5e11-4310-a8c7-fafb2932fee0",
+    "word": "indignation",
+    "category": "advanced"
+  },
+  {
+    "id": "c860d2b5-1b58-4e94-9c7e-e7c9635e210c",
+    "word": "insofar as",
+    "category": "connectors"
+  },
+  {
+    "id": "c8a49f22-5d82-41d7-92bc-1c6448be3ccc",
+    "word": "unanimous",
+    "category": "descriptive"
+  },
+  {
+    "id": "c923948e-1f52-48c3-9c02-cae12c15e2b5",
+    "word": "imply",
+    "category": "verbs"
+  },
+  {
+    "id": "c924d793-b43a-4824-8bb9-17a3c03f1626",
+    "word": "along with",
+    "category": "connectors"
+  },
+  {
+    "id": "c92c7b76-cfb3-4310-95bf-9c31e8d38551",
+    "word": "optimize",
+    "category": "verbs"
+  },
+  {
+    "id": "c95d57df-b958-4347-82e4-1464c3618695",
+    "word": "publish",
+    "category": "verbs"
+  },
+  {
+    "id": "c968ec18-a672-4be4-a022-f619b7d63bb4",
+    "word": "sardonic",
+    "category": "advanced"
+  },
+  {
+    "id": "c9740213-d3d3-48ea-8a95-58478e8662bd",
+    "word": "assessment",
+    "category": "nouns"
+  },
+  {
+    "id": "c99a4e4a-52c3-4f5c-8501-b3def56ca4fe",
+    "word": "formulate",
+    "category": "verbs"
+  },
+  {
+    "id": "c9c2f475-066a-4b1f-a8e8-dbce6fa9c80f",
+    "word": "generalization",
+    "category": "nouns"
+  },
+  {
+    "id": "c9e434aa-10d4-48cf-9814-d943114d93cc",
+    "word": "numerous",
+    "category": "adjectives"
+  },
+  {
+    "id": "ca0343b7-0c5c-49c3-93be-d937275bb146",
+    "word": "acumen",
+    "category": "advanced"
+  },
+  {
+    "id": "ca37c930-9441-4c35-b2b1-7b5a82fac813",
+    "word": "refine",
+    "category": "verbs"
+  },
+  {
+    "id": "ca40f6f8-1b21-41ed-a598-5444da2b045f",
+    "word": "chronic",
+    "category": "adjectives"
+  },
+  {
+    "id": "cabf3a89-9172-4b9e-80b9-e6f0c240c375",
+    "word": "exclusive",
+    "category": "adjectives"
+  },
+  {
+    "id": "cb15b826-9377-4491-ab2e-aa4f866f13fc",
+    "word": "influence",
+    "category": "verbs"
+  },
+  {
+    "id": "cb65f419-4ecb-420c-b4e7-d88ad26a69fb",
+    "word": "strategic",
+    "category": "adjectives"
+  },
+  {
+    "id": "cb6a58be-a3e3-47c9-beb5-6bb4d92938d6",
+    "word": "confirm",
+    "category": "verbs"
+  },
+  {
+    "id": "cb7a3262-e81c-4864-aaaf-212613e6ee41",
+    "word": "obvious",
+    "category": "adjectives"
+  },
+  {
+    "id": "cb9ce761-613b-483a-8374-82f9f0120d3b",
+    "word": "given that",
+    "category": "connectors"
+  },
+  {
+    "id": "cbbdf80d-76c8-4ea6-a159-cb2458cb0f1f",
+    "word": "as opposed to",
+    "category": "connectors"
+  },
+  {
+    "id": "cbc14385-c14e-45c5-94b2-ab10762d3db2",
+    "word": "adversary",
+    "category": "nouns"
+  },
+  {
+    "id": "cbc230b0-2a3f-41a5-b1ff-edca456dc0fc",
+    "word": "eloquent",
+    "category": "descriptive"
+  },
+  {
+    "id": "cbf453d8-c105-44fa-b490-cd0b50182a72",
+    "word": "portray",
+    "category": "verbs"
+  },
+  {
+    "id": "cc394184-c333-4632-a170-00d0517128eb",
+    "word": "hamper",
+    "category": "advanced"
+  },
+  {
+    "id": "cc3a1c4e-5fbd-4038-80b9-a98d0970fdca",
+    "word": "arbitrary",
+    "category": "adjectives"
+  },
+  {
+    "id": "cc3f57c9-633a-4c07-bdbd-adac148ce418",
+    "word": "correlate",
+    "category": "verbs"
+  },
+  {
+    "id": "cc4e2ef2-8770-48c7-b8fb-28a32e3979ed",
+    "word": "constructive",
+    "category": "descriptive"
+  },
+  {
+    "id": "cc5fe4e0-9bfb-4adf-a833-22cb537a923b",
+    "word": "disparity",
+    "category": "nouns"
+  },
+  {
+    "id": "cc8c482a-e14a-41f1-8fea-684b1b908e02",
+    "word": "implicitly",
+    "category": "connectors"
+  },
+  {
+    "id": "ccdff358-be77-4592-9231-ec4a88429b51",
+    "word": "enumerate",
+    "category": "verbs"
+  },
+  {
+    "id": "cd46b8a2-8983-4cd1-a76a-aecdc0dec1c0",
+    "word": "harmonious",
+    "category": "adjectives"
+  },
+  {
+    "id": "cd488e70-e6f4-4d44-8a59-3883f9be9c79",
+    "word": "in practice",
+    "category": "connectors"
+  },
+  {
+    "id": "cd8ea60b-60f6-4e03-a709-f1d4d2f507cd",
+    "word": "authentic",
+    "category": "adjectives"
+  },
+  {
+    "id": "cda78b8a-c376-405d-832a-ea9749e69aee",
+    "word": "ennui",
+    "category": "advanced"
+  },
+  {
+    "id": "cdf647e2-b121-4fce-8e4b-94f7451e6293",
+    "word": "justify",
+    "category": "verbs"
+  },
+  {
+    "id": "cdf7157f-624a-4a9b-bc42-d3c4b27433df",
+    "word": "methodical",
+    "category": "adjectives"
+  },
+  {
+    "id": "ce149b47-a811-484a-998b-6442f70f5501",
+    "word": "henceforth",
+    "category": "connectors"
+  },
+  {
+    "id": "ce1ce9bd-cced-488d-9ba0-724b2c10c85f",
+    "word": "discrepancy",
+    "category": "nouns"
+  },
+  {
+    "id": "ce870faa-dad7-4a93-a88d-dc8127ee9886",
+    "word": "in view of",
+    "category": "connectors"
+  },
+  {
+    "id": "cf394007-3627-48ce-98ac-5432883bece4",
+    "word": "such as",
+    "category": "connectors"
+  },
+  {
+    "id": "cf51a3d6-e964-49f4-822f-b3fd8d51d5e2",
+    "word": "partial",
+    "category": "adjectives"
+  },
+  {
+    "id": "cfb2b9a9-8e7d-45e4-8423-8aa317eaf7b6",
+    "word": "advance",
+    "category": "verbs"
+  },
+  {
+    "id": "d01e29d0-b802-42ce-8a42-b7e429cfce62",
+    "word": "aesthetic",
+    "category": "adjectives"
+  },
+  {
+    "id": "d03f432f-0dd4-4344-8717-efa278558932",
+    "word": "inconsistent",
+    "category": "adjectives"
+  },
+  {
+    "id": "d06db92f-cf7c-4178-ba80-cf49ace4f11a",
+    "word": "revise",
+    "category": "verbs"
+  },
+  {
+    "id": "d094c25c-2591-4859-b860-5d260446171a",
+    "word": "commonly",
+    "category": "connectors"
+  },
+  {
+    "id": "d0c08639-47f5-4454-a94b-f5f4547347ad",
+    "word": "rigorous",
+    "category": "descriptive"
+  },
+  {
+    "id": "d1383e29-a59a-4bf6-b762-a2a769dbf6a5",
+    "word": "connect",
+    "category": "verbs"
+  },
+  {
+    "id": "d174741c-24f3-4e76-b24a-9d984b1b0832",
+    "word": "bellicose",
+    "category": "advanced"
+  },
+  {
+    "id": "d1772ded-1025-4375-af48-4e2fd023ea7c",
+    "word": "ostensible",
+    "category": "academic"
+  },
+  {
+    "id": "d1ec81a2-b8f4-48b0-9d57-853a43170b65",
+    "word": "intricate",
+    "category": "descriptive"
+  },
+  {
+    "id": "d284399b-1a83-43d8-a479-dc904ef5a511",
+    "word": "ensure",
+    "category": "verbs"
+  },
+  {
+    "id": "d31dcff1-6707-4d94-ba14-034550e6004e",
+    "word": "spatial",
+    "category": "adjectives"
+  },
+  {
+    "id": "d3436022-0060-4e96-ab32-973b4b666222",
+    "word": "avarice",
+    "category": "advanced"
+  },
+  {
+    "id": "d35e3060-6555-4955-889f-48420a44c179",
+    "word": "essential",
+    "category": "descriptive"
+  },
+  {
+    "id": "d3693dbc-c649-4c64-bcb1-2d8783e6cc44",
+    "word": "design",
+    "category": "verbs"
+  },
+  {
+    "id": "d38dbb58-aaf6-4030-a7e7-c0fcb218110a",
+    "word": "explicitly",
+    "category": "connectors"
+  },
+  {
+    "id": "d394fe60-d8da-456f-912a-897cb95155b2",
+    "word": "relatively",
+    "category": "connectors"
+  },
+  {
+    "id": "d3dff670-a547-402b-b9d0-59014a8d211b",
+    "word": "to begin with",
+    "category": "connectors"
+  },
+  {
+    "id": "d3f2b6c9-5100-4664-8508-2b9a79c89a1d",
+    "word": "in light of",
+    "category": "connectors"
+  },
+  {
+    "id": "d419666d-77fc-4233-b9ca-f5bc44b89d2f",
+    "word": "contempt",
+    "category": "nouns"
+  },
+  {
+    "id": "d41f28dd-827b-4f78-9727-b3b8cd4e9a4e",
+    "word": "incongruous",
+    "category": "advanced"
+  },
+  {
+    "id": "d4b03966-4da6-4585-b7af-255f20ed5fd3",
+    "word": "occasionally",
+    "category": "connectors"
+  },
+  {
+    "id": "d501b089-e2c2-4877-9d6e-7349ccc3d559",
+    "word": "so that",
+    "category": "connectors"
+  },
+  {
+    "id": "d525a9b2-c87b-4068-a700-c7c7978acd3c",
+    "word": "effectively",
+    "category": "connectors"
+  },
+  {
+    "id": "d59fc169-fac1-4eb6-b30a-123877465051",
+    "word": "perspicacious",
+    "category": "advanced"
+  },
+  {
+    "id": "d5b06701-f827-4a7a-a87e-5c085517daeb",
+    "word": "combine",
+    "category": "verbs"
+  },
+  {
+    "id": "d5d67b36-3fca-4243-952b-072f07711f64",
+    "word": "pattern",
+    "category": "nouns"
+  },
+  {
+    "id": "d637033e-9392-427a-99e4-1c66e1dc653a",
+    "word": "omit",
+    "category": "verbs"
+  },
+  {
+    "id": "d6703ece-bba0-4123-9262-f43f34a3613a",
+    "word": "subsequently",
+    "category": "connectors"
+  },
+  {
+    "id": "d688c2fd-96f8-4a21-9948-0dd29087f238",
+    "word": "apply",
+    "category": "verbs"
+  },
+  {
+    "id": "d6b28ba2-6aa8-4153-a405-daa588e1391b",
+    "word": "aggravate",
+    "category": "verbs"
+  },
+  {
+    "id": "d6c49bef-3ced-4a06-b5a1-6caec692ba5e",
+    "word": "principle",
+    "category": "nouns"
+  },
+  {
+    "id": "d701db9b-00d6-48b1-99cf-5a4366f175f7",
+    "word": "provocative",
+    "category": "advanced"
+  },
+  {
+    "id": "d72118f6-ea08-4606-aadd-a9b6d67ee441",
+    "word": "oppressive",
+    "category": "descriptive"
+  },
+  {
+    "id": "d73db345-05ed-4629-ac10-43864d249d5c",
+    "word": "negligible",
+    "category": "adjectives"
+  },
+  {
+    "id": "d77dacb3-860c-42e3-997f-378281090fec",
+    "word": "inimitable",
+    "category": "advanced"
+  },
+  {
+    "id": "d8042d57-f80b-49f4-bc21-4ea08423dec9",
+    "word": "present",
+    "category": "verbs"
+  },
+  {
+    "id": "d8fc1a65-329e-4faa-9c85-c603083f67d4",
+    "word": "passionate",
+    "category": "descriptive"
+  },
+  {
+    "id": "d9131965-847e-4347-9f0b-f0f3cd2c57b3",
+    "word": "statement",
+    "category": "nouns"
+  },
+  {
+    "id": "d959b3f2-09e3-4e07-a68f-a558d0d77164",
+    "word": "consider",
+    "category": "academic"
+  },
+  {
+    "id": "d99cdab3-ae13-4bd2-9c6b-0d4250b55027",
+    "word": "contrary to",
+    "category": "connectors"
+  },
+  {
+    "id": "d9ad1e53-3b73-4a6a-ae4b-f27b98fc98de",
+    "word": "umbrage",
+    "category": "advanced"
+  },
+  {
+    "id": "d9f16b9d-0434-44ce-b0d2-c26745cc250a",
+    "word": "induce",
+    "category": "advanced"
+  },
+  {
+    "id": "da0be5bc-f9be-4394-86bd-571cb3223370",
+    "word": "clandestine",
+    "category": "adjectives"
+  },
+  {
+    "id": "da8fe74d-5bde-48b9-9c21-72d6a3803fc8",
+    "word": "assume",
+    "category": "verbs"
+  },
+  {
+    "id": "dadd204a-4409-4bff-8836-289cf76eaf27",
+    "word": "besides",
+    "category": "connectors"
+  },
+  {
+    "id": "dae97b60-315f-4236-ad70-952b4e2820f7",
+    "word": "particularly",
+    "category": "connectors"
+  },
+  {
+    "id": "db1d80bb-f76a-494f-aa02-eb8d25f50b1a",
+    "word": "caustic",
+    "category": "adjectives"
+  },
+  {
+    "id": "db37f371-0131-438d-958f-b27d7f8d28b5",
+    "word": "seek",
+    "category": "verbs"
+  },
+  {
+    "id": "db6f02d8-ecbc-4282-bca0-9f621741a6e9",
+    "word": "trivial",
+    "category": "descriptive"
+  },
+  {
+    "id": "db7baa55-97a1-4b0c-8340-1118de30cef2",
+    "word": "altruism",
+    "category": "nouns"
+  },
+  {
+    "id": "dba86617-e3c2-4789-8f1e-333b1aab52c7",
+    "word": "pertinent",
+    "category": "adjectives"
+  },
+  {
+    "id": "dc16f76d-d0b4-40ee-8526-dbea8c8ce73d",
+    "word": "viable",
+    "category": "academic"
+  },
+  {
+    "id": "dca912bd-041c-4017-89ce-460aeb0bfa83",
+    "word": "namely",
+    "category": "connectors"
+  },
+  {
+    "id": "dd9af1ff-e594-41a8-bc12-9ae5877cc6c2",
+    "word": "discreet",
+    "category": "adjectives"
+  },
+  {
+    "id": "deeb1c31-cbca-4883-aebd-cdc6a3ced6e9",
+    "word": "avert",
+    "category": "verbs"
+  },
+  {
+    "id": "dffd207e-3a3e-4715-96be-04784d4d7409",
+    "word": "execute",
+    "category": "verbs"
+  },
+  {
+    "id": "e07a3b24-47d3-4066-bfa6-446a9901218b",
+    "word": "ingenuous",
+    "category": "advanced"
+  },
+  {
+    "id": "e209f819-80a8-44f1-9f21-e6e73c848744",
+    "word": "periodic",
+    "category": "adjectives"
+  },
+  {
+    "id": "e22a96e6-2358-4873-a4cc-6f5a1aee28d9",
+    "word": "random",
+    "category": "adjectives"
+  },
+  {
+    "id": "e299737a-3e1c-4c02-a34b-1316d40431b5",
+    "word": "audacious",
+    "category": "adjectives"
+  },
+  {
+    "id": "e2d55211-295e-4412-acd2-5b4766575b6c",
+    "word": "associate",
+    "category": "verbs"
+  },
+  {
+    "id": "e2ef93bf-a8d3-4d5b-bdf7-c31f8da78816",
+    "word": "monitor",
+    "category": "verbs"
+  },
+  {
+    "id": "e3ad1c5c-60ff-40fb-b5a4-5af38c90a852",
+    "word": "individual",
+    "category": "adjectives"
+  },
+  {
+    "id": "e413c111-bdd9-474d-addf-a490def8cb3d",
+    "word": "observe",
+    "category": "verbs"
+  },
+  {
+    "id": "e41cc876-662b-43b0-805c-cca7a9f9bda6",
+    "word": "imperious",
+    "category": "advanced"
+  },
+  {
+    "id": "e4675ba0-0d8d-4190-aced-16146ec4d578",
+    "word": "coherence",
+    "category": "nouns"
+  },
+  {
+    "id": "e4efc512-56cb-446a-8a7d-9d5bd81b4912",
+    "word": "format",
+    "category": "verbs"
+  },
+  {
+    "id": "e4f8d79b-d240-4f2b-82d6-8973d7789736",
+    "word": "evaluation",
+    "category": "nouns"
+  },
+  {
+    "id": "e52ef5a7-5cd1-4012-b24a-6fbf45bbf885",
+    "word": "to summarize",
+    "category": "connectors"
+  },
+  {
+    "id": "e552fa7a-5c7f-484b-93ed-62aed7657e35",
+    "word": "transformation",
+    "category": "nouns"
+  },
+  {
+    "id": "e57fdf08-0878-4f0d-8121-acff6d4bff93",
+    "word": "organize",
+    "category": "verbs"
+  },
+  {
+    "id": "e588e157-37a3-46e3-a370-ba5357f7d111",
+    "word": "condone",
+    "category": "verbs"
+  },
+  {
+    "id": "e5ce9025-b715-4fe4-8969-fcc0bebbca19",
+    "word": "capricious",
+    "category": "advanced"
+  },
+  {
+    "id": "e5e9c7b2-807a-488e-9005-73547612da19",
+    "word": "eradicate",
+    "category": "verbs"
+  },
+  {
+    "id": "e5f887bd-07b5-4257-9046-05a1e51df39d",
+    "word": "sanguine",
+    "category": "advanced"
+  },
+  {
+    "id": "e6018c3b-2b6f-4679-958d-69ca9d2e7950",
+    "word": "component",
+    "category": "nouns"
+  },
+  {
+    "id": "e71b9e68-09a4-41b6-a192-40be22055dbc",
+    "word": "operate",
+    "category": "verbs"
+  },
+  {
+    "id": "e71c6a04-c971-481d-9942-825adfac82e7",
+    "word": "govern",
+    "category": "verbs"
+  },
+  {
+    "id": "e728daf9-5b70-49b5-bc3b-52b1daca0555",
+    "word": "insight",
+    "category": "nouns"
+  },
+  {
+    "id": "e74ff067-3cc2-4cdf-ab47-15417c0dc06b",
+    "word": "acute",
+    "category": "adjectives"
+  },
+  {
+    "id": "e7eebb4d-9c1d-4c36-aaf2-9a33ed3071bb",
+    "word": "dense",
+    "category": "adjectives"
+  },
+  {
+    "id": "e7fa5867-95b1-4887-9525-bbc2f9107159",
+    "word": "contribution",
+    "category": "nouns"
+  },
+  {
+    "id": "e8277264-70f6-417a-bb34-b53a26b447e2",
+    "word": "attain",
+    "category": "verbs"
+  },
+  {
+    "id": "e8931587-c9fd-4593-a18c-c69dd3dd5d74",
+    "word": "empirically",
+    "category": "connectors"
+  },
+  {
+    "id": "e90f995d-a0a5-48d5-b09f-75b320743cd9",
+    "word": "focused",
+    "category": "descriptive"
+  },
+  {
+    "id": "e932ac1b-ad13-476c-bb40-06d4863d27f9",
+    "word": "innovative",
+    "category": "adjectives"
+  },
+  {
+    "id": "e95806b2-c7dc-4064-9478-d9643734fb82",
+    "word": "bureaucracy",
+    "category": "nouns"
+  },
+  {
+    "id": "e9e82753-bb27-42c4-9ddd-78a7f98d074d",
+    "word": "accentuate",
+    "category": "verbs"
+  },
+  {
+    "id": "e9ffdf18-b167-4915-84c4-99aab9fafb29",
+    "word": "passive",
+    "category": "adjectives"
+  },
+  {
+    "id": "ea1630d3-4687-44af-9c89-c34b59bfd371",
+    "word": "exaggerate",
+    "category": "verbs"
+  },
+  {
+    "id": "ea63cd0f-97f0-45c1-91f2-58334df4158d",
+    "word": "mandatory",
+    "category": "adjectives"
+  },
+  {
+    "id": "eaf66f56-ac8d-4eb9-a3aa-0b5d79555e5f",
+    "word": "holistic",
+    "category": "adjectives"
+  },
+  {
+    "id": "eb179819-2696-4eb6-b6a6-2eb169fb3fe7",
+    "word": "optional",
+    "category": "adjectives"
+  },
+  {
+    "id": "eb185a64-bd5f-48b4-a2e7-bb7b64424187",
+    "word": "persevere",
+    "category": "verbs"
+  },
+  {
+    "id": "eb72decf-1ad5-4ab7-b2e8-e00da68acd3b",
+    "word": "exclude",
+    "category": "verbs"
+  },
+  {
+    "id": "ebd75c13-d5cb-461e-bc74-42fe186ec8ec",
+    "word": "for instance",
+    "category": "connectors"
+  },
+  {
+    "id": "ecc397c1-1917-4f23-8bf0-537d713da89a",
+    "word": "in effect",
+    "category": "connectors"
+  },
+  {
+    "id": "ed0ba776-4bcb-4b12-95d9-7bf325a05590",
+    "word": "assign",
+    "category": "verbs"
+  },
+  {
+    "id": "ed5ca198-cde3-4b98-bbd4-05687d832f83",
+    "word": "whether",
+    "category": "connectors"
+  },
+  {
+    "id": "ee01cd0d-f75f-4ac2-ae9c-e5205d9b392f",
+    "word": "mechanism",
+    "category": "nouns"
+  },
+  {
+    "id": "eee5d287-35d0-4155-bd09-510fd03e26d4",
+    "word": "on account of",
+    "category": "connectors"
+  },
+  {
+    "id": "ef089791-4c14-47af-ac51-893b0603b19b",
+    "word": "global",
+    "category": "adjectives"
+  },
+  {
+    "id": "ef2b688f-d160-4381-ae9d-a32f8ade4f49",
+    "word": "illustrate",
+    "category": "verbs"
+  },
+  {
+    "id": "ef67fa83-a4be-4683-8771-b0e20c160ce6",
+    "word": "appropriately",
+    "category": "connectors"
+  },
+  {
+    "id": "ef8502e3-a9e8-4a8f-9ed1-6ad2960083e0",
+    "word": "pervasive",
+    "category": "adjectives"
+  },
+  {
+    "id": "ef8e7e16-bcb7-4a7b-9e42-41c9ecb26ec2",
+    "word": "significantly",
+    "category": "connectors"
+  },
+  {
+    "id": "efbca05a-a8ee-47c4-9a66-ba48dc1d22b3",
+    "word": "disparate",
+    "category": "academic"
+  },
+  {
+    "id": "f0223b7d-7253-41f8-a23e-85ae9dc70a83",
+    "word": "affable",
+    "category": "advanced"
+  },
+  {
+    "id": "f074b2dc-fc3e-4f68-b121-e9f701818770",
+    "word": "cause",
+    "category": "verbs"
+  },
+  {
+    "id": "f0dcf6d9-733a-4d40-a8c9-bb8c79d74f97",
+    "word": "synthesize",
+    "category": "verbs"
+  },
+  {
+    "id": "f1141af2-ad3c-467b-bfb1-4ac0da49f754",
+    "word": "aggregate",
+    "category": "verbs"
+  },
+  {
+    "id": "f150b7b1-f18e-4e9d-be09-edef5fee6f1f",
+    "word": "objectively",
+    "category": "descriptive"
+  },
+  {
+    "id": "f15df6a8-e2e2-47e5-b4fe-52496095e622",
+    "word": "taciturn",
+    "category": "advanced"
+  },
+  {
+    "id": "f1d1092e-1905-4999-9970-03cd832425ee",
+    "word": "deviation",
+    "category": "nouns"
+  },
+  {
+    "id": "f298e0ea-a5c7-4bc0-b66e-956179591a58",
+    "word": "insouciant",
+    "category": "advanced"
+  },
+  {
+    "id": "f2b6166c-2128-40b0-b644-73759d279593",
+    "word": "dedicated",
+    "category": "descriptive"
+  },
+  {
+    "id": "f2b90d65-5f19-4050-91a8-55f29831aa83",
+    "word": "element",
+    "category": "nouns"
+  },
+  {
+    "id": "f2f78a15-7d65-47aa-90e8-12886caba888",
+    "word": "regional",
+    "category": "adjectives"
+  },
+  {
+    "id": "f308a18a-9e27-49b0-a401-ace55413f588",
+    "word": "supposedly",
+    "category": "connectors"
+  },
+  {
+    "id": "f32aa6d7-02a3-45fe-bd1c-5d9daa0d8404",
+    "word": "equally",
+    "category": "connectors"
+  },
+  {
+    "id": "f3628a73-4b29-4f39-88a6-82df3a89a7ab",
+    "word": "suppress",
+    "category": "verbs"
+  },
+  {
+    "id": "f368dab4-3a52-4eb6-b05f-3d6f54073366",
+    "word": "together with",
+    "category": "connectors"
+  },
+  {
+    "id": "f3c51462-14ff-4243-8c39-7f056aed3430",
+    "word": "abolish",
+    "category": "verbs"
+  },
+  {
+    "id": "f401d22f-ac8e-4cf1-86e5-ce306feec701",
+    "word": "quantify",
+    "category": "verbs"
+  },
+  {
+    "id": "f40a55d5-3064-4fa4-98e8-598284fd0eb6",
+    "word": "anarchy",
+    "category": "nouns"
+  },
+  {
+    "id": "f4577ce2-a5e7-4d42-99f4-1d96d2540f9b",
+    "word": "compile",
+    "category": "verbs"
+  },
+  {
+    "id": "f476ea55-955b-44b9-8d5d-cd02a0f7ebd5",
+    "word": "deter",
+    "category": "verbs"
+  },
+  {
+    "id": "f52f9374-4c18-4e5e-9704-d51f350a9396",
+    "word": "anomaly",
+    "category": "nouns"
+  },
+  {
+    "id": "f5793db9-e14e-4b09-bd16-76d0525d2584",
+    "word": "claim",
+    "category": "academic"
+  },
+  {
+    "id": "f591df9a-12ac-49e4-93b7-887f720a91f1",
+    "word": "while",
+    "category": "connectors"
+  },
+  {
+    "id": "f5c96ce0-9d2e-4325-97bf-165814f0c42c",
+    "word": "sequence",
+    "category": "nouns"
+  },
+  {
+    "id": "f6341956-90f8-4c2e-abee-edcd69054934",
+    "word": "irony",
+    "category": "nouns"
+  },
+  {
+    "id": "f7423a1a-ddc2-4bc2-8576-764c262437f6",
+    "word": "regarding",
+    "category": "connectors"
+  },
+  {
+    "id": "f74d49e2-3bb1-4401-b92d-ca342434b413",
+    "word": "indirectly",
+    "category": "connectors"
+  },
+  {
+    "id": "f7519b09-04e3-491f-ae64-75c446a7ae61",
+    "word": "separate",
+    "category": "verbs"
+  },
+  {
+    "id": "f8bcb4a4-e693-4754-944f-7fc2cc94032b",
+    "word": "deleterious",
+    "category": "advanced"
+  },
+  {
+    "id": "f8fc08e9-41d1-47c6-9bee-24c6fb46385b",
+    "word": "endeavor",
+    "category": "nouns"
+  },
+  {
+    "id": "f940283b-dc02-4fff-a91a-28c8bed9bd12",
+    "word": "delegate",
+    "category": "verbs"
+  },
+  {
+    "id": "f977f607-794d-4043-ad76-19658b1e75e9",
+    "word": "initially",
+    "category": "connectors"
+  },
+  {
+    "id": "f9d2d7fb-bad9-4ce0-8b3b-db4130cd3e90",
+    "word": "target",
+    "category": "verbs"
+  },
+  {
+    "id": "f9db72ae-d4ac-4c17-afbc-06b554c755ae",
+    "word": "modify",
+    "category": "verbs"
+  },
+  {
+    "id": "fa0c228c-3bdd-4dfd-8b88-aa7fea513ccb",
+    "word": "diligent",
+    "category": "descriptive"
+  },
+  {
+    "id": "fa19d337-51aa-4c03-ad07-cc390aff701c",
+    "word": "parsimonious",
+    "category": "advanced"
+  },
+  {
+    "id": "fa49af34-b167-4a47-b5e9-b75db5248e2f",
+    "word": "clearly",
+    "category": "connectors"
+  },
+  {
+    "id": "fae5ec77-5767-4876-a777-6dfcad0eb1c6",
+    "word": "apathy",
+    "category": "nouns"
+  },
+  {
+    "id": "fb4ce858-fbe0-480f-abd4-10f2e71c59bc",
+    "word": "ambiguity",
+    "category": "nouns"
+  },
+  {
+    "id": "fb4f6886-8461-47de-adc5-b3a1c52b3252",
+    "word": "sanctimonious",
+    "category": "advanced"
+  },
+  {
+    "id": "fb94578e-5cf5-414e-9c4c-3f416ea95ee6",
+    "word": "inclusion",
+    "category": "nouns"
+  },
+  {
+    "id": "fbe6cf65-d288-4227-8c28-774799cbda6f",
+    "word": "abbreviate",
+    "category": "verbs"
+  },
+  {
+    "id": "fbf74fe9-48bb-4abf-a76d-ee93a294fa69",
+    "word": "ameliorate",
+    "category": "verbs"
+  },
+  {
+    "id": "fc4505d8-398e-4020-a976-d37de3fac591",
+    "word": "genuine",
+    "category": "adjectives"
+  },
+  {
+    "id": "fc724c17-43a4-4db3-9618-8956fbb54198",
+    "word": "enhance",
+    "category": "verbs"
+  },
+  {
+    "id": "fca9a2ca-a580-4b5a-8be8-d26eef4c8abb",
+    "word": "accolade",
+    "category": "nouns"
+  },
+  {
+    "id": "fd249892-7159-4583-9b0f-c412a1d7c138",
+    "word": "understand",
+    "category": "verbs"
+  },
+  {
+    "id": "fd398651-f00e-4aa8-80f7-6c1e95151aa4",
+    "word": "implement",
+    "category": "verbs"
+  },
+  {
+    "id": "fd5bccd7-198a-49ec-865f-5b936cb42e30",
+    "word": "report",
+    "category": "verbs"
+  },
+  {
+    "id": "fe3980e7-133c-4eeb-bd67-816eff38e1fd",
+    "word": "align",
+    "category": "verbs"
+  },
+  {
+    "id": "fe3e6bb2-7b68-45a4-8ff7-7cdbc2ccc55e",
+    "word": "dissent",
+    "category": "verbs"
+  },
+  {
+    "id": "fe93490e-1d2b-415c-8eaf-4b5ddd158cdc",
+    "word": "critical",
+    "category": "adjectives"
+  },
+  {
+    "id": "fec09ff0-eb1d-48db-af61-019a4f19fbe5",
+    "word": "whereas",
+    "category": "connectors"
+  },
+  {
+    "id": "ff1743e6-ee93-4365-8885-33bd6ac16ea1",
+    "word": "austere",
+    "category": "advanced"
+  },
+  {
+    "id": "ff3d674b-0501-4cef-a096-503b1383db94",
+    "word": "integrate",
+    "category": "verbs"
+  },
+  {
+    "id": "ffa7f8f8-563c-44c5-b01f-6ac96e400b6f",
+    "word": "contemporary",
+    "category": "adjectives"
+  }
+]

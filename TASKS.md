@@ -106,5 +106,6 @@
 - [x] Found along the way: "מילים שטעיתי בהן" showed "—" as the translation since the explanations polish ("word (תרגום)"); `extractGloss` reads both formats (tested)
 - [x] Category reset prepared: `scripts/data/vocab-category.json` (494 academic = Academic Word List families + subject terms, 664 general) and `scripts/reset-vocab-categories.ts`; dry run 1,001 rows to change, 0 problems
 - [x] Card front shows the word only; "הצג רמז" reveals the example sentence; the definition is on the back with the translation
-- [ ] **Approval** to run the category reset (`--apply`) and then migration `20260925140000_vocab_category_theme_only.sql`
+- [x] Category reset applied: 1,158/1,158 verified (494 academic, 664 general). The first run updated the 337 academic rows, then the 664-row update overflowed the request URL; updates are now chunked (both scripts) and the rerun finished the general rows. Backups: `backups/vocab-category-2026-09-25T15-57-34-395Z.json` (all 1,001 original values) and `…15-57-51-344Z.json` (the 664 still unchanged at the rerun)
+- [x] Migration `vocab_category_theme_only` applied: category NOT NULL, default general, check (academic | general)
 - [ ] Deploy (push)

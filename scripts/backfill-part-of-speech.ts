@@ -23,6 +23,7 @@ import { join } from 'path';
 
 const APPLY = process.argv.includes('--apply');
 const PAGE = 1000;
+const CHUNK = 150;
 const PARTS = ['noun', 'verb', 'adjective', 'adverb', 'connector'] as const;
 type Part = (typeof PARTS)[number];
 
@@ -88,8 +89,12 @@ async function main() {
   for (const part of PARTS) {
     const ids = changes.filter(c => c.after === part).map(c => c.id);
     if (!ids.length) continue;
-    const { error } = await supabase.from('vocabulary').update({ part_of_speech: part }).in('id', ids);
-    if (error) throw new Error(`update failed for ${part}: ${error.message} (restore from ${file})`);
+    // Chunked: a few hundred UUIDs in one ?id=in.(…) overflow the request URL.
+    for (let i = 0; i < ids.length; i += CHUNK) {
+      const chunk = ids.slice(i, i + CHUNK);
+      const { error } = await supabase.from('vocabulary').update({ part_of_speech: part }).in('id', chunk);
+      if (error) throw new Error(`update failed for ${part}: ${error.message} (restore from ${file})`);
+    }
     console.log(`updated ${part}: ${ids.length}`);
   }
 

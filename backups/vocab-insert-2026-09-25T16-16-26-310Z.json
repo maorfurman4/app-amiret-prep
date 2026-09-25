@@ -1,0 +1,205 @@
+{
+  "batch": "scripts/data/vocab-batches/level1-batch01.json",
+  "inserted": [
+    {
+      "id": "6556205e-a4ea-4ce9-8b84-178f45d5f1d1",
+      "word": "allow"
+    },
+    {
+      "id": "d5acf5de-1ecb-4081-9113-ebff12a62431",
+      "word": "believe"
+    },
+    {
+      "id": "4d81088a-c1f5-4693-bd47-7717476b9389",
+      "word": "remain"
+    },
+    {
+      "id": "390a4b70-f43a-4fc5-809a-85edc4923b34",
+      "word": "suggest"
+    },
+    {
+      "id": "bac58dab-b7f4-4695-8c02-773c85514e75",
+      "word": "expect"
+    },
+    {
+      "id": "f64bb905-0b22-45ab-891f-ccf7d5f76fae",
+      "word": "follow"
+    },
+    {
+      "id": "1d9fc185-db1c-4d86-b2b0-9c18fc57a9d2",
+      "word": "reach"
+    },
+    {
+      "id": "579c530a-79c2-4f1d-ba38-ade7fb17b638",
+      "word": "involve"
+    },
+    {
+      "id": "7d3eb6d6-654f-4897-8330-4361e369025f",
+      "word": "continue"
+    },
+    {
+      "id": "f2a5d615-7137-4e4a-be44-63a12bb9efa3",
+      "word": "create"
+    },
+    {
+      "id": "4337a986-e1d9-449d-889a-e0c0e9cacd2e",
+      "word": "offer"
+    },
+    {
+      "id": "a399871a-8966-4ba0-8980-38803c27eb15",
+      "word": "choose"
+    },
+    {
+      "id": "77377c5a-6f12-4e41-b5cc-9a64c57ba991",
+      "word": "receive"
+    },
+    {
+      "id": "4fd95503-1608-49fd-8d2b-bba01093d55e",
+      "word": "protect"
+    },
+    {
+      "id": "ea7d7414-f6c4-4dca-b91a-123f34fbadec",
+      "word": "prevent"
+    },
+    {
+      "id": "638f86d9-2f63-486d-a5e8-3ecdc7e057b7",
+      "word": "agree"
+    },
+    {
+      "id": "ce254020-6634-4370-bc06-41f26ae14bd5",
+      "word": "accept"
+    },
+    {
+      "id": "612d5079-207e-49a5-91e2-23c1b47dec21",
+      "word": "achieve"
+    },
+    {
+      "id": "f572c235-577d-4e8b-9fac-c22f0e09fbb8",
+      "word": "replace"
+    },
+    {
+      "id": "578a7f74-f7ee-4f26-a99c-fa1b75344f2d",
+      "word": "share"
+    },
+    {
+      "id": "e8cdd800-c30a-418f-b756-8f8ba8663c95",
+      "word": "depend"
+    },
+    {
+      "id": "6e9c284e-2b10-4e34-969e-493e88c59330",
+      "word": "exist"
+    },
+    {
+      "id": "2efdbb5c-23df-45c9-874c-f9f70471a1ac",
+      "word": "fail"
+    },
+    {
+      "id": "37a6e842-24a5-4020-a5c4-ce3ec507957c",
+      "word": "raise"
+    },
+    {
+      "id": "9858ba7a-a1e1-46fb-a9cd-455961cc564b",
+      "word": "remove"
+    },
+    {
+      "id": "595d81a2-0195-4475-8c81-b89306de9788",
+      "word": "recognize"
+    },
+    {
+      "id": "f78b53e3-cbce-41fb-81d2-bcfa98ca4711",
+      "word": "amount"
+    },
+    {
+      "id": "a36da6ec-9fe9-4989-b2c6-01d5eade53ac",
+      "word": "knowledge"
+    },
+    {
+      "id": "4828f56b-555d-4b95-8d48-6c1994932f16",
+      "word": "society"
+    },
+    {
+      "id": "7d7ce146-6fa1-4ef1-8e9f-b974cc6bda55",
+      "word": "source"
+    },
+    {
+      "id": "b12544a4-ab51-4cac-b1a3-b33798f9ebc8",
+      "word": "growth"
+    },
+    {
+      "id": "0068b663-02b4-4a62-9f74-5bfb2926e06a",
+      "word": "value"
+    },
+    {
+      "id": "452293fd-7d9a-40dd-b694-541ce0d9dffc",
+      "word": "risk"
+    },
+    {
+      "id": "b076b3c2-cbd4-43ab-b456-4a8b3f45979d",
+      "word": "rate"
+    },
+    {
+      "id": "2eb61899-8e4c-4d2c-8cbc-4905e794a01e",
+      "word": "population"
+    },
+    {
+      "id": "6f2ce7ba-2444-4577-963b-4092f72f0af0",
+      "word": "feature"
+    },
+    {
+      "id": "4436007d-163a-4078-9cc2-b4808d5a8091",
+      "word": "quality"
+    },
+    {
+      "id": "b9b3df1c-b497-41fe-863d-3613e83b098a",
+      "word": "advantage"
+    },
+    {
+      "id": "1436d009-d963-41be-908a-0ffde9cd2e92",
+      "word": "behavior"
+    },
+    {
+      "id": "69b3e9da-3de0-4428-b07f-0c86eb5981db",
+      "word": "opportunity"
+    },
+    {
+      "id": "39e19a6c-9372-4dcd-928d-9421d384e478",
+      "word": "skill"
+    },
+    {
+      "id": "0c475ceb-1adb-4a05-8aae-1ba795586761",
+      "word": "available"
+    },
+    {
+      "id": "6e8b7a36-d146-4ca9-bb59-1f8f8ba87b0f",
+      "word": "local"
+    },
+    {
+      "id": "c08e8aef-09d2-4ff6-aeb2-9c33c071ed7b",
+      "word": "likely"
+    },
+    {
+      "id": "dd324df5-eb8c-4d6c-b31f-cac9c102bcbc",
+      "word": "necessary"
+    },
+    {
+      "id": "e815a03f-be28-4ad6-98a7-3f837bf78550",
+      "word": "recent"
+    },
+    {
+      "id": "934bf500-472f-4158-8acc-4cae14197434",
+      "word": "serious"
+    },
+    {
+      "id": "1c89af36-f116-45a2-85fb-69838ee47560",
+      "word": "already"
+    },
+    {
+      "id": "a0449645-7791-48c7-8dba-a4e2f15d7fc1",
+      "word": "especially"
+    },
+    {
+      "id": "72286ce0-d778-4fe6-a826-4d9ef60f3be7",
+      "word": "perhaps"
+    }
+  ]
+}

@@ -11,6 +11,8 @@
  *  3. any other " — " touching Hebrew → a sentence break ". " (or nothing,
  *     when the left side already ends in punctuation)
  *  4. "המורה...נקודות" (the gap in a quoted sentence) → "המורה ___ נקודות"
+ *  5. "ENG = עברית" opening a sentence → "ENG (עברית)" for a short gloss,
+ *     "עברית (ENG)" for an explanation, so Hebrew keeps its reading order
  *
  * It does NOT change wording: "לא נפתר" in this content is subject matter
  * ("the problem remains unsolved"), not feedback about the student. English
@@ -95,9 +97,36 @@ function gapRule(s: string): string {
     .replace(/([֐-׿])\s*\.\.\.\s*([֐-׿])/g, '$1 ___ $2');
 }
 
+/** A gloss short enough to sit in parentheses after the English it translates. */
+const MAX_GLOSS_WORDS = 4;
+
+/**
+ * Rule 5: "ENG = עברית" at the start of a sentence. In RTL the English run
+ * opens the line and pushes the Hebrew into a broken reading order, so:
+ *  - a short gloss becomes "ENG (עברית)"            ("abandon (לנטוש).")
+ *  - an explanation becomes "עברית (ENG)"           (Hebrew leads, English is the aside)
+ * Only when the right side is pure Hebrew; English on both sides is left alone.
+ */
+function equalsRule(s: string): string {
+  return s.replace(
+    /(^|\. |! |\? |: )((?:נכון! )?)([A-Za-z][A-Za-z0-9 ,'’\-/]*?) = ([֐-׿][^A-Za-z.()]*?)(?=\.(?:\s|$)|$)/gu,
+    (_m, lead: string, marker: string, eng: string, heb: string) => {
+      const english = eng.trim();
+      const hebrew = heb.trim();
+      if (hebrew.split(/\s+/).length <= MAX_GLOSS_WORDS) return `${lead}${marker}${english} (${hebrew})`;
+      // "parallel = מקביל, מתאים ל…" / "… = לחשוף; המונח…": a gloss followed by its reason.
+      const comma = hebrew.search(/[,;]/);
+      if (comma > 0 && hebrew.slice(0, comma).trim().split(/\s+/).length <= MAX_GLOSS_WORDS) {
+        return `${lead}${marker}${english} (${hebrew.slice(0, comma).trim()}): ${hebrew.slice(comma + 1).trim()}`;
+      }
+      return `${lead}${marker}${hebrew} (${english})`;
+    },
+  );
+}
+
 export function polishHebrew(text: string): string {
   if (!text || !hasHebrew(text)) return text;
-  return tidy(gapRule(dashRule(labelRule(glossRule(text)))));
+  return tidy(equalsRule(gapRule(dashRule(labelRule(glossRule(text))))));
 }
 
 export interface Explanation {

@@ -2,7 +2,7 @@
 
 import { use, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { PenLine, RotateCcw, BookOpen, FileText, PartyPopper, ClipboardList } from 'lucide-react';
+import { PenLine, RotateCcw, BookOpen, FileText, PartyPopper, ClipboardList, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import type { Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
@@ -117,7 +117,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
               onClick={() => router.push(`/results/${sessionId}`)}
               className="text-sm text-exam-accent hover:underline"
             >
-              ← חזרה לתוצאות
+              <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה לתוצאות</span>
             </button>
           </div>
 
@@ -216,7 +216,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                   disabled={currentIndex === 0}
                   className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt text-sm"
                 >
-                  קודם &rsaquo;
+                  <span className="inline-flex items-center gap-1"><ChevronRight className="w-4 h-4" aria-hidden />קודם</span>
                 </button>
 
                 {/* Mobile dot nav */}
@@ -247,7 +247,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                   disabled={currentIndex === filteredIndices.length - 1}
                   className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt text-sm"
                 >
-                  &lsaquo; הבא
+                  <span className="inline-flex items-center gap-1">הבא<ChevronLeft className="w-4 h-4" aria-hidden /></span>
                 </button>
               </div>
             </>

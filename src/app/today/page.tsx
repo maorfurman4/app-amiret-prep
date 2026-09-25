@@ -301,7 +301,7 @@ export default function TodaySessionPage() {
                 onClick={nextFromQuestionPhase}
                 className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
               >
-                {idx + 1 >= currentQuestions.length ? 'המשך' : 'שאלה הבאה ‹'}
+                {idx + 1 >= currentQuestions.length ? 'המשך' : <span className="inline-flex items-center gap-1">שאלה הבאה<ChevronLeft className="w-4 h-4" aria-hidden /></span>}
               </button>
             </div>
           )}
@@ -337,7 +337,7 @@ export default function TodaySessionPage() {
                   onClick={() => setFlipped(true)}
                   dir="rtl"
                   className="mt-4 text-sm text-exam-accent hover:opacity-80 font-medium"
-                >הצג תרגום ←</button>
+                >הצג תרגום</button>
               </div>
             ) : (
               <div>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import type { Question } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
-import { PenLine, RotateCcw, BookOpen, Languages, HelpCircle, AlertTriangle, PartyPopper, Trash2, Target, ThumbsUp, Check, X, type LucideIcon } from 'lucide-react';
+import { PenLine, RotateCcw, BookOpen, Languages, HelpCircle, AlertTriangle, PartyPopper, Trash2, Target, ThumbsUp, Check, X, type LucideIcon, ChevronLeft } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry, type ResponseLogEntry } from '@/lib/response-log-client';
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
@@ -330,7 +330,7 @@ export default function ReviewQueuePage() {
                     onClick={() => handleStartReview(type)}
                     className="px-3 py-2 bg-exam-alt text-on-amber rounded-xl text-sm font-bold shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform flex-shrink-0"
                   >
-                    תרגל ‹
+                    <span className="inline-flex items-center gap-1">תרגל<ChevronLeft className="w-4 h-4" aria-hidden /></span>
                   </button>
                   <button
                     onClick={() => handleDeleteCategory(type)}
@@ -512,7 +512,7 @@ export default function ReviewQueuePage() {
               </span>
             </div>
             <div className="text-xs text-exam-ink-soft">
-              {currentIndex + 1}/{questions.length} שאלות
+              שאלה {currentIndex + 1} מתוך {questions.length}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -582,7 +582,7 @@ export default function ReviewQueuePage() {
               onClick={handleNext}
               className="px-6 py-3 bg-exam-alt text-on-amber rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
             >
-              {isLast ? <span className="inline-flex items-center gap-1.5">סיום חזרה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
+              {isLast ? <span className="inline-flex items-center gap-1.5">סיום חזרה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : <span className="inline-flex items-center gap-1">שאלה הבאה<ChevronLeft className="w-4 h-4" aria-hidden /></span>}
             </button>
           )}
         </div>

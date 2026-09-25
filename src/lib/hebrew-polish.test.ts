@@ -46,6 +46,28 @@ describe('polishHebrew', () => {
     expect(polishHebrew('✅ נכון — הפסקה אומרת: תומכים טוענים')).toBe('✅ נכון. הפסקה אומרת: תומכים טוענים');
   });
 
+  it('puts a long Hebrew explanation first and the English phrase in parentheses', () => {
+    expect(polishHebrew('fair in letter but not in spirit = מבנה ניגוד בין חוקיות פורמלית לתחושת צדק מהותית.'))
+      .toBe('מבנה ניגוד בין חוקיות פורמלית לתחושת צדק מהותית (fair in letter but not in spirit).');
+  });
+
+  it('turns a short "ENG = gloss" into "ENG (gloss)", also mid-text', () => {
+    expect(polishHebrew('abandon = לנטוש. מחסור במימון מוביל לנטישה.')).toBe('abandon (לנטוש). מחסור במימון מוביל לנטישה.');
+    expect(polishHebrew('מה עושה חברה? shelve = לדחות ללא הכרעה.')).toBe('מה עושה חברה? shelve (לדחות ללא הכרעה).');
+    expect(polishHebrew('רמז: shelve = לדחות ללא הכרעה.')).toBe('רמז: shelve (לדחות ללא הכרעה).');
+  });
+
+  it('keeps a gloss that is followed by its reason', () => {
+    expect(polishHebrew('נכון! parallel = מקביל, מתאים למסקנות דומות ממקורות שונים'))
+      .toBe('נכון! parallel (מקביל): מתאים למסקנות דומות ממקורות שונים');
+    expect(polishHebrew('נכון! concentrate resources on = לרכז משאבים על; הביטוי הנכון'))
+      .toBe('נכון! concentrate resources on (לרכז משאבים על): הביטוי הנכון');
+  });
+
+  it('leaves English-to-English equations alone', () => {
+    expect(polishHebrew('נכון! A = B. אותה משמעות.')).toBe('נכון! A = B. אותה משמעות.');
+  });
+
   it('keeps ellipses intact', () => {
     expect(polishHebrew('not simply... — אותה משמעות')).toBe('not simply... אותה משמעות');
   });

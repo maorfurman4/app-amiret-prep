@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { X, Check } from 'lucide-react';
+import { X, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ExamTimer } from '@/components/exam/ExamTimer';
 import { PaceGauge } from '@/components/exam/PaceGauge';
 import { QuestionCard } from '@/components/exam/QuestionCard';
@@ -415,7 +415,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               disabled={isSubmitting}
               className="mt-3 px-4 py-2 rounded-sm border border-exam-alt/50 text-exam-alt text-sm font-semibold hover:bg-exam-alt-bg transition-colors disabled:opacity-60"
             >
-              דלג על התרגול החלופי וסיים ←
+              <span className="inline-flex items-center gap-1">דלג על התרגול החלופי וסיים<ChevronLeft className="w-4 h-4" aria-hidden /></span>
             </button>
           </div>
         )}
@@ -452,7 +452,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             disabled={currentQuestionIndex === 0 || isSubmitting}
             className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt transition-colors text-sm"
           >
-            קודם &rsaquo;
+            <span className="inline-flex items-center gap-1"><ChevronRight className="w-4 h-4" aria-hidden />קודם</span>
           </button>
 
           {/* Question nav dots */}
@@ -480,7 +480,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               disabled={isSubmitting}
               className="px-4 py-2 rounded-sm bg-exam-accent text-exam-accent-ink hover:opacity-90 transition-opacity text-sm font-medium disabled:opacity-50"
             >
-              &lsaquo; הבא
+              <span className="inline-flex items-center gap-1">הבא<ChevronLeft className="w-4 h-4" aria-hidden /></span>
             </button>
           ) : (
             <button
@@ -488,7 +488,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               disabled={isSubmitting}
               className="px-5 py-2 rounded-sm bg-exam-sage-strong text-on-emerald hover:opacity-90 transition-opacity text-sm font-bold disabled:opacity-60"
             >
-              {isSubmitting ? 'שולח...' : currentSection < SECTION_CONFIGS.length ? 'סיים פרק →' : (
+              {isSubmitting ? 'שולח...' : currentSection < SECTION_CONFIGS.length ? <span className="inline-flex items-center gap-1">סיים פרק<ChevronLeft className="w-4 h-4" aria-hidden /></span> : (
               <span className="inline-flex items-center gap-1.5">סיים מבחן <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span>
             )}
             </button>

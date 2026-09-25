@@ -32,8 +32,8 @@ export function VictoryPathSummary() {
         </span>
       ) : (
         <span className="text-exam-ink">
-          בקצב הנוכחי שלך: <span className="font-bold text-exam-ink tabular-nums">{TARGET_SCORE}</span> בעוד כ-
-          <span className="font-bold text-exam-ink tabular-nums">{' '}{heCount(forecast.daysToTarget, 'day')}</span>
+          בקצב הנוכחי שלך תגיע ל-<span className="font-bold text-exam-ink tabular-nums">{TARGET_SCORE}</span> בעוד
+          <span className="font-bold text-exam-ink">{' '}{heCount(forecast.daysToTarget, 'day')}</span>
         </span>
       )}
     </Link>

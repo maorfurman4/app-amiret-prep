@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Sparkles, LifeBuoy } from 'lucide-react';
+import { Sparkles, LifeBuoy, ChevronLeft } from 'lucide-react';
 import type { ContextualTip } from '@/lib/strategy-tip';
 import { RichText } from '@/components/strategies/RichText';
 
@@ -60,7 +60,7 @@ export function ContextualStrategyCard({ tip: { guide, tip, errors, total } }: {
           className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-exam-border bg-exam-paper-alt py-2.5 text-sm font-bold text-exam-ink shadow-surface hover:shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:shadow-pressed active:scale-[0.98] transition-[box-shadow,transform] duration-300 ease-spring"
         >
           לשיטה המלאה של {guide.titleHe}
-          <span aria-hidden>←</span>
+          <ChevronLeft className="w-4 h-4" aria-hidden />
         </Link>
       </div>
     </section>

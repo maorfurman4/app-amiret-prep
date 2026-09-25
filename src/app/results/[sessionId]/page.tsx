@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
-import { AlertTriangle, CheckCircle2, BookOpen, Clock, Trophy, Target } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, BookOpen, Clock, Trophy, Target, ChevronLeft } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
@@ -129,7 +129,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             <div className={`text-xl font-bold mb-1 animate-fade-up [animation-delay:280ms] ${classification.color}`}>{classification.label}</div>
             <div className="text-exam-ink-soft text-sm mb-6 animate-fade-up [animation-delay:340ms]">{classification.description}</div>
             <div className="text-exam-ink font-medium animate-fade-up [animation-delay:400ms]">
-              {totalCorrect} / {totalQuestions} תשובות נכונות
+              {totalCorrect} מתוך {totalQuestions} תשובות נכונות
             </div>
             {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
               <div className="text-xs text-exam-ink-soft mt-1 animate-fade-up [animation-delay:460ms]">
@@ -324,7 +324,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               <div className="font-bold text-exam-ink">עבור על כל השאלות ולמד מהטעויות</div>
               <div className="text-exam-ink-soft text-sm">הסבר מפורט לכל שאלה, כולל פסילת המסיחים</div>
             </div>
-            <div className="mr-auto text-exam-ink-soft text-xl">›</div>
+            <ChevronLeft className="mr-auto w-5 h-5 text-exam-ink-soft flex-shrink-0" aria-hidden />
           </div>
         </Link>
 

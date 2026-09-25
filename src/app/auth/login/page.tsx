@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
-import { UserCircle, Mail, AlertCircle, GraduationCap, RotateCcw } from 'lucide-react';
+import { UserCircle, Mail, AlertCircle, GraduationCap, RotateCcw, ArrowRight } from 'lucide-react';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { mergeGuestProgress } from '@/lib/merge-guest-client';
 import { clearGuestIdentity } from '@/lib/guest';
@@ -246,7 +246,7 @@ function LoginForm() {
           {loading ? 'שולח...' : 'שלח קישור איפוס'}
         </button>
         <button type="button" onClick={() => setShowForgot(false)} className="w-full text-center text-sm text-exam-ink-soft hover:text-exam-ink">
-          ← חזרה לכניסה
+          <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה לכניסה</span>
         </button>
       </form>
     );

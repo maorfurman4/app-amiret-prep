@@ -41,8 +41,8 @@ describe('ExemptionCard', () => {
     expect(html).toContain('לא תחזית רשמית');
   });
 
-  it('marks the score on the track only when given one', () => {
-    expect(render(0.5, 1.2, 0.45, 124)).toContain('right:74%');
+  it('marks the score on a left-to-right track only when given one', () => {
+    expect(render(0.5, 1.2, 0.45, 124)).toContain('left:74%');
     expect(render(0.5, 1.2, 0.45)).not.toContain('bg-exam-ink shadow-surface');
   });
 });

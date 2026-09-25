@@ -11,7 +11,7 @@ import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard'
 import { aggregateAccuracyByType, findWeakestType } from '@/lib/weakness';
 import { BackNav } from '@/components/BackNav';
 import { VictoryPath } from '@/components/stats/VictoryPath';
-import { BarChart3, Target, Check, Trophy, AlertTriangle, PartyPopper } from 'lucide-react';
+import { BarChart3, Target, Check, Trophy, AlertTriangle, PartyPopper, ChevronLeft } from 'lucide-react';
 import { heCount, agree } from '@/lib/hebrew-count';
 
 interface Stats {
@@ -281,9 +281,8 @@ export default function StatsPage() {
           <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up [animation-delay:240ms]">
             <div className="text-sm text-exam-ink-soft mb-1">הציון הגבוה ביותר</div>
             <div className="text-4xl font-bold text-exam-ink">{stats.best_score}</div>
-            <div className={`text-lg font-bold mt-1 ${classification.color}`}>
-              {classification.label} — {classification.description}
-            </div>
+            <div className={`text-lg font-bold mt-1 ${classification.color}`}>{classification.label}</div>
+            <div className="text-sm text-exam-ink-soft">{classification.description}</div>
             <div className="text-[11px] text-exam-ink-soft mt-2">
               כל מוסד קובע בעצמו את הסף לפטור ולכל רמה. זה הטווח הנפוץ, לא תקן אחיד
             </div>
@@ -373,7 +372,7 @@ export default function StatsPage() {
                   <div key={type}>
                     <div className="flex justify-between text-sm mb-1">
                       <span className="text-exam-ink">{TYPE_LABELS[type] ?? type}</span>
-                      <span className="text-exam-ink-soft">{data.correct}/{data.total} ({pct}%)</span>
+                      <span className="text-exam-ink-soft">{data.correct} מתוך {data.total} ({pct}%)</span>
                     </div>
                     <div className="h-2 bg-exam-paper-alt rounded-full overflow-hidden">
                       <div
@@ -409,7 +408,7 @@ export default function StatsPage() {
                       {TYPE_LABELS[weakestType.type] ?? weakestType.type} ברמה {level}, שנבחרה לפי הביצועים שלך
                     </div>
                   </div>
-                  <span className="text-exam-accent-ink text-xl">‹</span>
+                  <ChevronLeft className="w-5 h-5 text-exam-accent-ink flex-shrink-0" aria-hidden />
                 </Link>
               );
             })()}
@@ -458,7 +457,7 @@ export default function StatsPage() {
             {Object.keys(weakness.byDifficulty).length > 0 && (
               <>
                 <h3 className="font-semibold text-exam-ink text-sm mb-3">לפי רמת קושי</h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div dir="ltr" className="grid grid-cols-3 gap-3">
                   {(['easy', 'medium', 'hard'] as const).map(diff => {
                     const data = weakness.byDifficulty[diff];
                     if (!data) return null;

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ChevronLeft } from 'lucide-react';
 import { BackNav } from '@/components/BackNav';
 import { QUESTION_GUIDES } from '@/data/strategies';
 
@@ -35,9 +35,7 @@ export default function TipsIndexPage() {
                   </div>
                   <div className="text-sm text-exam-ink-soft leading-relaxed">{card.desc}</div>
                 </div>
-                <div className="text-exam-ink-soft group-hover:text-exam-accent transition-colors text-xl self-center">
-                  ←
-                </div>
+                <ChevronLeft className="w-5 h-5 text-exam-ink-soft group-hover:text-exam-accent transition-colors self-center flex-shrink-0" aria-hidden />
               </Link>
             ))}
           </div>

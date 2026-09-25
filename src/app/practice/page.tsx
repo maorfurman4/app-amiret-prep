@@ -17,7 +17,7 @@ import { ContextualStrategyCard } from '@/components/strategies/ContextualStrate
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { PaceGauge } from '@/components/exam/PaceGauge';
 import type { ResponseLogEntry } from '@/lib/response-log-client';
-import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon } from 'lucide-react';
+import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'starting' | 'practicing' | 'done';
@@ -459,14 +459,16 @@ function PracticeContent() {
             }}
             className="text-exam-ink-soft text-sm mb-6 hover:text-exam-ink"
           >
-            ← חזרה
+            <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה</span>
           </button>
           <h1 className="text-2xl font-bold text-exam-ink mb-1">רמת קושי</h1>
           <p className="text-exam-ink-soft mb-8 text-sm">בחר את רמת הקושי של השאלות</p>
-          <div className="grid grid-cols-3 gap-3">
+          {/* A scale reads low → high, left → right, even inside the RTL page. */}
+          <div dir="ltr" className="grid grid-cols-3 gap-3">
             {DIFFICULTY_OPTIONS.map((opt, i) => (
               <button
                 key={String(opt.value)}
+                dir="rtl"
                 onClick={() => {
                   setDiff(opt.value);
                   setStep('pick-count');
@@ -494,7 +496,7 @@ function PracticeContent() {
       <div className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
         <div className="w-full max-w-lg">
           <button onClick={() => setStep('pick-difficulty')} className="text-exam-ink-soft text-sm mb-6 hover:text-exam-ink">
-            ← חזרה
+            <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה</span>
           </button>
           <h1 className="text-2xl font-bold text-exam-ink mb-1">כמות שאלות</h1>
           <p className="text-exam-ink-soft mb-8 text-sm">כמה שאלות תרצה לתרגל?</p>
@@ -676,14 +678,14 @@ function PracticeContent() {
                 onClick={handlePrevQuestion}
                 className="hit-44 px-4 py-2 rounded-xl border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,transform] duration-300 ease-spring will-change-transform text-sm"
               >
-                {currentIndex === 0 ? '← לרמת קושי' : 'קודם ›'}
+                {<span className="inline-flex items-center gap-1"><ChevronRight className="w-4 h-4" aria-hidden />{currentIndex === 0 ? 'לרמת קושי' : 'קודם'}</span>}
               </button>
               {showResult && (
                 <button
                   onClick={handleNext}
                   className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
                 >
-                  {isLast ? <span className="inline-flex items-center gap-1.5">ראה תוצאות <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
+                  {isLast ? <span className="inline-flex items-center gap-1.5">ראה תוצאות <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : <span className="inline-flex items-center gap-1">שאלה הבאה<ChevronLeft className="w-4 h-4" aria-hidden /></span>}
                 </button>
               )}
             </div>
@@ -697,14 +699,14 @@ function PracticeContent() {
                 disabled={currentIndex === 0}
                 className="px-4 py-2 rounded-xl border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,transform] duration-300 ease-spring will-change-transform text-sm"
               >
-                קודם ›
+                <span className="inline-flex items-center gap-1"><ChevronRight className="w-4 h-4" aria-hidden />קודם</span>
               </button>
               {currentIndex < questions.length - 1 ? (
                 <button
                   onClick={() => setCurrentIndex(i => Math.min(questions.length - 1, i + 1))}
                   className="px-4 py-2 rounded-xl bg-exam-accent text-exam-accent-ink shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform text-sm font-medium"
                 >
-                  ‹ הבא
+                  <span className="inline-flex items-center gap-1">הבא<ChevronLeft className="w-4 h-4" aria-hidden /></span>
                 </button>
               ) : (
                 <button
@@ -724,7 +726,7 @@ function PracticeContent() {
                 onClick={handleNext}
                 className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
               >
-                {isLast ? <span className="inline-flex items-center gap-1.5">סיים בחינה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : 'שאלה הבאה ‹'}
+                {isLast ? <span className="inline-flex items-center gap-1.5">סיים בחינה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : <span className="inline-flex items-center gap-1">שאלה הבאה<ChevronLeft className="w-4 h-4" aria-hidden /></span>}
               </button>
             </div>
           )}

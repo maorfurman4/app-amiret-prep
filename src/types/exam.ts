@@ -115,12 +115,12 @@ export interface ScoreClassification {
 }
 
 export const SCORE_CLASSIFICATIONS: ScoreClassification[] = [
-  { label: 'טווח פטור נפוץ', description: 'אומדן פנימי; המוסד קובע את הסיווג בפועל', color: 'text-green-600' },
-  { label: 'טווח מתקדמים ב\'', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-blue-600' },
-  { label: 'טווח מתקדמים א\'', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-yellow-600' },
-  { label: 'טווח בסיסי', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-orange-600' },
-  { label: 'טווח טרום-בסיסי ב\'', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-red-600' },
-  { label: 'טווח טרום-בסיסי א\'', description: 'טווח נפוץ בלבד; המוסד קובע בפועל', color: 'text-red-700' },
+  { label: 'טווח פטור נפוץ', description: 'אומדן פנימי. את הסיווג בפועל קובע המוסד', color: 'text-green-600' },
+  { label: 'טווח מתקדמים ב\'', description: 'טווח נפוץ. את הסיווג בפועל קובע המוסד', color: 'text-blue-600' },
+  { label: 'טווח מתקדמים א\'', description: 'טווח נפוץ. את הסיווג בפועל קובע המוסד', color: 'text-yellow-600' },
+  { label: 'טווח בסיסי', description: 'טווח נפוץ. את הסיווג בפועל קובע המוסד', color: 'text-orange-600' },
+  { label: 'טווח טרום-בסיסי ב\'', description: 'טווח נפוץ. את הסיווג בפועל קובע המוסד', color: 'text-red-600' },
+  { label: 'טווח טרום-בסיסי א\'', description: 'טווח נפוץ. את הסיווג בפועל קובע המוסד', color: 'text-red-700' },
 ];
 
 export function classifyScore(score: number): ScoreClassification {

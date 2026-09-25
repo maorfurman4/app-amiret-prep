@@ -26,6 +26,22 @@ function formatDateShort(iso: string): string {
   return d.toLocaleDateString('he-IL', { day: 'numeric', month: 'short' });
 }
 
+/** Axis ticks are SVG text, which is LTR by default and would print "7 ביולי"
+ * as "ביולי 7"; render them right-to-left. */
+function DateTick({ x, y, payload }: { x?: number; y?: number; payload?: { value: string } }) {
+  return (
+    <text x={x} y={(y ?? 0) + 12} textAnchor="middle" direction="rtl" fontSize={10} fill="currentColor">
+      {payload ? formatDateShort(payload.value) : ''}
+    </text>
+  );
+}
+
+/** "כ-1.2 נק׳ ביום", or per week when the daily rate would round to 0.0. */
+function formatRate(slopePerDay: number): string {
+  if (slopePerDay >= 0.05) return `כ-${slopePerDay.toFixed(1)} נק׳ ביום`;
+  return `כ-${Math.max(0.1, slopePerDay * 7).toFixed(1)} נק׳ בשבוע`;
+}
+
 /**
  * Recharts is a real (already-installed, previously unused) dependency —
  * this is its first consumer. First-party consumer of src/lib/forecast.ts:
@@ -86,13 +102,17 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
       </h2>
       <p className="text-sm text-exam-ink-soft mb-4">
         {forecast.daysToTarget === 0 ? (
-          <>הגעת ליעד: <span className="font-bold text-exam-sage-strong">{targetScore}+</span> כבר בכיס</>
+          <>הגעת ליעד: <bdi dir="ltr" className="font-bold text-exam-sage-strong">{targetScore}+</bdi> כבר בכיס. עכשיו שומרים על הכושר.</>
+        ) : forecast.daysToTarget === null ? (
+          <>
+            הציון שלך יציב כרגע, סביב <span className="font-bold text-exam-ink tabular-nums">{Math.round(forecast.currentScore)}</span>.
+            {' '}תרגול ממוקד בנקודות החולשה הוא מה שיזיז אותו למעלה, ואז נראה כאן תחזית.
+          </>
         ) : (
           <>
-            בקצב הנוכחי שלך (<span className="font-bold text-exam-ink tabular-nums">+{forecast.slopePerDay.toFixed(1)}</span> נק׳ ליום):
-            {' '}תגיע ל-<span className="font-bold text-exam-ink tabular-nums">{targetScore}</span> בעוד כ-
-            <span className={`font-bold tabular-nums ${accelerating ? 'text-exam-sage-strong' : 'text-exam-ink'}`}>{' '}{heCount(forecast.daysToTarget ?? 0, 'day')}</span>
-            {accelerating && ', והקצב עולה'}
+            הציון שלך עולה ב{formatRate(forecast.slopePerDay)}. בקצב הזה תגיע ל-<span className="font-bold text-exam-ink tabular-nums">{targetScore}</span> בעוד
+            <span className={`font-bold ${accelerating ? 'text-exam-sage-strong' : 'text-exam-ink'}`}>{' '}{heCount(forecast.daysToTarget, 'day')}</span>
+            {accelerating ? ', והקצב אפילו מאיץ.' : '.'}
           </>
         )}
       </p>
@@ -102,8 +122,7 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
             <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-exam-border" vertical={false} />
             <XAxis
               dataKey="date"
-              tickFormatter={formatDateShort}
-              tick={{ fontSize: 10, fill: 'currentColor' }}
+              tick={<DateTick />}
               className="text-exam-ink-soft"
               axisLine={{ stroke: 'currentColor' }}
               tickLine={false}

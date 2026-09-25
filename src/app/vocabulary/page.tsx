@@ -11,7 +11,7 @@ import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
   RotateCcw, Trophy, ThumbsUp, Flame, Settings, Check, X, Target, Clock,
   TrendingDown, Zap, Link2, GraduationCap, Palette, Package, CheckCircle2,
-  AlertTriangle, ChevronUp, ChevronDown, Play,
+  AlertTriangle, ChevronUp, ChevronDown, Play, ChevronLeft, ArrowRight, ArrowLeft,
 } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
 
@@ -872,7 +872,7 @@ function VocabularyContent() {
                       setShowFavoritesList(false);
                     }}
                     className="flex-1 py-2 bg-exam-accent text-exam-accent-ink rounded-sm text-sm font-semibold hover:opacity-90 transition-opacity"
-                  >תרגל מועדפים בלבד ←</button>
+                  ><span className="inline-flex items-center gap-1">תרגל רק את המועדפים<ChevronLeft className="w-4 h-4" aria-hidden /></span></button>
                   <button
                     onClick={() => {
                       if (!window.confirm(`למחוק את כל ${favorites.size} המועדפים?`)) return;
@@ -1042,7 +1042,7 @@ function VocabularyContent() {
                   <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">רמה</div>
                   {/* Six even columns: "all" + levels 1–5, each a number with a
                       single star — a full 5-star row can't fit a chip this size. */}
-                  <div className="grid grid-cols-6 gap-2" dir="rtl">
+                  <div className="grid grid-cols-6 gap-2" dir="ltr">
                     {[0, 1, 2, 3, 4, 5].map(d => {
                       const selected = filterDiff === d;
                       return (
@@ -1102,8 +1102,8 @@ function VocabularyContent() {
             {deck.length > 0 && (
               <div className="mb-4">
                 <div className="flex justify-between text-xs text-exam-ink-soft mb-1.5">
-                  <span>נותרו <span className="font-bold text-exam-ink">{deck.length}</span> מילים</span>
-                  {progressScopeKnown > 0 && <span>ידעת <span className="font-bold text-exam-sage-strong">{progressScopeKnown}</span> / {progressScopeTotal} ({Math.round(progressScopeKnown / progressScopeTotal * 100)}%)</span>}
+                  <span>{deck.length === 1 ? 'נותרה מילה אחת' : <>נותרו <span className="font-bold text-exam-ink">{deck.toLocaleString('he-IL')}</span> מילים</>}</span>
+                  {progressScopeKnown > 0 && <span>ידעת <span className="font-bold text-exam-sage-strong">{progressScopeKnown.toLocaleString('he-IL')}</span> מתוך {progressScopeTotal.toLocaleString('he-IL')} ({Math.round(progressScopeKnown / progressScopeTotal * 100)}%)</span>}
                 </div>
                 {progressScopeKnown > 0 && (
                   <div className="w-full bg-exam-paper-alt rounded-full h-1.5">
@@ -1197,7 +1197,7 @@ function VocabularyContent() {
                         onClick={e => { e.stopPropagation(); setFlipped(true); }}
                         className="mt-6 w-full py-2.5 rounded-sm bg-exam-paper-alt hover:bg-exam-border/40 text-sm font-medium text-exam-ink transition-colors"
                         dir="rtl"
-                      >הצג תרגום ←</button>
+                      >הצג תרגום</button>
                     </div>
                   ) : (
                     <div key="back" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="rtl" style={{ opacity: faceOpacity }}>
@@ -1215,7 +1215,7 @@ function VocabularyContent() {
                       <button
                         onClick={e => { e.stopPropagation(); setFlipped(false); setShowHint(false); }}
                         className="mt-4 text-xs text-exam-ink-soft hover:text-exam-ink"
-                      >← חזור לצד הקדמי</button>
+                      ><span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה לצד הקדמי</span></button>
                     </div>
                   )}
                 </div>
@@ -1259,7 +1259,11 @@ function VocabularyContent() {
 
             {current && (
               <p className="text-exam-ink-soft text-[11px] text-center mt-3">
-                אפשר גם להחליק את הכרטיס: ימינה = ידעתי ✓ | שמאלה = לא ידעתי ✗
+                <span className="inline-flex items-center justify-center gap-x-3 gap-y-1 flex-wrap">
+                  <span>אפשר גם להחליק את הכרטיס:</span>
+                  <span className="inline-flex items-center gap-1"><ArrowRight className="w-3.5 h-3.5 text-exam-sage-strong" aria-hidden />ימינה אם ידעת</span>
+                  <span className="inline-flex items-center gap-1"><ArrowLeft className="w-3.5 h-3.5 text-exam-wrong" aria-hidden />שמאלה אם לא</span>
+                </span>
               </p>
             )}
 
@@ -1300,7 +1304,13 @@ function VocabularyContent() {
             )}
 
             <div className="mt-6 text-center text-xs text-exam-ink-soft hidden sm:block">
-              מקלדת: ← לא ידעתי &nbsp;|&nbsp; → ידעתי &nbsp;|&nbsp; Space להפוך &nbsp;|&nbsp; H לדוגמה
+              <span className="inline-flex items-center justify-center gap-x-4 gap-y-1 flex-wrap">
+                <span>קיצורי מקלדת:</span>
+                <span className="inline-flex items-center gap-1"><kbd className="inline-flex items-center rounded border border-exam-border bg-exam-paper-alt px-1 py-0.5"><ArrowLeft className="w-3 h-3" aria-label="חץ שמאלה" /></kbd>לא ידעתי</span>
+                <span className="inline-flex items-center gap-1"><kbd className="inline-flex items-center rounded border border-exam-border bg-exam-paper-alt px-1 py-0.5"><ArrowRight className="w-3 h-3" aria-label="חץ ימינה" /></kbd>ידעתי</span>
+                <span className="inline-flex items-center gap-1"><kbd className="rounded border border-exam-border bg-exam-paper-alt px-1.5 py-0.5 font-sans">רווח</kbd>להפוך</span>
+                <span className="inline-flex items-center gap-1"><kbd className="rounded border border-exam-border bg-exam-paper-alt px-1.5 py-0.5 font-sans">H</kbd>לדוגמה</span>
+              </span>
             </div>
           </>
         )}
@@ -1330,7 +1340,7 @@ function VocabularyContent() {
                 <div className="text-center mb-5">
                   <Target className="w-10 h-10 mx-auto mb-3 text-exam-accent" strokeWidth={1.5} aria-hidden />
                   <div className="text-2xl font-bold text-exam-ink mb-1">סיימת את החידון!</div>
-                  <div className="text-4xl font-bold text-exam-accent mb-1">{quizScore.correct} / {quizScore.total}</div>
+                  <div className="text-4xl font-bold text-exam-accent mb-1">{quizScore.correct} מתוך {quizScore.total}</div>
                   <p className="text-exam-ink-soft text-sm flex items-center justify-center gap-1.5">
                     {quizScore.correct === quizScore.total
                       ? <><Trophy className="w-4 h-4" aria-hidden />מושלם!</>
@@ -1394,7 +1404,7 @@ function VocabularyContent() {
               <>
                 {/* Quiz progress */}
                 <div className="flex items-center justify-between mb-4 text-sm text-exam-ink-soft">
-                  <span>{quizIndex + 1} / {quizDeck.length}</span>
+                  <span>{quizIndex + 1} מתוך {quizDeck.length}</span>
                   <span className="font-semibold text-exam-sage-strong">נכון: {quizScore.correct}</span>
                 </div>
                 <div className="w-full bg-exam-paper-alt rounded-sm h-1.5 mb-6 overflow-hidden">
@@ -1459,7 +1469,7 @@ function VocabularyContent() {
                     <button
                       onClick={handleQuizNext}
                       className="px-8 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] font-semibold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform flex items-center gap-1.5 mx-auto"
-                    >{quizIndex + 1 >= quizDeck.length ? <><Check className="w-4 h-4" strokeWidth={3} aria-hidden />סיום</> : 'הבא ←'}</button>
+                    >{quizIndex + 1 >= quizDeck.length ? <><Check className="w-4 h-4" strokeWidth={3} aria-hidden />סיום</> : <>הבא<ChevronLeft className="w-4 h-4" aria-hidden /></>}</button>
                   </div>
                 )}
               </>
@@ -1591,7 +1601,7 @@ function VocabularyContent() {
               <>
                 {/* Timed progress */}
                 <div className="flex items-center justify-between mb-3 text-sm text-exam-ink-soft">
-                  <span>{timedIndex + 1} / {timedDeck.length}</span>
+                  <span>{timedIndex + 1} מתוך {timedDeck.length}</span>
                   <span className="font-semibold text-exam-sage-strong">נכון: {timedScore}</span>
                 </div>
 

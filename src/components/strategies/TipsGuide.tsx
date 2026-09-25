@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { AlertTriangle, X } from 'lucide-react';
+import { AlertTriangle, X, ChevronLeft, ArrowRight } from 'lucide-react';
 import { BackNav } from '@/components/BackNav';
 import { RichText } from '@/components/strategies/RichText';
 import { ProgressiveRuleCard } from '@/components/strategies/ProgressiveRuleCard';
@@ -177,14 +177,14 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
                   <div className="font-bold text-exam-ink text-sm">{cta.title}</div>
                   <div className="text-exam-ink-soft text-xs mt-0.5">{cta.body}</div>
                 </div>
-                <span className={CTA_CLASS[cta.tone].icon}>‹</span>
+                <ChevronLeft className={`w-5 h-5 flex-shrink-0 ${CTA_CLASS[cta.tone].icon}`} aria-hidden />
               </div>
             </Link>
           ))}
 
           <div className="text-center pb-4">
             <Link href="/tips" className="hit-44 text-sm text-exam-accent hover:opacity-80 transition-opacity">
-              ← חזרה לכל האסטרטגיות
+              <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה לכל האסטרטגיות</span>
             </Link>
           </div>
 

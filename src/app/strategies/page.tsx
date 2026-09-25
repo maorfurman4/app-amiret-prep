@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Compass, LifeBuoy, NotebookPen, Lightbulb, Brain, Target, Check, PenLine } from 'lucide-react';
+import { Compass, LifeBuoy, NotebookPen, Lightbulb, Brain, Target, Check, PenLine, ChevronLeft, ArrowRight } from 'lucide-react';
 import { BackNav } from '@/components/BackNav';
 import { RichText } from '@/components/strategies/RichText';
 import {
@@ -174,7 +174,7 @@ function QuestionGuideDetail({ guide }: { guide: QuestionGuide }) {
       </div>
 
       <Link href={guide.tipsHref} className={`inline-block text-xs font-semibold ${colors.heading} hover:underline`}>
-        ← לטיפים המורחבים והמלכודות של {guide.titleHe}
+        <span className="inline-flex items-center gap-1">לטיפים המורחבים ולמלכודות של {guide.titleHe}<ChevronLeft className="w-3.5 h-3.5" aria-hidden /></span>
       </Link>
     </div>
   );
@@ -218,7 +218,7 @@ export default function StrategiesPage() {
               onClick={() => setTopic(null)}
               className="text-sm text-exam-ink-soft hover:text-exam-ink mb-5 flex items-center gap-1"
             >
-              ← כל הנושאים
+              <ArrowRight className="w-4 h-4" aria-hidden />כל הנושאים
             </button>
 
             {topic === 'rules' && (
@@ -386,7 +386,7 @@ export default function StrategiesPage() {
                         <p className="text-sm text-exam-ink-soft leading-relaxed">{h.text}</p>
                         {h.href && (
                           <Link href={h.href} className="inline-block mt-1.5 text-xs font-bold text-exam-accent hover:underline">
-                            {h.cta}
+                            <span className="inline-flex items-center gap-1">{h.cta}<ChevronLeft className="w-3.5 h-3.5" aria-hidden /></span>
                           </Link>
                         )}
                       </div>

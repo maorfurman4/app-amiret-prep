@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Stethoscope, Timer, Gauge, Sparkles, ArrowLeft, BookOpen, Target, type LucideIcon } from 'lucide-react';
+import { Stethoscope, Timer, Gauge, Sparkles, ArrowLeft, BookOpen, Target, type LucideIcon, ChevronLeft } from 'lucide-react';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
@@ -201,7 +201,7 @@ export default function DiagnosticPage() {
             disabled={selected === null || pending}
             className={`px-8 py-3 disabled:opacity-40 disabled:shadow-none disabled:translate-y-0 ${TACTILE_PRIMARY}`}
           >
-            {pending ? 'רגע...' : isLastPossible ? 'סיים וקבל תוכנית' : 'הבא ‹'}
+            {pending ? 'רגע...' : isLastPossible ? 'סיים וקבל תוכנית' : <span className="inline-flex items-center gap-1">הבא<ChevronLeft className="w-4 h-4" aria-hidden /></span>}
           </button>
         </div>
         <p className="mt-6 text-center text-xs text-exam-ink-soft">
@@ -273,7 +273,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
               <div className={`text-xl font-bold ${band.color}`}><bdi dir="ltr">~{plan.score}</bdi></div>
             </div>
           </div>
-          <div className="flex gap-1.5 mb-2" aria-label={`הטווח הסביר: רמות ${lo} עד ${hi}`}>
+          <div dir="ltr" className="flex gap-1.5 mb-2" aria-label={`הטווח הסביר: רמות ${lo} עד ${hi}`}>
             {[1, 2, 3, 4, 5].map(l => (
               <div
                 key={l}
@@ -306,7 +306,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
             <Link key={n.href} href={n.href} className="flex items-center gap-3 p-4 text-sm text-exam-ink hover:bg-exam-paper-alt transition-colors first:rounded-t-2xl last:rounded-b-2xl">
               <n.icon className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
               <span className="flex-1">{n.text}</span>
-              <span className="text-exam-ink-soft" aria-hidden>‹</span>
+              <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
             </Link>
           ))}
         </section>

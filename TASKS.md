@@ -6,9 +6,9 @@
 - [x] Dry run: 7,064 rows to change, 24,417 → 65 long dashes (the 65 are inside English quotes), 0 problems (option count, JSON shape, idempotency)
 - [x] RTL: explanations, options analysis, strategy and hint now render through `RichText` (English runs bidi-isolated) in `QuestionCard`
 - [x] Generator prompt (`src/lib/ai.ts`) asks for active voice, no long dashes, and the `word (תרגום): reason` gloss format
-- [ ] **Approval** to run `--apply` against production
-- [ ] Run `--apply`, verify the row count and zero failures in the output
-- [ ] Commit the backup file under `backups/`
+- [x] **Approval** to run `--apply` against production
+- [x] Run `--apply`: 7,064 rows updated, 0 failed; a second dry run finds 0 rows left to change
+- [x] Commit the backup file: `backups/explanations-2026-09-25T05-25-06-672Z.json` (7,064 original rows)
 - [ ] Spot-check a practice question's explanation in the browser after deploy
 
 ## Found along the way

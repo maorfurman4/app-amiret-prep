@@ -45,7 +45,10 @@ function BottomNavContent({ pathname }: { pathname: string }) {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-40 bg-exam-surface border-t border-exam-border md:hidden transform-gpu"
+      // pb-2.5: lifts the tabs ~2.5mm off the screen's bottom edge. A fixed
+      // value, since the viewport doesn't use viewport-fit=cover, so
+      // env(safe-area-inset-bottom) is always 0 here.
+      className="fixed bottom-0 inset-x-0 z-40 bg-exam-surface border-t border-exam-border pb-2.5 md:hidden transform-gpu"
       dir="rtl"
       style={{ WebkitTransform: 'translateZ(0)' }}
     >

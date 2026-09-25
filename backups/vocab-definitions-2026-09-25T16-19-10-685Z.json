@@ -1,0 +1,3177 @@
+[
+  {
+    "id": "007e1962-ea45-4b88-ac36-c4f7dc1811f1",
+    "word": "assumption",
+    "definition": "A thing accepted as true without proof."
+  },
+  {
+    "id": "00af9ce8-246f-4f1b-9f6e-5f19d6d5791e",
+    "word": "transform",
+    "definition": "To change in form, nature, or character."
+  },
+  {
+    "id": "0103f0dc-17cd-4dcd-80d6-bf054f158c5e",
+    "word": "atom",
+    "definition": "The smallest unit of an element retaining its properties."
+  },
+  {
+    "id": "0233ff7d-4d11-4c19-bc20-619b927fa75b",
+    "word": "munificent",
+    "definition": "More generous than is usual or expected."
+  },
+  {
+    "id": "0259a3e0-457c-4530-90a4-207bf7bb6c81",
+    "word": "learn",
+    "definition": "To gain knowledge or skill by study or experience."
+  },
+  {
+    "id": "029d925a-bdd5-4313-a502-1fd6384428ec",
+    "word": "test",
+    "definition": "To take measures to check the quality or reliability of something."
+  },
+  {
+    "id": "03521eaf-f291-467c-8b2c-8550d3d669ea",
+    "word": "vehement",
+    "definition": "Showing strong feeling; forceful and passionate."
+  },
+  {
+    "id": "0357e718-bb7b-4fb4-8555-713be6fba827",
+    "word": "gravity",
+    "definition": "The force attracting objects toward each other."
+  },
+  {
+    "id": "03cab853-4c29-4ac6-beee-167e274e11e3",
+    "word": "purpose",
+    "definition": "The reason for which something is done or exists."
+  },
+  {
+    "id": "03febd98-aa64-465a-afc0-eee7f08167c2",
+    "word": "legislation",
+    "definition": "Laws considered collectively."
+  },
+  {
+    "id": "04671973-f10b-4e14-a875-192d49db5ec5",
+    "word": "generally",
+    "definition": "In most cases; usually."
+  },
+  {
+    "id": "04cea5c0-dd23-419c-9bfa-21bbd7155d37",
+    "word": "mostly",
+    "definition": "For the greater part; mainly."
+  },
+  {
+    "id": "04f38ec9-d83f-4039-b52a-426229a0f05e",
+    "word": "literacy",
+    "definition": "The ability to read and write; competence in a field."
+  },
+  {
+    "id": "0540dea0-e292-4e9e-882f-de7b7ca30e13",
+    "word": "gradual",
+    "definition": "Taking place slowly over a long period of time."
+  },
+  {
+    "id": "0550962e-7875-49fc-b027-8a1cd407949f",
+    "word": "organized",
+    "definition": "Arranged in a systematic and efficient manner."
+  },
+  {
+    "id": "0569e92a-0abd-4b46-b5a0-80adae72c51d",
+    "word": "by contrast",
+    "definition": "When compared to another thing."
+  },
+  {
+    "id": "057ff40f-6cf8-452f-9b12-2a51acaf2cf2",
+    "word": "frequency",
+    "definition": "The rate at which something occurs; cycles per second."
+  },
+  {
+    "id": "05c9e3c4-dece-4a6d-bd28-7b4f09484d46",
+    "word": "magnitude",
+    "definition": "The great size or extent of something."
+  },
+  {
+    "id": "05fa95b5-e0bf-4839-939d-e563d2445bc2",
+    "word": "that is",
+    "definition": "Meaning; in other words."
+  },
+  {
+    "id": "06037c8c-9ca9-4319-84ff-c10562edba2a",
+    "word": "predominantly",
+    "definition": "Mainly; for the most part."
+  },
+  {
+    "id": "06592d17-e60c-4b7d-842f-d2b7c915e60e",
+    "word": "ramification",
+    "definition": "A consequence or outcome of an action or event."
+  },
+  {
+    "id": "06ca45f4-badc-47da-9e39-3e2d641c1de8",
+    "word": "unequivocal",
+    "definition": "Leaving no doubt; clear and unambiguous."
+  },
+  {
+    "id": "06ef2f8f-fb6e-4801-9246-6d8290bb287d",
+    "word": "tenuous",
+    "definition": "Very weak or slight; insubstantial."
+  },
+  {
+    "id": "06f77b1e-c000-498e-9114-d543c9ce5c5e",
+    "word": "manage",
+    "definition": "To be in charge of or deal with something."
+  },
+  {
+    "id": "07700358-c48f-4d4c-be60-b994329b24c7",
+    "word": "egregious",
+    "definition": "Outstandingly bad; shocking."
+  },
+  {
+    "id": "0779393a-c28e-44b8-a005-aab5c7008a89",
+    "word": "tendency",
+    "definition": "An inclination toward a particular characteristic."
+  },
+  {
+    "id": "07aac889-51d8-4c1a-8c23-f33048feef6c",
+    "word": "pressure",
+    "definition": "The force exerted per unit area."
+  },
+  {
+    "id": "07edf7ef-436c-4db6-ae3f-3892f5a77b32",
+    "word": "modification",
+    "definition": "A change made to something."
+  },
+  {
+    "id": "08322122-3845-483f-9e62-f47fbcec1e49",
+    "word": "kinetic",
+    "definition": "Relating to motion and the forces causing it."
+  },
+  {
+    "id": "0833f845-f2eb-4985-94c3-0f13f4ac88b2",
+    "word": "promote",
+    "definition": "To further the development or progress of something; to advocate."
+  },
+  {
+    "id": "08679ba6-1ee8-4aa8-a559-278025ff4440",
+    "word": "systematic",
+    "definition": "Done or acting according to a fixed plan or system."
+  },
+  {
+    "id": "088ce5c4-5fd6-4cce-80f3-bbd2b889721c",
+    "word": "beneficial",
+    "definition": "Resulting in good; favorable."
+  },
+  {
+    "id": "08d1c4a4-9600-4bf6-bb26-f31a8abd2872",
+    "word": "aid",
+    "definition": "To help or support."
+  },
+  {
+    "id": "09817c71-1c2f-455c-9393-fc4bc943c66c",
+    "word": "sequentially",
+    "definition": "In a sequence or in order."
+  },
+  {
+    "id": "09b073bb-a6f1-499e-b0a8-c3d64beae4b2",
+    "word": "signify",
+    "definition": "To be a sign or indication of something."
+  },
+  {
+    "id": "0b5227a9-ae2e-407e-be2e-e63457f16d92",
+    "word": "instead",
+    "definition": "As an alternative or substitute."
+  },
+  {
+    "id": "0bd25c88-421e-4586-9b53-07b045fb5ab2",
+    "word": "venal",
+    "definition": "Susceptible to bribery; corrupt."
+  },
+  {
+    "id": "0c5a7241-4f36-437e-b7ce-d920653e76e7",
+    "word": "vapid",
+    "definition": "Offering nothing stimulating; dull."
+  },
+  {
+    "id": "0c8607dd-15eb-4fa1-b57e-e37e2d0a7ed9",
+    "word": "spectrum",
+    "definition": "A range of values; wavelengths of electromagnetic radiation."
+  },
+  {
+    "id": "0c992e85-2797-4667-b626-c5dfb6919438",
+    "word": "strengthen",
+    "definition": "To make stronger or more effective."
+  },
+  {
+    "id": "0cb7bc88-5a4e-40b3-9852-2cd6ffe8b800",
+    "word": "density",
+    "definition": "The degree of compactness of a substance."
+  },
+  {
+    "id": "0d24e975-5b8f-4851-b4ff-3226eed0997e",
+    "word": "motivated",
+    "definition": "Eager to act or achieve something."
+  },
+  {
+    "id": "0d8c1a3c-e701-40dc-896b-679b98a3834e",
+    "word": "inherently",
+    "definition": "In a permanent, essential, or characteristic way."
+  },
+  {
+    "id": "0e0f150f-84dc-43eb-89a4-18000d8e3ebc",
+    "word": "respectively",
+    "definition": "Separately and in the order already mentioned."
+  },
+  {
+    "id": "0e0f269b-cb6b-4e12-b761-984ab07071c6",
+    "word": "independent variable",
+    "definition": "The variable deliberately changed in an experiment."
+  },
+  {
+    "id": "0e7dfad3-89a1-4135-8aa4-9fbad385112e",
+    "word": "structurally",
+    "definition": "With regard to structure."
+  },
+  {
+    "id": "0ee51c4b-5e45-4032-9e08-a0ecfedaba6e",
+    "word": "sufficiently",
+    "definition": "To a degree that meets a requirement."
+  },
+  {
+    "id": "0f65d679-3e4f-4303-ba23-2817ae9da209",
+    "word": "causality",
+    "definition": "The relationship between cause and effect."
+  },
+  {
+    "id": "0f6d4a48-fb2b-4561-aad3-15b191459d9f",
+    "word": "specious",
+    "definition": "Superficially plausible but actually wrong."
+  },
+  {
+    "id": "0f85f095-cdda-4e3f-a7b3-d953139b60db",
+    "word": "thorough",
+    "definition": "Complete in every way; not superficial."
+  },
+  {
+    "id": "0fb1ff97-334b-401f-b367-7c5154bafe86",
+    "word": "unless",
+    "definition": "Except if; on the condition that."
+  },
+  {
+    "id": "0fc7e8ad-38ef-41b6-a3ab-383ad8bcbbec",
+    "word": "virtual",
+    "definition": "Not physically existing but made by software to appear so."
+  },
+  {
+    "id": "0fd63a0a-a5ad-4111-9492-e744ac9e7464",
+    "word": "consistently",
+    "definition": "In every case or on every occasion; uniformly."
+  },
+  {
+    "id": "1016a582-68cd-42fb-ac44-a348d5196f35",
+    "word": "redundant",
+    "definition": "Not or no longer needed; superfluous."
+  },
+  {
+    "id": "1055fb95-502a-4ea6-a5c2-ee33060e1a08",
+    "word": "address",
+    "definition": "To deal with a matter; to speak to."
+  },
+  {
+    "id": "10748105-6c46-4af5-99ea-4fb8930a07c7",
+    "word": "notably",
+    "definition": "In particular; especially."
+  },
+  {
+    "id": "113388be-0556-417b-ba68-41b065bbcc70",
+    "word": "prerequisite",
+    "definition": "A required condition that must exist before something else can happen."
+  },
+  {
+    "id": "1189da6d-3f54-4937-ad3f-fcfb39081c81",
+    "word": "covet",
+    "definition": "To yearn to possess something belonging to another."
+  },
+  {
+    "id": "11b49d8a-f84b-40a1-b55b-ac0a92383962",
+    "word": "scientifically",
+    "definition": "In a way that is based on science."
+  },
+  {
+    "id": "125e6987-a7ee-43e8-bf28-c346b714ce6e",
+    "word": "encourage",
+    "definition": "To give support or confidence to."
+  },
+  {
+    "id": "126abd12-09da-45c7-b273-1dd175200387",
+    "word": "on the other hand",
+    "definition": "Used to introduce a contrasting point."
+  },
+  {
+    "id": "12874508-5830-4fa2-8518-87c05d2b8fbd",
+    "word": "update",
+    "definition": "To bring something into line with the latest information."
+  },
+  {
+    "id": "129479eb-16c2-4197-bcbe-7e4ff22f9355",
+    "word": "proclivity",
+    "definition": "A tendency to choose or do something; a preference."
+  },
+  {
+    "id": "12c23d49-04ea-4020-affc-144d66065b46",
+    "word": "formulation",
+    "definition": "The action of creating or preparing something."
+  },
+  {
+    "id": "12d798f6-a72f-454e-8f30-bc8d4df8ce2b",
+    "word": "rarely",
+    "definition": "Not often; seldom."
+  },
+  {
+    "id": "13418f67-78f9-4edc-9486-98bc7fbb8886",
+    "word": "provide",
+    "definition": "To make something available; to supply."
+  },
+  {
+    "id": "1353b2e7-be18-42f8-a67f-5178b7479035",
+    "word": "compatible",
+    "definition": "Able to exist or work together without conflict."
+  },
+  {
+    "id": "1373f3a0-2e4a-4ff7-88e5-023e97aa3e28",
+    "word": "as well as",
+    "definition": "In addition to; and also."
+  },
+  {
+    "id": "13db1c29-f446-40fd-bcd4-68898c10d50b",
+    "word": "exhaustive",
+    "definition": "Thorough and complete; covering all aspects."
+  },
+  {
+    "id": "15462c2f-412d-4f0c-aeeb-ebdc2b492069",
+    "word": "maintain",
+    "definition": "To keep something in its existing state or continue an argument."
+  },
+  {
+    "id": "15d54689-2686-4ca8-a18d-90a84b88498e",
+    "word": "measure",
+    "definition": "To ascertain the size, amount, or degree of something."
+  },
+  {
+    "id": "16217af8-e884-4a84-89b9-f29452f8921e",
+    "word": "logically",
+    "definition": "In a way that follows the rules of logic."
+  },
+  {
+    "id": "165064c0-df2b-4fa5-823e-aa0351caf466",
+    "word": "characteristic",
+    "definition": "A feature or quality belonging to a person or thing."
+  },
+  {
+    "id": "165c68da-07d3-4010-98b4-0b1eb236df6d",
+    "word": "static",
+    "definition": "Lacking in movement or change; stationary."
+  },
+  {
+    "id": "16a1eea9-124b-4dc5-b410-64797bb654d3",
+    "word": "balance",
+    "definition": "To keep steady; to make equal."
+  },
+  {
+    "id": "16ed463f-8149-4ee8-899e-fd68a590b027",
+    "word": "coordinate",
+    "definition": "To organize activities so they work together effectively."
+  },
+  {
+    "id": "1766254e-46fa-429f-9930-876a1acfcf7e",
+    "word": "alternatively",
+    "definition": "As another possibility."
+  },
+  {
+    "id": "1828f6b0-6a31-4c32-aa46-5e3fe8fa8c5c",
+    "word": "matrix",
+    "definition": "A rectangular array of numbers; a context or framework."
+  },
+  {
+    "id": "1860e7e3-218d-4f48-af29-492bcb918748",
+    "word": "regulation",
+    "definition": "A rule made and maintained by an authority."
+  },
+  {
+    "id": "189cfaff-adeb-4137-b9a4-331e8439357c",
+    "word": "peer review",
+    "definition": "Evaluation of scientific work by others in the same field."
+  },
+  {
+    "id": "18d77cd2-73ad-40df-8c8d-fd81264ce5f9",
+    "word": "terminology",
+    "definition": "The set of terms used in a particular field."
+  },
+  {
+    "id": "194027a6-3992-42de-994f-cd6af1dca0bb",
+    "word": "identification",
+    "definition": "The act of recognizing something as being what it is."
+  },
+  {
+    "id": "19545f52-740e-47e6-ab3d-c07b9f815291",
+    "word": "organism",
+    "definition": "An individual animal, plant, or single-celled life form."
+  },
+  {
+    "id": "1961470e-995e-46c5-9d92-cb005a0699c7",
+    "word": "reticent",
+    "definition": "Not revealing one's thoughts; reserved."
+  },
+  {
+    "id": "19bf53fa-bd6c-4be0-a18a-a873dab36799",
+    "word": "resolution",
+    "definition": "A firm decision; the action of solving something."
+  },
+  {
+    "id": "19c69bf0-0b21-4767-8a06-97c6a0238c38",
+    "word": "correlation coefficient",
+    "definition": "A measure of the strength of a relationship between variables."
+  },
+  {
+    "id": "1a4fdfe8-a48b-4d6e-87d4-f4f7f232c57e",
+    "word": "collaborative",
+    "definition": "Produced by or involving two or more parties working together."
+  },
+  {
+    "id": "1a85f71b-c08a-44af-b806-5560ff569b8d",
+    "word": "uniform",
+    "definition": "Remaining the same in all cases; consistent."
+  },
+  {
+    "id": "1ab4c26b-183c-4c07-892f-405427c64eaf",
+    "word": "practically",
+    "definition": "In a practical way; almost."
+  },
+  {
+    "id": "1af2d284-50aa-42f0-9103-e6dff85b0553",
+    "word": "equivocal",
+    "definition": "Open to more than one interpretation; ambiguous."
+  },
+  {
+    "id": "1c452b1d-5d82-4985-bcfc-f81ecb8bbdf5",
+    "word": "resolve",
+    "definition": "To settle or find a solution to a problem."
+  },
+  {
+    "id": "1cb21fd7-546c-4f78-a7e8-6a69c3278a08",
+    "word": "distribution",
+    "definition": "The way in which something is spread out or arranged."
+  },
+  {
+    "id": "1cca92d5-0cfd-44f1-9345-788dde77d4ad",
+    "word": "convoluted",
+    "definition": "Extremely complex and difficult to follow."
+  },
+  {
+    "id": "1cd084a8-298e-432b-9b5e-e7c2a8099caf",
+    "word": "linguistics",
+    "definition": "The scientific study of language."
+  },
+  {
+    "id": "1d0c2643-b71e-488e-b2a8-dd8f3f5a0da0",
+    "word": "orbit",
+    "definition": "The curved path of an object around a celestial body."
+  },
+  {
+    "id": "1d27360d-2c67-4529-83ce-1c40407fddf7",
+    "word": "trigger",
+    "definition": "To cause something to happen."
+  },
+  {
+    "id": "1d86c34e-cc85-4ce7-8c81-ab928e4744fc",
+    "word": "cognitive",
+    "definition": "Relating to mental processes of knowing and understanding."
+  },
+  {
+    "id": "1e08092b-719a-4256-b953-85fde4918fa1",
+    "word": "formal",
+    "definition": "Done in accordance with rules or conventions; official."
+  },
+  {
+    "id": "1e2c690d-ef59-4d8c-8877-e8821a188dfa",
+    "word": "select",
+    "definition": "To choose from a number of alternatives."
+  },
+  {
+    "id": "1eb33bd1-7635-426f-8fbe-c64784fbce1f",
+    "word": "parameter",
+    "definition": "A characteristic that helps define a system."
+  },
+  {
+    "id": "1ef99b20-a007-47c9-a423-51c2348537bf",
+    "word": "algorithm",
+    "definition": "A process or set of rules used in calculations."
+  },
+  {
+    "id": "1fee2a77-51fa-4de0-8547-87b441796921",
+    "word": "ultimately",
+    "definition": "Finally; in the end."
+  },
+  {
+    "id": "21d777d4-029a-4ec6-8182-2aef7037342d",
+    "word": "geography",
+    "definition": "The study of the Earth's surface and physical features."
+  },
+  {
+    "id": "21ef8486-114e-459d-89ac-f7fc9525b8db",
+    "word": "trepidation",
+    "definition": "A feeling of fear or agitation about something in the future."
+  },
+  {
+    "id": "221ba091-5e61-406a-a93b-566006af2c95",
+    "word": "enable",
+    "definition": "To make something possible; to give ability to."
+  },
+  {
+    "id": "224bb2dd-d3d5-4f14-bb43-f12d3a4d5e38",
+    "word": "ardent",
+    "definition": "Enthusiastic or passionate."
+  },
+  {
+    "id": "228b8a5a-546a-473e-934c-9129571ea386",
+    "word": "derivative",
+    "definition": "Something derived from another; in calculus, the rate of change."
+  },
+  {
+    "id": "22be0720-e278-45b3-b5a5-392145e9fd2c",
+    "word": "immune",
+    "definition": "Resistant to a particular infection or toxin."
+  },
+  {
+    "id": "22ee3b0f-9263-4345-9aeb-00b22565198f",
+    "word": "stable",
+    "definition": "Not likely to change or fail; firmly established."
+  },
+  {
+    "id": "23bd8af4-698e-4f68-b7b6-a95b6dee1708",
+    "word": "procedure",
+    "definition": "An established way of doing something."
+  },
+  {
+    "id": "24b1e13f-3a2e-4eb9-bb27-4062b57240e2",
+    "word": "proportion",
+    "definition": "A part or share of a whole."
+  },
+  {
+    "id": "24dfc582-b603-40ac-a55b-821cab0d0b9d",
+    "word": "autonomy",
+    "definition": "The right or condition of self-governance."
+  },
+  {
+    "id": "25105b86-4ef9-490a-8870-b2328dc123d9",
+    "word": "longitudinal",
+    "definition": "Relating to observations over a long period of time."
+  },
+  {
+    "id": "25317efd-5474-4e38-b918-eae22126e1e1",
+    "word": "notwithstanding",
+    "definition": "Despite; in spite of."
+  },
+  {
+    "id": "256c5c61-d411-40a9-90ae-9e19c5dbedf3",
+    "word": "simultaneous",
+    "definition": "Occurring or done at the same time."
+  },
+  {
+    "id": "25f7381b-5961-4b0f-8b8f-c2957636e4df",
+    "word": "diffusion",
+    "definition": "The spreading out of particles from a high to low concentration."
+  },
+  {
+    "id": "262467b8-14c8-4e6d-b50e-92b3eaa24187",
+    "word": "particle",
+    "definition": "A minute portion of matter."
+  },
+  {
+    "id": "269c9224-ab53-430e-91a1-4d8ea0772442",
+    "word": "gradient",
+    "definition": "The rate of change of a quantity; a slope."
+  },
+  {
+    "id": "26ae9039-464e-4333-9d7f-738c8e22e7ff",
+    "word": "cell",
+    "definition": "The smallest structural unit of living organisms."
+  },
+  {
+    "id": "26f06910-0512-4216-9d0c-aa08fe479ec9",
+    "word": "version",
+    "definition": "A particular form of something that differs slightly from others."
+  },
+  {
+    "id": "2708adcb-8b56-4850-b336-42e328577d48",
+    "word": "record",
+    "definition": "To set down in writing or other permanent form."
+  },
+  {
+    "id": "273c143c-75d8-40ad-83b3-2838e1a83c3e",
+    "word": "indeed",
+    "definition": "Used to emphasize a statement."
+  },
+  {
+    "id": "276e5040-464c-4357-a9a5-814928129d92",
+    "word": "sample size",
+    "definition": "The number of observations in a study."
+  },
+  {
+    "id": "276e5c17-108b-476e-8914-013decf53269",
+    "word": "decide",
+    "definition": "To make a choice; to settle a matter."
+  },
+  {
+    "id": "27892d22-7b4d-46a9-aad6-ed3b836f52de",
+    "word": "function",
+    "definition": "To work or operate in a proper or particular way."
+  },
+  {
+    "id": "27ab8c43-65f9-420b-ae97-5d2708c1af00",
+    "word": "inspirational",
+    "definition": "Providing or showing inspiration."
+  },
+  {
+    "id": "280508b6-64d2-492b-bba0-76ef6d9c52d9",
+    "word": "synthesis",
+    "definition": "The combination of elements to form a connected whole."
+  },
+  {
+    "id": "2813d030-8063-49c8-8c84-50039a436683",
+    "word": "probability",
+    "definition": "The likelihood that an event will occur."
+  },
+  {
+    "id": "28499499-c0cc-49b2-b843-dca31a62c253",
+    "word": "mendacious",
+    "definition": "Not telling the truth; lying."
+  },
+  {
+    "id": "28569bce-bdd5-45f4-9740-b80eb8318a19",
+    "word": "prioritize",
+    "definition": "To designate as more important than others."
+  },
+  {
+    "id": "28b3f99e-bf90-465e-a61d-822fd0ede120",
+    "word": "circumspect",
+    "definition": "Careful to consider all circumstances and potential consequences."
+  },
+  {
+    "id": "294916f9-e729-431d-8790-9a26442195ea",
+    "word": "valid",
+    "definition": "Actually supported by evidence; well-grounded."
+  },
+  {
+    "id": "29654600-f028-4ac5-bf68-11a6484bfabe",
+    "word": "momentum",
+    "definition": "The quantity of motion in a moving body."
+  },
+  {
+    "id": "2a5ffc99-3d3e-4c8e-8f1d-dd4ed4f7a1ee",
+    "word": "theorem",
+    "definition": "A general proposition proved by reasoning."
+  },
+  {
+    "id": "2b119354-da98-4d73-9edc-a3c598c8ec48",
+    "word": "parallel",
+    "definition": "Occurring or existing at the same time or in a similar way."
+  },
+  {
+    "id": "2b5a3c53-93aa-49b8-8797-411a3746f198",
+    "word": "temperature",
+    "definition": "The degree of heat present in a substance or object."
+  },
+  {
+    "id": "2c1041bf-0856-4677-be63-2ef262f40f45",
+    "word": "detect",
+    "definition": "To discover or identify the presence of something."
+  },
+  {
+    "id": "2cd14c35-2fc5-48ba-b6a6-57f653dbaea0",
+    "word": "contextually",
+    "definition": "With regard to context."
+  },
+  {
+    "id": "2d356573-f0f1-4795-91d6-05f6873d1017",
+    "word": "dimension",
+    "definition": "A measurable extent of a particular kind; an aspect."
+  },
+  {
+    "id": "2dfff259-3218-4289-a11b-ec6ddac1072f",
+    "word": "increasingly",
+    "definition": "To a greater and greater degree."
+  },
+  {
+    "id": "2e823174-6177-4e9d-8b0c-bd48a2ac15d6",
+    "word": "equation",
+    "definition": "A mathematical statement asserting equality."
+  },
+  {
+    "id": "2f65efe2-66b2-4897-810a-3ff52f4f0348",
+    "word": "launch",
+    "definition": "To start or set in motion."
+  },
+  {
+    "id": "2fe7ea35-0c6f-4e67-8fd1-39b96d4707f2",
+    "word": "interpretation",
+    "definition": "An explanation of the meaning of something."
+  },
+  {
+    "id": "306e7754-2cd4-4bfe-82c4-bea69d17dc2e",
+    "word": "geology",
+    "definition": "The science of the Earth's physical structure and history."
+  },
+  {
+    "id": "30ab60be-8c68-4643-94fc-236e7bdcf72e",
+    "word": "fastidious",
+    "definition": "Very attentive to accuracy and detail; hard to please."
+  },
+  {
+    "id": "3116d754-faec-4382-abe5-9bcd3219d37f",
+    "word": "vitriolic",
+    "definition": "Filled with bitter criticism or malice."
+  },
+  {
+    "id": "319481bb-98ca-4ca1-be59-0b3534386ff9",
+    "word": "reliable",
+    "definition": "Consistently good in quality; trustworthy."
+  },
+  {
+    "id": "31b21d41-32db-4dec-a2e4-7c56ea294b64",
+    "word": "negate",
+    "definition": "To make something ineffective; to nullify."
+  },
+  {
+    "id": "31c70ece-203d-416c-84c1-a9bf8c35238a",
+    "word": "relationship",
+    "definition": "The way in which two things are connected."
+  },
+  {
+    "id": "32086558-7e5d-4472-a693-44bf69864867",
+    "word": "concept",
+    "definition": "An abstract idea; a general notion."
+  },
+  {
+    "id": "3219120f-0edd-4aae-8e45-cc334cd67f1e",
+    "word": "environment",
+    "definition": "The surroundings or conditions in which someone operates."
+  },
+  {
+    "id": "326f9feb-7c2b-40c3-929c-9b0a4d7f3b15",
+    "word": "complexity",
+    "definition": "The state of having many different parts connected in a complicated way."
+  },
+  {
+    "id": "32c7b132-10ef-478b-8742-f94e9430311d",
+    "word": "prediction",
+    "definition": "A statement about what will happen in the future."
+  },
+  {
+    "id": "32f822af-925a-430b-85e4-043c16cd2545",
+    "word": "however",
+    "definition": "Used to introduce a contrast or caveat."
+  },
+  {
+    "id": "333c1c35-46b7-4b9a-86b9-f70cae25361d",
+    "word": "operation",
+    "definition": "The fact of functioning or being active."
+  },
+  {
+    "id": "33e66cac-7d74-446d-8b45-9b5f15c1b7d9",
+    "word": "identify",
+    "definition": "To recognize and name someone or something."
+  },
+  {
+    "id": "34250723-25bc-482d-86e2-3d13647f734e",
+    "word": "replicate",
+    "definition": "To reproduce or repeat."
+  },
+  {
+    "id": "34334eef-de58-4592-84ae-84ce9d392aa2",
+    "word": "entity",
+    "definition": "A thing with distinct and independent existence."
+  },
+  {
+    "id": "34763b47-dd63-472a-b969-4333198ab444",
+    "word": "ostentatious",
+    "definition": "Characterized by vulgar display; showy."
+  },
+  {
+    "id": "347ef9c5-a4c9-4771-8cd5-6ad27892aae3",
+    "word": "theory",
+    "definition": "A system of ideas intended to explain something."
+  },
+  {
+    "id": "34cbba65-c716-4646-9d90-5d3fefaf5415",
+    "word": "improve",
+    "definition": "To make or become better."
+  },
+  {
+    "id": "34d8e328-d0e9-426d-954b-4823fe59b835",
+    "word": "biased",
+    "definition": "Unfairly prejudiced for or against something."
+  },
+  {
+    "id": "354ac0c7-4438-4d44-9c6e-5fb68e0434f5",
+    "word": "plethora",
+    "definition": "A large or excessive amount of something."
+  },
+  {
+    "id": "35bf80e6-f1d0-4525-a49d-7967b9181150",
+    "word": "realistic",
+    "definition": "Having a sensible view of what is achievable."
+  },
+  {
+    "id": "35ee66bd-9d4c-4f10-af4c-5ca2e01c73cf",
+    "word": "construct",
+    "definition": "To build or create something; to formulate an argument."
+  },
+  {
+    "id": "361edaf9-ce13-4b38-8ba3-bf6612ea73c6",
+    "word": "progressively",
+    "definition": "In a way that increases step by step."
+  },
+  {
+    "id": "363a3807-8c00-42fe-b3c7-e671c8a0e76a",
+    "word": "adaptation",
+    "definition": "A change that makes something more suited to its environment."
+  },
+  {
+    "id": "365172a6-dd41-4c2b-8c24-9cfdc80e34cb",
+    "word": "research",
+    "definition": "To investigate systematically to establish facts."
+  },
+  {
+    "id": "3686b1cb-5047-407c-b5bf-150c0fd6b7d8",
+    "word": "linear",
+    "definition": "Progressing from one stage to another in a single direction."
+  },
+  {
+    "id": "368f117d-8a3c-495e-a8ec-2cdc98ca80c0",
+    "word": "discourse",
+    "definition": "Written or spoken communication on a subject."
+  },
+  {
+    "id": "36c63cfd-ca7c-4b2d-888c-5c1c8bb8a522",
+    "word": "migration",
+    "definition": "Movement from one place to another."
+  },
+  {
+    "id": "3755d334-73e0-4103-b4a2-b78a6fa33df9",
+    "word": "ideology",
+    "definition": "A system of ideas and ideals forming the basis of a policy."
+  },
+  {
+    "id": "3793f48b-f607-4663-90a8-1e200c963b00",
+    "word": "topology",
+    "definition": "The mathematical study of geometric properties."
+  },
+  {
+    "id": "37c9712f-5d58-40c2-bcff-5434bf26831a",
+    "word": "context",
+    "definition": "The circumstances that surround an event and help to explain it."
+  },
+  {
+    "id": "37e5e2eb-a1c7-45fd-be91-d3961af5018d",
+    "word": "data",
+    "definition": "Facts and statistics collected for reference or analysis."
+  },
+  {
+    "id": "37ffad33-ac80-4b3c-98df-b0e925b22a3f",
+    "word": "obsequious",
+    "definition": "Obedient or attentive to an excessive degree; fawning."
+  },
+  {
+    "id": "3810495c-841b-47ce-a426-cb57c417d10a",
+    "word": "validity",
+    "definition": "The quality of being logically or factually sound."
+  },
+  {
+    "id": "3889d6c0-e6ae-4dcf-b99c-1fd71844cde4",
+    "word": "motivation",
+    "definition": "The reason for acting in a particular way."
+  },
+  {
+    "id": "38bed146-8a28-4526-be9c-53d2c06eb12f",
+    "word": "still",
+    "definition": "Up to and including the present; even so."
+  },
+  {
+    "id": "3991d1e1-a1f5-485b-8cba-87af9700ca29",
+    "word": "compelling",
+    "definition": "Evoking strong interest or attraction; convincing."
+  },
+  {
+    "id": "3a129204-fccf-4a3c-8bdc-4ac841be4677",
+    "word": "pedantic",
+    "definition": "Overly concerned with formal rules or minor details."
+  },
+  {
+    "id": "3a5ea7b2-9f72-419a-a5a5-8fc52cd05a95",
+    "word": "independent",
+    "definition": "Free from outside control; not depending on others."
+  },
+  {
+    "id": "3a907a58-aa72-457f-879c-de4848ae148d",
+    "word": "enigmatic",
+    "definition": "Difficult to interpret; mysterious."
+  },
+  {
+    "id": "3aa8537c-3ba9-4296-81df-6c4bfe571a5c",
+    "word": "sociology",
+    "definition": "The study of human society and social behavior."
+  },
+  {
+    "id": "3b6a1a12-de45-416b-9a65-bbe0bdb51b32",
+    "word": "distinguish",
+    "definition": "To recognize or identify a difference between things."
+  },
+  {
+    "id": "3cc43eb4-ad03-4c65-8730-3058c159c14a",
+    "word": "theoretically",
+    "definition": "Based on or calculated through theory rather than experience."
+  },
+  {
+    "id": "3ce39801-0bc9-492b-864c-37304061f3f9",
+    "word": "increase",
+    "definition": "To become or make greater in size, amount, or degree."
+  },
+  {
+    "id": "3d0c2c72-886c-4067-8e4a-24239d74ad48",
+    "word": "trustworthy",
+    "definition": "Able to be relied on as honest or truthful."
+  },
+  {
+    "id": "3d457811-58d6-4592-8835-1c0ec35632cb",
+    "word": "paradoxical",
+    "definition": "Seemingly absurd or self-contradictory yet possibly true."
+  },
+  {
+    "id": "3e4db4e5-0fa2-439b-b971-e1a2a77b915d",
+    "word": "limitation",
+    "definition": "A condition that restricts quality or achievement."
+  },
+  {
+    "id": "3e4f2dcc-ed7b-4c5c-8b60-5439569d010c",
+    "word": "consequently",
+    "definition": "As a result; therefore."
+  },
+  {
+    "id": "3e5ca35a-dbb8-4f47-a0b5-af1956bba076",
+    "word": "specify",
+    "definition": "To identify clearly and definitely."
+  },
+  {
+    "id": "3eba1da0-f04d-4798-89e1-fb81b13961f5",
+    "word": "activate",
+    "definition": "To make something start working."
+  },
+  {
+    "id": "3f48ba3b-15b2-402d-95aa-c8176a199e5d",
+    "word": "distribute",
+    "definition": "To give or spread something out among a number of recipients."
+  },
+  {
+    "id": "3f8d592f-428b-4b5f-b831-94a70b208108",
+    "word": "substantially",
+    "definition": "To a great or significant extent."
+  },
+  {
+    "id": "404b997d-3a0c-483f-b6e1-591b42b8389a",
+    "word": "support",
+    "definition": "To give assistance or help to; to strengthen."
+  },
+  {
+    "id": "40ca0274-25b9-4e35-a935-b3e0a6300b3c",
+    "word": "interaction",
+    "definition": "Mutual or reciprocal action between things."
+  },
+  {
+    "id": "40cbc1f4-2282-4c63-8b6a-6ba013af33cf",
+    "word": "original",
+    "definition": "Present from the beginning; not derived from something else."
+  },
+  {
+    "id": "411c924b-86bf-4278-b118-3c3d07798aeb",
+    "word": "photon",
+    "definition": "A particle of light; a quantum of electromagnetic energy."
+  },
+  {
+    "id": "41e94635-9601-480b-8f15-db883afb7d25",
+    "word": "relate",
+    "definition": "To show a connection between two or more things."
+  },
+  {
+    "id": "42fa2871-7f50-4a2f-b048-6ee6ea7a9182",
+    "word": "stoic",
+    "definition": "Enduring pain without showing feeling; emotionally resilient."
+  },
+  {
+    "id": "435f18fd-6e60-496d-9f1e-7a2c5bb96867",
+    "word": "emergence",
+    "definition": "The process of becoming apparent or prominent."
+  },
+  {
+    "id": "43b0634a-9138-4854-86c1-4de0022bfe68",
+    "word": "fundamentally",
+    "definition": "In essential respects; at the most basic level."
+  },
+  {
+    "id": "43b53296-c4ed-4640-bda6-04c0bef12a4d",
+    "word": "predominant",
+    "definition": "Present as the strongest or main element."
+  },
+  {
+    "id": "43f2a218-6184-4738-9426-2d26109dffa2",
+    "word": "querulous",
+    "definition": "Complaining in a petulant or whining manner."
+  },
+  {
+    "id": "441ca9d9-0f5f-4980-b4ad-b1f6746f29e7",
+    "word": "verbose",
+    "definition": "Using more words than needed; wordy."
+  },
+  {
+    "id": "44eb7fa8-3b31-49a4-8e32-a0d34fae6ca9",
+    "word": "summarize",
+    "definition": "To give a brief statement of the main points."
+  },
+  {
+    "id": "45265dc8-c43c-4d20-aa31-6f3c252ee700",
+    "word": "navigate",
+    "definition": "To plan and direct a course; to find your way."
+  },
+  {
+    "id": "45a5b3a8-099e-4fe1-8dbe-4c92c8d3c9f9",
+    "word": "amplitude",
+    "definition": "The maximum extent of a wave or vibration."
+  },
+  {
+    "id": "45bd0134-14e8-45f6-bf85-0e81da891605",
+    "word": "analytically",
+    "definition": "In a way that uses analysis."
+  },
+  {
+    "id": "45ca2319-e432-4178-999e-dc8ec406e3e3",
+    "word": "lethargic",
+    "definition": "Affected by lethargy; sluggish and apathetic."
+  },
+  {
+    "id": "45d66cfc-99f9-480a-b4db-d3d51a9a0b7b",
+    "word": "competitive",
+    "definition": "Having a strong desire to succeed; relating to competition."
+  },
+  {
+    "id": "461e79e5-ca7d-428a-9d19-a6c97cef93b0",
+    "word": "specification",
+    "definition": "A detailed description of design requirements."
+  },
+  {
+    "id": "465a496c-c0ae-48f3-97be-ca1b1dbf8883",
+    "word": "precipitous",
+    "definition": "Done suddenly and without consideration; dangerously steep."
+  },
+  {
+    "id": "46a97757-362e-44ff-8a5c-5b251071e914",
+    "word": "anachronism",
+    "definition": "Something that belongs to a different time period."
+  },
+  {
+    "id": "470beee9-ec98-4190-ba4d-ac3fab5c2208",
+    "word": "taxonomy",
+    "definition": "The classification of organisms or things into groups."
+  },
+  {
+    "id": "4743f71c-8e10-4496-8ce5-2a1ac47cb5ac",
+    "word": "nonchalant",
+    "definition": "Feeling or appearing casually calm; indifferent."
+  },
+  {
+    "id": "477369d6-0bfe-4049-a7e9-0dbb7412b94b",
+    "word": "criteria",
+    "definition": "Principles or standards by which something may be judged."
+  },
+  {
+    "id": "47b21b36-91d6-463d-934c-ce3cbeea4b59",
+    "word": "integral",
+    "definition": "A mathematical value equivalent to an area under a curve."
+  },
+  {
+    "id": "4806d5f9-0d77-49d8-bada-053fe6f43fad",
+    "word": "neuroscience",
+    "definition": "The scientific study of the nervous system."
+  },
+  {
+    "id": "48168c3d-e926-44b9-b8cb-c8e4def029e0",
+    "word": "adroit",
+    "definition": "Clever or skillful in using the hands or mind."
+  },
+  {
+    "id": "498379af-ded5-4145-a250-f8763a985b37",
+    "word": "traditionally",
+    "definition": "In a way that follows long-established custom."
+  },
+  {
+    "id": "49e88f78-d6bd-4d7d-a31c-919a761c1311",
+    "word": "require",
+    "definition": "To need for a particular purpose."
+  },
+  {
+    "id": "49fe5749-4216-4b1b-b3f8-b2b9f4f773e8",
+    "word": "adopt",
+    "definition": "To choose and follow a plan or course."
+  },
+  {
+    "id": "49fe6ff2-477c-4a91-baa6-6bf40e4c8ade",
+    "word": "collect",
+    "definition": "To bring or gather together."
+  },
+  {
+    "id": "4ab98a80-9870-4638-8c62-e97d016cd42e",
+    "word": "lucid",
+    "definition": "Expressed clearly; easy to understand."
+  },
+  {
+    "id": "4abc086f-6d59-4f60-9070-f35ab3e6ee05",
+    "word": "lenient",
+    "definition": "More tolerant or less severe than expected."
+  },
+  {
+    "id": "4babea56-bf0c-49b3-9b22-420d4b7634d5",
+    "word": "presumptuous",
+    "definition": "Failing to observe limits; overconfident."
+  },
+  {
+    "id": "4bddb471-9c81-4d25-8806-19d94e1c1fc5",
+    "word": "preliminary",
+    "definition": "Coming before the main part; preparatory."
+  },
+  {
+    "id": "4c516675-ca21-4cbd-9def-7e1cf5a04a46",
+    "word": "structural",
+    "definition": "Relating to or forming part of a structure."
+  },
+  {
+    "id": "4c76aff2-c881-4d66-b49a-642f948ad949",
+    "word": "prevalent",
+    "definition": "Widespread or commonly occurring."
+  },
+  {
+    "id": "4c9d0398-4929-42e9-a919-fb07fddde9e0",
+    "word": "indefatigable",
+    "definition": "Never getting tired; persisting tirelessly."
+  },
+  {
+    "id": "4cb4177d-9cdd-4cfd-b8f1-c4e4821e0d62",
+    "word": "rigid",
+    "definition": "Unable to bend or be forced out of shape; not flexible."
+  },
+  {
+    "id": "4cbb7ee5-6449-41e9-a232-89d29b79247b",
+    "word": "philosophy",
+    "definition": "The study of fundamental questions about existence."
+  },
+  {
+    "id": "4ce72a47-4e1f-4ad0-bde7-6ac8edc82f14",
+    "word": "proactive",
+    "definition": "Creating or controlling a situation by action rather than response."
+  },
+  {
+    "id": "4d144dca-81f7-48ba-abc6-c9353ff22124",
+    "word": "pathology",
+    "definition": "The science of causes and effects of diseases."
+  },
+  {
+    "id": "4d8ac456-fc2b-485d-a8cb-43f19010d649",
+    "word": "infrastructure",
+    "definition": "The basic physical systems of an organization or nation."
+  },
+  {
+    "id": "4e22d9db-4f60-4f7f-9986-3ba90e5cbc5d",
+    "word": "spurious",
+    "definition": "Not genuine; false."
+  },
+  {
+    "id": "4e9335b4-eeb0-4017-8775-36337ff8285e",
+    "word": "outcome",
+    "definition": "The result or product of an action or event."
+  },
+  {
+    "id": "4ead8f42-2a88-4f48-b3bd-a11b1f685be0",
+    "word": "accurately",
+    "definition": "In a correct and precise manner."
+  },
+  {
+    "id": "4f562554-3213-4cd7-8012-2b05e03b4358",
+    "word": "approximate",
+    "definition": "To estimate; to come close to."
+  },
+  {
+    "id": "505699c2-ea7b-49d3-897f-cb849b47d18a",
+    "word": "comparatively",
+    "definition": "To a moderate degree; as compared to something else."
+  },
+  {
+    "id": "50d4b313-468e-4239-a7ab-2ff71116cecf",
+    "word": "statistics",
+    "definition": "The practice of collecting and analyzing numerical data."
+  },
+  {
+    "id": "50da2053-8e19-4e2a-8ec1-f844afff901b",
+    "word": "timid",
+    "definition": "Lacking in courage or confidence; easily frightened."
+  },
+  {
+    "id": "525c8cfb-7431-4bba-8ad0-2c9964beddcb",
+    "word": "excessive",
+    "definition": "More than is necessary or desirable."
+  },
+  {
+    "id": "5262ece6-85fe-4adc-b27a-22b2e09b9768",
+    "word": "technique",
+    "definition": "A way of carrying out a particular task."
+  },
+  {
+    "id": "52ba922e-1372-42dc-bc50-194175d045dc",
+    "word": "highlight",
+    "definition": "To draw attention to something important."
+  },
+  {
+    "id": "52bb074b-6ad2-4b87-8566-e87487974ec0",
+    "word": "consensus",
+    "definition": "General agreement among a group of people."
+  },
+  {
+    "id": "5320ab57-9ab0-472d-ac4b-67de9a92e5b0",
+    "word": "specifically",
+    "definition": "In a precise way; for a particular purpose."
+  },
+  {
+    "id": "533f22fd-ecb5-4092-8eb8-6161bc2ca35d",
+    "word": "insinuate",
+    "definition": "To suggest something unpleasant in an indirect way."
+  },
+  {
+    "id": "53bd13c1-9f02-4de1-89bc-19a15f1bfe85",
+    "word": "interactive",
+    "definition": "Allowing two-way communication or action."
+  },
+  {
+    "id": "5448dadf-5d87-4600-bc60-5c7080a252d3",
+    "word": "recommend",
+    "definition": "To suggest something as being beneficial."
+  },
+  {
+    "id": "551f0e3d-16b0-43ec-a39c-cccfbc2d6913",
+    "word": "hypocritical",
+    "definition": "Behaving in a way that contradicts stated beliefs."
+  },
+  {
+    "id": "5572068d-86cc-449a-9734-eecf06e68672",
+    "word": "prepare",
+    "definition": "To make ready in advance."
+  },
+  {
+    "id": "562594e1-a766-4334-96f0-6928ab25489c",
+    "word": "pernicious",
+    "definition": "Having a harmful effect; destructive."
+  },
+  {
+    "id": "57031bf5-8743-4a6d-b23c-f633c12ee7fd",
+    "word": "absorption",
+    "definition": "The process of taking in something."
+  },
+  {
+    "id": "578cbeae-81c4-4ff3-9c45-745591ad1488",
+    "word": "condition",
+    "definition": "A requirement or factor that affects the functioning of something."
+  },
+  {
+    "id": "57fd4d64-7aa3-42b0-b4c9-7924ed191f0f",
+    "word": "deferential",
+    "definition": "Showing deference; respectfully submissive."
+  },
+  {
+    "id": "59526adb-3b33-44f0-89f6-c4cb27ad4410",
+    "word": "unique",
+    "definition": "Being the only one of its kind."
+  },
+  {
+    "id": "5a326fa5-7761-4bf1-9c99-827790e78905",
+    "word": "delineate",
+    "definition": "To describe or portray precisely."
+  },
+  {
+    "id": "5b3a4b77-4a12-43bc-a85e-3fd733f9922f",
+    "word": "represent",
+    "definition": "To be a specimen or example of; to symbolize."
+  },
+  {
+    "id": "5b5e1ee4-7f82-4584-9030-4770a42bc3dd",
+    "word": "exorbitant",
+    "definition": "Unreasonably large; excessive."
+  },
+  {
+    "id": "5b8a0c31-d15d-4b73-9501-f7f7f31e2c72",
+    "word": "explanation",
+    "definition": "A statement that makes something clear."
+  },
+  {
+    "id": "5d80bc64-1da1-4a24-bb7b-8e36b6e3254f",
+    "word": "basis",
+    "definition": "The underlying support or foundation for an idea or argument."
+  },
+  {
+    "id": "5de02572-bcce-4bfa-84f9-1c51dfad0a4d",
+    "word": "inconsistency",
+    "definition": "The quality of not staying the same."
+  },
+  {
+    "id": "5de8fcdd-8a12-4a3a-bcde-1fbaae4a5149",
+    "word": "marginal",
+    "definition": "Relating to a margin; minor and not important."
+  },
+  {
+    "id": "5e2687ee-7167-47b6-bae6-9c6b7477118d",
+    "word": "extraneous",
+    "definition": "Irrelevant or unrelated to the subject."
+  },
+  {
+    "id": "5e33bae3-f33a-4ffd-b939-9f5b589901e2",
+    "word": "likewise",
+    "definition": "In the same way; also."
+  },
+  {
+    "id": "5e73bc6f-d71a-4b2d-856c-efca91725d1a",
+    "word": "incorporate",
+    "definition": "To include or absorb something into a larger whole."
+  },
+  {
+    "id": "5ee934fc-fa5e-4ff6-99f3-938d760bc6d6",
+    "word": "rather",
+    "definition": "More precisely; to the contrary."
+  },
+  {
+    "id": "5f04d989-6b09-4538-924f-568916f8dc70",
+    "word": "examine",
+    "definition": "To inspect or scrutinize something carefully."
+  },
+  {
+    "id": "60012d19-5ae7-43e9-b846-d485bf547cfe",
+    "word": "meanwhile",
+    "definition": "In the intervening period."
+  },
+  {
+    "id": "615ff63e-ef96-43b9-917b-516c19f6ffb5",
+    "word": "significant",
+    "definition": "Important; having a great effect."
+  },
+  {
+    "id": "619d1650-8ffb-431e-b452-2c4324489e74",
+    "word": "equivalent",
+    "definition": "Equal in value, amount, function, or meaning."
+  },
+  {
+    "id": "62f09dc5-b8af-4f45-98ba-37bce6f641b8",
+    "word": "empiricism",
+    "definition": "The theory that knowledge derives from sense experience."
+  },
+  {
+    "id": "62fea668-df52-4054-92d5-81e434339546",
+    "word": "distinction",
+    "definition": "A difference or contrast between similar things."
+  },
+  {
+    "id": "6352d47d-ec4d-429d-9842-68dd3e284f4a",
+    "word": "perception",
+    "definition": "A way of regarding or understanding something."
+  },
+  {
+    "id": "642b8923-3fdc-4b1d-be54-38f6a9b73795",
+    "word": "inertia",
+    "definition": "The tendency of an object to remain in its current state."
+  },
+  {
+    "id": "64730dd7-3af3-49b9-a8b3-5bbadc48421c",
+    "word": "guide",
+    "definition": "To show the way; to direct in action or opinion."
+  },
+  {
+    "id": "64c3bd44-c39f-4115-903b-9ab32fb3c957",
+    "word": "selective",
+    "definition": "Relating to or involving selection; careful in choosing."
+  },
+  {
+    "id": "64d28a27-6902-4f9c-9773-68d90a3eb453",
+    "word": "avoid",
+    "definition": "To keep away from; to prevent."
+  },
+  {
+    "id": "65205208-a366-4ac9-bca2-963d351da306",
+    "word": "reciprocally",
+    "definition": "In a way in which each side does something for the other."
+  },
+  {
+    "id": "65889282-e03c-4f09-a5a3-386ad3046286",
+    "word": "mercurial",
+    "definition": "Subject to sudden changes of mood; volatile."
+  },
+  {
+    "id": "659c3a15-b6e2-4e64-a5a3-def60b4099f1",
+    "word": "consolidate",
+    "definition": "To combine into a more effective whole."
+  },
+  {
+    "id": "664aa7e8-ec82-4b38-814b-c326430fc2f3",
+    "word": "transient",
+    "definition": "Lasting only for a short time; impermanent."
+  },
+  {
+    "id": "668ac3c2-7fa9-45ea-87b2-20d915afe7d0",
+    "word": "hormone",
+    "definition": "A regulatory chemical produced in the body."
+  },
+  {
+    "id": "67297418-1366-4ecd-b28e-c67acc737d52",
+    "word": "culpable",
+    "definition": "Deserving blame or censure; guilty."
+  },
+  {
+    "id": "68843c41-2e22-4992-9d2c-e7a5dfbea817",
+    "word": "metabolism",
+    "definition": "The chemical processes in a living organism."
+  },
+  {
+    "id": "69357c5b-9fe2-428c-af81-5977da28b3a1",
+    "word": "nonetheless",
+    "definition": "In spite of that; nevertheless."
+  },
+  {
+    "id": "6a11b44e-a264-41a4-a8f7-bc3b7592a6ee",
+    "word": "bacteria",
+    "definition": "Microscopic single-celled organisms."
+  },
+  {
+    "id": "6a67bbf1-d03a-4903-af22-cd3f3fb6effe",
+    "word": "consciousness",
+    "definition": "The state of being aware of one's own existence."
+  },
+  {
+    "id": "6a97b77d-7881-4e55-88a8-3637d159c4bc",
+    "word": "patient",
+    "definition": "Able to accept delay without becoming annoyed."
+  },
+  {
+    "id": "6b706caa-107e-4924-831d-9eb9cc70a6bf",
+    "word": "microeconomics",
+    "definition": "The part of economics concerned with individual choices."
+  },
+  {
+    "id": "6bc6cb86-c8ce-4af7-b7e8-ad07b4d35de1",
+    "word": "compensate",
+    "definition": "To give something to make up for a loss or deficiency."
+  },
+  {
+    "id": "6c56ce8f-026c-4ceb-a39d-19028c90317a",
+    "word": "adjust",
+    "definition": "To change to a satisfactory state."
+  },
+  {
+    "id": "6c70c79e-6c0a-4c5e-9032-8272dbfd6ae0",
+    "word": "produce",
+    "definition": "To make, create, or generate something."
+  },
+  {
+    "id": "6ced2c61-b0e6-447c-b450-631233fa56cb",
+    "word": "broadly",
+    "definition": "In general terms; without getting into details."
+  },
+  {
+    "id": "6d04c06e-aadf-4ccc-bfc5-7f6fe4c9433e",
+    "word": "communicate",
+    "definition": "To share or exchange information."
+  },
+  {
+    "id": "6d5f7047-4971-49f4-b90f-8d1a6966075c",
+    "word": "positive",
+    "definition": "Constructive, optimistic, or favorable."
+  },
+  {
+    "id": "6d6177b2-1c1f-4ed3-867f-3748ef216e90",
+    "word": "variation",
+    "definition": "A change or slight difference in something."
+  },
+  {
+    "id": "6e9f1ece-c35e-463d-8111-e5b6438c8c1e",
+    "word": "efficiently",
+    "definition": "In a way that achieves maximum productivity with minimum waste."
+  },
+  {
+    "id": "6eb8709e-2983-4a14-ac1a-526a90a90ef1",
+    "word": "exception",
+    "definition": "A person or thing that is excluded from a rule."
+  },
+  {
+    "id": "6ed16c77-59af-4581-818c-0c3b0cbe0b04",
+    "word": "quantum",
+    "definition": "The minimum discrete unit of energy."
+  },
+  {
+    "id": "6f21a61c-347b-4173-991e-94d5af46306a",
+    "word": "definition",
+    "definition": "A statement expressing the essential nature of something."
+  },
+  {
+    "id": "6f925454-c187-423d-8653-ef79398c5311",
+    "word": "critically",
+    "definition": "In a way that expresses disapproval or careful analysis."
+  },
+  {
+    "id": "6fa47c7d-d323-49e5-a32b-19fd7602e251",
+    "word": "minimal",
+    "definition": "Of the smallest possible amount; very small."
+  },
+  {
+    "id": "6fc0228b-4c61-43b4-a8db-1952ceafa42c",
+    "word": "motivate",
+    "definition": "To provide a reason for doing something."
+  },
+  {
+    "id": "7230c962-ea7a-43cd-a2c3-edd5e096e4c7",
+    "word": "reduce",
+    "definition": "To make something smaller or less in size, amount, or degree."
+  },
+  {
+    "id": "729b3262-cbb0-4d31-bf2a-507267ec2292",
+    "word": "phlegmatic",
+    "definition": "Having an unemotional and stolidly calm disposition."
+  },
+  {
+    "id": "730d3e49-d07c-4ff4-864e-8b25c30ffb6f",
+    "word": "governance",
+    "definition": "The action or manner of governing an organization."
+  },
+  {
+    "id": "73149ac8-a08b-4f6d-9235-87e3c695f6de",
+    "word": "symbolic",
+    "definition": "Serving as a symbol; involving symbolism."
+  },
+  {
+    "id": "7323d918-6c78-485a-a55d-614132d96503",
+    "word": "mass",
+    "definition": "A measure of the amount of matter in an object."
+  },
+  {
+    "id": "737b6bfe-7260-411a-8d56-f9ca6d1038a5",
+    "word": "equilibrium",
+    "definition": "A state of balance between opposing forces."
+  },
+  {
+    "id": "738d20bf-c0b8-43e3-b7c1-8a68ca537d78",
+    "word": "voluntary",
+    "definition": "Done, given, or acting of one's own free will."
+  },
+  {
+    "id": "73e2cdd3-3a1b-47fd-b285-86b0e6eeec86",
+    "word": "condescend",
+    "definition": "To behave as if you are better or more important."
+  },
+  {
+    "id": "73e87032-cf89-44d7-b886-83ed9ae4277c",
+    "word": "politically",
+    "definition": "In a way relating to government and public affairs."
+  },
+  {
+    "id": "741f029e-f940-4b5f-9089-34e334c5ac87",
+    "word": "paradoxically",
+    "definition": "In a way that contradicts expectations."
+  },
+  {
+    "id": "74a7b9f4-8883-47b1-828f-fc3ec25bcacc",
+    "word": "adequately",
+    "definition": "In a satisfactory or acceptable way."
+  },
+  {
+    "id": "7595dfe2-a6e2-4619-9c41-2eded5cfdb08",
+    "word": "literature",
+    "definition": "Written works on a particular subject."
+  },
+  {
+    "id": "75f5c8c1-8481-4d9b-a809-dd9682f21e72",
+    "word": "simulation",
+    "definition": "Imitation of a real-world process for study."
+  },
+  {
+    "id": "7647a066-9ba2-4810-a46b-37846ce2cacd",
+    "word": "cortex",
+    "definition": "The outer layer of an organ, especially the brain."
+  },
+  {
+    "id": "76f22c90-1c27-49c4-ab7a-c05bb7c3181c",
+    "word": "alternative",
+    "definition": "Available as another possibility or choice."
+  },
+  {
+    "id": "76f4f1a0-7eba-4334-b7cb-ab460903d6b0",
+    "word": "macroeconomics",
+    "definition": "The part of economics concerned with large-scale factors."
+  },
+  {
+    "id": "77d91a5b-833c-4925-bfda-831bda7c14c8",
+    "word": "primary",
+    "definition": "Of chief importance; first in order."
+  },
+  {
+    "id": "7800679a-4a5b-492a-a331-5f575ccddff0",
+    "word": "utilize",
+    "definition": "To make practical use of something."
+  },
+  {
+    "id": "785efb09-2047-4847-b61e-c527419ae581",
+    "word": "observation",
+    "definition": "The act of watching carefully; a remark."
+  },
+  {
+    "id": "795f127a-dbe9-4746-b952-bdee63e99fd3",
+    "word": "volume",
+    "definition": "The amount of space occupied; a quantity."
+  },
+  {
+    "id": "796bb1f1-9710-4e0e-afa3-b1155426426e",
+    "word": "ethics",
+    "definition": "Moral principles governing behavior."
+  },
+  {
+    "id": "7a0bf276-278f-4d60-afe9-17fc9f37739f",
+    "word": "simplify",
+    "definition": "To make something less complex or easier to understand."
+  },
+  {
+    "id": "7a341268-67bc-4e40-9ca4-5ca4c4f8682b",
+    "word": "assemble",
+    "definition": "To gather or collect together."
+  },
+  {
+    "id": "7a518e35-4c34-45cf-a7ed-610bd01494a1",
+    "word": "moderate",
+    "definition": "Average in amount, intensity, or degree."
+  },
+  {
+    "id": "7a644d54-9252-494b-9354-5dfee5720580",
+    "word": "legitimate",
+    "definition": "Conforming to the law or to rules; logically reasonable."
+  },
+  {
+    "id": "7a727990-836e-44dd-a923-c52dedbc9d7b",
+    "word": "except",
+    "definition": "Not including; other than."
+  },
+  {
+    "id": "7ae6921e-e877-4520-836b-7fec6c3eee7a",
+    "word": "negative",
+    "definition": "Expressing refusal or denial; harmful."
+  },
+  {
+    "id": "7b33dfcb-807c-4063-8dbe-cf4f3d26acd6",
+    "word": "didactic",
+    "definition": "Intended to teach or educate; overly instructive."
+  },
+  {
+    "id": "7b50af76-3994-49ca-a90f-8adf6d094496",
+    "word": "molecule",
+    "definition": "A group of atoms bonded together; the smallest unit of a compound."
+  },
+  {
+    "id": "7c12ef26-d99e-4eba-80dd-f30e5f9b2d37",
+    "word": "proportionally",
+    "definition": "In a proportionate manner; correspondingly."
+  },
+  {
+    "id": "7c75fb94-b4a3-44a0-99ae-9c2ba5f8b5c1",
+    "word": "logical",
+    "definition": "Reasoning correctly; arranged in a sensible sequence."
+  },
+  {
+    "id": "7d2bcf26-d409-4288-97e3-fd1d48070a60",
+    "word": "physiology",
+    "definition": "The science of the normal functions of living organisms."
+  },
+  {
+    "id": "7d50ee31-8b74-4e95-b20a-6ffc6a36cd0c",
+    "word": "merge",
+    "definition": "To combine two or more things into one."
+  },
+  {
+    "id": "7e45da35-8922-4a93-b547-a70c292d82fe",
+    "word": "perform",
+    "definition": "To carry out, accomplish, or fulfill an action."
+  },
+  {
+    "id": "7e6887c6-8fb0-4dc6-a5f7-d8d179bab0ca",
+    "word": "mainly",
+    "definition": "More than anything else; chiefly."
+  },
+  {
+    "id": "7e7e9d3b-ecfb-4f3b-9d84-e1c3a1485a66",
+    "word": "trend",
+    "definition": "A general direction in which something is developing or changing."
+  },
+  {
+    "id": "7ebbc253-db02-457f-9e5d-b38981e76699",
+    "word": "representation",
+    "definition": "The action of depicting or standing for something."
+  },
+  {
+    "id": "7ec12824-3380-4e70-a7be-8e72eebf5d99",
+    "word": "alacrity",
+    "definition": "Brisk and cheerful readiness."
+  },
+  {
+    "id": "7f2fa660-5bc0-4fc1-8a71-d94a04466164",
+    "word": "instance",
+    "definition": "A particular case or example of something."
+  },
+  {
+    "id": "7f8d572b-403c-4582-81e8-9cfd35bc7076",
+    "word": "clemency",
+    "definition": "Mercy and leniency shown to someone."
+  },
+  {
+    "id": "80d64e69-1938-4910-81f8-bbf65485fc25",
+    "word": "replication",
+    "definition": "The action of repeating a study to verify results."
+  },
+  {
+    "id": "82022780-001b-440a-8dee-1a9f6174c027",
+    "word": "vigilant",
+    "definition": "Keeping careful watch for possible dangers."
+  },
+  {
+    "id": "8205f638-b015-44dc-95fd-239cc05d2f95",
+    "word": "supportive",
+    "definition": "Providing encouragement or emotional help."
+  },
+  {
+    "id": "82fc1ad3-eb56-4166-a94a-90c0bb0eb139",
+    "word": "propose",
+    "definition": "To put forward an idea or plan for consideration."
+  },
+  {
+    "id": "83638478-92f2-4223-9906-b2e8396e78e0",
+    "word": "mutually",
+    "definition": "In a way that is shared between parties."
+  },
+  {
+    "id": "84609947-76c7-437f-a027-e56bb8ed65ce",
+    "word": "perfunctory",
+    "definition": "Carried out with minimal effort; superficial."
+  },
+  {
+    "id": "84a44b36-a247-4e51-a14a-7d82d8dd9cbd",
+    "word": "economically",
+    "definition": "In a way relating to economics or the economy."
+  },
+  {
+    "id": "854a0c80-dcc4-4977-adaf-a832a47d35cd",
+    "word": "specific",
+    "definition": "Clearly defined; precise."
+  },
+  {
+    "id": "85b9363e-0e8b-480f-aa48-60bf990a483a",
+    "word": "initialize",
+    "definition": "To set something to its starting state."
+  },
+  {
+    "id": "85e1d5f7-2ebc-4699-b298-e7d441e30753",
+    "word": "normalize",
+    "definition": "To bring or return to a normal condition; to make standard."
+  },
+  {
+    "id": "86345eb3-e75f-43f2-96a7-da504f2add22",
+    "word": "universal",
+    "definition": "Relating to all people or things in the world."
+  },
+  {
+    "id": "864eb13d-b306-48ab-afe8-583489f825a8",
+    "word": "transparent",
+    "definition": "Easy to perceive; open and honest."
+  },
+  {
+    "id": "86c30edf-f0b5-48a7-b273-bac239b41952",
+    "word": "administer",
+    "definition": "To manage and be responsible for; to give or apply."
+  },
+  {
+    "id": "874480a7-a861-4f6c-a7fa-e911fecc40d9",
+    "word": "precise",
+    "definition": "Marked by exactness and accuracy."
+  },
+  {
+    "id": "87f7da34-3df9-44d4-bb59-4ee6734ebafd",
+    "word": "antibody",
+    "definition": "A protein produced by the immune system to neutralize antigens."
+  },
+  {
+    "id": "8825a807-0bd6-4d64-9843-f5333ef1f709",
+    "word": "track",
+    "definition": "To follow or monitor the course of something."
+  },
+  {
+    "id": "8873189d-14d5-4dd3-b4a1-fb4f7b8e69b4",
+    "word": "factor",
+    "definition": "An element that contributes to a result."
+  },
+  {
+    "id": "88a2fdf9-8e81-4a3d-a0c6-56b73447db12",
+    "word": "justification",
+    "definition": "A reason or explanation for an action."
+  },
+  {
+    "id": "88a9f4e1-da07-4233-a327-5ebbc69af266",
+    "word": "disciplined",
+    "definition": "Showing a controlled form of behavior."
+  },
+  {
+    "id": "88b23bc4-01e3-4f76-b3df-bbe16cecad47",
+    "word": "corroborate",
+    "definition": "To confirm or support a statement or theory with evidence."
+  },
+  {
+    "id": "88eef07d-ac46-4391-bf10-d071bc5b6a89",
+    "word": "typically",
+    "definition": "In a way that is characteristic of a particular person or thing."
+  },
+  {
+    "id": "88f230dc-2573-4a0b-929e-e9629e224643",
+    "word": "otherwise",
+    "definition": "In different circumstances; in a different way."
+  },
+  {
+    "id": "89a68c3b-7386-4904-990a-fb2ba1bc1fba",
+    "word": "ecosystem",
+    "definition": "A community of organisms and their physical environment."
+  },
+  {
+    "id": "89bb5c61-e22e-43a7-b29c-7cd8da6535df",
+    "word": "institution",
+    "definition": "An organization founded for a purpose; an established law."
+  },
+  {
+    "id": "8a32d4cd-c3c2-4c7c-8470-6459779ea8b7",
+    "word": "widespread",
+    "definition": "Distributed or occurring over a wide area."
+  },
+  {
+    "id": "8a344874-66e6-4a73-87e4-97375fc539ab",
+    "word": "mutual",
+    "definition": "Shared or felt by each of two or more parties."
+  },
+  {
+    "id": "8a87a3fe-af20-4d92-b1c0-dd369131c7ae",
+    "word": "substantial",
+    "definition": "Of considerable importance, size, or worth."
+  },
+  {
+    "id": "8b562ab1-5cfd-497f-b988-0857de118248",
+    "word": "encompass",
+    "definition": "To surround and have or hold within; to include comprehensively."
+  },
+  {
+    "id": "8bb9ff78-e456-41c6-af74-280bce6e647e",
+    "word": "energy",
+    "definition": "The capacity to do work or produce change."
+  },
+  {
+    "id": "8bc6495c-7b1a-4212-b790-ab5406fa9d5c",
+    "word": "demography",
+    "definition": "The statistical study of populations."
+  },
+  {
+    "id": "8c767d72-898c-4efc-859b-061ddfcc6a37",
+    "word": "essentially",
+    "definition": "Used to emphasize the basic or most important aspect."
+  },
+  {
+    "id": "8cd2dcae-7b93-424d-9727-0d1e0dfe9a03",
+    "word": "individually",
+    "definition": "Separately; one by one."
+  },
+  {
+    "id": "8da221b2-d93b-413c-a800-be7d46f3910c",
+    "word": "assiduous",
+    "definition": "Showing great care and perseverance; diligent."
+  },
+  {
+    "id": "8dac42c3-fe9f-4655-8962-42e8c7db35c2",
+    "word": "wave",
+    "definition": "A disturbance that transfers energy through a medium."
+  },
+  {
+    "id": "8daffa5e-0a5c-4154-a9c1-25050fb8db53",
+    "word": "framework",
+    "definition": "A basic structure underlying a system or concept."
+  },
+  {
+    "id": "8dfdf150-b975-45bd-8142-97a5c7075781",
+    "word": "outline",
+    "definition": "To give a general description of something."
+  },
+  {
+    "id": "8e983afc-137f-40fb-a792-520dae5575a7",
+    "word": "empathetic",
+    "definition": "Showing an ability to understand another's feelings."
+  },
+  {
+    "id": "8eddd2d3-12bf-47eb-9eff-9c3a3d8b4307",
+    "word": "in particular",
+    "definition": "Especially; specifically."
+  },
+  {
+    "id": "902acb0b-554d-4205-8f80-a39e933bbfaa",
+    "word": "globalization",
+    "definition": "The process by which businesses develop international influence."
+  },
+  {
+    "id": "9079a115-eb23-40dd-8cf4-9bc03262edaa",
+    "word": "subjectively",
+    "definition": "Based on personal feelings rather than facts."
+  },
+  {
+    "id": "9096fa03-fc37-4065-8aac-3ae080c34e7f",
+    "word": "yet",
+    "definition": "Up until now; but at the same time."
+  },
+  {
+    "id": "90de0243-924d-47f9-adaf-55c0cde89b37",
+    "word": "antipathy",
+    "definition": "A deep dislike or hostility toward something."
+  },
+  {
+    "id": "90f8d2d6-6ef3-4abe-b8b2-f330ca479960",
+    "word": "progressive",
+    "definition": "Happening or developing gradually or in stages."
+  },
+  {
+    "id": "918546ec-4776-41b7-8a45-360727569981",
+    "word": "vacuous",
+    "definition": "Having or showing a lack of thought or intelligence; empty."
+  },
+  {
+    "id": "91ca89d5-74d7-4ae0-bd13-b40c33948927",
+    "word": "frequently",
+    "definition": "Many times; at short intervals."
+  },
+  {
+    "id": "924d1db4-89e1-464f-b9ef-986d644a4ed5",
+    "word": "culturally",
+    "definition": "In a way relating to culture."
+  },
+  {
+    "id": "925850b6-dde6-4431-99bd-c0266b4cf756",
+    "word": "reinforce",
+    "definition": "To strengthen or support something further."
+  },
+  {
+    "id": "92b52c67-4963-48c3-b7d6-38d508ea3690",
+    "word": "biodiversity",
+    "definition": "The variety of life in a particular habitat or ecosystem."
+  },
+  {
+    "id": "930d5583-17df-45b4-8ffe-7e8d16f15502",
+    "word": "explore",
+    "definition": "To investigate a subject or area thoroughly."
+  },
+  {
+    "id": "93f3919c-a9fd-4409-a6ac-88689c5044b9",
+    "word": "sensitive",
+    "definition": "Quick to detect or respond to slight changes."
+  },
+  {
+    "id": "9404fe67-6b62-4951-8f3f-1817254bbf0f",
+    "word": "rational",
+    "definition": "Based on reason or logic; sensible."
+  },
+  {
+    "id": "95e75027-c5b4-4be1-b602-100a417e72a8",
+    "word": "introduce",
+    "definition": "To bring into use or operation for the first time."
+  },
+  {
+    "id": "960c7a30-84ee-4c16-ada4-b85d7c133472",
+    "word": "ignominious",
+    "definition": "Deserving or causing public disgrace; humiliating."
+  },
+  {
+    "id": "96250217-07c5-46c0-ae32-ff14051ff0d0",
+    "word": "estimate",
+    "definition": "To roughly calculate or judge the value or extent of."
+  },
+  {
+    "id": "96300432-8be5-475c-ab74-59ed6a234e90",
+    "word": "interdependent",
+    "definition": "Dependent on each other."
+  },
+  {
+    "id": "96b5b60d-6afc-4ff3-93cc-cc43da336084",
+    "word": "classification",
+    "definition": "The action of grouping things into categories."
+  },
+  {
+    "id": "96bded49-4038-4313-aef3-aa138667b76f",
+    "word": "accomplish",
+    "definition": "To achieve or complete successfully."
+  },
+  {
+    "id": "96c22f3c-b689-4a26-89bd-7352461456ba",
+    "word": "deliver",
+    "definition": "To produce or provide; to hand over."
+  },
+  {
+    "id": "9715a905-896e-41fc-9064-3ae9041117d2",
+    "word": "robust",
+    "definition": "Strong and healthy; sturdy; thorough and reliable."
+  },
+  {
+    "id": "97dc29cc-01ef-4edc-bf82-970fea3caca7",
+    "word": "resonance",
+    "definition": "A phenomenon in which vibrations strengthen each other."
+  },
+  {
+    "id": "97efa21e-1fb4-4e0b-a25a-029f5a4b87d7",
+    "word": "largely",
+    "definition": "To a great extent; mostly."
+  },
+  {
+    "id": "986256a1-4fdc-440f-8b94-3ddd327420c0",
+    "word": "evolution",
+    "definition": "Gradual development of something over time."
+  },
+  {
+    "id": "987839e6-7761-4d07-9897-6547f11aec13",
+    "word": "vociferous",
+    "definition": "Expressing opinions in a loud and forceful way."
+  },
+  {
+    "id": "98cb678d-7869-40b1-9dd0-d2cda9b72fe4",
+    "word": "consistent",
+    "definition": "Acting or done in the same way over time; not self-contradictory."
+  },
+  {
+    "id": "98fb333e-5ca5-4cb5-9839-0abfcef65769",
+    "word": "circuitous",
+    "definition": "Longer than the most direct way; roundabout."
+  },
+  {
+    "id": "9912d411-1142-4838-ac85-d3aacd399035",
+    "word": "quixotic",
+    "definition": "Extremely idealistic; unrealistic."
+  },
+  {
+    "id": "99309919-db03-45c6-85fe-e0f5ed5fa1fe",
+    "word": "contradictory",
+    "definition": "Containing statements that oppose each other."
+  },
+  {
+    "id": "99da9dd9-009c-45cc-82c0-2310ea4fe003",
+    "word": "latent",
+    "definition": "Present but not yet apparent or active."
+  },
+  {
+    "id": "9a6084bd-429b-4906-8d33-26fd2c61da01",
+    "word": "verify",
+    "definition": "To make sure something is true by examining it."
+  },
+  {
+    "id": "9ad56b46-9796-48da-88ee-c6e0a86f46c4",
+    "word": "grandiose",
+    "definition": "Impressive but often unrealistic."
+  },
+  {
+    "id": "9b2d0830-87ca-414d-90d8-84a72c252595",
+    "word": "collectively",
+    "definition": "As a whole group."
+  },
+  {
+    "id": "9b38f86a-8e08-478a-896d-da3dc608f35b",
+    "word": "strategy",
+    "definition": "A plan of action designed to achieve a goal."
+  },
+  {
+    "id": "9c6d64a3-f82e-41e3-904d-99090f864f5a",
+    "word": "fallacious",
+    "definition": "Based on a mistaken belief; misleading."
+  },
+  {
+    "id": "9c749050-8b65-403c-86ee-cabc7c1b3c12",
+    "word": "comprehensively",
+    "definition": "In a way that deals thoroughly with all aspects."
+  },
+  {
+    "id": "9d237214-77b5-46a4-b8cd-b12589910cbc",
+    "word": "solve",
+    "definition": "To find an answer to or explanation for a problem."
+  },
+  {
+    "id": "9d6e3a40-3d95-4625-a450-4c0228eaa8b1",
+    "word": "realistically",
+    "definition": "In a way that represents things in a realistic way."
+  },
+  {
+    "id": "9dbfcb21-081c-45df-be25-c736f399f5db",
+    "word": "accordingly",
+    "definition": "Appropriately; in a way that corresponds."
+  },
+  {
+    "id": "9dd71d87-6fc6-419b-96a5-f802f686061e",
+    "word": "describe",
+    "definition": "To give details of how something is or was."
+  },
+  {
+    "id": "9ea96a47-b2a1-48a7-8a7d-b796f4a7ffac",
+    "word": "domain",
+    "definition": "An area of territory, knowledge, or activity."
+  },
+  {
+    "id": "9eb26164-c234-41c4-ad54-d7f79297a4f1",
+    "word": "visualize",
+    "definition": "To form a mental image of something; to represent visually."
+  },
+  {
+    "id": "a044b530-d8e3-4690-b796-4a8897ef014d",
+    "word": "morphology",
+    "definition": "The study of the form and structure of organisms."
+  },
+  {
+    "id": "a060e04f-d4ef-42a6-b5c3-3398731b72cc",
+    "word": "precisely",
+    "definition": "Exactly; in an accurate way."
+  },
+  {
+    "id": "a066451e-7a15-433d-a325-a708dc1a9fd7",
+    "word": "nucleus",
+    "definition": "The central part of an atom; the central part of a cell."
+  },
+  {
+    "id": "a0ba2e48-154c-4919-abc8-231b403f7a13",
+    "word": "socially",
+    "definition": "In a way relating to society and its organization."
+  },
+  {
+    "id": "a0bdee24-077d-4415-9fa6-dfa17a04d629",
+    "word": "superfluous",
+    "definition": "Unnecessary; more than is needed."
+  },
+  {
+    "id": "a193461f-ff90-4c4f-a845-5926bca71766",
+    "word": "credulous",
+    "definition": "Too ready to believe things; gullible."
+  },
+  {
+    "id": "a228d3d3-cb6a-4d4b-a553-bfa763a08455",
+    "word": "anatomy",
+    "definition": "The branch of science concerned with bodily structure."
+  },
+  {
+    "id": "a26c69ee-9815-43fd-b4a9-c6ed14584ea3",
+    "word": "visionary",
+    "definition": "Thinking about the future with imagination."
+  },
+  {
+    "id": "a2c6a2a8-7143-4c0e-aeb9-d15265d2ff4e",
+    "word": "jurisprudence",
+    "definition": "The theory or philosophy of law."
+  },
+  {
+    "id": "a2ca20b4-2b15-4fb7-8dea-9d4b3117d4e4",
+    "word": "arrange",
+    "definition": "To organize or put in order."
+  },
+  {
+    "id": "a3fc19d0-8931-44b1-a695-f563d03cf498",
+    "word": "altruistic",
+    "definition": "Showing selfless concern for the well-being of others."
+  },
+  {
+    "id": "a48a4555-485d-4c79-8e93-e96c06735a90",
+    "word": "norm",
+    "definition": "Something that is usual, typical, or standard."
+  },
+  {
+    "id": "a4dc69be-89be-4bf4-b84e-6dbfb1e3b330",
+    "word": "primarily",
+    "definition": "For the most part; mainly."
+  },
+  {
+    "id": "a5dcba68-8da0-42de-80bb-f6bba4f9ac14",
+    "word": "evidence",
+    "definition": "Available facts indicating whether something is true."
+  },
+  {
+    "id": "a68d086d-9855-4373-ba7b-2741627ae190",
+    "word": "apparent",
+    "definition": "Clearly visible or obvious; seeming real but not necessarily so."
+  },
+  {
+    "id": "a6a11d95-66af-4acb-a3c7-7b7979c24057",
+    "word": "gradually",
+    "definition": "Slowly and in small stages or amounts."
+  },
+  {
+    "id": "a7252416-b66d-40ce-bd63-5ff61be0476c",
+    "word": "cite",
+    "definition": "To refer to as evidence or as an example."
+  },
+  {
+    "id": "a765d688-d1ac-4752-90a8-b031d22946df",
+    "word": "overview",
+    "definition": "A general review or summary."
+  },
+  {
+    "id": "a796e5ea-08db-42dd-bfe1-746d3f69881f",
+    "word": "constraint",
+    "definition": "A limitation or restriction on something."
+  },
+  {
+    "id": "a8ad620a-62a3-442f-a853-a328a6df523c",
+    "word": "historically",
+    "definition": "With reference to past events."
+  },
+  {
+    "id": "a92371cd-5897-47f7-9237-aff9c38b0bf2",
+    "word": "hence",
+    "definition": "As a consequence; for this reason."
+  },
+  {
+    "id": "a9d0d82a-2bfe-4d65-9e28-709a95680979",
+    "word": "priority",
+    "definition": "The condition of being treated as more important than others."
+  },
+  {
+    "id": "aad62a4f-7bc7-407e-8a84-9d424e9f62c9",
+    "word": "standard",
+    "definition": "A level of quality or achievement considered acceptable."
+  },
+  {
+    "id": "aad7e31f-2be2-4b36-80e3-890a19aa33de",
+    "word": "change",
+    "definition": "To make different; to become different."
+  },
+  {
+    "id": "abb83178-9dae-4b9c-82b7-ef11ea6a2140",
+    "word": "generic",
+    "definition": "Characteristic of or relating to a class or group."
+  },
+  {
+    "id": "abc25525-25e8-46e0-b8da-a593ae1aca25",
+    "word": "systematically",
+    "definition": "Done in a methodical and consistent way."
+  },
+  {
+    "id": "abfba198-6c3b-46a5-a68c-4b0f292cb3ef",
+    "word": "capacity",
+    "definition": "The maximum amount that something can contain or do."
+  },
+  {
+    "id": "ad0eb6d2-7c04-4d05-85ce-4ef95dffb002",
+    "word": "review",
+    "definition": "To examine something again with the intention of improving or changing it."
+  },
+  {
+    "id": "ad3cf211-f592-40c1-8a5a-d7a6d420e951",
+    "word": "emission",
+    "definition": "The production and discharge of gases or radiation."
+  },
+  {
+    "id": "ad61cb5b-2dcc-4bc6-a7e9-ce010a884d62",
+    "word": "psychology",
+    "definition": "The scientific study of the mind and behavior."
+  },
+  {
+    "id": "ae1079a9-ee26-44c6-a6f5-1bbfc38bb07a",
+    "word": "entropy",
+    "definition": "A measure of disorder or randomness in a system."
+  },
+  {
+    "id": "ae45e156-fdd4-4839-ba3f-8eb32ea3bfeb",
+    "word": "acceleration",
+    "definition": "The rate of change of velocity over time."
+  },
+  {
+    "id": "ae72a2b7-2116-4951-929f-22606dab725e",
+    "word": "finite",
+    "definition": "Limited in size or extent."
+  },
+  {
+    "id": "ae7ac59d-39bb-426d-9cff-5fd8691ea8a5",
+    "word": "include",
+    "definition": "To comprise as part of a whole."
+  },
+  {
+    "id": "aec62746-21ca-416b-8c73-2b4a98f55791",
+    "word": "incite",
+    "definition": "To encourage or stir up feelings or actions."
+  },
+  {
+    "id": "aed3153b-4234-453f-8f01-8a88f39883a1",
+    "word": "technically",
+    "definition": "According to the facts or exact meaning."
+  },
+  {
+    "id": "afa987d1-fe9b-406d-8bb0-b2eb9e55e13a",
+    "word": "directly",
+    "definition": "In a straight line; without anything in between."
+  },
+  {
+    "id": "b059f1b0-857d-46ca-b1db-cd8db5505db9",
+    "word": "pompous",
+    "definition": "Affectedly grand or self-important."
+  },
+  {
+    "id": "b07d0304-864f-4bac-a43a-2ec10b9a3a08",
+    "word": "simulate",
+    "definition": "To imitate the appearance or character of something."
+  },
+  {
+    "id": "b1050425-faf6-4c85-afad-9631b95f0240",
+    "word": "retain",
+    "definition": "To keep or continue to have something."
+  },
+  {
+    "id": "b15ae7fe-e368-4d0c-85fe-bdd1515fc143",
+    "word": "in contrast",
+    "definition": "Used when comparing things that are different."
+  },
+  {
+    "id": "b20bc202-2d05-4900-8a78-d204151e0191",
+    "word": "recondite",
+    "definition": "Not known by many people; abstruse."
+  },
+  {
+    "id": "b2aa5836-cef8-45fc-925e-941c3fc4c7d3",
+    "word": "temporal",
+    "definition": "Relating to time; temporary."
+  },
+  {
+    "id": "b36c92b8-4fd8-46f8-a285-cfad9dd453f5",
+    "word": "inform",
+    "definition": "To give factual information to someone."
+  },
+  {
+    "id": "b40c0d77-b6b3-4d5c-a075-f96b7a89489e",
+    "word": "intense",
+    "definition": "Of extreme force, degree, or strength."
+  },
+  {
+    "id": "b460532a-f4fa-442e-968c-1b06316b5b9e",
+    "word": "velocity",
+    "definition": "The speed of something in a given direction."
+  },
+  {
+    "id": "b5494b2d-6d7b-4e21-9660-c3b0d463dd15",
+    "word": "persistent",
+    "definition": "Continuing to exist or occur despite difficulties."
+  },
+  {
+    "id": "b56da870-e2c1-481d-85ab-d23f2cbf6bc3",
+    "word": "approximately",
+    "definition": "Close to but not exactly."
+  },
+  {
+    "id": "b58bcb99-7824-4844-bb6c-553cc9468e5b",
+    "word": "concentration",
+    "definition": "The amount of a substance in a given volume."
+  },
+  {
+    "id": "b63b4c9f-f077-4517-9404-0f956d539a65",
+    "word": "literal",
+    "definition": "Taking words in their usual or primary sense."
+  },
+  {
+    "id": "b6859ce7-8f83-4573-afce-5a56709efe95",
+    "word": "consequence",
+    "definition": "A result or effect of an action or condition."
+  },
+  {
+    "id": "b7018672-5c9e-4fb1-95f0-f21f9b88bc20",
+    "word": "requirement",
+    "definition": "A thing needed or obligatory for a purpose."
+  },
+  {
+    "id": "b74128fc-8cb2-42d7-ac10-398a52e1c3fb",
+    "word": "inequality",
+    "definition": "Difference in size, degree, or circumstances."
+  },
+  {
+    "id": "b78ce862-aac5-4d4b-a3d0-c574129afd2d",
+    "word": "impact",
+    "definition": "A marked effect or influence."
+  },
+  {
+    "id": "b7ea1014-e9ba-4025-8498-69a123d9116d",
+    "word": "causation",
+    "definition": "The action or process of causing something to happen."
+  },
+  {
+    "id": "b9c0f5dd-deda-47e2-9c84-2d2217c005e0",
+    "word": "handle",
+    "definition": "To manage or deal with a situation."
+  },
+  {
+    "id": "ba79ff11-2f69-4ba5-9e83-e0156d0b4819",
+    "word": "manifest",
+    "definition": "To display or show something by actions or appearances."
+  },
+  {
+    "id": "bab70e59-dd26-41cc-928c-36d0a7efee84",
+    "word": "engage",
+    "definition": "To participate or involve oneself in an activity."
+  },
+  {
+    "id": "bb287e64-3a29-4e64-8fbb-bb94b03427ec",
+    "word": "definitive",
+    "definition": "Done or reached with finality; most authoritative."
+  },
+  {
+    "id": "bb2c408c-c06c-4de4-995c-672f2c5b99ef",
+    "word": "gratuitous",
+    "definition": "Uncalled for; lacking good reason; unwarranted."
+  },
+  {
+    "id": "bb7854b1-64dd-483c-bce6-0d41eb9f612f",
+    "word": "amiable",
+    "definition": "Having a friendly and pleasant manner."
+  },
+  {
+    "id": "bbdc2a28-55d4-46f3-94ed-b15a751e9dd6",
+    "word": "convert",
+    "definition": "To change in form, character, or function."
+  },
+  {
+    "id": "bc44805d-c092-469d-aa7e-6add5c117e01",
+    "word": "ethnography",
+    "definition": "The scientific description of peoples and cultures."
+  },
+  {
+    "id": "bd572ef2-e921-4deb-a938-75b4326327e9",
+    "word": "seldom",
+    "definition": "Not often; rarely."
+  },
+  {
+    "id": "bda71ad7-9f5b-4130-83fe-14f1c111481c",
+    "word": "cognition",
+    "definition": "The mental action of acquiring knowledge and understanding."
+  },
+  {
+    "id": "be528980-35d6-4877-bc9c-c09c46825cea",
+    "word": "elucidate",
+    "definition": "To make something clearer; to explain."
+  },
+  {
+    "id": "be97e9fd-f8b7-42c6-a7fe-e0e2b17e386d",
+    "word": "unctuous",
+    "definition": "Excessively flattering; smugly virtuous."
+  },
+  {
+    "id": "beaeb1ae-abb5-4dc4-9eae-371b5a4838b2",
+    "word": "evasive",
+    "definition": "Tending to avoid commitment; not frank."
+  },
+  {
+    "id": "bee91136-ff2f-444f-965a-cc878ec29a2c",
+    "word": "prominent",
+    "definition": "Important; well-known; standing out."
+  },
+  {
+    "id": "bf235198-c407-40f0-a6f8-39d33954e04d",
+    "word": "mutation",
+    "definition": "A change in the DNA sequence."
+  },
+  {
+    "id": "bff51587-fc73-407e-9d61-86548ed5460e",
+    "word": "scrutiny",
+    "definition": "Critical observation or examination."
+  },
+  {
+    "id": "c03d1f19-da76-46aa-84a8-808598494e99",
+    "word": "circumstance",
+    "definition": "A fact or condition connected with an event or action."
+  },
+  {
+    "id": "c0c79f8f-0af8-43b0-938f-a4f2f15acad2",
+    "word": "aversion",
+    "definition": "A strong dislike or disinclination."
+  },
+  {
+    "id": "c116b80d-6bac-468d-a8be-f6f68361db24",
+    "word": "resistance",
+    "definition": "The opposition offered to electric current; opposition."
+  },
+  {
+    "id": "c1376752-a3b1-41c4-ae4f-0af450bb33a8",
+    "word": "control group",
+    "definition": "A group in an experiment not receiving the treatment."
+  },
+  {
+    "id": "c1f55d5d-181f-4ad0-81f9-c747e9ab06c4",
+    "word": "supplement",
+    "definition": "To add something to something else to improve or complete it."
+  },
+  {
+    "id": "c1f5e851-b1f4-4392-ad40-0f9b4e2fcfd4",
+    "word": "stimulate",
+    "definition": "To encourage activity, growth, or interest."
+  },
+  {
+    "id": "c1f7e0df-ef76-4777-a09a-630778b8edb1",
+    "word": "optimal",
+    "definition": "Best or most favorable; most efficient."
+  },
+  {
+    "id": "c1f85d64-849e-4b6f-8c4f-70584aa314bf",
+    "word": "fervent",
+    "definition": "Having or displaying a passionate intensity."
+  },
+  {
+    "id": "c2c17ad4-5167-4cb4-9d52-4f19eb47e397",
+    "word": "polynomial",
+    "definition": "An expression of more than two algebraic terms."
+  },
+  {
+    "id": "c33d9e7a-2e89-404d-8589-b9fcb5a25866",
+    "word": "predict",
+    "definition": "To say what will happen in the future based on evidence."
+  },
+  {
+    "id": "c3acf70f-7078-4810-b6d8-32ccbe5dba78",
+    "word": "malleable",
+    "definition": "Easily influenced; adaptable."
+  },
+  {
+    "id": "c41aa6cf-4012-463d-917b-46bf23205f48",
+    "word": "signal",
+    "definition": "To indicate or suggest something."
+  },
+  {
+    "id": "c4ab916e-09d9-4c72-a7aa-2d2f67c76a19",
+    "word": "responsible",
+    "definition": "Having an obligation to do something; trustworthy."
+  },
+  {
+    "id": "c4ff5250-4a73-4548-9dc8-de98bc504339",
+    "word": "in other words",
+    "definition": "Expressing the same thing in a different way."
+  },
+  {
+    "id": "c5a97e40-85a5-4702-abf8-10ad5afea6d5",
+    "word": "potential",
+    "definition": "Having or showing the capacity to develop in the future."
+  },
+  {
+    "id": "c5e88dd5-142c-4844-8adc-77589aa5e2c6",
+    "word": "appease",
+    "definition": "To pacify or satisfy someone by giving what they demand."
+  },
+  {
+    "id": "c61bacad-4c46-40c4-bb67-63cd4afbec0c",
+    "word": "cumulative",
+    "definition": "Increasing by successive additions; growing over time."
+  },
+  {
+    "id": "c77896f8-f6ac-4c4e-abf0-f3c8d27ee4a2",
+    "word": "transfer",
+    "definition": "To move something from one place or person to another."
+  },
+  {
+    "id": "c7ec5778-b4a9-4027-a7ca-dd7cce928c29",
+    "word": "pedagogy",
+    "definition": "The method and practice of teaching."
+  },
+  {
+    "id": "c8385d78-5e11-4310-a8c7-fafb2932fee0",
+    "word": "indignation",
+    "definition": "Anger or annoyance at what is perceived as unfair."
+  },
+  {
+    "id": "c923948e-1f52-48c3-9c02-cae12c15e2b5",
+    "word": "imply",
+    "definition": "To suggest something without directly stating it."
+  },
+  {
+    "id": "c92c7b76-cfb3-4310-95bf-9c31e8d38551",
+    "word": "optimize",
+    "definition": "To make the best use of; to maximize efficiency."
+  },
+  {
+    "id": "c95d57df-b958-4347-82e4-1464c3618695",
+    "word": "publish",
+    "definition": "To make information publicly available."
+  },
+  {
+    "id": "c968ec18-a672-4be4-a022-f619b7d63bb4",
+    "word": "sardonic",
+    "definition": "Grimly mocking; cynically humorous."
+  },
+  {
+    "id": "c9740213-d3d3-48ea-8a95-58478e8662bd",
+    "word": "assessment",
+    "definition": "The evaluation or estimation of something."
+  },
+  {
+    "id": "c9c2f475-066a-4b1f-a8e8-dbce6fa9c80f",
+    "word": "generalization",
+    "definition": "A broad statement derived from specific cases."
+  },
+  {
+    "id": "c9e434aa-10d4-48cf-9814-d943114d93cc",
+    "word": "numerous",
+    "definition": "Great in number; many."
+  },
+  {
+    "id": "ca0343b7-0c5c-49c3-93be-d937275bb146",
+    "word": "acumen",
+    "definition": "The ability to make good judgments; shrewdness."
+  },
+  {
+    "id": "ca37c930-9441-4c35-b2b1-7b5a82fac813",
+    "word": "refine",
+    "definition": "To improve something by making small changes."
+  },
+  {
+    "id": "cabf3a89-9172-4b9e-80b9-e6f0c240c375",
+    "word": "exclusive",
+    "definition": "Excluding or not admitting other things; restricted."
+  },
+  {
+    "id": "cb65f419-4ecb-420c-b4e7-d88ad26a69fb",
+    "word": "strategic",
+    "definition": "Relating to the identification of long-term goals."
+  },
+  {
+    "id": "cb7a3262-e81c-4864-aaaf-212613e6ee41",
+    "word": "obvious",
+    "definition": "Easily perceived or understood; clear."
+  },
+  {
+    "id": "cbf453d8-c105-44fa-b490-cd0b50182a72",
+    "word": "portray",
+    "definition": "To depict or describe someone in a particular way."
+  },
+  {
+    "id": "cc394184-c333-4632-a170-00d0517128eb",
+    "word": "hamper",
+    "definition": "To hinder or impede the movement or progress of."
+  },
+  {
+    "id": "cc4e2ef2-8770-48c7-b8fb-28a32e3979ed",
+    "word": "constructive",
+    "definition": "Serving a useful purpose; helping to improve."
+  },
+  {
+    "id": "cc8c482a-e14a-41f1-8fea-684b1b908e02",
+    "word": "implicitly",
+    "definition": "In a way that is not directly stated."
+  },
+  {
+    "id": "cd8ea60b-60f6-4e03-a709-f1d4d2f507cd",
+    "word": "authentic",
+    "definition": "Of undisputed origin; genuine."
+  },
+  {
+    "id": "cf51a3d6-e964-49f4-822f-b3fd8d51d5e2",
+    "word": "partial",
+    "definition": "Existing only in part; incomplete; biased toward one side."
+  },
+  {
+    "id": "cfb2b9a9-8e7d-45e4-8423-8aa317eaf7b6",
+    "word": "advance",
+    "definition": "To move forward; to make progress."
+  },
+  {
+    "id": "d06db92f-cf7c-4178-ba80-cf49ace4f11a",
+    "word": "revise",
+    "definition": "To reconsider or alter something in light of new information."
+  },
+  {
+    "id": "d094c25c-2591-4859-b860-5d260446171a",
+    "word": "commonly",
+    "definition": "Very often; frequently."
+  },
+  {
+    "id": "d1383e29-a59a-4bf6-b762-a2a769dbf6a5",
+    "word": "connect",
+    "definition": "To join or link together."
+  },
+  {
+    "id": "d174741c-24f3-4e76-b24a-9d984b1b0832",
+    "word": "bellicose",
+    "definition": "Demonstrating aggression; eager to fight."
+  },
+  {
+    "id": "d1ae9d3f-9c8b-4f4f-9d25-e0ddcd5e026c",
+    "word": "voltage",
+    "definition": "The electrical force driving current through a circuit."
+  },
+  {
+    "id": "d279eb52-4a27-41df-95db-72acca502c6c",
+    "word": "ion",
+    "definition": "An atom or molecule with a net electrical charge."
+  },
+  {
+    "id": "d284399b-1a83-43d8-a479-dc904ef5a511",
+    "word": "ensure",
+    "definition": "To make certain that something will occur."
+  },
+  {
+    "id": "d31dcff1-6707-4d94-ba14-034550e6004e",
+    "word": "spatial",
+    "definition": "Relating to space or the arrangement of things in space."
+  },
+  {
+    "id": "d3436022-0060-4e96-ab32-973b4b666222",
+    "word": "avarice",
+    "definition": "Extreme greed for wealth or material gain."
+  },
+  {
+    "id": "d3693dbc-c649-4c64-bcb1-2d8783e6cc44",
+    "word": "design",
+    "definition": "To plan and create with a specific purpose."
+  },
+  {
+    "id": "d38dbb58-aaf6-4030-a7e7-c0fcb218110a",
+    "word": "explicitly",
+    "definition": "In a way that is clear and detailed."
+  },
+  {
+    "id": "d394fe60-d8da-456f-912a-897cb95155b2",
+    "word": "relatively",
+    "definition": "In relation to something else; comparatively."
+  },
+  {
+    "id": "d3cc32c6-f0a0-4d8e-aa93-7643e347eaf7",
+    "word": "dependent variable",
+    "definition": "The variable being measured in an experiment."
+  },
+  {
+    "id": "d3f556da-d781-4198-a1f8-16abb2940a45",
+    "word": "corollary",
+    "definition": "A natural consequence of a theorem; a direct result."
+  },
+  {
+    "id": "d41f28dd-827b-4f78-9727-b3b8cd4e9a4e",
+    "word": "incongruous",
+    "definition": "Not in harmony or keeping with the surroundings."
+  },
+  {
+    "id": "d4b03966-4da6-4585-b7af-255f20ed5fd3",
+    "word": "occasionally",
+    "definition": "At irregular intervals; from time to time."
+  },
+  {
+    "id": "d4b3820e-2a31-489f-9431-aecb5584b197",
+    "word": "oscillation",
+    "definition": "Regular back-and-forth movement."
+  },
+  {
+    "id": "d525a9b2-c87b-4068-a700-c7c7978acd3c",
+    "word": "effectively",
+    "definition": "In a way that produces a desired result."
+  },
+  {
+    "id": "d5b06701-f827-4a7a-a87e-5c085517daeb",
+    "word": "combine",
+    "definition": "To merge or put together."
+  },
+  {
+    "id": "d5d67b36-3fca-4243-952b-072f07711f64",
+    "word": "pattern",
+    "definition": "A repeated form or design; a regular sequence."
+  },
+  {
+    "id": "d637033e-9392-427a-99e4-1c66e1dc653a",
+    "word": "omit",
+    "definition": "To leave something out or exclude it."
+  },
+  {
+    "id": "d698e145-fd55-4447-8f5a-17387f9a265f",
+    "word": "radiation",
+    "definition": "Energy emitted as waves or particles."
+  },
+  {
+    "id": "d701db9b-00d6-48b1-99cf-5a4366f175f7",
+    "word": "provocative",
+    "definition": "Causing anger or another strong reaction."
+  },
+  {
+    "id": "d77dacb3-860c-42e3-997f-378281090fec",
+    "word": "inimitable",
+    "definition": "So good or unusual as to be impossible to copy."
+  },
+  {
+    "id": "d8042d57-f80b-49f4-bc21-4ea08423dec9",
+    "word": "present",
+    "definition": "To show or introduce something to an audience."
+  },
+  {
+    "id": "d81708f2-b4c2-46c3-b8cf-b2c9e0bc5ef7",
+    "word": "compound",
+    "definition": "A substance formed from two or more elements; complex."
+  },
+  {
+    "id": "d851d09d-f4b6-4047-b466-039be0c3b06d",
+    "word": "ecology",
+    "definition": "The study of organisms and their environment."
+  },
+  {
+    "id": "d8fc1a65-329e-4faa-9c85-c603083f67d4",
+    "word": "passionate",
+    "definition": "Having or showing strong emotion or conviction."
+  },
+  {
+    "id": "d9131965-847e-4347-9f0b-f0f3cd2c57b3",
+    "word": "statement",
+    "definition": "A clear expression of something in speech or writing."
+  },
+  {
+    "id": "d9ad1e53-3b73-4a6a-ae4b-f27b98fc98de",
+    "word": "umbrage",
+    "definition": "Offense or annoyance."
+  },
+  {
+    "id": "d9f16b9d-0434-44ce-b0d2-c26745cc250a",
+    "word": "induce",
+    "definition": "To succeed in persuading or causing someone to do something."
+  },
+  {
+    "id": "dadd204a-4409-4bff-8836-289cf76eaf27",
+    "word": "besides",
+    "definition": "In addition to; apart from."
+  },
+  {
+    "id": "dae97b60-315f-4236-ad70-952b4e2820f7",
+    "word": "particularly",
+    "definition": "Especially; to a higher degree than usual."
+  },
+  {
+    "id": "db37f371-0131-438d-958f-b27d7f8d28b5",
+    "word": "seek",
+    "definition": "To search for; to try to find."
+  },
+  {
+    "id": "de23cc70-6c2c-4806-b7de-d2b3d77c3f0b",
+    "word": "chromosome",
+    "definition": "A structure within cells containing genetic information."
+  },
+  {
+    "id": "dfd99233-6390-4ede-a719-bd3313a79aee",
+    "word": "formula",
+    "definition": "A mathematical relationship expressed in symbols."
+  },
+  {
+    "id": "dffd207e-3a3e-4715-96be-04784d4d7409",
+    "word": "execute",
+    "definition": "To carry out or put into effect a plan or action."
+  },
+  {
+    "id": "e07a3b24-47d3-4066-bfa6-446a9901218b",
+    "word": "ingenuous",
+    "definition": "Innocent and unsuspecting; artlessly sincere."
+  },
+  {
+    "id": "e1944a8a-2178-4a48-b0aa-09daa4409391",
+    "word": "circulation",
+    "definition": "Movement in a circle; the flow of blood through the body."
+  },
+  {
+    "id": "e209f819-80a8-44f1-9f21-e6e73c848744",
+    "word": "periodic",
+    "definition": "Appearing or occurring at intervals."
+  },
+  {
+    "id": "e22a96e6-2358-4873-a4cc-6f5a1aee28d9",
+    "word": "random",
+    "definition": "Made, done, or happening without method or conscious decision."
+  },
+  {
+    "id": "e2d55211-295e-4412-acd2-5b4766575b6c",
+    "word": "associate",
+    "definition": "To connect in the mind; to relate."
+  },
+  {
+    "id": "e2ef93bf-a8d3-4d5b-bdf7-c31f8da78816",
+    "word": "monitor",
+    "definition": "To observe and check the progress of something over time."
+  },
+  {
+    "id": "e413c111-bdd9-474d-addf-a490def8cb3d",
+    "word": "observe",
+    "definition": "To notice or perceive something; to watch carefully."
+  },
+  {
+    "id": "e41cc876-662b-43b0-805c-cca7a9f9bda6",
+    "word": "imperious",
+    "definition": "Assuming power without justification; domineering."
+  },
+  {
+    "id": "e4675ba0-0d8d-4190-aced-16146ec4d578",
+    "word": "coherence",
+    "definition": "The quality of being logical and consistent."
+  },
+  {
+    "id": "e4efc512-56cb-446a-8a7d-9d5bd81b4912",
+    "word": "format",
+    "definition": "To arrange in a specific structure."
+  },
+  {
+    "id": "e4f8d79b-d240-4f2b-82d6-8973d7789736",
+    "word": "evaluation",
+    "definition": "The making of a judgment about the quality of something."
+  },
+  {
+    "id": "e52ef5a7-5cd1-4012-b24a-6fbf45bbf885",
+    "word": "to summarize",
+    "definition": "Used before restating something more concisely."
+  },
+  {
+    "id": "e57fdf08-0878-4f0d-8121-acff6d4bff93",
+    "word": "organize",
+    "definition": "To arrange systematically; to structure."
+  },
+  {
+    "id": "e5ce9025-b715-4fe4-8969-fcc0bebbca19",
+    "word": "capricious",
+    "definition": "Given to sudden changes of mood or behavior; unpredictable."
+  },
+  {
+    "id": "e6018c3b-2b6f-4679-958d-69ca9d2e7950",
+    "word": "component",
+    "definition": "A part or element of a larger whole."
+  },
+  {
+    "id": "e64850dd-9e12-4796-9b24-d55af6b05d32",
+    "word": "paradigm shift",
+    "definition": "A fundamental change in assumptions or approach."
+  },
+  {
+    "id": "e71b9e68-09a4-41b6-a192-40be22055dbc",
+    "word": "operate",
+    "definition": "To work or cause to work in a particular way."
+  },
+  {
+    "id": "e74ff067-3cc2-4cdf-ab47-15417c0dc06b",
+    "word": "acute",
+    "definition": "Having a severe or sudden onset; perceptive."
+  },
+  {
+    "id": "e79af4f1-150e-4d7e-8b21-99d3bc22bb6d",
+    "word": "semantics",
+    "definition": "The branch of linguistics concerned with meaning."
+  },
+  {
+    "id": "e7eebb4d-9c1d-4c36-aaf2-9a33ed3071bb",
+    "word": "dense",
+    "definition": "Closely compacted; containing a lot of information."
+  },
+  {
+    "id": "e7fa5867-95b1-4887-9525-bbc2f9107159",
+    "word": "contribution",
+    "definition": "Something given or done to help a common purpose."
+  },
+  {
+    "id": "e8931587-c9fd-4593-a18c-c69dd3dd5d74",
+    "word": "empirically",
+    "definition": "Based on observation or experiment."
+  },
+  {
+    "id": "e90f995d-a0a5-48d5-b09f-75b320743cd9",
+    "word": "focused",
+    "definition": "Paying particular attention; concentrated."
+  },
+  {
+    "id": "ea63cd0f-97f0-45c1-91f2-58334df4158d",
+    "word": "mandatory",
+    "definition": "Required by law or rules; compulsory."
+  },
+  {
+    "id": "eb179819-2696-4eb6-b6a6-2eb169fb3fe7",
+    "word": "optional",
+    "definition": "Available to be chosen but not obligatory."
+  },
+  {
+    "id": "ed5ca198-cde3-4b98-bbd4-05687d832f83",
+    "word": "whether",
+    "definition": "Expressing a doubt or choice between alternatives."
+  },
+  {
+    "id": "ee01cd0d-f75f-4ac2-ae9c-e5205d9b392f",
+    "word": "mechanism",
+    "definition": "A process by which something takes place."
+  },
+  {
+    "id": "ef67fa83-a4be-4683-8771-b0e20c160ce6",
+    "word": "appropriately",
+    "definition": "In a manner that is suitable or proper."
+  },
+  {
+    "id": "ef8502e3-a9e8-4a8f-9ed1-6ad2960083e0",
+    "word": "pervasive",
+    "definition": "Spreading through and apparent in every part of something."
+  },
+  {
+    "id": "ef8e7e16-bcb7-4a7b-9e42-41c9ecb26ec2",
+    "word": "significantly",
+    "definition": "In a way that is large or important enough to be noticed."
+  },
+  {
+    "id": "f0223b7d-7253-41f8-a23e-85ae9dc70a83",
+    "word": "affable",
+    "definition": "Friendly, good-natured, and easy to talk to."
+  },
+  {
+    "id": "f0dcf6d9-733a-4d40-a8c9-bb8c79d74f97",
+    "word": "synthesize",
+    "definition": "To combine information from multiple sources into a coherent whole."
+  },
+  {
+    "id": "f1141af2-ad3c-467b-bfb1-4ac0da49f754",
+    "word": "aggregate",
+    "definition": "To combine into a mass or whole."
+  },
+  {
+    "id": "f150b7b1-f18e-4e9d-be09-edef5fee6f1f",
+    "word": "objectively",
+    "definition": "In a way that is not influenced by personal feelings."
+  },
+  {
+    "id": "f15df6a8-e2e2-47e5-b4fe-52496095e622",
+    "word": "taciturn",
+    "definition": "Reserved or uncommunicative in speech."
+  },
+  {
+    "id": "f298e0ea-a5c7-4bc0-b66e-956179591a58",
+    "word": "insouciant",
+    "definition": "Showing a casual lack of concern; indifferent."
+  },
+  {
+    "id": "f2b6166c-2128-40b0-b644-73759d279593",
+    "word": "dedicated",
+    "definition": "Committed to a task or purpose."
+  },
+  {
+    "id": "f2b90d65-5f19-4050-91a8-55f29831aa83",
+    "word": "element",
+    "definition": "A part of a whole; an essential component."
+  },
+  {
+    "id": "f2f78a15-7d65-47aa-90e8-12886caba888",
+    "word": "regional",
+    "definition": "Relating to a particular region or area."
+  },
+  {
+    "id": "f4577ce2-a5e7-4d42-99f4-1d96d2540f9b",
+    "word": "compile",
+    "definition": "To produce a list or book by assembling information from other sources."
+  },
+  {
+    "id": "f476ea55-955b-44b9-8d5d-cd02a0f7ebd5",
+    "word": "deter",
+    "definition": "To discourage someone from doing something through fear of consequences."
+  },
+  {
+    "id": "f4e2d0ce-cf82-44ff-95b1-a54354ffaad9",
+    "word": "abstraction",
+    "definition": "The concept of separating essential qualities from specifics."
+  },
+  {
+    "id": "f74d49e2-3bb1-4401-b92d-ca342434b413",
+    "word": "indirectly",
+    "definition": "In a way that is not straightforward."
+  },
+  {
+    "id": "f7519b09-04e3-491f-ae64-75c446a7ae61",
+    "word": "separate",
+    "definition": "To set apart; to distinguish."
+  },
+  {
+    "id": "f8bcb4a4-e693-4754-944f-7fc2cc94032b",
+    "word": "deleterious",
+    "definition": "Causing harm or damage."
+  },
+  {
+    "id": "f8fc08e9-41d1-47c6-9bee-24c6fb46385b",
+    "word": "endeavor",
+    "definition": "An attempt to achieve a goal; an enterprise."
+  },
+  {
+    "id": "f940283b-dc02-4fff-a91a-28c8bed9bd12",
+    "word": "delegate",
+    "definition": "To entrust a task to another person."
+  },
+  {
+    "id": "f999d68e-ca38-4837-934b-3f037c11bce3",
+    "word": "axiom",
+    "definition": "A statement accepted as true without proof."
+  },
+  {
+    "id": "f9d2d7fb-bad9-4ce0-8b3b-db4130cd3e90",
+    "word": "target",
+    "definition": "To select as a goal or objective."
+  },
+  {
+    "id": "fa19d337-51aa-4c03-ad07-cc390aff701c",
+    "word": "parsimonious",
+    "definition": "Very unwilling to spend money; extremely frugal. Of an explanation: using the fewest possible assumptions."
+  },
+  {
+    "id": "fa49af34-b167-4a47-b5e9-b75db5248e2f",
+    "word": "clearly",
+    "definition": "In a clear manner; without doubt."
+  },
+  {
+    "id": "fb4f6886-8461-47de-adc5-b3a1c52b3252",
+    "word": "sanctimonious",
+    "definition": "Making a show of being morally superior; self-righteous."
+  },
+  {
+    "id": "fb94578e-5cf5-414e-9c4c-3f416ea95ee6",
+    "word": "inclusion",
+    "definition": "The action of including someone or something."
+  },
+  {
+    "id": "fbe6cf65-d288-4227-8c28-774799cbda6f",
+    "word": "abbreviate",
+    "definition": "To shorten a word, phrase, or text."
+  },
+  {
+    "id": "fd249892-7159-4583-9b0f-c412a1d7c138",
+    "word": "understand",
+    "definition": "To have or gain knowledge of something."
+  },
+  {
+    "id": "fd5bccd7-198a-49ec-865f-5b936cb42e30",
+    "word": "report",
+    "definition": "To give information about something."
+  },
+  {
+    "id": "fe092560-0bcf-44f8-9372-63eb81809283",
+    "word": "isotope",
+    "definition": "Atoms of the same element with different numbers of neutrons."
+  },
+  {
+    "id": "fe3980e7-133c-4eeb-bd67-816eff38e1fd",
+    "word": "align",
+    "definition": "To place things in a straight line; to come together."
+  },
+  {
+    "id": "fe3e6bb2-7b68-45a4-8ff7-7cdbc2ccc55e",
+    "word": "dissent",
+    "definition": "Disagreement with an official or majority opinion (noun); to hold or express such disagreement (verb)."
+  },
+  {
+    "id": "ff1743e6-ee93-4365-8885-33bd6ac16ea1",
+    "word": "austere",
+    "definition": "Severe in manner or appearance; without luxury."
+  },
+  {
+    "id": "ff3d674b-0501-4cef-a096-503b1383db94",
+    "word": "integrate",
+    "definition": "To combine parts into a whole; to bring together."
+  }
+]

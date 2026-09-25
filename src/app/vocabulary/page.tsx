@@ -10,7 +10,7 @@ import { nextInterval, addDays, isDue } from '@/lib/spaced-repetition';
 import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
   RotateCcw, Trophy, ThumbsUp, Flame, Settings, Check, X, Target, Clock,
-  TrendingDown, Zap, Link2, GraduationCap, Palette, Package, CheckCircle2,
+  TrendingDown, GraduationCap, CheckCircle2,
   AlertTriangle, ChevronUp, ChevronDown, Play, ChevronLeft, ArrowRight, ArrowLeft,
 } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
@@ -49,13 +49,25 @@ interface TimedResult {
 const CATEGORY_LABELS: Record<string, string> = {
   general:     'כללי',
   academic:    'אקדמי',
-  descriptive: 'תיאורי',
+  descriptive: 'שמות תואר',
   verbs:       'פעלים',
-  connectors:  'מחברים',
+  connectors:  'מילות קישור',
   nouns:       'שמות עצם',
   advanced:    'מתקדם',
   adjectives:  'שמות תואר',
 };
+
+/**
+ * The `category` column mixes grammar (verbs, nouns, …) with themes
+ * (academic, advanced). The filter keeps them apart: parts of speech here,
+ * themes only in THEMED_PACKS. "descriptive" words are adjectives too.
+ */
+const PARTS_OF_SPEECH: { id: string; label: string; categories: string[] }[] = [
+  { id: 'nouns',      label: 'שמות עצם',    categories: ['nouns'] },
+  { id: 'verbs',      label: 'פעלים',       categories: ['verbs'] },
+  { id: 'adjectives', label: 'שמות תואר',   categories: ['adjectives', 'descriptive'] },
+  { id: 'connectors', label: 'מילות קישור', categories: ['connectors'] },
+];
 
 const CATEGORY_COLORS: Record<string, string> = {
   general:     'bg-exam-paper-alt text-exam-ink-soft',
@@ -415,14 +427,11 @@ function VocabularyContent() {
   // ─── Themed packs definition ───────────────────────────────────────────────
   const THEMED_PACKS = [
     ...(myWords.length > 0 ? [{ id: 'my-mistakes', icon: TrendingDown, label: `המילים שהפילו אותי (${myWords.length})`, filter: (w: VocabWord) => w.category === 'my-mistakes' }] : []),
-    { id: 'verbs',      icon: Zap,            label: 'פעלים חזקים',    filter: (w: VocabWord) => w.category === 'verbs' },
-    { id: 'connectors', icon: Link2,          label: 'מחברים ומעברים', filter: (w: VocabWord) => w.category === 'connectors' },
     { id: 'academic',   icon: GraduationCap,  label: 'אקדמי',           filter: (w: VocabWord) => w.category === 'academic' },
     { id: 'advanced',   icon: Flame,          label: 'מתקדם',           filter: (w: VocabWord) => w.difficulty_level >= 4 },
     { id: 'easy',       icon: CheckCircle2,   label: 'קל להתחלה',       filter: (w: VocabWord) => w.difficulty_level <= 2 },
-    { id: 'adjectives', icon: Palette,        label: 'תיאורים',         filter: (w: VocabWord) => w.category === 'adjectives' || w.category === 'descriptive' },
-    { id: 'nouns',      icon: Package,        label: 'שמות עצם',        filter: (w: VocabWord) => w.category === 'nouns' },
-    { id: 'favorites',  icon: Heart,          label: 'מועדפים',         filter: (w: VocabWord) => favorites.has(w.id) },
+    // Reached from the Favorites window ("תרגל רק את המועדפים"), not listed as a set.
+    { id: 'favorites',  icon: Heart,          label: 'מועדפים',         filter: (w: VocabWord) => favorites.has(w.id), hidden: true },
   ];
 
   // ─── Compute filtered words ────────────────────────────────────────────────
@@ -436,7 +445,10 @@ function VocabularyContent() {
       if (pack) filtered = filtered.filter(pack.filter);
     }
 
-    if (filterCat) filtered = filtered.filter(w => w.category === filterCat);
+    if (filterCat) {
+      const pos = PARTS_OF_SPEECH.find(p => p.id === filterCat);
+      filtered = filtered.filter(w => pos ? pos.categories.includes(w.category) : w.category === filterCat);
+    }
     if (filterDiff) filtered = filtered.filter(w => w.difficulty_level === filterDiff);
     if (search.trim()) {
       const q = search.trim().toLowerCase();
@@ -817,8 +829,6 @@ function VocabularyContent() {
   // The face clears out under the swipe color before the label is strong.
   const faceOpacity = 1 - Math.min(1, 2 * Math.max(knewOpacity, unknownOpacity));
 
-  const categoryCounts = allWords.reduce<Record<string, number>>((acc, w) => { acc[w.category] = (acc[w.category] ?? 0) + 1; return acc; }, {});
-  const categories = [...new Set(allWords.map(w => w.category))].filter(c => categoryCounts[c] >= 5).sort();
 
   // ─── Timer bar color ───────────────────────────────────────────────────────
   const timerColor = timeLeft > timedTimePerWord * 0.5 ? 'bg-exam-sage-strong' : timeLeft > timedTimePerWord * 0.25 ? 'bg-exam-alt' : 'bg-exam-wrong';
@@ -971,7 +981,7 @@ function VocabularyContent() {
                 )}
                 {filterCat && (
                   <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-paper-alt text-exam-ink-soft rounded-sm text-xs font-medium">
-                    {CATEGORY_LABELS[filterCat] ?? filterCat}
+                    {PARTS_OF_SPEECH.find(p => p.id === filterCat)?.label ?? CATEGORY_LABELS[filterCat] ?? filterCat}
                     <button onClick={() => setFilterCat('')} aria-label="הסרת הקטגוריה" className="hover:opacity-70 inline-flex"><X className="w-3.5 h-3.5" aria-hidden /></button>
                   </span>
                 )}
@@ -1017,7 +1027,7 @@ function VocabularyContent() {
                 <div>
                   <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">סטים נושאיים</div>
                   <div className="flex flex-wrap gap-2">
-                    {THEMED_PACKS.map(pack => (
+                    {THEMED_PACKS.filter(pack => !('hidden' in pack && pack.hidden)).map(pack => (
                       <button
                         key={pack.id}
                         onClick={() => setActivePack(activePack === pack.id ? '' : pack.id)}
@@ -1029,11 +1039,11 @@ function VocabularyContent() {
 
                 {/* Categories */}
                 <div>
-                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">קטגוריה</div>
+                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">חלקי דיבר</div>
                   <div className="flex flex-wrap gap-2">
                     <button onClick={() => setFilterCat('')} className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] ${!filterCat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>הכל</button>
-                    {categories.map(cat => (
-                      <button key={cat} onClick={() => setFilterCat(cat === filterCat ? '' : cat)} className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] ${filterCat === cat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{CATEGORY_LABELS[cat] ?? cat}</button>
+                    {PARTS_OF_SPEECH.map(({ id: cat, label }) => (
+                      <button key={cat} onClick={() => setFilterCat(cat === filterCat ? '' : cat)} className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] ${filterCat === cat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{label}</button>
                     ))}
                   </div>
                 </div>
@@ -1174,26 +1184,22 @@ function VocabularyContent() {
                       </div>
                       <div className="mb-4 flex justify-center"><StarRow n={current.difficulty_level} size={18} /></div>
 
-                      {/* A word not learned yet shows its definition and example up
-                          front, so the first pass teaches it. A word coming back
-                          for review keeps them behind the hint, to test recall. */}
-                      {!(current.definition || current.example_sentence) ? null : (!known.has(current.id) || showHint) ? (
-                        <div className="mt-4 space-y-2 text-left">
-                          {current.definition && (
-                            <p className="text-sm text-exam-ink-soft leading-relaxed">{cleanSnippet(current.definition)}</p>
-                          )}
-                          {current.example_sentence && (
-                            <p className="font-serif p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-sm text-exam-alt italic leading-relaxed">
-                              {cleanSnippet(current.example_sentence, { keepPeriod: true })}
-                            </p>
-                          )}
-                        </div>
-                      ) : (
+                      {/* The definition is shown up front on a word not learned yet.
+                          The example sentence is the hint: always behind "הצג רמז".
+                          A word back for review hides both, to test recall. */}
+                      {(!known.has(current.id) || showHint) && current.definition && (
+                        <p className="mt-4 text-sm text-exam-ink-soft leading-relaxed text-left">{cleanSnippet(current.definition)}</p>
+                      )}
+                      {showHint && current.example_sentence ? (
+                        <p className="font-serif mt-3 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-sm text-exam-alt italic leading-relaxed text-left">
+                          {cleanSnippet(current.example_sentence, { keepPeriod: true })}
+                        </p>
+                      ) : (current.example_sentence || (known.has(current.id) && current.definition)) && (
                         <button
                           onClick={e => { e.stopPropagation(); setShowHint(true); }}
-                          className="text-xs text-exam-alt hover:opacity-80 mt-2 inline-flex items-center gap-1"
+                          className="hit-44 text-xs text-exam-alt hover:opacity-80 mt-3 inline-flex items-center gap-1"
                           dir="rtl"
-                        ><Lightbulb className="w-3.5 h-3.5" aria-hidden />הצג הגדרה ומשפט לדוגמה</button>
+                        ><Lightbulb className="w-3.5 h-3.5" aria-hidden />הצג רמז</button>
                       )}
 
                       <button
@@ -1247,18 +1253,20 @@ function VocabularyContent() {
               </div>
             )}
 
+            {/* RTL: the first button sits on the right, so "ידעתי" (swipe right) is on
+                the right and "לא ידעתי" (swipe left) on the left. */}
             {current && (
               <div className="flex gap-4 mt-6 justify-center">
-                <button
-                  onClick={handleUnknown}
-                  disabled={!!animating}
-                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-exam-wrong-bg border-2 border-exam-wrong/40 text-exam-wrong font-bold text-lg shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-surface"
-                ><X className="mx-auto" strokeWidth={3} aria-hidden /><br /><span className="text-sm font-medium">לא ידעתי</span></button>
                 <button
                   onClick={handleKnew}
                   disabled={!!animating}
                   className="flex-1 max-w-[140px] py-4 rounded-2xl bg-exam-sage-bg border-2 border-exam-sage/40 text-exam-sage-strong font-bold text-lg shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-surface"
                 ><Check className="mx-auto" strokeWidth={3} aria-hidden /><br /><span className="text-sm font-medium">ידעתי</span></button>
+                <button
+                  onClick={handleUnknown}
+                  disabled={!!animating}
+                  className="flex-1 max-w-[140px] py-4 rounded-2xl bg-exam-wrong-bg border-2 border-exam-wrong/40 text-exam-wrong font-bold text-lg shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-surface"
+                ><X className="mx-auto" strokeWidth={3} aria-hidden /><br /><span className="text-sm font-medium">לא ידעתי</span></button>
               </div>
             )}
 
@@ -1311,10 +1319,10 @@ function VocabularyContent() {
             <div className="mt-6 text-center text-xs text-exam-ink-soft hidden sm:block">
               <span className="inline-flex items-center justify-center gap-x-4 gap-y-1 flex-wrap">
                 <span>קיצורי מקלדת:</span>
-                <span className="inline-flex items-center gap-1"><kbd className="inline-flex items-center rounded border border-exam-border bg-exam-paper-alt px-1 py-0.5"><ArrowLeft className="w-3 h-3" aria-label="חץ שמאלה" /></kbd>לא ידעתי</span>
                 <span className="inline-flex items-center gap-1"><kbd className="inline-flex items-center rounded border border-exam-border bg-exam-paper-alt px-1 py-0.5"><ArrowRight className="w-3 h-3" aria-label="חץ ימינה" /></kbd>ידעתי</span>
+                <span className="inline-flex items-center gap-1"><kbd className="inline-flex items-center rounded border border-exam-border bg-exam-paper-alt px-1 py-0.5"><ArrowLeft className="w-3 h-3" aria-label="חץ שמאלה" /></kbd>לא ידעתי</span>
                 <span className="inline-flex items-center gap-1"><kbd className="rounded border border-exam-border bg-exam-paper-alt px-1.5 py-0.5 font-sans">רווח</kbd>להפוך</span>
-                <span className="inline-flex items-center gap-1"><kbd className="rounded border border-exam-border bg-exam-paper-alt px-1.5 py-0.5 font-sans">H</kbd>לדוגמה</span>
+                <span className="inline-flex items-center gap-1"><kbd className="rounded border border-exam-border bg-exam-paper-alt px-1.5 py-0.5 font-sans">H</kbd>לרמז</span>
               </span>
             </div>
           </>

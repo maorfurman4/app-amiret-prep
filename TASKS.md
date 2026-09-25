@@ -74,3 +74,11 @@
 - [x] Quick-test settings: rounded pill radio groups ([5] [10] [20], [10] [15] [20] [30]) reading low → high; "שניות לכל מילה" instead of "30ש׳" (which rendered as "’30ש")
 - [x] Found along the way: typing in the filter search fired the card shortcuts (H, space, arrows); shortcuts now ignore text fields and open overlays
 - [x] Counts: `heCount` groups thousands ("1,158 מילים"); "(פחות מ-1%)" instead of "(0%)" once a word is known; timed score "X מתוך Y"
+
+# Vocabulary logic fixes (`fix/vocab-logic-ux`)
+
+- [x] Buttons match the swipe: "ידעתי" (green, swipe right, → key) on the right, "לא ידעתי" (red, swipe left, ← key) on the left; the keyboard hint lists them in the same order
+- [x] Hint restored: an unlearned card shows the definition only; the example sentence waits behind "הצג רמז" (H); a word back for review hides both until the hint
+- [x] Filters without duplicates: "סטים נושאיים" = המילים שהפילו אותי, אקדמי, מתקדם, קל להתחלה; "חלקי דיבר" = שמות עצם, פעלים, שמות תואר (adjectives + descriptive), מילות קישור. Favorites stays reachable from the Favorites window only
+- [x] Card tags use the same names ("מחברים" → "מילות קישור", "תיאורי" → "שמות תואר")
+- Note: `category` holds either a part of speech or a theme, so the 300 words tagged academic/advanced (178 + 122) don't appear under any part of speech. Tagging them needs a data pass.

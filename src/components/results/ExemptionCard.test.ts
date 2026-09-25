@@ -16,9 +16,11 @@ describe('ExemptionCard', () => {
   });
 
   it('frames it as a natural frequency', () => {
-    expect(render(0.72)).toContain('בערך 7 מתוך 10');
-    expect(render(0.02)).toContain('פחות מ-1 מתוך 10');
-    expect(render(0.98)).toContain('כמעט 10 מתוך 10');
+    expect(render(0.72)).toContain('בערך 7 מתוך 10 נבחנים עם תוצאה כמו שלך נמצאים');
+    expect(render(0.1)).toContain('בערך אחד מתוך 10 נבחנים עם תוצאה כמו שלך נמצא ');
+    expect(render(0.02)).toContain('פחות מאחד מתוך 10 נבחנים עם תוצאה כמו שלך נמצא ');
+    expect(render(0.98)).toContain('כמעט כל הנבחנים עם תוצאה כמו שלך נמצאים');
+    expect(render(0.72)).not.toContain('מתוך 10 נבחנים עם תוצאה כמו שלך, ');
   });
 
   it('picks the tone from the probability', () => {

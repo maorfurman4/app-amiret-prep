@@ -180,7 +180,7 @@ export default function ReviewQueuePage() {
 
   // Clear ALL questions
   const handleClearAll = async () => {
-    if (!window.confirm(`למחוק את כל ${allQuestions.length} השאלות מרשימת החזרה?`)) return;
+    if (!window.confirm(allQuestions.length === 1 ? 'למחוק את השאלה מרשימת החזרה?' : `למחוק את כל ${allQuestions.length} השאלות מרשימת החזרה?`)) return;
     authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}`, { method: 'DELETE' }).catch(() => {});
     setAllQuestions([]);
     setStep('empty');
@@ -190,7 +190,8 @@ export default function ReviewQueuePage() {
   const handleDeleteCategory = async (type: string) => {
     const inCategory = allQuestions.filter(q => q.type === type);
     if (inCategory.length === 0) return;
-    if (!window.confirm(`למחוק את כל ${inCategory.length} השאלות בקטגוריית "${CATEGORY_LABELS[type] ?? type}"?`)) return;
+    const label = CATEGORY_LABELS[type] ?? type;
+    if (!window.confirm(inCategory.length === 1 ? `למחוק את השאלה בקטגוריית "${label}"?` : `למחוק את כל ${inCategory.length} השאלות בקטגוריית "${label}"?`)) return;
 
     const newAll = allQuestions.filter(q => q.type !== type);
     setAllQuestions(newAll);

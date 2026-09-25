@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Sparkles, LifeBuoy, ChevronLeft } from 'lucide-react';
 import type { ContextualTip } from '@/lib/strategy-tip';
 import { RichText } from '@/components/strategies/RichText';
+import { heCount } from '@/lib/hebrew-count';
 
 const TONE: Record<'blue' | 'purple' | 'green', { badge: string; glow: string; icon: string }> = {
   blue: { badge: 'bg-exam-accent/10 text-exam-accent', glow: 'from-exam-accent/25', icon: 'text-exam-accent' },
@@ -22,7 +23,7 @@ export function ContextualStrategyCard({ tip: { guide, tip, errors, total } }: {
     : errors === total
       ? `טעית ב${total === 2 ? 'שתי' : `כל ${total}`} השאלות ${kind} בתרגול הזה.`
       : errors === 1
-        ? `טעית בשאלה אחת מתוך ${total} שאלות ${kind} בתרגול הזה.`
+        ? `טעית בשאלה אחת מתוך ${heCount(total, 'question')} ${kind} בתרגול הזה.`
         : `טעית ב-${errors} מתוך ${total} שאלות ${kind} בתרגול הזה.`;
   const reason = errors > 0
     ? `${missed} הכלי הזה יעזור לך שם יותר מכל דבר אחר.`

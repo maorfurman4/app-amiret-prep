@@ -875,7 +875,7 @@ function VocabularyContent() {
                   ><span className="inline-flex items-center gap-1">תרגל רק את המועדפים<ChevronLeft className="w-4 h-4" aria-hidden /></span></button>
                   <button
                     onClick={() => {
-                      if (!window.confirm(`למחוק את כל ${favorites.size} המועדפים?`)) return;
+                      if (!window.confirm(favorites.size === 1 ? 'להסיר את המילה מהמועדפים?' : `להסיר את כל ${favorites.size} המילים מהמועדפים?`)) return;
                       clearAllFavorites();
                     }}
                     className="px-3 py-2 bg-exam-paper-alt text-exam-ink-soft rounded-sm text-sm hover:bg-exam-border/30 transition-colors"

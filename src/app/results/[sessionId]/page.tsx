@@ -181,7 +181,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:200ms]">
           <h2 className="font-bold text-exam-ink mb-4">פירוט לפי סוג שאלה</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-            {Object.entries(byType).map(([type, { correct, total }], i) => {
+            {Object.entries(byType).filter(([, d]) => d.total > 0).map(([type, { correct, total }], i) => {
               const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
               const color = pct >= 75 ? 'text-exam-sage-strong bg-exam-sage-bg border-exam-sage/40'
                 : pct >= 50 ? 'text-exam-alt bg-exam-alt-bg border-exam-alt/40'
@@ -202,10 +202,10 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
           <h3 className="font-semibold text-exam-ink text-sm mb-3">פירוט לפי פרק, והמסלול האדפטיבי שלך</h3>
           <p className="text-xs text-exam-ink-soft mb-3">
-            רמה 1–5 = רמת הקושי שאליה ניתב אותך האלגוריתם בכל פרק. במבחן האמיתי, רק הגעה לרמות הגבוהות מאפשרת ציון גבוה.
+            התגית &quot;רמה X/5&quot; היא רמת הקושי שאליה ניתב אותך האלגוריתם בכל פרק. במבחן האמיתי, רק הגעה לרמות הגבוהות מאפשרת ציון גבוה.
           </p>
           <div className="space-y-3">
-            {sectionResults.map((sr) => {
+            {sectionResults.filter(sr => sr.totalCount > 0).map((sr) => {
               const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
               const pct = sr.totalCount > 0 ? Math.round((sr.correctCount / sr.totalCount) * 100) : 0;
               const difficulty = sr.questions?.[0]?.difficulty_level;

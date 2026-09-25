@@ -40,11 +40,14 @@ const TONE: Record<ExemptionTone, { arc: string; band: string; text: string; glo
   },
 };
 
-function frequencyCopy(p: number): string {
+/** Who, among ten test-takers with this result, is actually at the exemption line. Verb agrees with the count. */
+function frequencySentence(p: number): string {
   const inTen = Math.round(p * 10);
-  if (inTen <= 0) return 'פחות מ-1 מתוך 10';
-  if (inTen >= 10) return 'כמעט 10 מתוך 10';
-  return `בערך ${inTen} מתוך 10`;
+  const at = `בפועל ברמה של ${EXEMPTION_SCORE} ומעלה`;
+  if (inTen <= 0) return `פחות מאחד מתוך 10 נבחנים עם תוצאה כמו שלך נמצא ${at}.`;
+  if (inTen === 1) return `בערך אחד מתוך 10 נבחנים עם תוצאה כמו שלך נמצא ${at}.`;
+  if (inTen >= 10) return `כמעט כל הנבחנים עם תוצאה כמו שלך נמצאים ${at}.`;
+  return `בערך ${inTen} מתוך 10 נבחנים עם תוצאה כמו שלך נמצאים ${at}.`;
 }
 
 /** Position on the 50–150 track, as a % from the left: scales read low → high, left → right. */
@@ -134,7 +137,7 @@ export function ExemptionCard({ measurement, heading, basis, score }: ExemptionC
 
         <p className={`mt-4 text-center font-bold ${tone.text}`}>{tone.headline}</p>
         <p className="mt-1 text-center text-sm text-exam-ink-soft">
-          מתוך 10 נבחנים עם תוצאה כמו שלך, {frequencyCopy(p)} נמצאים בפועל ברמה של {EXEMPTION_SCORE} ומעלה.
+          {frequencySentence(p)}
         </p>
 
         {/* Where the measurement sits against the line: 80% range + cut + score */}

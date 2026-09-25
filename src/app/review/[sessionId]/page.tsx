@@ -109,8 +109,12 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
             <div>
               <div className="text-sm font-bold text-exam-ink">סקירת מבחן</div>
               <div className="text-xs text-exam-ink-soft">
-                {heCount(filteredIndices.length, 'question')}
-                {filter === 'wrong' ? ` ${agree(filteredIndices.length, 'שגויה', 'שגויות')}` : filter === 'correct' ? ` ${agree(filteredIndices.length, 'נכונה', 'נכונות')}` : ''}
+                {filteredIndices.length === 0
+                  ? (filter === 'wrong' ? 'אין שאלות שגויות' : filter === 'correct' ? 'אין תשובות נכונות' : 'אין שאלות')
+                  : <>
+                      {heCount(filteredIndices.length, 'question')}
+                      {filter === 'wrong' ? ` ${agree(filteredIndices.length, 'שגויה', 'שגויות')}` : filter === 'correct' ? ` ${agree(filteredIndices.length, 'נכונה', 'נכונות')}` : ''}
+                    </>}
               </div>
             </div>
             <button
@@ -177,7 +181,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
               {filter === 'wrong'
                 ? <PartyPopper className="w-10 h-10 mx-auto mb-3" strokeWidth={1.5} aria-hidden />
                 : <ClipboardList className="w-10 h-10 mx-auto mb-3" strokeWidth={1.5} aria-hidden />}
-              <div>{filter === 'wrong' ? 'ענית נכון על הכול. אין כאן טעויות לסקור!' : 'אין כאן שאלות לסקור'}</div>
+              <div>{filter === 'wrong' ? 'ענית נכון על הכול. אין כאן טעויות לסקור!' : filter === 'correct' ? 'במבחן הזה אין תשובות נכונות. הלימוד האמיתי נמצא בסקירת הטעויות.' : 'אין כאן שאלות לסקור'}</div>
             </div>
           ) : (
             <>

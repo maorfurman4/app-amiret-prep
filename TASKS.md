@@ -44,3 +44,14 @@
 - [x] "הסר את תאריך המבחן" text button removed from the editor; a trash icon now sits next to the edit icon inside the date card, with errors shown in the card
 - [x] Text arrows: "התחל", "הבא", "התחל כאן" and the plan-screen list already render Lucide SVG icons with RTL-correct direction (verified in the browser: every button and list row has its SVG)
 - [x] Diagnostic plan: one encouraging sentence under the level strip; range, type comparison and calibration note moved into a collapsed "איך הרמה חושבה?"
+
+# Static text vs dynamic state (`fix/dynamic-copy-audit`)
+
+- [x] Diagnostic plan: the level explanation follows the strip. One level: "התשובות שלך הצביעו בבירור על רמה X, ולכן רק היא מסומנת" (no mention of light squares); a range: dark = best estimate, light = the rest of the range (no longer "around it", since the range can sit on one side); strip aria-label says "הרמה שלך: X" for a single level
+- [x] Plan-screen arrows ("התחל כאן", the "אחר כך" list, "איך הרמה חושבה?") verified as Lucide SVGs (arrow-left, chevron-left, chevron-down that flips when open); no text arrows on the page
+- [x] Stats readiness: "ממוצע 3 האומדנים האחרונים" now names what it averages (last exam / two / three); the stability line ("פער בין המבחנים") is shown only with 2+ exams; "כל סוגי השאלות מעל 70%" is shown only when there is per-type data
+- [x] Stats by difficulty: a level with no questions shows a neutral "— · עוד לא תרגלת" card instead of a red "0%" and "0/0", and keeps its slot so the scale stays easy → hard
+- [x] Results: question types and sections with 0 questions (e.g. a skipped section) are hidden instead of showing "0/0 · 0%"
+- [x] Review screen: header reads "אין שאלות שגויות" / "אין תשובות נכונות" instead of "0 שאלות"; the empty "correct" filter has its own message
+- [x] Agreement: exemption frequency ("בערך אחד מתוך 10 נבחנים… נמצא", no repeated "מתוך 10"), "נקודה אחת עד היעד", "מילה שזכרת", "מתוך שתי שאלות", singular delete confirmations (review queue, category, favorites)
+- [x] Positional claims removed where the target may not render ("התמקד בחולשות למטה")

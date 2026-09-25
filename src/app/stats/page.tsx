@@ -227,10 +227,13 @@ export default function StatsPage() {
           }
           const reasons: { ok: boolean; text: string; href?: string }[] = [];
           reasons.push({ ok: rawRows.length >= 3, text: rawRows.length >= 3 ? `השלמת ${rawRows.length} מבחנים` : `רק ${heCount(rawRows.length, 'exam')}. צריך לפחות 3 למדידה יציבה`, href: rawRows.length >= 3 ? undefined : '/exam' });
-          reasons.push({ ok: avg3 >= 134, text: `ממוצע 3 האומדנים האחרונים: ${Math.round(avg3)} ${avg3 >= 134 ? '(מעל 134 באומדן הפנימי)' : `(${Math.max(1, Math.ceil(134 - avg3)) === 1 ? 'חסרה נקודה אחת' : `חסרות ${Math.ceil(134 - avg3)} נק׳`} ל-134 באומדן)`}` });
-          reasons.push({ ok: spread <= 12, text: spread <= 12 ? `יציבות טובה (פער ${spread} נק׳ בין המבחנים)` : `תנודתיות גבוהה (פער ${spread} נק׳). עוד כמה סימולציות ייצבו את התמונה` });
+          // The label names exactly how many exams the figure rests on (1–3).
+          const avgLabel = last3.length === 1 ? 'האומדן במבחן האחרון' : last3.length === 2 ? 'ממוצע שני האומדנים האחרונים' : 'ממוצע 3 האומדנים האחרונים';
+          reasons.push({ ok: avg3 >= 134, text: `${avgLabel}: ${Math.round(avg3)} ${avg3 >= 134 ? '(מעל 134 באומדן הפנימי)' : `(${Math.max(1, Math.ceil(134 - avg3)) === 1 ? 'חסרה נקודה אחת' : `חסרות ${Math.ceil(134 - avg3)} נק׳`} ל-134 באומדן)`}` });
+          // Stability needs at least two exams to compare; one exam has no "gap between exams".
+          if (last3.length >= 2) reasons.push({ ok: spread <= 12, text: spread <= 12 ? `יציבות טובה (פער ${spread} נק׳ בין המבחנים)` : `תנודתיות גבוהה (פער ${spread} נק׳). עוד כמה סימולציות ייצבו את התמונה` });
           const weakTypes = Object.entries(typeAcc).filter(([, d]) => d.t > 0 && d.c / d.t < 0.7);
-          reasons.push({ ok: weakTypes.length === 0, text: weakTypes.length === 0 ? 'כל סוגי השאלות מעל 70%' : `פחות מ-70% הצלחה: ${weakTypes.map(([t]) => TYPE_LABELS[t] ?? t).join(', ')}` });
+          if (Object.values(typeAcc).some(d => d.t > 0)) reasons.push({ ok: weakTypes.length === 0, text: weakTypes.length === 0 ? 'כל סוגי השאלות מעל 70%' : `פחות מ-70% הצלחה: ${weakTypes.map(([t]) => TYPE_LABELS[t] ?? t).join(', ')}` });
           if (hiTotal > 0) reasons.push({ ok: hiCorrect / hiTotal >= 0.55, text: `ברמות 4-5: ${Math.round((hiCorrect / hiTotal) * 100)}% ${hiCorrect / hiTotal >= 0.55 ? '(יציב גם ברמות הגבוהות)' : '(כדאי לחזק את הרמות הגבוהות)'}` });
           if (timedQ > 0) reasons.push({ ok: overCap / timedQ <= 0.15, text: overCap === 0 ? 'קצב מצוין: אף שאלה לא חרגה מהתקציב' : `${heCount(overCap, 'question')} ${agree(overCap, 'חרגה', 'חרגו')} מתקציב הזמן` });
           const okCount = reasons.filter(r => r.ok).length;
@@ -333,7 +336,7 @@ export default function StatsPage() {
               <div className="grid grid-cols-2 gap-3 text-center">
                 <div className="bg-exam-paper-alt rounded-xl p-3">
                   <div className="text-2xl font-bold text-exam-ink">{reached ? <Check className="w-6 h-6 mx-auto" strokeWidth={3} aria-hidden /> : gap}</div>
-                  <div className="text-xs text-exam-ink-soft mt-0.5">{reached ? 'עברת את היעד' : 'נקודות עד היעד'}</div>
+                  <div className="text-xs text-exam-ink-soft mt-0.5">{reached ? 'עברת את היעד' : `${agree(gap, 'נקודה', 'נקודות')} עד היעד`}</div>
                 </div>
                 <div className="bg-exam-paper-alt rounded-xl p-3">
                   {reached ? (
@@ -349,7 +352,7 @@ export default function StatsPage() {
                   ) : (
                     <>
                       <div className="text-2xl font-bold text-exam-ink-soft">—</div>
-                      <div className="text-xs text-exam-ink-soft mt-0.5">{hist.length < 2 ? 'עוד מבחן אחד ונחשב מגמה' : 'המגמה עדיין לא עולה. התמקד בחולשות למטה'}</div>
+                      <div className="text-xs text-exam-ink-soft mt-0.5">{hist.length < 2 ? 'עוד מבחן אחד ונחשב מגמה' : 'המגמה עדיין לא עולה. תרגול ממוקד בנקודות החולשה שלך יזיז אותה'}</div>
                     </>
                   )}
                 </div>
@@ -460,8 +463,18 @@ export default function StatsPage() {
                 <div dir="ltr" className="grid grid-cols-3 gap-3">
                   {(['easy', 'medium', 'hard'] as const).map(diff => {
                     const data = weakness.byDifficulty[diff];
-                    if (!data) return null;
-                    const pct = data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
+                    // No questions at this level yet: a neutral card, not a red "0%" (and the
+                    // slot stays, so the scale keeps reading easy → hard, left to right).
+                    if (!data || data.total === 0) {
+                      return (
+                        <div key={diff} className="p-3 rounded-xl border border-dashed border-exam-border text-center text-exam-ink-soft">
+                          <div className="text-xl font-bold" aria-hidden>—</div>
+                          <div className="text-xs font-semibold mt-0.5">{DIFFICULTY_LABELS[diff]}</div>
+                          <div className="text-xs mt-0.5">עוד לא תרגלת</div>
+                        </div>
+                      );
+                    }
+                    const pct = Math.round((data.correct / data.total) * 100);
                     const color = pct >= 80
                       ? 'text-exam-sage-strong bg-exam-sage-bg border-exam-sage/40'
                       : pct >= 60

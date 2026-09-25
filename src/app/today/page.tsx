@@ -14,7 +14,7 @@ import {
   Sparkles, RotateCcw, BookOpen, Target, Volume2, Check, X,
   PartyPopper, ThumbsUp, AlertTriangle, ChevronLeft,
 } from 'lucide-react';
-import { heCount } from '@/lib/hebrew-count';
+import { agree, heCount } from '@/lib/hebrew-count';
 
 interface VocabWord {
   id: string;
@@ -371,7 +371,7 @@ export default function TodaySessionPage() {
           <h1 className="text-2xl font-bold text-exam-ink">סיימת את האימון של היום!</h1>
           <div className="flex items-center justify-center gap-6 text-sm text-exam-ink-soft">
             {pct !== null && <div><div className="text-2xl font-bold text-exam-ink">{pct}%</div>תשובות נכונות</div>}
-            {vocabKnownCount > 0 && <div><div className="text-2xl font-bold text-exam-ink">{vocabKnownCount}</div>מילים שזכרת</div>}
+            {vocabKnownCount > 0 && <div><div className="text-2xl font-bold text-exam-ink">{vocabKnownCount}</div>{agree(vocabKnownCount, 'מילה שזכרת', 'מילים שזכרת')}</div>}
           </div>
           <div className="flex items-center justify-center gap-1.5 text-exam-ink-soft text-sm">
             <ThumbsUp className="w-4 h-4" aria-hidden />נתראה מחר באימון הבא

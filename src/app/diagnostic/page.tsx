@@ -273,7 +273,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
               <div className={`text-xl font-bold ${band.color}`}><bdi dir="ltr">~{plan.score}</bdi></div>
             </div>
           </div>
-          <div dir="ltr" className="flex gap-1.5 mb-2" aria-label={`הטווח הסביר: רמות ${lo} עד ${hi}`}>
+          <div dir="ltr" className="flex gap-1.5 mb-2" aria-label={lo === hi ? `הרמה שלך: ${lo}` : `הטווח הסביר: רמות ${lo} עד ${hi}`}>
             {[1, 2, 3, 4, 5].map(l => (
               <div
                 key={l}
@@ -298,7 +298,12 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
               <ChevronDown className="w-3.5 h-3.5 transition-transform duration-300 ease-spring group-open:rotate-180" aria-hidden />
             </summary>
             <div className="mt-2 space-y-1.5 text-xs text-exam-ink-soft leading-relaxed">
-              <p>{lo === hi ? `הטווח הסביר: רמה ${lo}.` : <>הטווח הסביר: רמות <bdi dir="ltr">{lo}–{hi}</bdi>.</>} המשבצת הכהה היא ההערכה הטובה ביותר, והבהירות סביבה הן הטווח שבו הרמה שלך כנראה נמצאת.</p>
+              {/* Light squares exist only when the range spans more than one level. */}
+              <p>
+                {lo === hi
+                  ? `התשובות שלך הצביעו בבירור על רמה ${lo}, ולכן רק היא מסומנת.`
+                  : <>הטווח הסביר: רמות <bdi dir="ltr">{lo}–{hi}</bdi>. המשבצת הכהה היא ההערכה הטובה ביותר, והבהירות הן שאר הרמות שבהן אתה עשוי להיות.</>}
+              </p>
               <p>
                 {plan.split
                   ? 'מצאנו הבדל ברור בין סוגי השאלות, ולכן לכל סוג יש רמה משלו.'

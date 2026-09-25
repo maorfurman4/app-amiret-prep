@@ -91,5 +91,5 @@
 - [x] `scripts/backfill-part-of-speech.ts`: dry run by default; `--apply` refuses on any mismatch, writes `backups/part-of-speech-<ts>.json`, updates only `part_of_speech`, re-reads to verify
 - [x] App: filter "חלקי דיבר" reads `part_of_speech` (falls back to the old category until the backfill), new chip "תוארי פועל"; the card shows grammar and theme as separate tags ("שם עצם" + "אקדמי")
 - [x] Migration applied on production (column empty, check constraint in place, no new security advisor findings); dry run: 1,158 rows to fill, 0 problems
-- [ ] **Approval** to run the backfill with `--apply`
+- [x] Backfill applied: 1,158 rows updated, verify 1,158/1,158 match; backup `backups/part-of-speech-2026-09-25T15-32-21-949Z.json` (all values were null before)
 - [ ] Deploy the app change (push) after the backfill

@@ -355,8 +355,12 @@ function VocabularyContent() {
   // ─── Load from storage and DB ──────────────────────────────────────────────
   useEffect(() => {
 
-    const VOCAB_CACHE_KEY = 'vocab_cache_v3';
+    // Bump the version whenever the row shape changes: v4 added part_of_speech.
+    // A v3 cache (no part_of_speech) left themed words with no part of speech
+    // for up to 6 hours, so "אקדמי" + any part of speech showed nothing.
+    const VOCAB_CACHE_KEY = 'vocab_cache_v4';
     const VOCAB_CACHE_TTL = 6 * 60 * 60 * 1000; // 6h
+    try { localStorage.removeItem('vocab_cache_v3'); } catch { /* storage blocked */ }
 
     const fetchAll = async () => {
       // Try cache first
@@ -364,7 +368,8 @@ function VocabularyContent() {
         const raw = localStorage.getItem(VOCAB_CACHE_KEY);
         if (raw) {
           const { data, ts } = JSON.parse(raw) as { data: VocabWord[]; ts: number };
-          if (Date.now() - ts < VOCAB_CACHE_TTL && data.length > 0) {
+          // Also refuse a cache whose rows lack a field the filters rely on.
+          if (Date.now() - ts < VOCAB_CACHE_TTL && data.length > 0 && 'part_of_speech' in data[0]) {
             setAllWords(shuffle(data));
             setLoading(false);
             return;

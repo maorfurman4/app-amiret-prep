@@ -82,3 +82,14 @@
 - [x] Filters without duplicates: "סטים נושאיים" = המילים שהפילו אותי, אקדמי, מתקדם, קל להתחלה; "חלקי דיבר" = שמות עצם, פעלים, שמות תואר (adjectives + descriptive), מילות קישור. Favorites stays reachable from the Favorites window only
 - [x] Card tags use the same names ("מחברים" → "מילות קישור", "תיאורי" → "שמות תואר")
 - Note: `category` holds either a part of speech or a theme, so the 300 words tagged academic/advanced (178 + 122) don't appear under any part of speech. Tagging them needs a data pass.
+
+# Vocabulary part of speech (`feat/vocab-part-of-speech`)
+
+- [x] Migration `20260925120000_vocab_part_of_speech.sql`: nullable `part_of_speech` column (noun | verb | adjective | adverb | connector) with a check constraint; `category` untouched and keeps the theme
+- [x] Reviewed mapping `scripts/data/vocab-part-of-speech.json` for all 1,158 words: 355 adjectives, 308 verbs, 291 nouns, 122 connectors, 82 adverbs. First pass from the definitions ("To …" = verb, "A/The …" = noun, …), then every disagreement with the old category and all 300 academic/advanced words reviewed by hand
+- [x] Old categories corrected on the way: -ly words filed under "connectors"/"descriptive" are adverbs (primarily, largely, apparently…); "integrity", "consensus", "defiance" are nouns; linking phrases (despite, owing to, what is more) are connectors
+- [x] `scripts/backfill-part-of-speech.ts`: dry run by default; `--apply` refuses on any mismatch, writes `backups/part-of-speech-<ts>.json`, updates only `part_of_speech`, re-reads to verify
+- [x] App: filter "חלקי דיבר" reads `part_of_speech` (falls back to the old category until the backfill), new chip "תוארי פועל"; the card shows grammar and theme as separate tags ("שם עצם" + "אקדמי")
+- [ ] **Approval** to apply the migration on production
+- [ ] **Approval** to run the backfill with `--apply`
+- [ ] Deploy the app change (push) after the backfill

@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
 import { cleanSnippet } from '@/lib/vocab-text';
+import { PARTS_OF_SPEECH, PART_OF_SPEECH_LABEL, PART_OF_SPEECH_TAG, THEME_LABEL, partOfSpeechOf, type PartOfSpeech } from '@/lib/part-of-speech';
 import { Modal } from '@/components/ui/Modal';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
@@ -35,6 +36,8 @@ interface VocabWord {
   hebrew_translation: string;
   example_sentence: string;
   category: string;
+  /** Grammar, independent of the theme in `category`; null until backfilled. */
+  part_of_speech?: string | null;
   difficulty_level: number;
 }
 
@@ -46,38 +49,15 @@ interface TimedResult {
   timeTaken: number;
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  general:     'כללי',
-  academic:    'אקדמי',
-  descriptive: 'שמות תואר',
-  verbs:       'פעלים',
-  connectors:  'מילות קישור',
-  nouns:       'שמות עצם',
-  advanced:    'מתקדם',
-  adjectives:  'שמות תואר',
-};
+/** Filter chips for "חלקי דיבר", from the part_of_speech column (see src/lib/part-of-speech.ts). */
+const PARTS_OF_SPEECH_FILTER = PARTS_OF_SPEECH.map(id => ({ id, label: PART_OF_SPEECH_LABEL[id] }));
 
-/**
- * The `category` column mixes grammar (verbs, nouns, …) with themes
- * (academic, advanced). The filter keeps them apart: parts of speech here,
- * themes only in THEMED_PACKS. "descriptive" words are adjectives too.
- */
-const PARTS_OF_SPEECH: { id: string; label: string; categories: string[] }[] = [
-  { id: 'nouns',      label: 'שמות עצם',    categories: ['nouns'] },
-  { id: 'verbs',      label: 'פעלים',       categories: ['verbs'] },
-  { id: 'adjectives', label: 'שמות תואר',   categories: ['adjectives', 'descriptive'] },
-  { id: 'connectors', label: 'מילות קישור', categories: ['connectors'] },
-];
-
-const CATEGORY_COLORS: Record<string, string> = {
-  general:     'bg-exam-paper-alt text-exam-ink-soft',
-  academic:    'bg-exam-accent/10 text-exam-accent',
-  descriptive: 'bg-exam-alt-bg text-exam-alt',
-  verbs:       'bg-exam-sage-bg text-exam-sage-strong',
-  connectors:  'bg-exam-alt-bg text-exam-alt',
-  nouns:       'bg-exam-accent/10 text-exam-accent',
-  advanced:    'bg-exam-ink/10 text-exam-ink',
-  adjectives:  'bg-exam-sage-bg text-exam-sage-strong',
+const PART_OF_SPEECH_COLORS: Record<PartOfSpeech, string> = {
+  noun:      'bg-exam-accent/10 text-exam-accent',
+  verb:      'bg-exam-sage-bg text-exam-sage-strong',
+  adjective: 'bg-exam-alt-bg text-exam-alt',
+  adverb:    'bg-exam-paper-alt text-exam-ink-soft',
+  connector: 'bg-exam-wrong-bg text-exam-wrong',
 };
 
 const STORAGE_KEY = 'vocab_known_ids';
@@ -445,10 +425,7 @@ function VocabularyContent() {
       if (pack) filtered = filtered.filter(pack.filter);
     }
 
-    if (filterCat) {
-      const pos = PARTS_OF_SPEECH.find(p => p.id === filterCat);
-      filtered = filtered.filter(w => pos ? pos.categories.includes(w.category) : w.category === filterCat);
-    }
+    if (filterCat) filtered = filtered.filter(w => partOfSpeechOf(w) === filterCat);
     if (filterDiff) filtered = filtered.filter(w => w.difficulty_level === filterDiff);
     if (search.trim()) {
       const q = search.trim().toLowerCase();
@@ -981,7 +958,7 @@ function VocabularyContent() {
                 )}
                 {filterCat && (
                   <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-paper-alt text-exam-ink-soft rounded-sm text-xs font-medium">
-                    {PARTS_OF_SPEECH.find(p => p.id === filterCat)?.label ?? CATEGORY_LABELS[filterCat] ?? filterCat}
+                    {PART_OF_SPEECH_LABEL[filterCat as PartOfSpeech] ?? filterCat}
                     <button onClick={() => setFilterCat('')} aria-label="הסרת הקטגוריה" className="hover:opacity-70 inline-flex"><X className="w-3.5 h-3.5" aria-hidden /></button>
                   </span>
                 )}
@@ -1042,7 +1019,7 @@ function VocabularyContent() {
                   <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">חלקי דיבר</div>
                   <div className="flex flex-wrap gap-2">
                     <button onClick={() => setFilterCat('')} className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] ${!filterCat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>הכל</button>
-                    {PARTS_OF_SPEECH.map(({ id: cat, label }) => (
+                    {PARTS_OF_SPEECH_FILTER.map(({ id: cat, label }) => (
                       <button key={cat} onClick={() => setFilterCat(cat === filterCat ? '' : cat)} className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] ${filterCat === cat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{label}</button>
                     ))}
                   </div>
@@ -1165,9 +1142,16 @@ function VocabularyContent() {
                   {!flipped ? (
                     <div key="front" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="ltr" style={{ opacity: faceOpacity }}>
                       <div className="flex items-center justify-center gap-1.5 mb-4">
-                        <div className={`inline-block px-3 py-1 rounded-sm text-xs font-medium ${CATEGORY_COLORS[current.category] ?? 'bg-exam-paper-alt text-exam-ink-soft'}`}>
-                          {CATEGORY_LABELS[current.category] ?? current.category}
-                        </div>
+                        {/* Grammar and theme are separate tags: "שם עצם" + "אקדמי". */}
+                        {(() => {
+                          const pos = partOfSpeechOf(current);
+                          return pos && (
+                            <div dir="rtl" className={`inline-block px-3 py-1 rounded-sm text-xs font-medium ${PART_OF_SPEECH_COLORS[pos]}`}>{PART_OF_SPEECH_TAG[pos]}</div>
+                          );
+                        })()}
+                        {THEME_LABEL[current.category] && (
+                          <div dir="rtl" className="inline-block px-3 py-1 rounded-sm text-xs font-medium border border-exam-border text-exam-ink-soft">{THEME_LABEL[current.category]}</div>
+                        )}
                         {known.has(current.id) && (
                           <div dir="rtl" className="inline-flex items-center gap-1 px-2 py-1 rounded-sm text-[10px] font-semibold bg-exam-accent/10 text-exam-accent">
                             <RotateCcw className="w-2.5 h-2.5" aria-hidden />לחזרה

@@ -23,12 +23,12 @@ export const NOUNS = {
 
 export type NounKey = keyof typeof NOUNS;
 
-/** "שאלה אחת" / "שתי שאלות" / "יומיים" / "5 שאלות". */
+/** "שאלה אחת" / "שתי שאלות" / "יומיים" / "5 שאלות" / "1,158 מילים". */
 export function heCount(n: number, noun: NounKey | HebrewNoun): string {
   const w: HebrewNoun = typeof noun === 'string' ? NOUNS[noun] : noun;
   if (n === 1) return `${w.one} ${w.gender === 'm' ? 'אחד' : 'אחת'}`;
   if (n === 2) return w.dual ?? `${w.gender === 'm' ? 'שני' : 'שתי'} ${w.many}`;
-  return `${n} ${w.many}`;
+  return `${n.toLocaleString('he-IL')} ${w.many}`;
 }
 
 /** Picks the singular or plural form of a word that agrees with a count (verbs, adjectives). */

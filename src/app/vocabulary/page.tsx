@@ -14,6 +14,8 @@ import {
   AlertTriangle, ChevronUp, ChevronDown, Play, ChevronLeft, ArrowRight, ArrowLeft,
 } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
+import { cleanSnippet } from '@/lib/vocab-text';
+import { Modal } from '@/components/ui/Modal';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
 function StarRow({ n, size = 14 }: { n: number; size?: number }) {
@@ -793,8 +795,11 @@ function VocabularyContent() {
   };
 
   useEffect(() => {
-    if (mode !== 'flashcard') return;
+    if (mode !== 'flashcard' || showFilterDrawer || showFavoritesList) return;
     const onKey = (e: KeyboardEvent) => {
+      // Typing in a field (the filter search) must not flip or mark cards.
+      const t = e.target as HTMLElement | null;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
       if (e.key === 'ArrowRight') handleKnew();
       else if (e.key === 'ArrowLeft') handleUnknown();
       else if (e.key === ' ') { e.preventDefault(); setFlipped(f => !f); }
@@ -802,7 +807,7 @@ function VocabularyContent() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [handleKnew, handleUnknown, mode]);
+  }, [handleKnew, handleUnknown, mode, showFilterDrawer, showFavoritesList]);
 
   const knownWords = allWords.filter(w => known.has(w.id));
   const rotate = animating === 'right' ? 20 : animating === 'left' ? -20 : dragX * 0.06;
@@ -860,93 +865,72 @@ function VocabularyContent() {
           </button>
         </div>
 
-        {/* ── Favorites Panel ───────────────────────────────────────────────── */}
-        {showFavoritesList && (
-          <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowFavoritesList(false)}>
-            <div
-              className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[80dvh] flex flex-col"
-              onClick={e => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
-                <div className="flex items-center gap-2">
-                  <Heart className="w-5 h-5 text-exam-wrong" fill="currentColor" aria-hidden />
-                  <span className="font-bold text-exam-ink text-lg">מילים שמורות</span>
-                  <span className="bg-exam-wrong-bg text-exam-wrong text-xs font-bold px-2 py-0.5 rounded-sm">{favorites.size}</span>
-                </div>
-                <button onClick={() => setShowFavoritesList(false)} className="text-exam-ink-soft hover:text-exam-ink text-2xl leading-none">×</button>
-              </div>
-
-              {/* Actions */}
-              {favorites.size > 0 && (
-                <div className="px-5 py-3 flex gap-2 border-b border-exam-border">
-                  <button
-                    onClick={() => {
-                      setActivePack('favorites');
-                      setShowFavoritesList(false);
-                    }}
-                    className="flex-1 py-2 bg-exam-accent text-exam-accent-ink rounded-sm text-sm font-semibold hover:opacity-90 transition-opacity"
-                  ><span className="inline-flex items-center gap-1">תרגל רק את המועדפים<ChevronLeft className="w-4 h-4" aria-hidden /></span></button>
-                  <button
-                    onClick={() => {
-                      if (!window.confirm(favorites.size === 1 ? 'להסיר את המילה מהמועדפים?' : `להסיר את כל ${favorites.size} המילים מהמועדפים?`)) return;
-                      clearAllFavorites();
-                    }}
-                    className="px-3 py-2 bg-exam-paper-alt text-exam-ink-soft rounded-sm text-sm hover:bg-exam-border/30 transition-colors"
-                  >נקה הכל</button>
-                </div>
-              )}
-
-              {/* List */}
-              <div className="overflow-y-auto flex-1 px-5 py-3">
-                {favorites.size === 0 ? (
-                  <div className="text-center py-12">
-                    <Heart className="w-10 h-10 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
-                    <p className="text-exam-ink-soft text-sm">הרשימה שלך עוד ריקה.</p>
-                    <p className="text-exam-ink-soft text-xs mt-1 flex items-center justify-center gap-1">לחץ <Heart className="inline w-3.5 h-3.5" aria-hidden /> על כרטיסייה כדי לשמור אותה כאן.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {allWords.filter(w => favorites.has(w.id)).map((w, i) => (
-                      <div
-                        key={w.id}
-                        style={{ animationDelay: `${Math.min(i, 12) * 35}ms` }}
-                        className="flex items-center justify-between p-3 bg-exam-paper-alt rounded-xl border border-exam-border animate-fade-up"
-                      >
-                        <div dir="ltr" className="flex-1 min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <div className="font-serif font-bold text-exam-ink text-sm">{w.word}</div>
-                            {known.has(w.id) && (
-                              <span dir="rtl" className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-sm bg-exam-sage-bg text-exam-sage-strong text-[10px] font-semibold">
-                                <Check className="w-2.5 h-2.5" strokeWidth={3} aria-hidden />ידוע
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-exam-ink-soft text-xs mt-0.5">{w.hebrew_translation}</div>
-                          {w.example_sentence && (
-                            <div dir="ltr" className="font-serif text-exam-ink-soft text-xs mt-0.5 italic truncate text-right">{w.example_sentence}</div>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 mr-3 flex-shrink-0">
-                          <button onClick={() => speak(w.word)} className="hover:scale-110 transition-transform text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>
-                          <button
-                            onClick={() => removeFavorite(w.id)}
-                            aria-label={`הסר את ${w.word} מהמועדפים`}
-                            title="הסר מהמועדפים"
-                            className="flex items-center gap-1 px-2 py-1 rounded-sm text-exam-wrong hover:text-on-danger hover:bg-exam-wrong border border-exam-wrong/40 text-xs font-semibold transition-colors"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" aria-hidden />
-                            <span>הסר</span>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+        {/* ── Favorites ─────────────────────────────────────────────────────── */}
+        <Modal
+          open={showFavoritesList}
+          onClose={() => setShowFavoritesList(false)}
+          icon={<Heart className="w-5 h-5 text-exam-wrong flex-shrink-0" fill="currentColor" aria-hidden />}
+          title={<>מילים שמורות <span className="mr-1 bg-exam-wrong-bg text-exam-wrong text-xs font-bold px-2 py-0.5 rounded-full align-middle">{favorites.size}</span></>}
+          footer={favorites.size > 0 ? (
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setActivePack('favorites'); setShowFavoritesList(false); }}
+                className="flex-1 py-2.5 bg-exam-accent text-exam-accent-ink rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity inline-flex items-center justify-center gap-1"
+              >תרגל רק את המועדפים<ChevronLeft className="w-4 h-4" aria-hidden /></button>
+              <button
+                onClick={() => {
+                  if (!window.confirm(favorites.size === 1 ? 'להסיר את המילה מהמועדפים?' : `להסיר את כל ${favorites.size} המילים מהמועדפים?`)) return;
+                  clearAllFavorites();
+                }}
+                className="px-4 py-2.5 bg-exam-paper-alt text-exam-ink-soft rounded-xl text-sm hover:bg-exam-border/30 transition-colors inline-flex items-center gap-1.5"
+              ><Trash2 className="w-3.5 h-3.5" aria-hidden />נקה הכל</button>
             </div>
+          ) : undefined}
+        >
+          <div className="px-5 py-4">
+            {favorites.size === 0 ? (
+              <div className="text-center py-8">
+                <Heart className="w-10 h-10 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
+                <p className="text-exam-ink-soft text-sm">הרשימה שלך עוד ריקה.</p>
+                <p className="text-exam-ink-soft text-xs mt-1 flex items-center justify-center gap-1">לחץ <Heart className="inline w-3.5 h-3.5" aria-hidden /> על כרטיסייה כדי לשמור אותה כאן.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {allWords.filter(w => favorites.has(w.id)).map((w, i) => (
+                  <div
+                    key={w.id}
+                    style={{ animationDelay: `${Math.min(i, 12) * 35}ms` }}
+                    className="flex items-center justify-between gap-3 p-3 bg-exam-paper-alt rounded-xl border border-exam-border animate-fade-up"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <bdi dir="ltr" className="font-serif font-bold text-exam-ink text-sm">{w.word}</bdi>
+                        {known.has(w.id) && (
+                          <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-sm bg-exam-sage-bg text-exam-sage-strong text-[10px] font-semibold">
+                            <Check className="w-2.5 h-2.5" strokeWidth={3} aria-hidden />ידוע
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-exam-ink-soft text-xs mt-0.5">{w.hebrew_translation}</div>
+                      {w.example_sentence && (
+                        <div dir="ltr" className="font-serif text-exam-ink-soft text-xs mt-0.5 italic truncate text-left">{cleanSnippet(w.example_sentence, { keepPeriod: true })}</div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <button onClick={() => speak(w.word)} aria-label={`השמע הגייה של ${w.word}`} className="hit-44 p-1.5 rounded-lg text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-4 h-4" aria-hidden /></button>
+                      <button
+                        onClick={() => removeFavorite(w.id)}
+                        aria-label={`הסר את ${w.word} מהמועדפים`}
+                        title="הסר מהמועדפים"
+                        className="hit-44 p-1.5 rounded-lg text-exam-wrong hover:text-on-danger hover:bg-exam-wrong transition-colors"
+                      ><Trash2 className="w-4 h-4" aria-hidden /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </Modal>
 
         {/* ── Mode Switcher ─────────────────────────────────────────────────── */}
         <div className="flex rounded-sm bg-exam-paper-alt p-1 mb-5 gap-1">
@@ -982,25 +966,25 @@ function VocabularyContent() {
                 {activePack && (
                   <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-accent/10 text-exam-accent rounded-sm text-xs font-medium">
                     {THEMED_PACKS.find(p => p.id === activePack)?.label}
-                    <button onClick={() => setActivePack('')} className="hover:opacity-70 font-bold leading-none">×</button>
+                    <button onClick={() => setActivePack('')} aria-label="הסרת הסט" className="hover:opacity-70 inline-flex"><X className="w-3.5 h-3.5" aria-hidden /></button>
                   </span>
                 )}
                 {filterCat && (
                   <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-paper-alt text-exam-ink-soft rounded-sm text-xs font-medium">
                     {CATEGORY_LABELS[filterCat] ?? filterCat}
-                    <button onClick={() => setFilterCat('')} className="hover:text-exam-ink font-bold leading-none">×</button>
+                    <button onClick={() => setFilterCat('')} aria-label="הסרת הקטגוריה" className="hover:opacity-70 inline-flex"><X className="w-3.5 h-3.5" aria-hidden /></button>
                   </span>
                 )}
                 {filterDiff > 0 && (
                   <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-alt-bg text-exam-alt rounded-sm text-xs font-medium">
                     <StarRow n={filterDiff} />
-                    <button onClick={() => setFilterDiff(0)} className="hover:opacity-70 font-bold leading-none">×</button>
+                    <button onClick={() => setFilterDiff(0)} aria-label="הסרת סינון הרמה" className="hover:opacity-70 inline-flex"><X className="w-3.5 h-3.5" aria-hidden /></button>
                   </span>
                 )}
                 {search.trim() && (
                   <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-sage-bg text-exam-sage-strong rounded-sm text-xs font-medium max-w-[140px]">
-                    <span className="truncate">&quot;<bdi>{search}</bdi>&quot;</span>
-                    <button onClick={() => setSearch('')} aria-label="ניקוי החיפוש" className="hit-44 hover:text-exam-sage-strong font-bold leading-none flex-shrink-0">×</button>
+                    <span className="truncate"><bdi>{search}</bdi></span>
+                    <button onClick={() => setSearch('')} aria-label="ניקוי החיפוש" className="hit-44 hover:text-exam-sage-strong inline-flex flex-shrink-0"><X className="w-3.5 h-3.5" aria-hidden /></button>
                   </span>
                 )}
               </div>
@@ -1008,24 +992,27 @@ function VocabularyContent() {
           );
         })()}
 
-        {/* ── Filter drawer ─────────────────────────────────────────────────── */}
-        {showFilterDrawer && (
-          <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowFilterDrawer(false)}>
-            <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[85dvh] flex flex-col" onClick={e => e.stopPropagation()}>
-              <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
-                <span className="font-bold text-exam-ink text-lg">סינון מילים</span>
-                <div className="flex items-center gap-4">
-                  {!!(activePack || filterCat || filterDiff || search) && (
-                    <button
-                      onClick={() => { setActivePack(''); setFilterCat(''); setFilterDiff(0); setSearch(''); }}
-                      className="text-sm text-exam-wrong font-semibold"
-                    >נקה הכל</button>
-                  )}
-                  <button onClick={() => setShowFilterDrawer(false)} className="text-2xl text-exam-ink-soft leading-none hover:text-exam-ink">×</button>
-                </div>
-              </div>
-
-              <div className="overflow-y-auto px-5 py-5 space-y-6">
+        {/* ── Filters ───────────────────────────────────────────────────────── */}
+        <Modal
+          open={showFilterDrawer}
+          onClose={() => setShowFilterDrawer(false)}
+          icon={<Search className="w-5 h-5 text-exam-ink-soft flex-shrink-0" aria-hidden />}
+          title="סינון מילים"
+          actions={!!(activePack || filterCat || filterDiff || search) && (
+            <button
+              onClick={() => { setActivePack(''); setFilterCat(''); setFilterDiff(0); setSearch(''); }}
+              className="text-sm text-exam-wrong font-semibold px-2 py-1 rounded-lg hover:bg-exam-wrong-bg transition-colors"
+            >נקה הכל</button>
+          )}
+          footer={
+            <button
+              onClick={() => setShowFilterDrawer(false)}
+              disabled={filteredWords.length === 0}
+              className="w-full py-3 bg-exam-accent hover:opacity-90 text-exam-accent-ink rounded-xl font-bold text-sm transition-opacity disabled:opacity-60"
+            >{filteredWords.length === 0 ? 'אין מילים שמתאימות לסינון' : `הצג ${heCount(filteredWords.length, 'word')}`}</button>
+          }
+        >
+          <div className="px-5 py-5 space-y-6">
                 {/* Themed packs */}
                 <div>
                   <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">סטים נושאיים</div>
@@ -1097,16 +1084,7 @@ function VocabularyContent() {
                   />
                 </div>
               </div>
-
-              <div className="px-5 py-4 border-t border-exam-border">
-                <button
-                  onClick={() => setShowFilterDrawer(false)}
-                  className="w-full py-3 bg-exam-accent hover:opacity-90 text-exam-accent-ink rounded-sm font-bold text-sm transition-opacity"
-                >{filteredWords.length === 0 ? 'אין מילים שמתאימות לסינון' : `הצג ${heCount(filteredWords.length, 'word')}`}</button>
-              </div>
-            </div>
-          </div>
-        )}
+        </Modal>
 
         {/* ════════════════════════════════════════════════════════════════════
             FLASHCARD MODE
@@ -1117,7 +1095,7 @@ function VocabularyContent() {
               <div className="mb-4">
                 <div className="flex justify-between text-xs text-exam-ink-soft mb-1.5">
                   <span>{deck.length === 1 ? 'נותרה מילה אחת' : <>נותרו <span className="font-bold text-exam-ink">{deck.length.toLocaleString('he-IL')}</span> מילים</>}</span>
-                  {progressScopeKnown > 0 && <span>ידעת <span className="font-bold text-exam-sage-strong">{progressScopeKnown.toLocaleString('he-IL')}</span> מתוך {progressScopeTotal.toLocaleString('he-IL')} ({Math.round(progressScopeKnown / progressScopeTotal * 100)}%)</span>}
+                  {progressScopeKnown > 0 && <span>ידעת <span className="font-bold text-exam-sage-strong">{progressScopeKnown.toLocaleString('he-IL')}</span> מתוך {progressScopeTotal.toLocaleString('he-IL')} ({progressScopeKnown / progressScopeTotal < 0.005 ? 'פחות מ-1%' : `${Math.round(progressScopeKnown / progressScopeTotal * 100)}%`})</span>}
                 </div>
                 {progressScopeKnown > 0 && (
                   <div className="w-full bg-exam-paper-alt rounded-full h-1.5">
@@ -1196,16 +1174,26 @@ function VocabularyContent() {
                       </div>
                       <div className="mb-4 flex justify-center"><StarRow n={current.difficulty_level} size={18} /></div>
 
-                      {showHint ? (
-                        <div className="font-serif mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt italic leading-relaxed text-left">
-                          &quot;{current.example_sentence}&quot;
+                      {/* A word not learned yet shows its definition and example up
+                          front, so the first pass teaches it. A word coming back
+                          for review keeps them behind the hint, to test recall. */}
+                      {!(current.definition || current.example_sentence) ? null : (!known.has(current.id) || showHint) ? (
+                        <div className="mt-4 space-y-2 text-left">
+                          {current.definition && (
+                            <p className="text-sm text-exam-ink-soft leading-relaxed">{cleanSnippet(current.definition)}</p>
+                          )}
+                          {current.example_sentence && (
+                            <p className="font-serif p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-sm text-exam-alt italic leading-relaxed">
+                              {cleanSnippet(current.example_sentence, { keepPeriod: true })}
+                            </p>
+                          )}
                         </div>
                       ) : (
                         <button
                           onClick={e => { e.stopPropagation(); setShowHint(true); }}
                           className="text-xs text-exam-alt hover:opacity-80 mt-2 inline-flex items-center gap-1"
                           dir="rtl"
-                        ><Lightbulb className="w-3.5 h-3.5" aria-hidden />הצג משפט לדוגמה</button>
+                        ><Lightbulb className="w-3.5 h-3.5" aria-hidden />הצג הגדרה ומשפט לדוגמה</button>
                       )}
 
                       <button
@@ -1221,10 +1209,12 @@ function VocabularyContent() {
                         <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>
                       </div>
                       <div className="text-3xl font-bold text-exam-accent mb-3">{current.hebrew_translation}</div>
-                      <p className="text-exam-ink-soft text-sm leading-relaxed mb-4">{current.definition}</p>
+                      {current.definition && (
+                        <p dir="ltr" className="text-exam-ink-soft text-sm leading-relaxed mb-4">{cleanSnippet(current.definition)}</p>
+                      )}
                       {current.example_sentence && (
-                        <div className="font-serif p-3 bg-exam-paper-alt border border-exam-border rounded-sm text-xs text-exam-ink-soft italic leading-relaxed text-left" dir="ltr">
-                          &quot;{current.example_sentence}&quot;
+                        <div className="font-serif p-3 bg-exam-paper-alt border border-exam-border rounded-xl text-xs text-exam-ink-soft italic leading-relaxed text-left" dir="ltr">
+                          {cleanSnippet(current.example_sentence, { keepPeriod: true })}
                         </div>
                       )}
                       <button
@@ -1442,7 +1432,7 @@ function VocabularyContent() {
                   </div>
                   {quizDeck[quizIndex].example_sentence && (
                     <p className="font-serif text-exam-ink-soft text-xs italic text-left" dir="ltr">
-                      &quot;{quizDeck[quizIndex].example_sentence}&quot;
+                      {cleanSnippet(quizDeck[quizIndex].example_sentence, { keepPeriod: true })}
                     </p>
                   )}
                 </div>
@@ -1504,27 +1494,35 @@ function VocabularyContent() {
                   <div className="text-xl font-bold text-exam-ink">הגדרות מבחן מהיר</div>
                 </div>
                 <div className="space-y-5">
-                  <div>
-                    <div className="text-sm font-semibold text-exam-ink-soft mb-2">מספר מילים</div>
-                    <div className="flex gap-2">
+                  {/* Pills read low → high, left → right, like every scale in the app. */}
+                  <div role="radiogroup" aria-labelledby="timed-count-label">
+                    <div id="timed-count-label" className="text-sm font-semibold text-exam-ink-soft mb-2">מספר מילים</div>
+                    <div className="flex flex-wrap justify-center gap-2" dir="ltr">
                       {([5, 10, 20] as const).map(n => (
                         <button
                           key={n}
+                          type="button"
+                          role="radio"
+                          aria-checked={timedWordCount === n}
                           onClick={() => setTimedWordCount(n)}
-                          className={`flex-1 py-2.5 rounded-sm border-2 font-bold text-sm transition-all ${timedWordCount === n ? 'border-exam-accent bg-exam-accent/10 text-exam-accent' : 'border-exam-border text-exam-ink-soft hover:border-exam-border-strong'}`}
+                          className={`hit-44 min-w-14 px-4 py-2 rounded-full border text-sm font-bold tabular-nums transition-[background-color,color,border-color,box-shadow,transform] duration-300 ease-spring active:scale-[0.94] ${timedWordCount === n ? 'bg-exam-accent text-exam-accent-ink border-exam-accent shadow-surface' : 'bg-exam-surface text-exam-ink border-exam-border hover:border-exam-border-strong hover:shadow-surface'}`}
                         >{n}</button>
                       ))}
                     </div>
                   </div>
-                  <div>
-                    <div className="text-sm font-semibold text-exam-ink-soft mb-2">זמן לכל מילה</div>
-                    <div className="flex gap-2">
+                  <div role="radiogroup" aria-labelledby="timed-time-label">
+                    <div id="timed-time-label" className="text-sm font-semibold text-exam-ink-soft mb-2">שניות לכל מילה</div>
+                    <div className="flex flex-wrap justify-center gap-2" dir="ltr">
                       {([10, 15, 20, 30] as const).map(t => (
                         <button
                           key={t}
+                          type="button"
+                          role="radio"
+                          aria-checked={timedTimePerWord === t}
+                          aria-label={`${t} שניות`}
                           onClick={() => setTimedTimePerWord(t)}
-                          className={`flex-1 py-2.5 rounded-sm border-2 font-bold text-sm transition-all ${timedTimePerWord === t ? 'border-exam-accent bg-exam-accent/10 text-exam-accent' : 'border-exam-border text-exam-ink-soft hover:border-exam-border-strong'}`}
-                        >{t}ש׳</button>
+                          className={`hit-44 min-w-14 px-4 py-2 rounded-full border text-sm font-bold tabular-nums transition-[background-color,color,border-color,box-shadow,transform] duration-300 ease-spring active:scale-[0.94] ${timedTimePerWord === t ? 'bg-exam-accent text-exam-accent-ink border-exam-accent shadow-surface' : 'bg-exam-surface text-exam-ink border-exam-border hover:border-exam-border-strong hover:shadow-surface'}`}
+                        >{t}</button>
                       ))}
                     </div>
                   </div>
@@ -1552,7 +1550,7 @@ function VocabularyContent() {
                 <div className="text-center mb-6">
                   <Clock className="w-10 h-10 mx-auto mb-3 text-exam-accent" strokeWidth={1.5} aria-hidden />
                   <div className="text-2xl font-bold text-exam-ink mb-1">המבחן הסתיים!</div>
-                  <div className="text-5xl font-bold text-exam-accent mb-1">{timedScore}/{timedDeck.length}</div>
+                  <div className="text-4xl font-bold text-exam-accent mb-1">{timedScore} מתוך {timedDeck.length}</div>
                   <p className="text-exam-ink-soft text-sm flex items-center justify-center gap-1.5">
                     {timedScore === timedDeck.length
                       ? <><Trophy className="w-4 h-4" aria-hidden />מושלם!</>
@@ -1569,7 +1567,7 @@ function VocabularyContent() {
                       <div className="text-left">
                         <div className="font-bold text-exam-ink text-sm" dir="ltr">{r.word.word}</div>
                         <div className="text-xs text-exam-ink-soft">{r.word.hebrew_translation}</div>
-                        <div className="text-xs text-exam-ink-soft">{r.timeTaken.toFixed(1)}ש׳</div>
+                        <div className="text-xs text-exam-ink-soft"><bdi dir="ltr">{r.timeTaken.toFixed(1)}</bdi> שנ׳</div>
                       </div>
                       {r.correct
                         ? <Check className="w-5 h-5 text-exam-sage-strong flex-shrink-0" strokeWidth={3} aria-hidden />
@@ -1627,7 +1625,7 @@ function VocabularyContent() {
                     style={{ width: `${(timeLeft / timedTimePerWord) * 100}%` }}
                   />
                 </div>
-                <div className="text-center text-sm font-bold text-exam-ink-soft mb-5">{timeLeft}ש׳</div>
+                <div className="text-center text-sm font-bold text-exam-ink-soft mb-5"><bdi dir="ltr">{timeLeft}</bdi> שנ׳</div>
 
                 {/* Timed card */}
                 <div className="bg-exam-surface rounded-2xl shadow-raised border border-exam-border p-6 mb-4">
@@ -1645,7 +1643,7 @@ function VocabularyContent() {
                   </div>
                   {timedDeck[timedIndex].example_sentence && (
                     <p className="font-serif text-exam-ink-soft text-xs italic text-left" dir="ltr">
-                      &quot;{timedDeck[timedIndex].example_sentence}&quot;
+                      {cleanSnippet(timedDeck[timedIndex].example_sentence, { keepPeriod: true })}
                     </p>
                   )}
                 </div>

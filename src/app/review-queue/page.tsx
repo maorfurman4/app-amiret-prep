@@ -10,6 +10,7 @@ import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry, type ResponseLogEntry } from '@/lib/response-log-client';
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { heCount, agree } from '@/lib/hebrew-count';
+import { Modal } from '@/components/ui/Modal';
 
 type Step = 'loading' | 'empty' | 'error' | 'overview' | 'reviewing' | 'done';
 
@@ -414,27 +415,28 @@ export default function ReviewQueuePage() {
   const pickerOrder = sortedCategories(pickerGroups);
 
   const questionPicker = (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center" onClick={() => setShowQuestionPicker(false)}>
-      <div className="bg-exam-surface rounded-t-md w-full max-w-lg max-h-[70dvh] flex flex-col" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-exam-border">
-          <span className="font-bold text-exam-ink text-lg">בחר שאלה</span>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleRestartSession}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-exam-accent/10 text-exam-accent rounded-sm text-sm font-semibold hover:bg-exam-accent/20 transition-colors"
-            >
-              <RotateCcw className="w-3.5 h-3.5" aria-hidden /> מההתחלה
-            </button>
-            <button
-              onClick={handleClearAll}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-exam-wrong-bg text-exam-wrong rounded-sm text-sm font-semibold hover:opacity-80 transition-opacity"
-            >
-              <span className="inline-flex items-center gap-1.5"><Trash2 className="w-3.5 h-3.5" aria-hidden />נקה הכל</span>
-            </button>
-            <button onClick={() => setShowQuestionPicker(false)} className="text-exam-ink-soft hover:text-exam-ink text-2xl leading-none">×</button>
-          </div>
+    <Modal
+      open={showQuestionPicker}
+      onClose={() => setShowQuestionPicker(false)}
+      title="בחר שאלה"
+      footer={
+        <div className="flex gap-2">
+          <button
+            onClick={handleRestartSession}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-exam-accent/10 text-exam-accent rounded-xl text-sm font-semibold hover:bg-exam-accent/20 transition-colors"
+          >
+            <RotateCcw className="w-3.5 h-3.5" aria-hidden />מההתחלה
+          </button>
+          <button
+            onClick={handleClearAll}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-exam-wrong-bg text-exam-wrong rounded-xl text-sm font-semibold hover:opacity-80 transition-opacity"
+          >
+            <Trash2 className="w-3.5 h-3.5" aria-hidden />נקה הכל
+          </button>
         </div>
-        <div className="overflow-y-auto flex-1 px-4 py-3 space-y-4">
+      }
+    >
+        <div className="px-4 py-3 space-y-4">
           {pickerOrder.map(type => (
             <div key={type}>
               <div className="flex items-center justify-between mb-2 px-1">
@@ -491,8 +493,7 @@ export default function ReviewQueuePage() {
             </div>
           ))}
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 
   // ─── Reviewing ─────────────────────────────────────────────────────────────
@@ -501,7 +502,7 @@ export default function ReviewQueuePage() {
 
   return (
     <div className="min-h-dvh bg-exam-paper" dir="rtl">
-      {showQuestionPicker && questionPicker}
+      {questionPicker}
 
       <header className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">

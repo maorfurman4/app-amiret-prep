@@ -27,4 +27,7 @@ describe('agree', () => {
     expect(agree(1, 'חרגה', 'חרגו')).toBe('חרגה');
     expect(agree(4, 'חרגה', 'חרגו')).toBe('חרגו');
   });
+  it('groups thousands', () => {
+    expect(heCount(1158, 'word')).toBe('1,158 מילים');
+  });
 });

@@ -62,3 +62,15 @@
 - [x] Page wrapper `overflow-x-clip w-full` (clip, not hidden, so it doesn't become a scroll container); page stays 375px during the drag and the exit
 - [x] Card `touch-action: pan-y`: horizontal finger movement drives only the swipe
 - [x] `overscroll-behavior-x: none` on the document while the vocabulary page is open, restored on leave
+
+# Vocabulary overlays and card polish (`fix/vocab-modals-polish`, on top of `fix/vocab-horizontal-overflow`)
+
+- [x] One overlay pattern: `src/components/ui/Modal.tsx` — full-screen dimmed backdrop, single centered panel (portal to <body>), close on backdrop / X / Escape, page scroll locked, focus to close and back, header actions + pinned footer
+- [x] Moved onto it: vocabulary Favorites and Filters (were bottom sheets), review-queue question picker (was a bottom sheet)
+- [x] Quick-test settings and results stay in the page: they are the screen of that mode, not overlays (a modal there would leave an empty page behind it)
+- [x] Text pointers: every remaining "×" close button (filter chips, search chip, overlay headers) is a Lucide X with an aria-label; the app has no text arrows left (grep of ← → ‹ › « » <- -> × ✓ ✗ in JSX)
+- [x] Raw data: `cleanSnippet` (`src/lib/vocab-text.ts`, tested) strips wrapping quotes from examples and the final period from definitions; no more `"…"` around examples; the English definition sits in an LTR block so its period no longer jumps to the start
+- [x] Unlearned cards show the definition and example on the front by default; words back for review keep them behind "הצג הגדרה ומשפט לדוגמה" (H still toggles)
+- [x] Quick-test settings: rounded pill radio groups ([5] [10] [20], [10] [15] [20] [30]) reading low → high; "שניות לכל מילה" instead of "30ש׳" (which rendered as "’30ש")
+- [x] Found along the way: typing in the filter search fired the card shortcuts (H, space, arrows); shortcuts now ignore text fields and open overlays
+- [x] Counts: `heCount` groups thousands ("1,158 מילים"); "(פחות מ-1%)" instead of "(0%)" once a word is known; timed score "X מתוך Y"

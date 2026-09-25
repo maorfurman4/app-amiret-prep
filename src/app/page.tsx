@@ -147,7 +147,7 @@ export default function HomePage() {
                 { range: '50–69', label: "טרום-בסיסי א'", color: 'text-exam-wrong' },
               ].map(row => (
                 <div key={row.range} className="flex items-center gap-2">
-                  <span className={`font-mono font-bold w-20 ${row.color}`}>{row.range}</span>
+                  <span className={`font-mono font-bold w-20 ${row.color}`}><bdi dir="ltr">{row.range}</bdi></span>
                   <span className="text-exam-ink-soft">{row.label}</span>
                 </div>
               ))}

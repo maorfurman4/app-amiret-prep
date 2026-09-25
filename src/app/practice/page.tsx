@@ -482,7 +482,7 @@ function PracticeContent() {
                   {opt.value === 'random' ? <Dices className="w-6 h-6 mx-auto" aria-hidden /> : opt.label}
                 </div>
                 <div className="text-xs font-semibold text-exam-ink mt-1">{opt.sublabel}</div>
-                <div className="text-xs text-exam-ink-soft mt-0.5">{opt.range}</div>
+                <div className="text-xs text-exam-ink-soft mt-0.5"><bdi dir="ltr">{opt.range}</bdi></div>
               </button>
             ))}
           </div>

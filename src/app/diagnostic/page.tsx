@@ -290,7 +290,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
             ))}
           </div>
           <p className="text-xs text-exam-ink-soft leading-relaxed">
-            {lo === hi ? `הטווח הסביר: רמה ${lo}.` : `הטווח הסביר: רמות ${lo}–${hi}.`}{' '}
+            {lo === hi ? `הטווח הסביר: רמה ${lo}.` : <>הטווח הסביר: רמות <bdi dir="ltr">{lo}–{hi}</bdi>.</>}{' '}
             {plan.split
               ? `מצאנו הבדל ברור בין סוגי השאלות, ולכן לכל סוג יש רמה משלו.`
               : `ההבדל בין סוגי השאלות (${typeLine}) קטן מכדי להסיק ממנו משהו באבחון קצר, ולכן קיבלת רמה אחת לשניהם.`}{' '}

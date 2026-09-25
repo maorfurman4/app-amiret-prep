@@ -171,7 +171,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               score >= row.min && score <= row.max ? 'bg-exam-paper-alt ring-2 ring-exam-accent shadow-surface' : ''
             }`}>
               <div className={`w-3 h-3 rounded-full ${row.color}`} />
-              <span className="font-mono text-sm text-exam-ink-soft">{row.range}</span>
+              <span className="font-mono text-sm text-exam-ink-soft"><bdi dir="ltr">{row.range}</bdi></span>
               <span className="text-sm text-exam-ink">{row.label}</span>
             </div>
           ))}

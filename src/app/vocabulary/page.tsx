@@ -1102,7 +1102,7 @@ function VocabularyContent() {
             {deck.length > 0 && (
               <div className="mb-4">
                 <div className="flex justify-between text-xs text-exam-ink-soft mb-1.5">
-                  <span>{deck.length === 1 ? 'נותרה מילה אחת' : <>נותרו <span className="font-bold text-exam-ink">{deck.toLocaleString('he-IL')}</span> מילים</>}</span>
+                  <span>{deck.length === 1 ? 'נותרה מילה אחת' : <>נותרו <span className="font-bold text-exam-ink">{deck.length.toLocaleString('he-IL')}</span> מילים</>}</span>
                   {progressScopeKnown > 0 && <span>ידעת <span className="font-bold text-exam-sage-strong">{progressScopeKnown.toLocaleString('he-IL')}</span> מתוך {progressScopeTotal.toLocaleString('he-IL')} ({Math.round(progressScopeKnown / progressScopeTotal * 100)}%)</span>}
                 </div>
                 {progressScopeKnown > 0 && (

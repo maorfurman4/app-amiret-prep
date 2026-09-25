@@ -1,0 +1,405 @@
+{
+  "batch": "scripts/data/vocab-batches/level1-batch02.json",
+  "inserted": [
+    {
+      "id": "b5ca4cfe-3b2d-494a-bde3-324e5f3526d4",
+      "word": "appear"
+    },
+    {
+      "id": "272664f4-649b-43ef-bc47-c111d9f96c3f",
+      "word": "become"
+    },
+    {
+      "id": "58f16da1-3ed2-475c-bc06-a2ebd5d059cb",
+      "word": "bring"
+    },
+    {
+      "id": "94010f29-22ff-48e1-be6e-6a298e333288",
+      "word": "build"
+    },
+    {
+      "id": "cbe207a0-a86a-4cd9-8a09-2ebc056610b4",
+      "word": "carry"
+    },
+    {
+      "id": "34aa8666-379e-4f6f-86bb-44c1c139495c",
+      "word": "cover"
+    },
+    {
+      "id": "12825633-f2cb-4f62-9d10-6c6ba6f992b8",
+      "word": "discover"
+    },
+    {
+      "id": "bdae0b73-29a4-46fa-b5fe-d637a7eecb17",
+      "word": "discuss"
+    },
+    {
+      "id": "79451d99-c4ba-48cc-a0bd-297941c4c2b6",
+      "word": "enter"
+    },
+    {
+      "id": "135ff5e9-a4a3-4dca-be5c-dbfc69783db2",
+      "word": "express"
+    },
+    {
+      "id": "62c73f95-e188-4acf-a6a1-5cc8310e2235",
+      "word": "gain"
+    },
+    {
+      "id": "d64e3421-f3fe-44b6-b06d-7da3a52b9fbe",
+      "word": "hold"
+    },
+    {
+      "id": "0434a320-b65b-4669-8ecd-d4bbb9dd6b9c",
+      "word": "join"
+    },
+    {
+      "id": "2efcca16-7eec-487c-b207-0fdf20924c43",
+      "word": "lead"
+    },
+    {
+      "id": "98fb2464-a63d-46e8-a0b9-6a6f07dabdb9",
+      "word": "lose"
+    },
+    {
+      "id": "402b24fe-2c14-4bd1-b035-3e0e02ecb79c",
+      "word": "mention"
+    },
+    {
+      "id": "262e6ce7-83ed-4ea2-b185-e05470a35b7c",
+      "word": "occur"
+    },
+    {
+      "id": "67299800-5106-48dd-9480-f7e7cf6489ab",
+      "word": "prove"
+    },
+    {
+      "id": "d66e5638-4aa5-48df-ae75-bb1ba9d7d59d",
+      "word": "divide"
+    },
+    {
+      "id": "589124e2-ecc8-40b5-8fc9-a3d5cb40e5b5",
+      "word": "refer"
+    },
+    {
+      "id": "583de6ed-6e98-46bb-b0a2-b94af2cd57d5",
+      "word": "release"
+    },
+    {
+      "id": "0c352ded-590b-4934-ae41-638ed11a6b04",
+      "word": "respond"
+    },
+    {
+      "id": "4f61d837-c9d2-42c0-ac18-b383c17dfa71",
+      "word": "return"
+    },
+    {
+      "id": "d4eb2ea6-8d79-4005-a2a1-d8dae0c2cd07",
+      "word": "save"
+    },
+    {
+      "id": "db709106-6c79-4769-b3c1-37d6e109295d",
+      "word": "serve"
+    },
+    {
+      "id": "be02f435-8038-49fa-bbe4-71e74d346fea",
+      "word": "spend"
+    },
+    {
+      "id": "a74a3512-89b2-4eb6-b47f-3fbbcd1622c9",
+      "word": "spread"
+    },
+    {
+      "id": "ec4a53d5-ddb1-4e62-a497-97975eeb6fc0",
+      "word": "suffer"
+    },
+    {
+      "id": "926fbd10-1ba1-46a3-8010-ec0bf31b5977",
+      "word": "treat"
+    },
+    {
+      "id": "ec3439ff-d0ed-4f79-9489-9cc9c8453e3d",
+      "word": "warn"
+    },
+    {
+      "id": "90a71213-3632-4d48-8372-e432c4a06967",
+      "word": "contain"
+    },
+    {
+      "id": "c5023bb5-70c3-4a6e-9d26-e2cc75fc6b93",
+      "word": "attract"
+    },
+    {
+      "id": "6a7eea83-6c89-4cd8-802e-a92370c68ce9",
+      "word": "destroy"
+    },
+    {
+      "id": "c1768e45-7d59-42a5-8010-c6e417e938a4",
+      "word": "refuse"
+    },
+    {
+      "id": "baf45222-4818-4cdf-ad7f-8d97f7704287",
+      "word": "survive"
+    },
+    {
+      "id": "64551273-69b8-4728-8e48-65682d1aafbe",
+      "word": "reject"
+    },
+    {
+      "id": "bd0e93da-55e8-4cc2-a28e-cf2de435f322",
+      "word": "ability"
+    },
+    {
+      "id": "6a131be7-c01c-4add-9d09-7a63d2c41b7d",
+      "word": "action"
+    },
+    {
+      "id": "0c5c560b-3132-49e1-a243-f12ef827ff30",
+      "word": "activity"
+    },
+    {
+      "id": "5507fc4a-004d-4722-810f-ad4457edca85",
+      "word": "area"
+    },
+    {
+      "id": "75e4478d-057e-439d-b1da-824bd3d1e9ec",
+      "word": "century"
+    },
+    {
+      "id": "70b469a9-a65a-4265-96a3-6998ef665d4a",
+      "word": "citizen"
+    },
+    {
+      "id": "0f50bc45-ba4c-4eaa-80f3-92e82e07bcbe",
+      "word": "climate"
+    },
+    {
+      "id": "0cd5e4b2-9822-486e-8599-277a669446fc",
+      "word": "community"
+    },
+    {
+      "id": "0b789f25-b344-4996-b415-43b1be98302f",
+      "word": "cost"
+    },
+    {
+      "id": "ed3ba3c4-97d5-4622-afbd-e04d9dffa8bf",
+      "word": "demand"
+    },
+    {
+      "id": "6520c7f4-0e38-4591-a06e-10e3b0fbacfc",
+      "word": "disease"
+    },
+    {
+      "id": "65a85103-ed65-4b74-8025-2e96f11f5a47",
+      "word": "education"
+    },
+    {
+      "id": "3247d6b6-3c85-416a-9c41-ac3c09515d36",
+      "word": "effort"
+    },
+    {
+      "id": "6c06ba30-02c8-4525-936d-d85a57efd7ca",
+      "word": "event"
+    },
+    {
+      "id": "a726a4ac-cb79-49d5-8332-a044dd99b24e",
+      "word": "experience"
+    },
+    {
+      "id": "3b7d728e-37a0-40ca-989c-1fc6a147db1f",
+      "word": "expert"
+    },
+    {
+      "id": "163449f6-8cfc-4ee8-ad2c-ad731c63bfcc",
+      "word": "goal"
+    },
+    {
+      "id": "4cc858e3-d3df-4f9d-af74-0251998986ec",
+      "word": "profit"
+    },
+    {
+      "id": "93ab613c-e5f6-4772-9c09-80e9518669df",
+      "word": "habit"
+    },
+    {
+      "id": "09643f89-19fc-4ec1-8594-b8948fa3a5f5",
+      "word": "health"
+    },
+    {
+      "id": "2acc1efb-78d9-4a6f-94f1-a93d99a28d68",
+      "word": "income"
+    },
+    {
+      "id": "1f38ff9e-53ea-4a2f-b429-8751490a23ab",
+      "word": "industry"
+    },
+    {
+      "id": "7e45315e-4735-470c-ae5b-ecf01c183191",
+      "word": "issue"
+    },
+    {
+      "id": "22229ce6-bd84-4751-96ef-cca8af70fc82",
+      "word": "law"
+    },
+    {
+      "id": "74aafcca-90e0-48fa-971d-f3bb6e043710",
+      "word": "market"
+    },
+    {
+      "id": "7fa3c6e4-4cc3-4bb6-91ab-56656a1b448d",
+      "word": "material"
+    },
+    {
+      "id": "fdc6d873-939d-4697-a219-26b5c0148b0b",
+      "word": "memory"
+    },
+    {
+      "id": "86207813-05e0-4b26-83bb-858668d2c812",
+      "word": "policy"
+    },
+    {
+      "id": "50ebac31-afec-49aa-88ed-0a729b3d65d0",
+      "word": "resource"
+    },
+    {
+      "id": "cb19e897-ce9c-45a2-9ac0-8738898d96c5",
+      "word": "role"
+    },
+    {
+      "id": "28dd3f45-1e16-46c7-845b-33f23fa0caf9",
+      "word": "species"
+    },
+    {
+      "id": "2a855177-3068-461e-8959-6696f54cd609",
+      "word": "task"
+    },
+    {
+      "id": "df16ace9-705f-4e67-9e2d-563f410e862a",
+      "word": "technology"
+    },
+    {
+      "id": "015da0a2-2229-41e8-a219-3524f10d7709",
+      "word": "tool"
+    },
+    {
+      "id": "25b4e930-68b6-41a6-abba-526bc5cf6154",
+      "word": "wealth"
+    },
+    {
+      "id": "25e7f06c-4d42-4798-a914-7ee30f2ea7d7",
+      "word": "actual"
+    },
+    {
+      "id": "24430cb8-f4b9-4cda-a378-77bbd8f3cdcc",
+      "word": "basic"
+    },
+    {
+      "id": "19b01b8e-6f1d-4998-9cb3-e54be9fa5447",
+      "word": "certain"
+    },
+    {
+      "id": "10898577-3efa-4ae8-a331-eb92086d1c76",
+      "word": "current"
+    },
+    {
+      "id": "f8529d05-43fd-41cd-b19a-40bcde786a79",
+      "word": "difficult"
+    },
+    {
+      "id": "2c049559-b48c-4669-bc83-37f074b239f6",
+      "word": "entire"
+    },
+    {
+      "id": "319f8a36-e96b-47b1-b365-8dd05612446d",
+      "word": "foreign"
+    },
+    {
+      "id": "09353cab-78cd-49d0-aa1c-3c53787a3bd3",
+      "word": "huge"
+    },
+    {
+      "id": "3a7592d7-f409-4051-bf00-a463b82d8c04",
+      "word": "human"
+    },
+    {
+      "id": "18ceaba3-99d9-47b0-a781-30226a40b62b",
+      "word": "major"
+    },
+    {
+      "id": "ecf6f767-6c12-4143-9cad-522e9ebd08e2",
+      "word": "modern"
+    },
+    {
+      "id": "7b05549d-026a-4c94-bbd7-6b5a997c3af1",
+      "word": "physical"
+    },
+    {
+      "id": "e19fdb65-8778-4baf-b778-acfde274f70a",
+      "word": "famous"
+    },
+    {
+      "id": "7b5e2cd4-efe9-4102-8db5-a91cbc4a4d3f",
+      "word": "previous"
+    },
+    {
+      "id": "a39c57ca-a3ef-45ec-9ab0-6a67b4392e89",
+      "word": "private"
+    },
+    {
+      "id": "3d445af8-396b-4572-af75-411a4ea03e27",
+      "word": "public"
+    },
+    {
+      "id": "9ad78414-4372-4526-ab52-4b1eebb8a8ca",
+      "word": "useful"
+    },
+    {
+      "id": "427fb953-4012-40ad-b376-4b69a3eb8c74",
+      "word": "actually"
+    },
+    {
+      "id": "aab585a0-b5e4-4273-9da6-35dc4093f17a",
+      "word": "almost"
+    },
+    {
+      "id": "7f5701f0-9143-4e26-873e-cd80f0684f7c",
+      "word": "often"
+    },
+    {
+      "id": "bc192ea3-427e-4bb4-a621-192f637338fc",
+      "word": "quickly"
+    },
+    {
+      "id": "19c85576-cf51-45f9-9e05-fb54d7d6db50",
+      "word": "usually"
+    },
+    {
+      "id": "d766caf4-3cbe-48bc-b293-ada6194e6159",
+      "word": "nearly"
+    },
+    {
+      "id": "db66c47d-e76d-4940-a9bb-740b36235737",
+      "word": "completely"
+    },
+    {
+      "id": "0a1031e0-1804-4bfc-9c59-2a962d4715b3",
+      "word": "immediately"
+    },
+    {
+      "id": "93fe8fc0-059b-432e-9419-880c88dedb44",
+      "word": "for example"
+    },
+    {
+      "id": "cb466130-d9ed-48c3-aba0-c0248120e710",
+      "word": "of course"
+    },
+    {
+      "id": "0f52f503-17a3-460f-8f53-33160d08daf1",
+      "word": "at the same time"
+    },
+    {
+      "id": "b5eb1d00-7094-4d55-bf31-9a055bcf2f1e",
+      "word": "even so"
+    }
+  ]
+}

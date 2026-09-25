@@ -298,6 +298,16 @@ function VocabularyContent() {
   // guestId, so nothing here needs to read it back — see src/lib/guest.ts).
   useEffect(() => { ensureGuestIdentity().catch(() => {}); }, []);
 
+  // A horizontal card swipe shouldn't also trigger the browser's own
+  // horizontal overscroll (back/forward gesture, rubber-band). Scoped to this
+  // page: restored on leave.
+  useEffect(() => {
+    const root = document.documentElement;
+    const prev = root.style.overscrollBehaviorX;
+    root.style.overscrollBehaviorX = 'none';
+    return () => { root.style.overscrollBehaviorX = prev; };
+  }, []);
+
   // ─── Personal pack: words from the user's own SC mistakes ─────────────────
   const [myWords, setMyWords] = useState<VocabWord[]>([]);
   useEffect(() => {
@@ -817,7 +827,11 @@ function VocabularyContent() {
   }
 
   return (
-    <div className="min-h-dvh bg-exam-paper" dir="rtl">
+    // overflow-x-clip: the swiped card flies up to 400px sideways. In an RTL
+    // page, overflow on the left is scrollable, so without this a "לא ידעתי"
+    // swipe widened the page and exposed a blank strip. clip (not hidden)
+    // doesn't turn the wrapper into a scroll container.
+    <div className="min-h-dvh w-full bg-exam-paper overflow-x-clip" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
 
       <div className="max-w-lg mx-auto px-4 pt-4 pb-32">
@@ -1119,7 +1133,8 @@ function VocabularyContent() {
                 {deck[1] && <div className="absolute inset-0 bg-exam-surface rounded-2xl shadow-surface border border-exam-border" style={{ transform: 'scale(0.96) translateY(9px)', zIndex: 1 }} />}
 
                 <div
-                  className="relative bg-exam-surface rounded-2xl shadow-raised border border-exam-border-strong p-8 min-h-[320px] flex flex-col justify-center cursor-grab active:cursor-grabbing [perspective:1200px]"
+                  // touch-pan-y: horizontal finger movement drives the swipe only; vertical still scrolls the page.
+                  className="relative bg-exam-surface rounded-2xl shadow-raised border border-exam-border-strong p-8 min-h-[320px] flex flex-col justify-center cursor-grab active:cursor-grabbing touch-pan-y [perspective:1200px]"
                   style={{
                     zIndex: 2,
                     transform: `translateX(${tx}px) rotate(${rotate}deg)`,

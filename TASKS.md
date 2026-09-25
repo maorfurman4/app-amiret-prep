@@ -55,3 +55,10 @@
 - [x] Review screen: header reads "אין שאלות שגויות" / "אין תשובות נכונות" instead of "0 שאלות"; the empty "correct" filter has its own message
 - [x] Agreement: exemption frequency ("בערך אחד מתוך 10 נבחנים… נמצא", no repeated "מתוך 10"), "נקודה אחת עד היעד", "מילה שזכרת", "מתוך שתי שאלות", singular delete confirmations (review queue, category, favorites)
 - [x] Positional claims removed where the target may not render ("התמקד בחולשות למטה")
+
+# Vocabulary horizontal overflow (`fix/vocab-horizontal-overflow`)
+
+- [x] Reproduced at 375px: dragging a card left, or the "לא ידעתי" exit (−400px), widened the page to 532px; in an RTL page left-side overflow is scrollable, which exposed the blank strip
+- [x] Page wrapper `overflow-x-clip w-full` (clip, not hidden, so it doesn't become a scroll container); page stays 375px during the drag and the exit
+- [x] Card `touch-action: pan-y`: horizontal finger movement drives only the swipe
+- [x] `overscroll-behavior-x: none` on the document while the vocabulary page is open, restored on leave

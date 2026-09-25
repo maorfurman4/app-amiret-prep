@@ -84,7 +84,8 @@ The "explanation" field must itself be a JSON-encoded string matching this struc
 - "strategy": in Hebrew, a short transferable tip — the general technique that would lead to the answer even without knowing the specific vocabulary (e.g. a connector word's logic, a grammar pattern, or a process-of-elimination cue).
 
 IMPORTANT:
-- All Hebrew text must be grammatically correct Modern Israeli Hebrew
+- All Hebrew text must be grammatically correct, natural Modern Israeli Hebrew in the active voice
+- Do not use the long dash (—) in Hebrew text; use periods, commas and colons. Gloss an English word as "word (תרגום): reason", e.g. "invited (הזמינה): הפוך מהשפעה שלילית"
 - Questions must be original and not from any known textbook
 - The correct answer should not be predictable by position (vary it)
 - Distractors must be plausible

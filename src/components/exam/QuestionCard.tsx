@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Check, X, Lightbulb, CheckCircle2, XCircle, ListChecks } from 'lucide-react';
 import type { Question } from '@/types/exam';
+import { RichText } from '@/components/strategies/RichText';
 
 interface ExplanationData {
   correct_reason: string;
@@ -167,7 +168,7 @@ export function QuestionCard({
                 <Lightbulb className="w-4 h-4 text-exam-alt" aria-hidden />
                 <span className="text-xs font-bold text-exam-alt">רמז: כיוון לפתרון</span>
               </div>
-              <p className="text-sm text-exam-ink leading-relaxed">{hintStrategy}</p>
+              <p className="text-sm text-exam-ink leading-relaxed"><RichText text={hintStrategy} /></p>
             </div>
           )}
         </div>
@@ -181,7 +182,7 @@ export function QuestionCard({
               <CheckCircle2 className="w-4 h-4 text-exam-sage-strong" aria-hidden />
               <span className="font-bold text-exam-sage-strong text-sm">למה זו התשובה הנכונה</span>
             </div>
-            <p className="text-exam-ink text-sm leading-relaxed">{explanation.correct_reason}</p>
+            <p className="text-exam-ink text-sm leading-relaxed"><RichText text={explanation.correct_reason} /></p>
           </div>
 
           {explanation.options_analysis.length > 0 && (
@@ -208,7 +209,7 @@ export function QuestionCard({
                         <span className="font-serif font-medium text-exam-ink">{opt.text}</span>
                         {explanation.options_analysis[i] && (
                           <p className={`mt-1 text-xs leading-relaxed font-sans ${correct ? 'text-exam-sage-strong' : 'text-exam-wrong'}`} dir="rtl">
-                            {explanation.options_analysis[i]}
+                            <RichText text={explanation.options_analysis[i]} />
                           </p>
                         )}
                       </div>
@@ -225,7 +226,7 @@ export function QuestionCard({
                 <Lightbulb className="w-4 h-4 text-exam-ink" aria-hidden />
                 <span className="font-bold text-exam-ink text-sm">טיפ אסטרטגי</span>
               </div>
-              <p className="text-exam-ink text-sm leading-relaxed">{explanation.strategy}</p>
+              <p className="text-exam-ink text-sm leading-relaxed"><RichText text={explanation.strategy} /></p>
             </div>
           )}
         </div>

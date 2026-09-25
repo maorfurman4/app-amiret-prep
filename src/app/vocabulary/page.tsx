@@ -1169,17 +1169,13 @@ function VocabularyContent() {
                       </div>
                       <div className="mb-4 flex justify-center"><StarRow n={current.difficulty_level} size={18} /></div>
 
-                      {/* The definition is shown up front on a word not learned yet.
-                          The example sentence is the hint: always behind "הצג רמז".
-                          A word back for review hides both, to test recall. */}
-                      {(!known.has(current.id) || showHint) && current.definition && (
-                        <p className="mt-4 text-sm text-exam-ink-soft leading-relaxed text-left">{cleanSnippet(current.definition)}</p>
-                      )}
+                      {/* Front: the word only. The hint is an example sentence that uses
+                          it; the definition waits on the back with the translation. */}
                       {showHint && current.example_sentence ? (
-                        <p className="font-serif mt-3 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-sm text-exam-alt italic leading-relaxed text-left">
+                        <p className="font-serif mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-sm text-exam-alt italic leading-relaxed text-left">
                           {cleanSnippet(current.example_sentence, { keepPeriod: true })}
                         </p>
-                      ) : (current.example_sentence || (known.has(current.id) && current.definition)) && (
+                      ) : current.example_sentence && (
                         <button
                           onClick={e => { e.stopPropagation(); setShowHint(true); }}
                           className="hit-44 text-xs text-exam-alt hover:opacity-80 mt-3 inline-flex items-center gap-1"

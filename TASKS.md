@@ -105,5 +105,6 @@
 - [x] Quiz distractors: same kind of word (a verb against verbs) instead of the legacy category
 - [x] Found along the way: "מילים שטעיתי בהן" showed "—" as the translation since the explanations polish ("word (תרגום)"); `extractGloss` reads both formats (tested)
 - [x] Category reset prepared: `scripts/data/vocab-category.json` (494 academic = Academic Word List families + subject terms, 664 general) and `scripts/reset-vocab-categories.ts`; dry run 1,001 rows to change, 0 problems
+- [x] Card front shows the word only; "הצג רמז" reveals the example sentence; the definition is on the back with the translation
 - [ ] **Approval** to run the category reset (`--apply`) and then migration `20260925140000_vocab_category_theme_only.sql`
 - [ ] Deploy (push)

@@ -114,12 +114,12 @@ export default function DiagnosticPage() {
             <h1 className="text-3xl font-bold text-exam-ink">מאיפה להתחיל? נגלה ביחד</h1>
             <p className="text-exam-ink-soft leading-relaxed">
               אבחון קצר שמתאים את עצמו אליך אחרי כל תשובה, ונעצר ברגע שיש מספיק ודאות לגבי הרמה שלך.
-              בסוף תקבל צעד ראשון אחד וברור — בלי לבחור בעצמך מתוך תפריט.
+              בסוף תקבל צעד ראשון אחד וברור, בלי לבחור בעצמך מתוך תפריט.
             </p>
             <div className="bg-exam-surface rounded-2xl shadow-surface border border-exam-border p-4 text-sm text-exam-ink-soft text-right space-y-2">
               <div className="flex items-center gap-2"><Gauge className="w-4 h-4 flex-shrink-0" aria-hidden />{DIAGNOSTIC.minItems}–{DIAGNOSTIC.maxItems} שאלות · בדרך כלל כ-5 דקות</div>
               <div className="flex items-center gap-2"><Target className="w-4 h-4 flex-shrink-0" aria-hidden />השלמת משפטים וניסוח מחדש, לסירוגין</div>
-              <div className="flex items-center gap-2"><Timer className="w-4 h-4 flex-shrink-0" aria-hidden />ללא טיימר — ענה בקצב טבעי, ונחש כשאתה לא בטוח</div>
+              <div className="flex items-center gap-2"><Timer className="w-4 h-4 flex-shrink-0" aria-hidden />בלי טיימר. ענה בקצב טבעי, ונחש כשאתה לא בטוח</div>
             </div>
             <button
               onClick={() => step([])}
@@ -138,7 +138,7 @@ export default function DiagnosticPage() {
     return (
       <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center space-y-3">
-          <div className="text-exam-wrong">שגיאה בטעינת השאלה הבאה</div>
+          <div className="text-exam-wrong">לא הצלחנו לטעון את השאלה הבאה</div>
           <button onClick={() => step(answers)} disabled={pending} className="text-exam-accent underline text-sm">
             {pending ? 'מנסה שוב...' : 'נסה שוב'}
           </button>
@@ -204,7 +204,7 @@ export default function DiagnosticPage() {
           </button>
         </div>
         <p className="mt-6 text-center text-xs text-exam-ink-soft">
-          לא תראה כאן מיד אם צדקת. ענה לפי תחושת הבטן, בדיוק כמו במבחן — השאלה הבאה נבחרת לפי התשובה שלך.
+          לא תראה כאן מיד אם צדקת. ענה לפי תחושת הבטן, בדיוק כמו במבחן. השאלה הבאה נבחרת לפי התשובה שלך.
         </p>
       </main>
     </div>
@@ -225,9 +225,9 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
       href: plan.secondary.href,
     },
     ...(plan.suggestVocabulary
-      ? [{ icon: BookOpen, text: '10 דקות של אוצר מילים ביום — הבסיס לכל השאר', href: '/vocabulary' }]
+      ? [{ icon: BookOpen, text: '10 דקות של אוצר מילים ביום: הבסיס לכל השאר', href: '/vocabulary' }]
       : []),
-    { icon: Stethoscope, text: 'אחרי כמה ימי תרגול — סימולציית פרקי הליבה', href: '/exam' },
+    { icon: Stethoscope, text: 'אחרי כמה ימי תרגול: סימולציית פרקי הליבה', href: '/exam' },
   ];
 
   return (
@@ -251,7 +251,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
           </h2>
           <p className="text-sm text-exam-ink-soft leading-relaxed mb-4">
             {plan.split
-              ? `כאן הפער הכי ברור — ולכן כאן התרגול ישתלם לך הכי הרבה.`
+              ? `כאן הפער הכי ברור, ולכן כאן התרגול ישתלם לך הכי הרבה.`
               : `5 שאלות בלי טיימר, עם הסבר אחרי כל תשובה. זו רמה שמאתגרת אותך בלי לתסכל.`}
           </p>
           <Link href={plan.primary.href} className={`flex w-full items-center justify-center gap-2 py-3.5 text-base ${TACTILE_PRIMARY}`}>

@@ -29,7 +29,7 @@ const TYPE_OPTIONS: { type: PracticeType; label: string; desc: string; icon: Luc
   { type: 'sentence_completion', label: 'השלמת משפטים', desc: 'בחר את המילה החסרה במשפט', icon: PenLine },
   { type: 'restatement',        label: 'ניסוח מחדש',   desc: 'מצא את המשפט שאומר אותו הדבר', icon: RotateCcw },
   { type: 'reading_comprehension', label: 'הבנת הנקרא', desc: 'קרא קטע וענה על שאלות הבנה', icon: BookOpen },
-  { type: 'mixed', label: 'מעורב סוגים', desc: 'כל סוגי השאלות באותו תרגול — הכי קרוב למבחן האמיתי', icon: Shuffle },
+  { type: 'mixed', label: 'מעורב סוגים', desc: 'כל סוגי השאלות באותו תרגול. הכי קרוב למבחן האמיתי', icon: Shuffle },
 ];
 
 const DIFFICULTY_OPTIONS: { value: Difficulty; label: string; sublabel: string; range: string }[] = [
@@ -431,7 +431,7 @@ function PracticeContent() {
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-exam-surface rounded-2xl border border-exam-border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] hover:border-exam-border-strong transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform text-sm text-exam-ink-soft hover:text-exam-ink"
             >
               <BookOpen className="w-4 h-4" strokeWidth={1.75} aria-hidden />
-              <span>אוצר מילים — כרטיסיות לימוד</span>
+              <span>אוצר מילים: כרטיסיות לימוד</span>
             </Link>
           </div>
         </div>
@@ -521,7 +521,7 @@ function PracticeContent() {
           {/* Practice mode selector */}
           <div className="mt-6 space-y-2">
             {[
-              { id: 'learn', title: 'למידה', desc: 'הסבר מיידי אחרי כל תשובה — בקצב שלך', active: !examMode && !sectionMode, on: () => { setExamMode(false); setSectionMode(false); } },
+              { id: 'learn', title: 'למידה', desc: 'הסבר מיידי אחרי כל תשובה, בקצב שלך', active: !examMode && !sectionMode, on: () => { setExamMode(false); setSectionMode(false); } },
               { id: 'perQ', title: 'אימון מהירות', desc: 'טיימר לכל שאלה בנפרד, הסברים בסוף', active: examMode && !sectionMode, on: () => { setExamMode(true); setSectionMode(false); } },
               // A real exam section is always a single question type, so
               // "true exam conditions" mode doesn't map onto a mixed-type
@@ -800,7 +800,7 @@ function PracticeContent() {
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-exam-ink-soft">
-                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר, על סמך {questions.length} שאלות בלבד — לא ציון רשמי של מאל&quot;ו.
+                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר, על סמך {questions.length} שאלות בלבד. זה לא ציון רשמי של מאל&quot;ו.
                   {selectedDiff !== 'random' && ' לאומדן מדויק יותר, תרגל ברמה מעורבת או עשה סימולציה של פרקי הליבה.'}
                   {' '}כל מוסד קובע בעצמו את הסף לפטור ולכל רמה; {diagClass.label} הוא הטווח הנפוץ.
                 </p>
@@ -850,7 +850,7 @@ function PracticeContent() {
                       {isCorrect ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : <X className="w-3.5 h-3.5" strokeWidth={3} aria-hidden />}
                       <span>שאלה {i + 1}</span>
                       {answers[i] === null && (
-                        <span className="text-exam-ink-soft font-normal">(לא ענית — הזמן נגמר)</span>
+                        <span className="text-exam-ink-soft font-normal">(לא ענית, הזמן נגמר)</span>
                       )}
                     </div>
                     <div className="bg-exam-surface">

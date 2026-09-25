@@ -132,13 +132,13 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             </div>
             {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
               <div className="text-xs text-exam-ink-soft mt-1 animate-fade-up [animation-delay:460ms]">
-                כולל התרגול החלופי, שאינו חלק מפרקי הליבה — טעויות בו לא הורידו לך את האומדן
+                כולל התרגול החלופי, שאינו חלק מפרקי הליבה. טעויות בו לא הורידו לך את האומדן
               </div>
             )}
           </div>
         </div>
 
-        <AuthCTA message="התחבר כדי לשמור את הציון הזה ולהמשיך מכל מכשיר — כל מה שעשית עד עכשיו יעבור אוטומטית לחשבון." />
+        <AuthCTA message="התחבר כדי לשמור את הציון הזה ולהמשיך מכל מכשיר. כל מה שעשית עד עכשיו יעבור אוטומטית לחשבון." />
 
         {/* Probability of exemption — the real measurement uncertainty of
             THIS exam (stored at completion, or re-derived identically for
@@ -199,7 +199,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             })}
           </div>
 
-          <h3 className="font-semibold text-exam-ink text-sm mb-3">פירוט לפי פרק — והמסלול האדפטיבי שלך</h3>
+          <h3 className="font-semibold text-exam-ink text-sm mb-3">פירוט לפי פרק, והמסלול האדפטיבי שלך</h3>
           <p className="text-xs text-exam-ink-soft mb-3">
             רמה 1–5 = רמת הקושי שאליה ניתב אותך האלגוריתם בכל פרק. במבחן האמיתי, רק הגעה לרמות הגבוהות מאפשרת ציון גבוה.
           </p>
@@ -301,14 +301,14 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                     {overCap.length} שאלות חרגו מ&quot;תקציב התקיעה&quot;
                   </div>
                   <div className="text-xs text-exam-alt leading-relaxed">
-                    {overCap.slice(0, 4).map(x => `פרק ${x.section} שאלה ${x.q}: ${Math.round(x.t)} שנ׳${x.wrong ? ' (ועוד טעית בה — עדיף לנחש ולהתקדם)' : ''}`).join(' · ')}
+                    {overCap.slice(0, 4).map(x => `פרק ${x.section} שאלה ${x.q}: ${Math.round(x.t)} שנ׳${x.wrong ? ' (ועוד טעית בה. עדיף לנחש ולהתקדם)' : ''}`).join(' · ')}
                     {overCap.length > 4 && ` · ועוד ${overCap.length - 4}`}
                   </div>
                 </div>
               ) : (
                 <div className="p-3 bg-exam-sage-bg border border-exam-sage/40 rounded-xl text-sm text-exam-sage-strong font-medium flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 flex-shrink-0" aria-hidden />
-                  קצב מצוין — אף שאלה לא חרגה מתקציב התקיעה
+                  קצב מצוין: אף שאלה לא חרגה מתקציב התקיעה
                 </div>
               )}
             </div>

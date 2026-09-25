@@ -90,13 +90,13 @@ export function OfficialScorePrompt() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ score, testDate, testType }),
       });
-      if (!res.ok) { setError('השמירה נכשלה — נסה שוב'); return; }
+      if (!res.ok) { setError('השמירה נכשלה. נסה שוב'); return; }
       const body = await res.json() as Result;
       // The slot stays ours until the student closes the result; only then
       // does the exam-date card come back (asking for the next date).
       setResult({ score: body.score, prediction: body.prediction });
     } catch {
-      setError('אין חיבור — נסה שוב');
+      setError('אין חיבור. נסה שוב');
     } finally {
       setSaving(false);
     }
@@ -117,7 +117,7 @@ export function OfficialScorePrompt() {
           </p>
         )}
         <p className="mt-2 text-xs text-exam-ink-soft">
-          כל ציון רשמי מכייל את האומדנים של האתר מול המציאות — גם לתלמידים הבאים.
+          כל ציון רשמי מכייל את האומדנים של האתר מול המציאות, גם בשביל התלמידים הבאים.
         </p>
         {!exempt && (
           <p className="mt-2 text-xs text-exam-ink-soft">כשתקבע את המועד הבא, נתזמן את החזרות מחדש לקראתו.</p>

@@ -67,7 +67,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const loadSession = useCallback(() => {
     const requestStartedAt = Date.now();
     return authFetch(`/api/exam/state?sessionId=${sessionId}`).then(async res => {
-    if (res.status === 429) { setError('יותר מדי בקשות בזמן קצר — חכה כדקה ולחץ "נסה שוב".'); return; }
+    if (res.status === 429) { setError('יותר מדי בקשות בזמן קצר. חכה כדקה ולחץ "נסה שוב".'); return; }
     if (!res.ok) { setError('לא הצלחנו לטעון את המבחן'); return; }
     const data = await res.json() as { session: SessionState; serverNow?: string };
 
@@ -205,7 +205,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       }
 
       if (res.status === 429) {
-        setError('יותר מדי בקשות בזמן קצר — התשובות שלך לא נשלחו. חכה כדקה ולחץ "נסה שוב".');
+        setError('יותר מדי בקשות בזמן קצר, והתשובות שלך לא נשלחו. חכה כדקה ולחץ "נסה שוב".');
         return;
       }
       if (res.status === 409) {
@@ -218,7 +218,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         return;
       }
       if (!res.ok) {
-        setError('שגיאה בשליחת התשובות. נסה שוב.');
+        setError('לא הצלחנו לשלוח את התשובות. נסה שוב.');
         return;
       }
 
@@ -235,7 +235,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         setLockedAnswers(new Set());
       }
     } catch {
-      setError('שגיאה בשליחת התשובות. נסה שוב.');
+      setError('לא הצלחנו לשלוח את התשובות. נסה שוב.');
     } finally {
       isSubmittingRef.current = false;
       setIsSubmitting(false);
@@ -266,7 +266,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     // only the timer moves you on. Practice mode stays free.
     if (unanswered > 0 && !session.is_practice) {
       setSubmitWarning(
-        `נשארו ${unanswered} שאלות שלא ענית עליהן. כמו במבחן האמיתי, אי אפשר לסיים פרק לפני שעונים על כולן — ואם לא יודעים, מנחשים.`
+        `נשארו ${unanswered} שאלות שלא ענית עליהן. כמו במבחן האמיתי, אי אפשר לסיים פרק לפני שעונים על כולן. ואם לא יודעים, מנחשים.`
       );
       return;
     }
@@ -396,17 +396,17 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
         {lateNotice && (
           <div className="mb-6 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt flex items-center justify-between gap-3" dir="rtl">
-            <span>הפרק הקודם נשלח אחרי שהזמן נגמר, ולכן — כמו במבחן האמיתי — התשובות בו לא נספרו.</span>
+            <span>הפרק הקודם נשלח אחרי שהזמן נגמר, ולכן, כמו במבחן האמיתי, התשובות בו לא נספרו.</span>
             <button onClick={() => setLateNotice(false)} className="text-xs underline flex-shrink-0">הבנתי</button>
           </div>
         )}
         {currentCfg?.experimental && (
           <div className="mb-6 p-4 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-ink">
             <p>
-              <span className="font-bold">תרגול חלופי — לא חלק מהדמיית הליבה.</span> בבחינת אמירנ&quot;ט
+              <span className="font-bold">תרגול חלופי: לא חלק מהדמיית הליבה.</span> בבחינת אמירנ&quot;ט
               הפרקים האחרונים עשויים להיות שני פרקים ניסיוניים מסוגים חדשים, או מטלת כתיבה אחת.
-              האתר עדיין אינו מדמה את סוגי השמע, יצירת המילים, הדקדוק בהקשר או הכתיבה. התרגול החלופי כאן{' '}
-              <span className="font-semibold">אינו מוריד</span> את האומדן הפנימי, ותשובות נכונות יכולות{' '}
+              האתר עדיין לא מדמה את סוגי השמע, יצירת המילים, הדקדוק בהקשר או הכתיבה. התרגול החלופי כאן{' '}
+              <span className="font-semibold">לא מוריד</span> את האומדן הפנימי, ותשובות נכונות יכולות{' '}
               <span className="font-semibold">להעלות</span> אותו במעט (עד 2 נקודות).
             </p>
             <button
@@ -432,7 +432,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         {isSubmitting && (
           <div className="flex items-center justify-center gap-2 mt-4 text-sm text-exam-ink-soft" dir="rtl">
             <span className="w-4 h-4 border-2 border-exam-border border-t-exam-ink rounded-full animate-spin" />
-            שולח את הפרק וטוען את הבא — רגע אחד...
+            שולח את הפרק וטוען את הבא. רגע אחד...
           </div>
         )}
 
@@ -461,7 +461,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
                 key={i}
                 onClick={() => { if (!isSubmitting) setCurrentQuestionIndex(i); }}
                 disabled={isSubmitting}
-                aria-label={`שאלה ${i + 1}${answers[i] === null ? ' — עוד לא ענית' : ''}`}
+                aria-label={`שאלה ${i + 1}${answers[i] === null ? ', עוד לא ענית' : ''}`}
                 className={`w-8 h-8 rounded-sm text-xs font-bold transition-colors disabled:opacity-40 border ${
                   i === currentQuestionIndex ? 'bg-exam-accent border-exam-accent text-exam-accent-ink' :
                   answers[i] !== null ? 'bg-exam-paper-alt border-exam-border text-exam-ink' :
@@ -497,7 +497,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         {/* Official AMIRNET guidance */}
         {!session.is_practice && (
           <p className="mt-6 text-center text-xs text-exam-ink-soft">
-            שאלה שלא ענית עליה נספרת כטעות, ואין קנס על טעות — אז אם אינך בטוח, נחש.
+            שאלה שלא ענית עליה נספרת כטעות, ואין קנס על טעות. אז אם אינך בטוח, נחש.
           </p>
         )}
       </main>

@@ -2,7 +2,7 @@
 
 import { useDashboardSummary } from '@/lib/dashboard-context';
 
-const DEFAULT_TAGLINE = 'הכנה ממוקדת לאמירנ"ט — בדרך לפטור';
+const DEFAULT_TAGLINE = 'הכנה ממוקדת לאמירנ"ט, בדרך לפטור';
 
 /**
  * Replaces the static tagline with a personalized one once we know the
@@ -16,7 +16,7 @@ export function HeroTagline() {
   let text = DEFAULT_TAGLINE;
   if (score != null) {
     text = score >= 134
-      ? `האומדן הפנימי האחרון שלך: ${score} — מעל 134`
+      ? `האומדן הפנימי האחרון שלך: ${score}, מעל 134`
       : `הציון האחרון שלך: ${score} · עוד ${134 - score} נק׳ ל-134+`;
   }
 

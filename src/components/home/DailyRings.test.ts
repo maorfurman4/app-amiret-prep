@@ -28,7 +28,7 @@ describe('three learning rings', () => {
 
   it('an empty queue is caught up, with an honest count of what was done', () => {
     expect(render({ done: 0, due: 0 })).toContain('אין חזרות ממתינות');
-    expect(render({ done: 4, due: 0 })).toContain('הכול מעודכן · 4 הושלמו');
+    expect(render({ done: 4, due: 0 })).toContain('הכול מעודכן · סיימת 4');
   });
 
   it('marks the weekly simulation', () => {
@@ -37,7 +37,7 @@ describe('three learning rings', () => {
   });
 
   it('only marks completion when all three rings are closed', () => {
-    const pop = 'כל טבעות הלמידה הושלמו';
+    const pop = 'סגרת את כל טבעות הלמידה';
     expect(render({ effort: 15, done: 3, due: 0, sim: false })).not.toContain(pop);
     expect(render({ effort: 14, done: 3, due: 0, sim: true })).not.toContain(pop);
     expect(render({ effort: 15, done: 3, due: 0, sim: true })).toContain(pop);

@@ -197,7 +197,7 @@ export default function StatsPage() {
               measurement={current.measurement}
               heading={<>הסיכוי שלך ל-<ExemptTarget /> כרגע</>}
               basis={current.dropped > 0
-                ? `${basis} — לא כללנו מבחנים קודמים שהיו נמוכים בבירור, כי התקדמת מאז`
+                ? `${basis}. לא כללנו מבחנים קודמים שהיו נמוכים בבירור, כי התקדמת מאז`
                 : basis}
               score={thetaToScore(current.measurement.theta)}
             />
@@ -225,19 +225,19 @@ export default function StatsPage() {
             }
           }
           const reasons: { ok: boolean; text: string; href?: string }[] = [];
-          reasons.push({ ok: rawRows.length >= 3, text: rawRows.length >= 3 ? `השלמת ${rawRows.length} מבחנים` : `רק ${rawRows.length} מבחנים — צריך לפחות 3 למדידה יציבה`, href: rawRows.length >= 3 ? undefined : '/exam' });
-          reasons.push({ ok: avg3 >= 134, text: `ממוצע 3 האומדנים האחרונים: ${Math.round(avg3)} ${avg3 >= 134 ? '— מעל 134 באומדן הפנימי' : `— פער של ${Math.max(1, Math.ceil(134 - avg3))} נק׳ מ-134 באומדן`}` });
-          reasons.push({ ok: spread <= 12, text: spread <= 12 ? `יציבות טובה (פער ${spread} נק׳ בין המבחנים)` : `תנודתיות גבוהה (פער ${spread} נק׳) — עוד כמה סימולציות ייצבו את התמונה` });
+          reasons.push({ ok: rawRows.length >= 3, text: rawRows.length >= 3 ? `השלמת ${rawRows.length} מבחנים` : `רק ${rawRows.length} מבחנים. צריך לפחות 3 למדידה יציבה`, href: rawRows.length >= 3 ? undefined : '/exam' });
+          reasons.push({ ok: avg3 >= 134, text: `ממוצע 3 האומדנים האחרונים: ${Math.round(avg3)} ${avg3 >= 134 ? '(מעל 134 באומדן הפנימי)' : `(חסרות ${Math.max(1, Math.ceil(134 - avg3))} נק׳ ל-134 באומדן)`}` });
+          reasons.push({ ok: spread <= 12, text: spread <= 12 ? `יציבות טובה (פער ${spread} נק׳ בין המבחנים)` : `תנודתיות גבוהה (פער ${spread} נק׳). עוד כמה סימולציות ייצבו את התמונה` });
           const weakTypes = Object.entries(typeAcc).filter(([, d]) => d.t > 0 && d.c / d.t < 0.7);
           reasons.push({ ok: weakTypes.length === 0, text: weakTypes.length === 0 ? 'כל סוגי השאלות מעל 70%' : `מתחת ל-70% ב: ${weakTypes.map(([t]) => TYPE_LABELS[t] ?? t).join(', ')}` });
-          if (hiTotal > 0) reasons.push({ ok: hiCorrect / hiTotal >= 0.55, text: `ברמות 4-5: ${Math.round((hiCorrect / hiTotal) * 100)}% ${hiCorrect / hiTotal >= 0.55 ? '— יציב גם ברמות הגבוהות' : '— מומלץ לחזק את הרמות הגבוהות'}` });
-          if (timedQ > 0) reasons.push({ ok: overCap / timedQ <= 0.15, text: overCap === 0 ? 'קצב מצוין — אף שאלה לא חרגה מהתקציב' : `${overCap} שאלות חרגו מתקציב הזמן` });
+          if (hiTotal > 0) reasons.push({ ok: hiCorrect / hiTotal >= 0.55, text: `ברמות 4-5: ${Math.round((hiCorrect / hiTotal) * 100)}% ${hiCorrect / hiTotal >= 0.55 ? '(יציב גם ברמות הגבוהות)' : '(כדאי לחזק את הרמות הגבוהות)'}` });
+          if (timedQ > 0) reasons.push({ ok: overCap / timedQ <= 0.15, text: overCap === 0 ? 'קצב מצוין: אף שאלה לא חרגה מהתקציב' : `${overCap} שאלות חרגו מתקציב הזמן` });
           const okCount = reasons.filter(r => r.ok).length;
           const verdict = okCount === reasons.length && rawRows.length >= 3 && avg3 >= 134
             ? { label: 'מוכנות גבוהה לפי מדדי האתר', cls: 'bg-exam-sage-strong text-on-emerald', desc: 'הביצועים יציבים והאומדן הפנימי מעל 134. זו אינה תחזית ציון רשמית.' }
             : avg3 >= 120 && rawRows.length >= 3
-            ? { label: 'כמעט שם', cls: 'bg-exam-alt text-on-amber', desc: 'הבסיס חזק — סגור את הפערים שמסומנים למטה.' }
-            : { label: 'עוד לא — ממשיכים לעבוד', cls: 'bg-exam-paper-alt text-exam-ink', desc: 'תוכנית: סימולציית פרקי הליבה + תרגול חולשה ממוקד כל יום.' };
+            ? { label: 'כמעט שם', cls: 'bg-exam-alt text-on-amber', desc: 'הבסיס חזק. עכשיו סגור את הפערים שמסומנים למטה.' }
+            : { label: 'עוד לא, ממשיכים לעבוד', cls: 'bg-exam-paper-alt text-exam-ink', desc: 'תוכנית: סימולציית פרקי הליבה + תרגול חולשה ממוקד כל יום.' };
           return (
             <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up">
               <div className="flex items-center gap-3 mb-1">
@@ -284,7 +284,7 @@ export default function StatsPage() {
               {classification.label} — {classification.description}
             </div>
             <div className="text-[11px] text-exam-ink-soft mt-2">
-              כל מוסד קובע בעצמו את הסף לפטור ולכל רמה — זה הטווח הנפוץ, לא תקן אחיד
+              כל מוסד קובע בעצמו את הסף לפטור ולכל רמה. זה הטווח הנפוץ, לא תקן אחיד
             </div>
           </div>
         )}
@@ -349,7 +349,7 @@ export default function StatsPage() {
                   ) : (
                     <>
                       <div className="text-2xl font-bold text-exam-ink-soft">—</div>
-                      <div className="text-xs text-exam-ink-soft mt-0.5">{hist.length < 2 ? 'עוד מבחן אחד ונחשב מגמה' : 'המגמה עדיין לא עולה — התמקד בחולשות למטה'}</div>
+                      <div className="text-xs text-exam-ink-soft mt-0.5">{hist.length < 2 ? 'עוד מבחן אחד ונחשב מגמה' : 'המגמה עדיין לא עולה. התמקד בחולשות למטה'}</div>
                     </>
                   )}
                 </div>
@@ -405,7 +405,7 @@ export default function StatsPage() {
                   <div>
                     <div className="text-exam-accent-ink font-bold text-sm flex items-center gap-1.5"><Target className="w-4 h-4" aria-hidden />תרגל את החולשה שלך עכשיו</div>
                     <div className="text-exam-accent-ink/80 text-xs mt-0.5">
-                      {TYPE_LABELS[weakestType.type] ?? weakestType.type} ברמה {level} — נבחר אוטומטית לפי הביצועים שלך
+                      {TYPE_LABELS[weakestType.type] ?? weakestType.type} ברמה {level}, שנבחרה לפי הביצועים שלך
                     </div>
                   </div>
                   <span className="text-exam-accent-ink text-xl">‹</span>

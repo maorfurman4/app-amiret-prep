@@ -191,7 +191,7 @@ export default function StrategiesPage() {
       <div className="bg-exam-surface border-b border-exam-border px-4 py-5">
         <h1 className="text-2xl font-bold text-exam-ink flex items-center gap-2"><Brain className="w-6 h-6" aria-hidden />המדריך המלא לפתרון האמירנ&quot;ט</h1>
         <p className="text-sm text-exam-ink-soft mt-1">
-          בחר נושא — כל אחד קצר וממוקד
+          בחר נושא. כל אחד קצר וממוקד
         </p>
       </div>
 
@@ -243,7 +243,7 @@ export default function StrategiesPage() {
 
             {topic === 'time' && (
               <section>
-                <h2 className="text-lg font-bold text-exam-ink mb-3">תקציב הזמן שלך — כולל &quot;תקציב תקיעה&quot;</h2>
+                <h2 className="text-lg font-bold text-exam-ink mb-3">תקציב הזמן שלך, כולל &quot;תקציב תקיעה&quot;</h2>
                 <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={TIME_INTRO} tone="intro" />
                 </div>
@@ -343,7 +343,7 @@ export default function StrategiesPage() {
 
             {topic === 'methods' && (
               <section>
-                <h2 className="text-lg font-bold text-exam-ink mb-3">שיטות הקריאה בשוק — ומה אנחנו ממליצים</h2>
+                <h2 className="text-lg font-bold text-exam-ink mb-3">שיטות הקריאה בשוק, ומה אנחנו ממליצים</h2>
                 <div className="mb-5 bg-exam-surface rounded-md border border-exam-border p-4">
                   <TextBlock text={METHODS_INTRO} tone="intro" />
                 </div>

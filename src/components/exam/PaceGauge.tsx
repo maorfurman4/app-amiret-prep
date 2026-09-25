@@ -18,12 +18,12 @@ const LOOK: Record<PaceStatus, { label: string; dot: string; hint: string }> = {
   ahead: {
     label: 'יש לך מרווח',
     dot: 'bg-exam-accent',
-    hint: 'אתה מקדים את התקציב. את הזמן העודף אפשר להשקיע בשאלות שסימנת כלא-בטוחות.',
+    hint: 'אתה מקדים את התקציב. את הזמן העודף אפשר להשקיע בשאלות שסימנת כי לא היית בטוח.',
   },
   behind: {
     label: 'כדאי להתקדם',
     dot: 'bg-exam-alt',
-    hint: 'שאלה שתקועה מעבר לתקציב — נחש, סמן, והמשך. אפשר לחזור אליה בסוף הפרק.',
+    hint: 'שאלה שתקועה מעבר לתקציב? נחש, סמן, והמשך. אפשר לחזור אליה בסוף הפרק.',
   },
 };
 
@@ -105,7 +105,7 @@ export function PaceGauge({
             onClick={() => { setPaceHint(false); setOpen(false); }}
             className="mt-2 text-[11px] font-semibold text-exam-accent hover:underline"
           >
-            הסתר — מצב אמת (בלי מד קצב)
+            הסתר (מצב אמת, בלי מד קצב)
           </button>
         </div>
       )}

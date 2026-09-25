@@ -12,7 +12,7 @@ export function ReviewDueNudge({ dueCount }: { dueCount: number }) {
       <span className="font-bold text-exam-wrong tabular-nums">{dueCount}</span>
       {' '}
       {dueCount === 1 ? 'פריט ממתין לחזרה' : 'פריטים ממתינים לחזרה'}
-      {' — עכשיו, כשהזיכרון מתחיל לדעוך, חזרה מחזקת אותו הכי הרבה'}
+      {'. עכשיו, כשהזיכרון מתחיל לדעוך, חזרה מחזקת אותו הכי הרבה'}
     </p>
   );
 }

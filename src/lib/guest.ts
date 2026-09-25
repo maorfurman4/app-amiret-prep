@@ -18,7 +18,7 @@ export function ensureGuestIdentity(): Promise<void> {
   if (!initialization) {
     initialization = fetch('/api/auth/guest', { method: 'POST', credentials: 'same-origin', cache: 'no-store' })
       .then(async response => {
-        if (!response.ok) throw new Error('לא ניתן להתחיל כעת. נסה לרענן את הדף.');
+        if (!response.ok) throw new Error('לא הצלחנו להתחיל. נסה לרענן את הדף.');
         const { guestId } = await response.json() as { guestId: string };
         // Preserve the old identifier for manual recovery; never send it as proof.
         try {

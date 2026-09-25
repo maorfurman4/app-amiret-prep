@@ -141,11 +141,11 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
         body: JSON.stringify({ displayName: trimmed }),
       });
       const data = await res.json();
-      if (!res.ok) { setNameError(data.error ?? 'שגיאה בשמירה'); return; }
+      if (!res.ok) { setNameError(data.error ?? 'לא הצלחנו לשמור. נסה שוב.'); return; }
       setDisplayName(data.displayName);
       setPanel('settings');
     } catch {
-      setNameError('שגיאת רשת');
+      setNameError('אין חיבור לאינטרנט.');
     } finally {
       setNameSaving(false);
     }
@@ -164,7 +164,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
       setConfirmPassword('');
       setTimeout(() => { setPwSuccess(false); setPanel('settings'); }, 1500);
     } catch {
-      setPwError('שגיאת רשת');
+      setPwError('אין חיבור לאינטרנט.');
     } finally {
       setPwSaving(false);
     }
@@ -184,10 +184,10 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
       body.append('file', file);
       const res = await authFetch('/api/profile/upload-avatar', { method: 'POST', body });
       const data = await res.json();
-      if (!res.ok) { setAvatarError(data.error ?? 'שגיאה בהעלאה'); return; }
+      if (!res.ok) { setAvatarError(data.error ?? 'לא הצלחנו להעלות את התמונה.'); return; }
       setAvatarOverride(data.avatarUrl);
     } catch {
-      setAvatarError('שגיאת רשת');
+      setAvatarError('אין חיבור לאינטרנט.');
     } finally {
       setAvatarSaving(false);
     }
@@ -199,10 +199,10 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
     try {
       const res = await authFetch('/api/profile/upload-avatar', { method: 'DELETE' });
       const data = await res.json();
-      if (!res.ok) { setAvatarError(data.error ?? 'שגיאה במחיקה'); return; }
+      if (!res.ok) { setAvatarError(data.error ?? 'לא הצלחנו להסיר את התמונה.'); return; }
       setAvatarOverride(null);
     } catch {
-      setAvatarError('שגיאת רשת');
+      setAvatarError('אין חיבור לאינטרנט.');
     } finally {
       setAvatarSaving(false);
     }

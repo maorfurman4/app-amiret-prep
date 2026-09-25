@@ -27,7 +27,7 @@ export function VictoryPathSummary() {
       <TrendingUp className="w-4 h-4 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />
       {forecast.daysToTarget === 0 ? (
         <span className="text-exam-ink">
-          הגעת ל-<span className="font-bold text-exam-sage-strong tabular-nums">{TARGET_SCORE}+</span> — כל הכבוד!
+          הגעת ל-<span className="font-bold text-exam-sage-strong tabular-nums">{TARGET_SCORE}+</span>. כל הכבוד!
         </span>
       ) : (
         <span className="text-exam-ink">

@@ -77,7 +77,7 @@ export function ErrorCauseTagger({
           <button
             type="button"
             onClick={() => setEditing(true)}
-            aria-label={`סיבה: ${ERROR_CAUSE_LABEL[cause]} — הקש לשינוי`}
+            aria-label={`סיבה: ${ERROR_CAUSE_LABEL[cause]}. הקש לשינוי`}
             className="hit-44 inline-flex items-center gap-1.5 rounded-full border border-exam-accent bg-exam-accent px-3 py-1 text-xs font-bold text-exam-accent-ink animate-check-pop"
           >
             <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden />
@@ -85,7 +85,7 @@ export function ErrorCauseTagger({
           </button>
         )}
       </div>
-      {failed && <p className="mt-1.5 text-[11px] text-exam-wrong">לא הצלחנו לשמור — נסה שוב.</p>}
+      {failed && <p className="mt-1.5 text-[11px] text-exam-wrong">לא הצלחנו לשמור. נסה שוב.</p>}
     </div>
   );
 }

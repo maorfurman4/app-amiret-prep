@@ -263,7 +263,7 @@ export default function ReviewQueuePage() {
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-4">
             <AlertTriangle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
-            <h1 className="text-xl font-bold text-exam-ink">שגיאה בטעינה</h1>
+            <h1 className="text-xl font-bold text-exam-ink">לא הצלחנו לטעון את החזרה</h1>
             <p className="text-exam-ink-soft text-sm">לא הצלחנו לטעון את השאלות. בדוק את החיבור לאינטרנט.</p>
             <button
               onClick={() => fetchDueQuestions(guestId)}
@@ -377,7 +377,7 @@ export default function ReviewQueuePage() {
           <div className="bg-exam-surface rounded-2xl shadow-surface border border-exam-border p-4 text-sm text-exam-ink-soft">
             {pct >= 80 && 'מצוין! אתה שולט בשאלות האלה.'}
             {pct >= 60 && pct < 80 && 'טוב! עוד קצת תרגול ותגיע לשלמות.'}
-            {pct < 60 && 'הלמידה לוקחת זמן — ממשיכים לחזור!'}
+            {pct < 60 && 'למידה לוקחת זמן. ממשיכים לחזור!'}
           </div>
           <div className="space-y-3">
             <button

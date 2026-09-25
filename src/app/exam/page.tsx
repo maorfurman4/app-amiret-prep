@@ -19,7 +19,7 @@ const MODES: { mode: ExamMode; title: string; desc: string; icon: LucideIcon; is
   {
     mode: 'practice',
     title: 'מצב תרגול',
-    desc: 'בלי טיימר, עם הסבר מיד אחרי כל תשובה — בקצב שלך',
+    desc: 'בלי טיימר, עם הסבר מיד אחרי כל תשובה, בקצב שלך',
     icon: BookOpen,
     isPractice: true,
   },
@@ -68,7 +68,7 @@ export default function ExamModePage() {
       });
 
       if (!res.ok) {
-        setError('שגיאה ביצירת מבחן. נסה שוב.');
+        setError('לא הצלחנו ליצור את המבחן. נסה שוב.');
         return;
       }
 
@@ -122,7 +122,7 @@ export default function ExamModePage() {
               <Stethoscope className="w-8 h-8 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
               <div>
                 <div className="text-lg font-bold text-exam-ink">אבחון רמה מהיר</div>
-                <div className="text-sm text-exam-ink-soft leading-relaxed">6–10 שאלות אדפטיביות בכ-5 דקות — גלה את הרמה שלך ומאיפה להתחיל</div>
+                <div className="text-sm text-exam-ink-soft leading-relaxed">6–10 שאלות אדפטיביות בכ-5 דקות. גלה את הרמה שלך ומאיפה להתחיל</div>
               </div>
             </div>
           </Link>

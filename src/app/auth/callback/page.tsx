@@ -115,7 +115,7 @@ function CallbackHandler() {
           <h2 className="text-xl font-bold text-exam-ink">ההתחברות הצליחה</h2>
           <p className="text-exam-ink-soft text-sm leading-relaxed">
             אבל לא הצלחנו לאשר שההתקדמות שצברת כאורח/ת (רצף ימים, מילים שסימנת) הועברה לחשבון.
-            הנתונים עדיין נשמרים במכשיר הזה — כדאי לנסות שוב.
+            הנתונים עדיין שמורים במכשיר הזה, אז כדאי לנסות שוב.
           </p>
           <button
             onClick={retryMerge}

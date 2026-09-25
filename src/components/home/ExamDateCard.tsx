@@ -19,7 +19,7 @@ function formatExamDate(dateStr: string): string {
 }
 
 function countdownCopy(daysLeft: number): string {
-  if (daysLeft === 0) return 'המבחן היום — בהצלחה!';
+  if (daysLeft === 0) return 'המבחן היום. בהצלחה!';
   if (daysLeft === 1) return 'המבחן מחר';
   return `עוד ${daysLeft} ימים למבחן`;
 }
@@ -86,13 +86,13 @@ export function ExamDateCard() {
         body: JSON.stringify({ examDate: value }),
       });
       if (!res.ok) {
-        setError(res.status === 400 ? 'בחר תאריך מהיום ועד שנתיים קדימה' : 'השמירה נכשלה — נסה שוב');
+        setError(res.status === 400 ? 'בחר תאריך מהיום ועד שנתיים קדימה' : 'השמירה נכשלה. נסה שוב');
         return;
       }
       setSavedDate(value);
       setEditing(false);
     } catch {
-      setError('אין חיבור — נסה שוב');
+      setError('אין חיבור. נסה שוב');
     } finally {
       setSaving(false);
     }
@@ -185,7 +185,7 @@ export function ExamDateCard() {
     <button type="button" onClick={openEditor} className={BANNER_CLASSES}>
       <CalendarClock className="w-6 h-6 text-exam-accent flex-shrink-0" strokeWidth={1.75} aria-hidden />
       <div className="flex-1">
-        <div className="font-semibold text-sm">{hadPastDate ? 'תאריך המבחן עבר — מתי המבחן הבא?' : 'מתי המבחן שלך?'}</div>
+        <div className="font-semibold text-sm">{hadPastDate ? 'תאריך המבחן עבר. מתי המבחן הבא?' : 'מתי המבחן שלך?'}</div>
         <div className="text-exam-ink-soft text-xs">קבע תאריך, ונתזמן את החזרות כך שהזיכרון שלך יהיה בשיא ביום המבחן</div>
       </div>
       <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />

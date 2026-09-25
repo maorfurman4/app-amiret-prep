@@ -56,8 +56,8 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
         </h2>
         <p className="text-sm text-exam-ink-soft">
           {remaining > 0
-            ? `עוד ${remaining} ${remaining === 1 ? 'מבחן' : 'מבחנים'} ונוכל לחשב תחזית אמינה — היא מבוססת על הקצב שלך לאורך זמן, לא על ניחוש`
-            : 'עוד קצת — כדי לחשב תחזית אמינה צריך מבחנים מכמה ימים שונים'}
+            ? `עוד ${remaining} ${remaining === 1 ? 'מבחן' : 'מבחנים'} ונוכל לחשב תחזית אמינה. היא מבוססת על הקצב שלך לאורך זמן, לא על ניחוש`
+            : 'עוד קצת. כדי לחשב תחזית אמינה צריך מבחנים מכמה ימים שונים'}
         </p>
       </div>
     );
@@ -85,13 +85,13 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
       </h2>
       <p className="text-sm text-exam-ink-soft mb-4">
         {forecast.daysToTarget === 0 ? (
-          <>הגעת ליעד — <span className="font-bold text-exam-sage-strong">{targetScore}+</span> כבר בכיס</>
+          <>הגעת ליעד: <span className="font-bold text-exam-sage-strong">{targetScore}+</span> כבר בכיס</>
         ) : (
           <>
             בקצב הנוכחי שלך (<span className="font-bold text-exam-ink tabular-nums">+{forecast.slopePerDay.toFixed(1)}</span> נק׳ ליום):
             {' '}תגיע ל-<span className="font-bold text-exam-ink tabular-nums">{targetScore}</span> בעוד כ-
             <span className={`font-bold tabular-nums ${accelerating ? 'text-exam-sage-strong' : 'text-exam-ink'}`}>{' '}{forecast.daysToTarget} ימים</span>
-            {accelerating && ' — והקצב עולה'}
+            {accelerating && ', והקצב עולה'}
           </>
         )}
       </p>

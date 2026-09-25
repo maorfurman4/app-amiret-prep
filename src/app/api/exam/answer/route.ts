@@ -249,7 +249,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (nextQuestions.length !== nextCfg.questionCount) {
-      return NextResponse.json({ error: 'לא ניתן לטעון פרק מלא כרגע. נסה שוב.' }, { status: 503 });
+      return NextResponse.json({ error: 'לא הצלחנו לטעון את הפרק הבא. נסה שוב.' }, { status: 503 });
     }
     const newQIds = nextQuestions.map(q => q.id);
     seenQuestionIds = newQIds;

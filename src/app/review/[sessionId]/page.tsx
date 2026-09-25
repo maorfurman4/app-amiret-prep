@@ -60,7 +60,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
     return (
       <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
-          <div className="text-exam-wrong text-xl mb-3">שגיאה בטעינת השאלות</div>
+          <div className="text-exam-wrong text-xl mb-3">לא הצלחנו לטעון את השאלות</div>
           <button onClick={() => { setFetchError(false); setLoadToken(t => t + 1); }} className="text-exam-accent underline text-sm">נסה שוב</button>
         </div>
       </div>
@@ -153,7 +153,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                 <button
                   key={flatIdx}
                   onClick={() => goTo(pos)}
-                  aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ' — נכונה' : ' — שגויה'}`}
+                  aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ', נכונה' : ', שגויה'}`}
                   className={`w-full py-1.5 rounded-sm text-xs font-bold transition-all border ${
                     pos === currentIndex
                       ? 'bg-exam-accent text-exam-accent-ink border-exam-accent scale-105'
@@ -226,7 +226,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                       <button
                         key={flatIdx}
                         onClick={() => goTo(pos)}
-                        aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ' — נכונה' : ' — שגויה'}`}
+                        aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ', נכונה' : ', שגויה'}`}
                         className={`w-7 h-7 rounded-sm text-xs font-bold transition-all border ${
                           pos === currentIndex
                             ? 'bg-exam-accent text-exam-accent-ink border-exam-accent scale-110'

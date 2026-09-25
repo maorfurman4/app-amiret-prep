@@ -51,7 +51,7 @@ function LoginForm() {
       provider: 'google',
       options: { redirectTo },
     });
-    if (error) { setError('שגיאה בכניסה עם Google'); setGoogleLoading(false); }
+    if (error) { setError('לא הצלחנו להתחבר עם Google. נסה שוב.'); setGoogleLoading(false); }
   };
 
   // Moves guest-mode history (exam sessions, review queue, streak, vocab
@@ -79,8 +79,8 @@ function LoginForm() {
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) {
         setError(error.message.includes('already registered')
-          ? 'כתובת האימייל הזו כבר רשומה — נסה להתחבר'
-          : 'שגיאה בהרשמה, נסה שוב');
+          ? 'כתובת האימייל הזו כבר רשומה. נסה להתחבר'
+          : 'לא הצלחנו להשלים את ההרשמה. נסה שוב.');
       } else if (data.session) {
         // signUp() returns an active session immediately when email
         // confirmation is off; falls to the "check your email" branch
@@ -109,7 +109,7 @@ function LoginForm() {
     const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent('/auth/reset-password')}`;
     const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
     if (error) {
-      setError('שגיאה בשליחת המייל, נסה שוב');
+      setError('לא הצלחנו לשלוח את המייל. נסה שוב.');
     } else {
       setForgotSent(true);
     }
@@ -128,7 +128,7 @@ function LoginForm() {
         <h2 className="text-xl font-bold text-exam-ink">ההתחברות הצליחה</h2>
         <p className="text-exam-ink-soft text-sm leading-relaxed">
           אבל לא הצלחנו לאשר שההתקדמות שצברת כאורח/ת (רצף ימים, מילים שסימנת) הועברה לחשבון.
-          הנתונים עדיין נשמרים במכשיר הזה — כדאי לנסות שוב.
+          הנתונים עדיין שמורים במכשיר הזה, אז כדאי לנסות שוב.
         </p>
         <button
           onClick={() => finishLogin(mergeFailedToken)}
@@ -372,7 +372,7 @@ export default function LoginPage() {
         <p className="text-center text-exam-ink-soft text-xs mt-6">
           אפשר גם להמשיך{' '}
           <Link href="/" className="text-exam-ink-soft hover:text-exam-ink underline">בלי חשבון</Link>
-          {' '}— ההתקדמות תישמר רק בדפדפן הזה, ותימחק אם תנקה את נתוני האתר.
+          {' '}(ההתקדמות תישמר רק בדפדפן הזה, ותימחק אם תנקה את נתוני האתר).
         </p>
       </div>
     </div>

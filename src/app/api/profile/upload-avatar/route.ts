@@ -28,14 +28,14 @@ export async function POST(req: NextRequest) {
 
   const file = form.get('file');
   if (!(file instanceof File)) {
-    return NextResponse.json({ error: 'קובץ לא נמצא' }, { status: 400 });
+    return NextResponse.json({ error: 'לא נבחר קובץ' }, { status: 400 });
   }
   if (file.size > MAX_BYTES) {
     return NextResponse.json({ error: 'הקובץ גדול מדי (מקסימום 3MB)' }, { status: 400 });
   }
   const ext = ALLOWED_TYPES[file.type];
   if (!ext) {
-    return NextResponse.json({ error: 'סוג קובץ לא נתמך — יש להעלות JPG, PNG, WEBP או GIF' }, { status: 400 });
+    return NextResponse.json({ error: 'סוג הקובץ לא נתמך. אפשר להעלות JPG, PNG, WEBP או GIF' }, { status: 400 });
   }
 
   const path = `${user.id}/avatar.${ext}`;

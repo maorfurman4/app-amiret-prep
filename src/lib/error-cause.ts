@@ -8,7 +8,7 @@ export const ERROR_CAUSE_LABEL: Record<ErrorCause, string> = {
   vocab: 'לא הכרתי מילה',
   logic: 'טעיתי בהיגיון',
   time: 'לחץ זמן',
-  careless: 'ידעתי — פספוס',
+  careless: 'ידעתי, פספסתי',
 };
 
 /** A wrong answer this fast was more likely a slip than a real attempt. */

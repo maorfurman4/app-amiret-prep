@@ -29,14 +29,14 @@ const TONE: Record<ExemptionTone, { arc: string; band: string; text: string; glo
     band: 'bg-exam-accent',
     text: 'text-exam-accent',
     glow: 'bg-exam-accent/20',
-    headline: 'ממש על הקו — כל מבחן נוסף מחדד את התמונה',
+    headline: 'ממש על הקו. כל מבחן נוסף מחדד את התמונה',
   },
   building: {
     arc: 'stroke-exam-alt',
     band: 'bg-exam-alt',
     text: 'text-exam-alt',
     glow: 'bg-exam-alt/20',
-    headline: 'עוד בדרך לשם — יש על מה לבנות',
+    headline: 'עוד בדרך לשם, ויש על מה לבנות',
   },
 };
 
@@ -164,7 +164,7 @@ export function ExemptionCard({ measurement, heading, basis, score }: ExemptionC
         </p>
 
         <p className="mt-3 pt-3 border-t border-exam-border text-[11px] leading-relaxed text-exam-ink-soft">
-          אומדן על הסקאלה הפנימית של האתר, לפי דיוק המדידה בפועל — לא תחזית רשמית של נית&quot;ה.
+          אומדן על הסקאלה הפנימית של האתר, לפי דיוק המדידה בפועל. זו לא תחזית רשמית של נית&quot;ה.
           כל מוסד לימודים קובע בעצמו את הסף לפטור.
         </p>
       </section>

@@ -79,7 +79,7 @@ export function DailyRings({ rings, persistCelebration = true }: { rings: Rings;
         </svg>
         {allClosed && (
           <span
-            role="img" aria-label="כל טבעות הלמידה הושלמו"
+            role="img" aria-label="סגרת את כל טבעות הלמידה"
             className={`absolute inset-0 m-auto flex size-7 items-center justify-center rounded-full bg-exam-sage-bg text-exam-sage-strong shadow-progress ${celebrate ? 'ring-closure-check' : ''}`}
           >
             <Check className="size-4" strokeWidth={2.5} aria-hidden="true" />
@@ -98,7 +98,7 @@ export function DailyRings({ rings, persistCelebration = true }: { rings: Rings;
           <span className="text-exam-ink-soft">חזרות בזמן</span>
           {reviewsCaughtUp ? (
             <span className="font-semibold text-exam-sage-strong">
-              {rings.retention.done > 0 ? `הכול מעודכן · ${rings.retention.done} הושלמו` : 'אין חזרות ממתינות'}
+              {rings.retention.done > 0 ? `הכול מעודכן · סיימת ${rings.retention.done}` : 'אין חזרות ממתינות'}
             </span>
           ) : (
             <span className="font-bold text-exam-ink tabular-nums" dir="ltr">{rings.retention.done}/{retentionTarget}</span>

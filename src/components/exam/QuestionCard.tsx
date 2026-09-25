@@ -93,7 +93,7 @@ export function QuestionCard({
       {question.type === 'restatement' && (
         <div className="mb-6 px-4 py-3 bg-exam-paper-alt border border-exam-border border-r-[3px] border-r-exam-ink rounded-sm" dir="rtl">
           <div className="text-xs text-exam-ink-soft font-semibold mb-2 uppercase tracking-wide">
-            המשפט המקורי — מצא את הניסוח השקול
+            משפט המקור: מצא את הניסוח השקול
           </div>
           <div dir="ltr" lang="en" className="font-serif text-lg text-exam-ink leading-relaxed text-left">
             {question.text}
@@ -159,13 +159,13 @@ export function QuestionCard({
               className="hit-44 text-sm text-exam-alt hover:opacity-80 flex items-center gap-1.5 transition-opacity"
             >
               <Lightbulb className="w-4 h-4" aria-hidden />
-              <span>רמז — כיוון לפתרון</span>
+              <span>רמז: כיוון לפתרון</span>
             </button>
           ) : (
             <div className="p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm">
               <div className="flex items-center gap-1.5 mb-1">
                 <Lightbulb className="w-4 h-4 text-exam-alt" aria-hidden />
-                <span className="text-xs font-bold text-exam-alt">רמז — כיוון לפתרון</span>
+                <span className="text-xs font-bold text-exam-alt">רמז: כיוון לפתרון</span>
               </div>
               <p className="text-sm text-exam-ink leading-relaxed">{hintStrategy}</p>
             </div>

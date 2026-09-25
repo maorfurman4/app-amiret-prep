@@ -114,7 +114,7 @@ export default function ResetPasswordPage() {
       return (
         <div className="text-center space-y-4">
           <Clock className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
-          <h2 className="text-xl font-bold text-exam-ink">הקישור אינו תקף</h2>
+          <h2 className="text-xl font-bold text-exam-ink">הקישור כבר לא בתוקף</h2>
           <p className="text-exam-ink-soft text-sm">
             קישור האיפוס פג תוקף או שכבר נעשה בו שימוש.<br />
             אפשר לבקש קישור חדש ממסך הכניסה.

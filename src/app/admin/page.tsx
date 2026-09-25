@@ -75,7 +75,7 @@ export default function AdminPage() {
           : `נוצרו ${data.inserted} שאלות`
       );
     } catch {
-      setError('שגיאת רשת');
+      setError('אין חיבור לאינטרנט.');
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { TrendingUp } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
+import { heCount } from '@/lib/hebrew-count';
 
 const TARGET_SCORE = 134;
 
@@ -32,7 +33,7 @@ export function VictoryPathSummary() {
       ) : (
         <span className="text-exam-ink">
           בקצב הנוכחי שלך: <span className="font-bold text-exam-ink tabular-nums">{TARGET_SCORE}</span> בעוד כ-
-          <span className="font-bold text-exam-ink tabular-nums">{' '}{forecast.daysToTarget}</span> ימים
+          <span className="font-bold text-exam-ink tabular-nums">{' '}{heCount(forecast.daysToTarget, 'day')}</span>
         </span>
       )}
     </Link>

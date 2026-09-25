@@ -39,7 +39,7 @@ describe('ExamDateCard', () => {
 
   it('shows a countdown with an edit control once a date is set', () => {
     const html = render('2026-11-01');
-    expect(html).toContain('עוד <span class="tabular-nums">39</span> ימים למבחן');
+    expect(html).toContain('עוד 39 ימים למבחן');
     expect(html).toContain('aria-label="שינוי תאריך המבחן"');
   });
 
@@ -47,6 +47,7 @@ describe('ExamDateCard', () => {
     expect(render('2026-10-01')).toContain('המרווחים בין החזרות מתקצרים');
     expect(render('2026-11-01')).not.toContain('המרווחים בין החזרות מתקצרים');
     expect(render('2026-09-24')).toContain('המבחן מחר');
+    expect(render('2026-09-25')).toContain('עוד יומיים למבחן');
     expect(render('2026-09-23')).toContain('המבחן היום');
   });
 

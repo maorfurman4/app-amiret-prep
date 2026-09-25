@@ -6,6 +6,7 @@ import { CalendarClock, CalendarCheck, ChevronLeft, Pencil } from 'lucide-react'
 import { useDashboardSummary } from '@/lib/dashboard-context';
 import { authFetch } from '@/lib/auth-fetch';
 import { addLocalDays, localDaysBetween, todayLocalStr } from '@/lib/date-local';
+import { heCount } from '@/lib/hebrew-count';
 
 /** Same window PUT /api/goals enforces. */
 const MAX_DAYS_AHEAD = 730;
@@ -21,7 +22,7 @@ function formatExamDate(dateStr: string): string {
 function countdownCopy(daysLeft: number): string {
   if (daysLeft === 0) return 'המבחן היום. בהצלחה!';
   if (daysLeft === 1) return 'המבחן מחר';
-  return `עוד ${daysLeft} ימים למבחן`;
+  return `עוד ${heCount(daysLeft, 'day')} למבחן`;
 }
 
 /**
@@ -162,7 +163,7 @@ export function ExamDateCard() {
         <CalendarCheck className="w-5 h-5 text-exam-sage-strong flex-shrink-0" strokeWidth={1.75} aria-hidden />
         <div className="flex-1 min-w-0">
           <div className="font-bold text-sm">
-            {daysLeft! > 1 ? <>עוד <span className="tabular-nums">{daysLeft}</span> ימים למבחן</> : countdownCopy(daysLeft!)}
+            {countdownCopy(daysLeft!)}
           </div>
           <div className="text-exam-ink-soft text-xs">
             {formatExamDate(examDate)}

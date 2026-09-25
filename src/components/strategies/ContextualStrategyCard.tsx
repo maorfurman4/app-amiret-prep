@@ -16,9 +16,17 @@ const TONE: Record<'blue' | 'purple' | 'green', { badge: string; glow: string; i
  */
 export function ContextualStrategyCard({ tip: { guide, tip, errors, total } }: { tip: ContextualTip }) {
   const tone = TONE[guide.color];
+  const kind = `מסוג ${guide.titleHe}`;
+  const missed = total === 1
+    ? `טעית בשאלה ${kind} בתרגול הזה.`
+    : errors === total
+      ? `טעית ב${total === 2 ? 'שתי' : `כל ${total}`} השאלות ${kind} בתרגול הזה.`
+      : errors === 1
+        ? `טעית בשאלה אחת מתוך ${total} שאלות ${kind} בתרגול הזה.`
+        : `טעית ב-${errors} מתוך ${total} שאלות ${kind} בתרגול הזה.`;
   const reason = errors > 0
-    ? `טעית ב-${errors} מתוך ${total} שאלות ${guide.titleHe} בתרגול הזה. הכלי הזה יעזור לך שם יותר מכל דבר אחר.`
-    : `ענית נכון על כל שאלות ${guide.titleHe}. הכלי הזה יעזור לך לשמור על זה גם כשהשאלות יהיו קשות יותר.`;
+    ? `${missed} הכלי הזה יעזור לך שם יותר מכל דבר אחר.`
+    : `ענית נכון על ${total === 1 ? `השאלה ${kind}` : `כל השאלות ${kind}`}. הכלי הזה יעזור לך לשמור על זה גם כשהשאלות יהיו קשות יותר.`;
 
   return (
     <section

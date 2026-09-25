@@ -12,6 +12,7 @@ import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-clie
 import { toCanonicalOption } from '@/lib/option-shuffle';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { DIAGNOSTIC, type DiagnosticState, type DiagnosticType, type StartPlan } from '@/lib/diagnostic-plan';
+import { heCount } from '@/lib/hebrew-count';
 
 /**
  * Onboarding diagnostic — a stateless, item-by-item CAT. Every step posts
@@ -216,7 +217,7 @@ export default function DiagnosticPage() {
 function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
   const band = classifyScore(plan.score);
   const [lo, hi] = plan.levelRange;
-  const typeLine = plan.byType.map(t => `${TYPE_LABEL[t.type]} ${t.correct}/${t.total}`).join(' · ');
+  const typeLine = plan.byType.map(t => `${TYPE_LABEL[t.type]}: ${t.correct} מתוך ${t.total}`).join(' · ');
 
   const next: { icon: LucideIcon; text: string; href: string }[] = [
     {
@@ -236,7 +237,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
         <div className="text-center animate-fade-up">
           <Sparkles className="w-9 h-9 mx-auto mb-2 text-exam-accent animate-check-pop" strokeWidth={1.5} aria-hidden />
           <h1 className="text-2xl font-bold text-exam-ink">התוכנית שלך מוכנה</h1>
-          <p className="text-sm text-exam-ink-soft mt-1">על סמך {answered} שאלות</p>
+          <p className="text-sm text-exam-ink-soft mt-1">על סמך {heCount(answered, 'question')}</p>
         </div>
 
         {/* The one action */}

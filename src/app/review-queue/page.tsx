@@ -9,6 +9,7 @@ import { PenLine, RotateCcw, BookOpen, Languages, HelpCircle, AlertTriangle, Par
 import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry, type ResponseLogEntry } from '@/lib/response-log-client';
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
+import { heCount, agree } from '@/lib/hebrew-count';
 
 type Step = 'loading' | 'empty' | 'error' | 'overview' | 'reviewing' | 'done';
 
@@ -284,8 +285,8 @@ export default function ReviewQueuePage() {
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-6">
             <PartyPopper className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
-            <h1 className="text-2xl font-bold text-exam-ink">כל הכבוד!</h1>
-            <p className="text-exam-ink-soft">אין כרגע שאלות לחזרה. חזור מחר</p>
+            <h1 className="text-2xl font-bold text-exam-ink">סגרת את כל החזרות</h1>
+            <p className="text-exam-ink-soft">אין כרגע שאלות שמחכות לך. נתראה מחר עם סבב חדש.</p>
             <button
               onClick={() => router.push('/exam')}
               className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
@@ -310,7 +311,7 @@ export default function ReviewQueuePage() {
             <div className="text-center">
               <RotateCcw className="w-9 h-9 mx-auto mb-2 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
               <h1 className="text-2xl font-bold text-exam-ink">חזרה על טעויות</h1>
-              <p className="text-exam-ink-soft mt-1">{allQuestions.length} שאלות מחכות לך, לפי סוג</p>
+              <p className="text-exam-ink-soft mt-1">{heCount(allQuestions.length, 'question')} {agree(allQuestions.length, 'מחכה', 'מחכות')} לך, לפי סוג</p>
             </div>
 
             <div className="space-y-3">
@@ -323,7 +324,7 @@ export default function ReviewQueuePage() {
                   {(() => { const Icon = CATEGORY_ICONS[type] ?? HelpCircle; return <Icon className="w-6 h-6 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />; })()}
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-exam-ink">{CATEGORY_LABELS[type] ?? type}</div>
-                    <div className="text-xs text-exam-ink-soft">{groups[type].length} שאלות</div>
+                    <div className="text-xs text-exam-ink-soft">{heCount(groups[type].length, 'question')}</div>
                   </div>
                   <button
                     onClick={() => handleStartReview(type)}
@@ -469,8 +470,10 @@ export default function ReviewQueuePage() {
                         }`}>
                           {correct ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : wrong ? <X className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : i + 1}
                         </span>
-                        <span className="text-sm text-exam-ink text-right leading-snug line-clamp-2 flex-1">
-                          {q.text.length > 80 ? q.text.slice(0, 80) + '…' : q.text}
+                        {/* English question text: its own LTR box, so the clamp's ellipsis and the
+                            sentence's final punctuation land on the right (end) side. */}
+                        <span dir="ltr" className="font-serif text-sm text-exam-ink text-left leading-snug line-clamp-2 flex-1">
+                          {q.text}
                         </span>
                       </button>
                       <button

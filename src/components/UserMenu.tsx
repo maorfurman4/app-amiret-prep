@@ -18,7 +18,7 @@ const VIEWPORT_GUTTER = 8;
 /* Fixed-palette classes (menu-* tokens are identical in light and dark). */
 const ITEM = 'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-right text-sm font-semibold text-menu-ink hover:bg-menu-hover focus-visible:bg-menu-hover focus-visible:outline-none transition-colors';
 const ITEM_ICON = 'w-[18px] h-[18px] flex-shrink-0 text-menu-accent';
-const INPUT = 'w-full px-3 py-2 rounded-lg border border-menu-border bg-menu-surface text-sm text-menu-ink placeholder:text-menu-ink-soft focus:outline-none focus:ring-2 focus:ring-menu-accent/30';
+const INPUT = 'w-full px-3 py-2 rounded-lg border border-menu-border bg-menu-surface text-sm text-start text-menu-ink placeholder:text-right placeholder:text-menu-ink-soft focus:outline-none focus:ring-2 focus:ring-menu-accent/30';
 const PRIMARY = 'w-full py-2.5 rounded-xl bg-menu-accent text-white text-sm font-bold shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:shadow-pressed transition-[transform,box-shadow,opacity] duration-300 ease-spring disabled:opacity-50';
 
 /** `previewUser` is for the dev-only /dev/user-menu preview: it skips the auth subscription. */
@@ -278,8 +278,8 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
           <div className="flex items-center gap-3 px-2 pt-1 pb-3 mb-1 border-b border-menu-border">
             {avatar('lg')}
             <div className="min-w-0 flex-1">
-              <p className="text-[15px] font-bold text-menu-ink truncate">{displayName || 'הגדר שם תצוגה'}</p>
-              <p className="text-xs text-menu-ink-soft truncate" dir="ltr">{user.email}</p>
+              <p dir="auto" className="text-[15px] font-bold text-menu-ink truncate text-right">{displayName || 'הגדר שם תצוגה'}</p>
+              <p className="text-xs text-menu-ink-soft truncate text-right" dir="ltr">{user.email}</p>
             </div>
           </div>
 
@@ -358,6 +358,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
           <div className="px-1 pb-1 space-y-2">
             <input
               type="text"
+              dir="auto"
               value={nameInput}
               onChange={e => setNameInput(e.target.value)}
               maxLength={40}
@@ -382,6 +383,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
               <>
                 <input
                   type="password"
+                  dir="ltr"
                   value={newPassword}
                   onChange={e => setNewPassword(e.target.value)}
                   placeholder="סיסמה חדשה"
@@ -390,6 +392,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
                 />
                 <input
                   type="password"
+                  dir="ltr"
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
                   placeholder="אימות סיסמה"

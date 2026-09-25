@@ -12,6 +12,7 @@ import { aggregateAccuracyByType, findWeakestType } from '@/lib/weakness';
 import { BackNav } from '@/components/BackNav';
 import { VictoryPath } from '@/components/stats/VictoryPath';
 import { BarChart3, Target, Check, Trophy, AlertTriangle, PartyPopper } from 'lucide-react';
+import { heCount, agree } from '@/lib/hebrew-count';
 
 interface Stats {
   total_exams: number;
@@ -160,8 +161,8 @@ export default function StatsPage() {
         <BackNav backHref="/exam" backLabel="מבחן" />
         <div className="flex flex-col items-center justify-center h-[calc(100dvh-3rem)] text-center px-4">
           <BarChart3 className="w-14 h-14 mx-auto mb-4 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
-          <h1 className="text-2xl font-bold text-exam-ink mb-2">אין עדיין נתונים</h1>
-          <p className="text-exam-ink-soft mb-6">סיים לפחות מבחן אחד כדי לראות סטטיסטיקות</p>
+          <h1 className="text-2xl font-bold text-exam-ink mb-2">הסטטיסטיקה שלך מחכה למבחן הראשון</h1>
+          <p className="text-exam-ink-soft mb-6">אחרי סימולציה אחת תראה כאן את הציון שלך, את החוזקות ואת מה שכדאי לחזק.</p>
           <Link href="/exam" className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-semibold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform">
             התחל מבחן
           </Link>
@@ -225,13 +226,13 @@ export default function StatsPage() {
             }
           }
           const reasons: { ok: boolean; text: string; href?: string }[] = [];
-          reasons.push({ ok: rawRows.length >= 3, text: rawRows.length >= 3 ? `השלמת ${rawRows.length} מבחנים` : `רק ${rawRows.length} מבחנים. צריך לפחות 3 למדידה יציבה`, href: rawRows.length >= 3 ? undefined : '/exam' });
-          reasons.push({ ok: avg3 >= 134, text: `ממוצע 3 האומדנים האחרונים: ${Math.round(avg3)} ${avg3 >= 134 ? '(מעל 134 באומדן הפנימי)' : `(חסרות ${Math.max(1, Math.ceil(134 - avg3))} נק׳ ל-134 באומדן)`}` });
+          reasons.push({ ok: rawRows.length >= 3, text: rawRows.length >= 3 ? `השלמת ${rawRows.length} מבחנים` : `רק ${heCount(rawRows.length, 'exam')}. צריך לפחות 3 למדידה יציבה`, href: rawRows.length >= 3 ? undefined : '/exam' });
+          reasons.push({ ok: avg3 >= 134, text: `ממוצע 3 האומדנים האחרונים: ${Math.round(avg3)} ${avg3 >= 134 ? '(מעל 134 באומדן הפנימי)' : `(${Math.max(1, Math.ceil(134 - avg3)) === 1 ? 'חסרה נקודה אחת' : `חסרות ${Math.ceil(134 - avg3)} נק׳`} ל-134 באומדן)`}` });
           reasons.push({ ok: spread <= 12, text: spread <= 12 ? `יציבות טובה (פער ${spread} נק׳ בין המבחנים)` : `תנודתיות גבוהה (פער ${spread} נק׳). עוד כמה סימולציות ייצבו את התמונה` });
           const weakTypes = Object.entries(typeAcc).filter(([, d]) => d.t > 0 && d.c / d.t < 0.7);
-          reasons.push({ ok: weakTypes.length === 0, text: weakTypes.length === 0 ? 'כל סוגי השאלות מעל 70%' : `מתחת ל-70% ב: ${weakTypes.map(([t]) => TYPE_LABELS[t] ?? t).join(', ')}` });
+          reasons.push({ ok: weakTypes.length === 0, text: weakTypes.length === 0 ? 'כל סוגי השאלות מעל 70%' : `פחות מ-70% הצלחה: ${weakTypes.map(([t]) => TYPE_LABELS[t] ?? t).join(', ')}` });
           if (hiTotal > 0) reasons.push({ ok: hiCorrect / hiTotal >= 0.55, text: `ברמות 4-5: ${Math.round((hiCorrect / hiTotal) * 100)}% ${hiCorrect / hiTotal >= 0.55 ? '(יציב גם ברמות הגבוהות)' : '(כדאי לחזק את הרמות הגבוהות)'}` });
-          if (timedQ > 0) reasons.push({ ok: overCap / timedQ <= 0.15, text: overCap === 0 ? 'קצב מצוין: אף שאלה לא חרגה מהתקציב' : `${overCap} שאלות חרגו מתקציב הזמן` });
+          if (timedQ > 0) reasons.push({ ok: overCap / timedQ <= 0.15, text: overCap === 0 ? 'קצב מצוין: אף שאלה לא חרגה מהתקציב' : `${heCount(overCap, 'question')} ${agree(overCap, 'חרגה', 'חרגו')} מתקציב הזמן` });
           const okCount = reasons.filter(r => r.ok).length;
           const verdict = okCount === reasons.length && rawRows.length >= 3 && avg3 >= 134
             ? { label: 'מוכנות גבוהה לפי מדדי האתר', cls: 'bg-exam-sage-strong text-on-emerald', desc: 'הביצועים יציבים והאומדן הפנימי מעל 134. זו אינה תחזית ציון רשמית.' }
@@ -344,7 +345,7 @@ export default function StatsPage() {
                   ) : examsToGo !== null ? (
                     <>
                       <div className="text-2xl font-bold text-exam-ink"><bdi dir="ltr">~{examsToGo}</bdi></div>
-                      <div className="text-xs text-exam-ink-soft mt-0.5">מבחנים עד היעד בקצב הנוכחי (+{slope.toFixed(1)} נק׳ למבחן)</div>
+                      <div className="text-xs text-exam-ink-soft mt-0.5">{agree(examsToGo, 'מבחן', 'מבחנים')} עד היעד בקצב הנוכחי (+{slope.toFixed(1)} נק׳ למבחן)</div>
                     </>
                   ) : (
                     <>

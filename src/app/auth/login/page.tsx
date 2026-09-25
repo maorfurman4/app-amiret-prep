@@ -154,7 +154,7 @@ function LoginForm() {
         <h2 className="text-xl font-bold text-exam-ink">כבר מחובר</h2>
         <p className="text-exam-ink-soft text-sm">
           מחובר בתור<br />
-          <span className="font-semibold text-exam-ink">{currentUser.email}</span>
+          <bdi dir="ltr" className="font-semibold text-exam-ink">{currentUser.email}</bdi>
         </p>
         <button
           onClick={() => router.push('/')}
@@ -185,7 +185,7 @@ function LoginForm() {
         <h2 className="text-xl font-bold text-exam-ink">בדוק את תיבת המייל שלך</h2>
         <p className="text-exam-ink-soft text-sm leading-relaxed">
           שלחנו לך קישור אישור לכתובת<br />
-          <span className="font-semibold text-exam-ink">{email}</span>
+          <bdi dir="ltr" className="font-semibold text-exam-ink">{email}</bdi>
         </p>
         <p className="text-exam-ink-soft text-xs">
           לחץ על הקישור במייל כדי לאמת את החשבון ולהתחיל
@@ -208,7 +208,7 @@ function LoginForm() {
         <h2 className="text-xl font-bold text-exam-ink">מייל איפוס נשלח</h2>
         <p className="text-exam-ink-soft text-sm">
           שלחנו לך קישור לאיפוס הסיסמה לכתובת<br />
-          <span className="font-semibold text-exam-ink">{email}</span>
+          <bdi dir="ltr" className="font-semibold text-exam-ink">{email}</bdi>
         </p>
         <button
           onClick={() => { setForgotSent(false); setShowForgot(false); }}

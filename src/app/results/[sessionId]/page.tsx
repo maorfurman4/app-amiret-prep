@@ -11,6 +11,7 @@ import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } fro
 import { thetaToScore } from '@/lib/adaptive';
 import { sessionMeasurement } from '@/lib/exemption';
 import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
+import { heCount, agree } from '@/lib/hebrew-count';
 
 interface SessionData {
   score: number;
@@ -298,7 +299,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 <div className="p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl">
                   <div className="text-sm font-semibold text-exam-alt mb-1 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
-                    {overCap.length} שאלות חרגו מ&quot;תקציב התקיעה&quot;
+                    {heCount(overCap.length, 'question')} {agree(overCap.length, 'חרגה', 'חרגו')} מ&quot;תקציב התקיעה&quot;
                   </div>
                   <div className="text-xs text-exam-alt leading-relaxed">
                     {overCap.slice(0, 4).map(x => `פרק ${x.section} שאלה ${x.q}: ${Math.round(x.t)} שנ׳${x.wrong ? ' (ועוד טעית בה. עדיף לנחש ולהתקדם)' : ''}`).join(' · ')}

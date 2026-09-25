@@ -10,6 +10,7 @@ import { SectionProgress } from '@/components/exam/SectionProgress';
 import { SECTION_CONFIGS, type Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
 import { clearExamDraft, readExamDraft, writeExamDraft } from '@/lib/exam-draft';
+import { heCount } from '@/lib/hebrew-count';
 
 interface SessionState {
   id: string;
@@ -266,7 +267,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     // only the timer moves you on. Practice mode stays free.
     if (unanswered > 0 && !session.is_practice) {
       setSubmitWarning(
-        `נשארו ${unanswered} שאלות שלא ענית עליהן. כמו במבחן האמיתי, אי אפשר לסיים פרק לפני שעונים על כולן. ואם לא יודעים, מנחשים.`
+        `${unanswered === 1 ? 'נשארה שאלה אחת שלא ענית עליה' : `נשארו ${heCount(unanswered, 'question')} שלא ענית עליהן`}. כמו במבחן האמיתי, אי אפשר לסיים פרק לפני שעונים על כולן. ואם לא יודעים, מנחשים.`
       );
       return;
     }
@@ -330,7 +331,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               <span className="text-xs text-exam-ink-soft">
                 פרק {currentSection} — {currentCfg?.type === 'sentence_completion' ? 'השלמת משפטים' :
                   currentCfg?.type === 'restatement' ? 'ניסוח מחדש' :
-                  currentCfg?.type === 'reading_comprehension' ? 'הבנת הנקרא' : 'ESRA'}
+                  currentCfg?.type === 'reading_comprehension' ? 'הבנת הנקרא' : 'אנגלית ESRA'}
                 {currentCfg?.experimental && (
                   <span className="mr-1 px-1.5 py-0.5 rounded-sm bg-exam-alt-bg text-exam-alt font-semibold">תרגול חלופי</span>
                 )}

@@ -1,6 +1,7 @@
 import { Trophy } from 'lucide-react';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { BackNav } from '@/components/BackNav';
+import { heCount } from '@/lib/hebrew-count';
 
 interface LeaderboardEntry {
   display_name: string | null;
@@ -35,8 +36,8 @@ export default async function LeaderboardPage() {
         {entries.length === 0 ? (
           <div className="text-center py-20">
             <Trophy className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
-            <div className="text-exam-ink-soft">עדיין אין נתונים בלוח</div>
-            <div className="text-exam-ink-soft text-sm mt-1">סיימו מבחן ראשון כדי להופיע כאן</div>
+            <div className="text-exam-ink-soft">הלוח עוד ריק</div>
+            <div className="text-exam-ink-soft text-sm mt-1">סיים סימולציה אחת, ותופיע כאן ראשון.</div>
           </div>
         ) : (
           <div className="space-y-3">
@@ -57,8 +58,8 @@ export default async function LeaderboardPage() {
                     {i + 1}
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold text-exam-ink">{name}</div>
-                    <div className="text-xs text-exam-ink-soft">{entry.total_exams} מבחנים | ממוצע {Math.round(entry.avg_score)}</div>
+                    <div dir="auto" className="font-semibold text-exam-ink text-right">{name}</div>
+                    <div className="text-xs text-exam-ink-soft">{heCount(entry.total_exams, 'exam')} · ממוצע {Math.round(entry.avg_score)}</div>
                   </div>
                   <div className="text-2xl font-bold text-exam-ink">{entry.best_score}</div>
                 </div>

@@ -13,6 +13,7 @@ import {
   TrendingDown, Zap, Link2, GraduationCap, Palette, Package, CheckCircle2,
   AlertTriangle, ChevronUp, ChevronDown, Play,
 } from 'lucide-react';
+import { heCount } from '@/lib/hebrew-count';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
 function StarRow({ n, size = 14 }: { n: number; size?: number }) {
@@ -117,7 +118,7 @@ function dueLabel(nextReviewAt: string | undefined): string {
   const days = Math.ceil((new Date(nextReviewAt).getTime() - Date.now()) / 86_400_000);
   if (days <= 0) return 'לחזרה היום';
   if (days === 1) return 'לחזרה מחר';
-  return `לחזרה בעוד ${days} ימים`;
+  return `לחזרה בעוד ${heCount(days, 'day')}`;
 }
 
 /**
@@ -887,7 +888,7 @@ function VocabularyContent() {
                 {favorites.size === 0 ? (
                   <div className="text-center py-12">
                     <Heart className="w-10 h-10 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
-                    <p className="text-exam-ink-soft text-sm">עדיין לא שמרת מילים.</p>
+                    <p className="text-exam-ink-soft text-sm">הרשימה שלך עוד ריקה.</p>
                     <p className="text-exam-ink-soft text-xs mt-1 flex items-center justify-center gap-1">לחץ <Heart className="inline w-3.5 h-3.5" aria-hidden /> על כרטיסייה כדי לשמור אותה כאן.</p>
                   </div>
                 ) : (
@@ -909,7 +910,7 @@ function VocabularyContent() {
                           </div>
                           <div className="text-exam-ink-soft text-xs mt-0.5">{w.hebrew_translation}</div>
                           {w.example_sentence && (
-                            <div className="font-serif text-exam-ink-soft text-xs mt-0.5 italic truncate">{w.example_sentence}</div>
+                            <div dir="ltr" className="font-serif text-exam-ink-soft text-xs mt-0.5 italic truncate text-right">{w.example_sentence}</div>
                           )}
                         </div>
                         <div className="flex items-center gap-2 mr-3 flex-shrink-0">
@@ -984,7 +985,7 @@ function VocabularyContent() {
                 )}
                 {search.trim() && (
                   <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-sage-bg text-exam-sage-strong rounded-sm text-xs font-medium max-w-[140px]">
-                    <span className="truncate">&ldquo;{search}&rdquo;</span>
+                    <span className="truncate">&quot;<bdi>{search}</bdi>&quot;</span>
                     <button onClick={() => setSearch('')} aria-label="ניקוי החיפוש" className="hit-44 hover:text-exam-sage-strong font-bold leading-none flex-shrink-0">×</button>
                   </span>
                 )}
@@ -1076,8 +1077,9 @@ function VocabularyContent() {
                     type="text"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    placeholder="חיפוש מילה בעברית / אנגלית..."
-                    className="w-full px-4 py-3 rounded-sm border border-exam-border bg-exam-paper-alt text-sm focus:outline-none focus:border-exam-accent text-right text-exam-ink"
+                    dir="auto"
+                    placeholder="חפש מילה בעברית או באנגלית"
+                    className="w-full px-4 py-3 rounded-sm border border-exam-border bg-exam-paper-alt text-sm focus:outline-none focus:border-exam-accent text-start placeholder:text-right text-exam-ink"
                   />
                 </div>
               </div>
@@ -1086,7 +1088,7 @@ function VocabularyContent() {
                 <button
                   onClick={() => setShowFilterDrawer(false)}
                   className="w-full py-3 bg-exam-accent hover:opacity-90 text-exam-accent-ink rounded-sm font-bold text-sm transition-opacity"
-                >הצג {filteredWords.length} מילים</button>
+                >{filteredWords.length === 0 ? 'אין מילים שמתאימות לסינון' : `הצג ${heCount(filteredWords.length, 'word')}`}</button>
               </div>
             </div>
           </div>
@@ -1226,7 +1228,7 @@ function VocabularyContent() {
                     <div className="text-xl font-bold text-exam-ink mb-2">
                       {!filterCat && !filterDiff && !search && !activePack ? 'כל הכבוד! סיימת את כל הכרטיסיות' : 'כל הכבוד! סיימת את הסט הזה'}
                     </div>
-                    <p className="text-exam-ink-soft text-sm mb-6">ידעת {progressScopeKnown} מילים</p>
+                    <p className="text-exam-ink-soft text-sm mb-6">{progressScopeKnown === 0 ? 'הפעם לא סימנת אף מילה כידועה. בסיבוב הבא זה כבר ייראה אחרת.' : `ידעת ${heCount(progressScopeKnown, 'word')}`}</p>
                     <button onClick={handleResetAll} className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-medium hover:opacity-90 transition-opacity inline-flex items-center gap-2">
                       <RotateCcw className="w-4 h-4" aria-hidden />התחל מחדש
                     </button>
@@ -1234,7 +1236,7 @@ function VocabularyContent() {
                 ) : (
                   <>
                     <Search className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
-                    <div className="text-exam-ink-soft">אין מילים תואמות לחיפוש</div>
+                    <div className="text-exam-ink-soft">לא מצאנו מילים שמתאימות לחיפוש. נסה מילה אחרת או נקה את הסינון.</div>
                   </>
                 )}
               </div>
@@ -1267,7 +1269,7 @@ function VocabularyContent() {
                   onClick={() => setShowKnownList(v => !v)}
                   className="w-full flex items-center justify-between px-4 py-3 bg-exam-sage-bg border border-exam-sage/40 rounded-sm text-sm font-medium text-exam-sage-strong hover:opacity-80 transition-opacity"
                 >
-                  <span className="inline-flex items-center gap-1">ידעת {knownWords.length} מילים <Check className="inline w-3.5 h-3.5" strokeWidth={3} aria-hidden /></span>
+                  <span className="inline-flex items-center gap-1">ידעת {heCount(knownWords.length, 'word')} <Check className="inline w-3.5 h-3.5" strokeWidth={3} aria-hidden /></span>
                   <span className="inline-flex items-center gap-1">{showKnownList ? <><ChevronUp className="w-3.5 h-3.5" aria-hidden />סגור</> : <><ChevronDown className="w-3.5 h-3.5" aria-hidden />הצג</>}</span>
                 </button>
                 {showKnownList && (
@@ -1311,7 +1313,7 @@ function VocabularyContent() {
             {quizDeck.length === 0 ? (
               <div className="text-center py-16">
                 <Search className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
-                <div className="text-exam-ink-soft">אין מילים תואמות לחיפוש</div>
+                <div className="text-exam-ink-soft">לא מצאנו מילים שמתאימות לחיפוש. נסה מילה אחרת או נקה את הסינון.</div>
               </div>
             ) : quizDeck.length < 4 ? (
               /* Checks the deck actually in play, not the live filteredWords —
@@ -1320,7 +1322,7 @@ function VocabularyContent() {
                  running quiz behind this error screen. */
               <div className="text-center py-16">
                 <Search className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
-                <div className="text-exam-ink-soft">צריך לפחות 4 מילים בסט הנוכחי לחידון</div>
+                <div className="text-exam-ink-soft">לחידון צריך לפחות 4 מילים. הרחב את הסינון כדי להוסיף עוד.</div>
               </div>
             ) : quizDone ? (
               /* Quiz done screen */
@@ -1342,7 +1344,7 @@ function VocabularyContent() {
                   <div className="mb-5">
                     <div className="text-xs font-semibold text-exam-ink-soft mb-2 px-1 flex items-center gap-1">
                       <X className="w-3.5 h-3.5 text-exam-wrong" strokeWidth={3} aria-hidden />
-                      {quizWrongWords.length} מילים לחזרה:
+                      {heCount(quizWrongWords.length, 'word')} לחזרה:
                     </div>
                     <div className="space-y-2">
                       {quizWrongWords.map(w => (
@@ -1506,7 +1508,7 @@ function VocabularyContent() {
                     disabled={filteredWords.length < 4}
                     className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-1.5"
                   ><Play className="w-4 h-4" fill="currentColor" aria-hidden />התחל!</button>
-                  {filteredWords.length < 4 && <p className="text-center text-xs text-exam-alt">צריך לפחות 4 מילים בסט הנוכחי</p>}
+                  {filteredWords.length < 4 && <p className="text-center text-xs text-exam-alt">צריך לפחות 4 מילים. הרחב את הסינון כדי להוסיף עוד.</p>}
                 </div>
               </div>
             ) : timedDeck.length < 4 ? (
@@ -1517,7 +1519,7 @@ function VocabularyContent() {
                  answers) invisibly in the background. */
               <div className="text-center py-16">
                 <Search className="w-9 h-9 mx-auto mb-3 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
-                <div className="text-exam-ink-soft">צריך לפחות 4 מילים למבחן מהיר</div>
+                <div className="text-exam-ink-soft">למבחן מהיר צריך לפחות 4 מילים. הרחב את הסינון כדי להוסיף עוד.</div>
               </div>
             ) : timedDone ? (
               /* Timed done screen */

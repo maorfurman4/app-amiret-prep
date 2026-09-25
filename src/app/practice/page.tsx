@@ -18,6 +18,7 @@ import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { PaceGauge } from '@/components/exam/PaceGauge';
 import type { ResponseLogEntry } from '@/lib/response-log-client';
 import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon } from 'lucide-react';
+import { heCount } from '@/lib/hebrew-count';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'starting' | 'practicing' | 'done';
 type Difficulty = 1 | 2 | 3 | 4 | 5 | 'random';
@@ -773,7 +774,7 @@ function PracticeContent() {
               {pct < 60 && 'כדאי לחזור על החומר הזה ולתרגל שוב.'}
               {questions.length - correctCount > 0 && (
                 <div className="mt-2 text-exam-ink-soft text-xs">
-                  טעית ב-{questions.length - correctCount} מתוך {questions.length} שאלות
+                  {questions.length - correctCount === 1 ? `טעית בשאלה אחת מתוך ${questions.length}` : `טעית ב-${questions.length - correctCount} מתוך ${questions.length} שאלות`}
                 </div>
               )}
             </div>
@@ -800,7 +801,7 @@ function PracticeContent() {
                   </div>
                 </div>
                 <p className="mt-3 text-xs text-exam-ink-soft">
-                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר, על סמך {questions.length} שאלות בלבד. זה לא ציון רשמי של מאל&quot;ו.
+                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר, על סמך {heCount(questions.length, 'question')} בלבד. זה לא ציון רשמי של מאל&quot;ו.
                   {selectedDiff !== 'random' && ' לאומדן מדויק יותר, תרגל ברמה מעורבת או עשה סימולציה של פרקי הליבה.'}
                   {' '}כל מוסד קובע בעצמו את הסף לפטור ולכל רמה; {diagClass.label} הוא הטווח הנפוץ.
                 </p>
@@ -907,7 +908,7 @@ function PracticeContent() {
       {loading
         ? <div className="text-exam-ink-soft">טוען שאלות...</div>
         : <div className="text-center">
-            <div className="text-exam-wrong mb-3">{error ?? 'שגיאה לא צפויה'}</div>
+            <div className="text-exam-wrong mb-3">{error ?? 'משהו השתבש. נסה שוב.'}</div>
             <button onClick={handleRestart} className="text-exam-accent underline text-sm">נסה שוב</button>
           </div>
       }

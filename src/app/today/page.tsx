@@ -14,6 +14,7 @@ import {
   Sparkles, RotateCcw, BookOpen, Target, Volume2, Check, X,
   PartyPopper, ThumbsUp, AlertTriangle, ChevronLeft,
 } from 'lucide-react';
+import { heCount } from '@/lib/hebrew-count';
 
 interface VocabWord {
   id: string;
@@ -231,9 +232,9 @@ export default function TodaySessionPage() {
 
   if (phase === 'intro' && data) {
     const items = [
-      data.reviewQuestions.length > 0 && { icon: RotateCcw, label: `${data.reviewQuestions.length} שאלות לחזרה`, sub: 'טעויות ישנות שהגיע זמנן' },
-      data.vocabWords.length > 0 && { icon: BookOpen, label: `${data.vocabWords.length} מילים לחזרה`, sub: 'מילים שסימנת שאתה יודע, לרענון' },
-      data.weakQuestions.length > 0 && { icon: Target, label: `${data.weakQuestions.length} שאלות תרגול ממוקד`, sub: data.weakType ? `${TYPE_LABELS[data.weakType] ?? data.weakType}: נקודת החולשה שלך` : 'תרגול טרי' },
+      data.reviewQuestions.length > 0 && { icon: RotateCcw, label: `${heCount(data.reviewQuestions.length, 'question')} לחזרה`, sub: 'טעויות ישנות שהגיע זמנן' },
+      data.vocabWords.length > 0 && { icon: BookOpen, label: `${heCount(data.vocabWords.length, 'word')} לחזרה`, sub: 'מילים שסימנת שאתה יודע, לרענון' },
+      data.weakQuestions.length > 0 && { icon: Target, label: `${heCount(data.weakQuestions.length, 'question')} לתרגול ממוקד`, sub: data.weakType ? `${TYPE_LABELS[data.weakType] ?? data.weakType}: נקודת החולשה שלך` : 'תרגול טרי' },
     ].filter(Boolean) as { icon: typeof RotateCcw; label: string; sub: string }[];
 
     return (

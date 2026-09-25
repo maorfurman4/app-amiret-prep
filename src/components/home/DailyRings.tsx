@@ -98,7 +98,7 @@ export function DailyRings({ rings, persistCelebration = true }: { rings: Rings;
           <span className="text-exam-ink-soft">חזרות בזמן</span>
           {reviewsCaughtUp ? (
             <span className="font-semibold text-exam-sage-strong">
-              {rings.retention.done > 0 ? `הכול מעודכן · סיימת ${rings.retention.done}` : 'אין חזרות ממתינות'}
+              {rings.retention.done > 0 ? `הכול מעודכן · סיימת ${rings.retention.done}` : 'אין חזרות להיום'}
             </span>
           ) : (
             <span className="font-bold text-exam-ink tabular-nums" dir="ltr">{rings.retention.done}/{retentionTarget}</span>

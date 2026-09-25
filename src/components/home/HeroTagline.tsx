@@ -17,7 +17,7 @@ export function HeroTagline() {
   if (score != null) {
     text = score >= 134
       ? `האומדן הפנימי האחרון שלך: ${score}, מעל 134`
-      : `הציון האחרון שלך: ${score} · עוד ${134 - score} נק׳ ל-134+`;
+      : `הציון האחרון שלך: ${score} · ${134 - score === 1 ? 'חסרה נקודה אחת' : `עוד ${134 - score} נק׳`} ל-134+`;
   }
 
   return <p className="text-exam-ink-soft">{text}</p>;

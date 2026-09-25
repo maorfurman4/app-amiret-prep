@@ -8,6 +8,7 @@ import type { Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import type { ErrorCause } from '@/lib/error-cause';
+import { heCount, agree } from '@/lib/hebrew-count';
 
 type Filter = 'all' | 'wrong' | 'correct';
 
@@ -108,8 +109,8 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
             <div>
               <div className="text-sm font-bold text-exam-ink">סקירת מבחן</div>
               <div className="text-xs text-exam-ink-soft">
-                {filteredIndices.length} שאלות
-                {filter === 'wrong' ? ' שגויות' : filter === 'correct' ? ' נכונות' : ''}
+                {heCount(filteredIndices.length, 'question')}
+                {filter === 'wrong' ? ` ${agree(filteredIndices.length, 'שגויה', 'שגויות')}` : filter === 'correct' ? ` ${agree(filteredIndices.length, 'נכונה', 'נכונות')}` : ''}
               </div>
             </div>
             <button
@@ -176,7 +177,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
               {filter === 'wrong'
                 ? <PartyPopper className="w-10 h-10 mx-auto mb-3" strokeWidth={1.5} aria-hidden />
                 : <ClipboardList className="w-10 h-10 mx-auto mb-3" strokeWidth={1.5} aria-hidden />}
-              <div>{filter === 'wrong' ? 'אין טעויות! ענית נכון על הכל' : 'לא נמצאו שאלות'}</div>
+              <div>{filter === 'wrong' ? 'ענית נכון על הכול. אין כאן טעויות לסקור!' : 'אין כאן שאלות לסקור'}</div>
             </div>
           ) : (
             <>

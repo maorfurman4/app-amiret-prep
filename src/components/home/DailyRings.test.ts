@@ -23,11 +23,11 @@ describe('three learning rings', () => {
   it('shows outstanding due reviews as done/total', () => {
     const html = render({ done: 2, due: 3 });
     expect(html).toContain('>2/5<');
-    expect(html).not.toContain('אין חזרות ממתינות');
+    expect(html).not.toContain('אין חזרות להיום');
   });
 
   it('an empty queue is caught up, with an honest count of what was done', () => {
-    expect(render({ done: 0, due: 0 })).toContain('אין חזרות ממתינות');
+    expect(render({ done: 0, due: 0 })).toContain('אין חזרות להיום');
     expect(render({ done: 4, due: 0 })).toContain('הכול מעודכן · סיימת 4');
   });
 

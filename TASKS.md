@@ -117,5 +117,7 @@
 - [x] Guards tested on a deliberately broken batch (nothing written, all 9 problems reported; found and fixed a bug where later rows went unchecked)
 - [x] Batch 1: 50 level-1 words (`scripts/data/vocab-batches/level1-batch01.json`), 0 errors against the live database; 3 family warnings to review (rate, quality, advantage)
 - [x] Batch 1 inserted: 50 words (rate, quality, advantage acknowledged), 1,158 → 1,208 verified; level 1 now 153 (197 to go). Log for --rollback: `backups/vocab-insert-2026-09-25T16-16-26-310Z.json`
-- [ ] Batches 2–12 (197 more level 1, then levels 2–5)
+- [x] Batch 2 prepared: 100 level-1 words, 0 errors; 9 family warnings reviewed (6 false matches, 3 shared roots kept); government, probably, popular (true families) and reduce (exists) replaced
+- [ ] **Approval** to insert batch 2
+- [ ] Batches 3+ (97 more level 1, then levels 2–5)
 - [x] Definitions cleanup (`scripts/clean-vocab-definitions.ts`): 635 trailing periods removed, 0 failed, verify 0 left; parsimonious's two sentences joined with a semicolon. Backup `backups/vocab-definitions-2026-09-25T16-19-10-685Z.json`. Audit before the run: no ellipses, quote marks, stray spaces or uppercase words anywhere

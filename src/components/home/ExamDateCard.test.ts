@@ -41,6 +41,8 @@ describe('ExamDateCard', () => {
     const html = render('2026-11-01');
     expect(html).toContain('עוד 39 ימים למבחן');
     expect(html).toContain('aria-label="שינוי תאריך המבחן"');
+    expect(html).toContain('aria-label="הסרת תאריך המבחן"');
+    expect(html).toContain('1 בנובמבר 2026');
   });
 
   it('mentions compression inside the final two weeks, and handles tomorrow/today', () => {

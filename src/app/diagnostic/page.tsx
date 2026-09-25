@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Stethoscope, Timer, Gauge, Sparkles, ArrowLeft, BookOpen, Target, type LucideIcon, ChevronLeft } from 'lucide-react';
+import { Stethoscope, Timer, Gauge, Sparkles, ArrowLeft, BookOpen, Target, ChevronLeft, ChevronDown, type LucideIcon } from 'lucide-react';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
@@ -289,13 +289,24 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
               </div>
             ))}
           </div>
-          <p className="text-xs text-exam-ink-soft leading-relaxed">
-            {lo === hi ? `הטווח הסביר: רמה ${lo}.` : <>הטווח הסביר: רמות <bdi dir="ltr">{lo}–{hi}</bdi>.</>}{' '}
-            {plan.split
-              ? `מצאנו הבדל ברור בין סוגי השאלות, ולכן לכל סוג יש רמה משלו.`
-              : `ההבדל בין סוגי השאלות (${typeLine}) קטן מכדי להסיק ממנו משהו באבחון קצר, ולכן קיבלת רמה אחת לשניהם.`}{' '}
-            המערכת ממשיכה לכייל את הרמה ברקע בכל תרגול. זו הערכה פנימית, לא ציון רשמי.
+          <p className="text-sm text-exam-ink leading-relaxed">
+            זו נקודת הפתיחה שלך, ומכאן רק מתקדמים. הרמה תתעדכן מעצמה ככל שתתרגל.
           </p>
+          <details className="group mt-2">
+            <summary className="hit-44 inline-flex items-center gap-1 text-xs font-semibold text-exam-accent cursor-pointer list-none select-none [&::-webkit-details-marker]:hidden">
+              איך הרמה חושבה?
+              <ChevronDown className="w-3.5 h-3.5 transition-transform duration-300 ease-spring group-open:rotate-180" aria-hidden />
+            </summary>
+            <div className="mt-2 space-y-1.5 text-xs text-exam-ink-soft leading-relaxed">
+              <p>{lo === hi ? `הטווח הסביר: רמה ${lo}.` : <>הטווח הסביר: רמות <bdi dir="ltr">{lo}–{hi}</bdi>.</>} המשבצת הכהה היא ההערכה הטובה ביותר, והבהירות סביבה הן הטווח שבו הרמה שלך כנראה נמצאת.</p>
+              <p>
+                {plan.split
+                  ? 'מצאנו הבדל ברור בין סוגי השאלות, ולכן לכל סוג יש רמה משלו.'
+                  : `ההבדל בין סוגי השאלות (${typeLine}) קטן מכדי להסיק ממנו משהו באבחון קצר, ולכן קיבלת רמה אחת לשניהם.`}
+              </p>
+              <p>המערכת ממשיכה לכייל את הרמה בכל תרגול. זו הערכה פנימית, לא ציון רשמי.</p>
+            </div>
+          </details>
         </section>
 
         <AuthCTA message="התחבר כדי לשמור את התוכנית ולעקוב אחרי ההתקדמות שלך." />

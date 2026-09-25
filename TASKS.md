@@ -37,3 +37,10 @@
 - [x] Counters: "X / Y" → "X מתוך Y" (results, review queue, stats, vocabulary progress/quiz/speed test); large totals formatted "1,158"
 - [x] Text pseudo-icons (‹ › ← → | ✓ ✗) replaced with Lucide icons in 14 components; RTL direction fixed (back = right-pointing, forward = left-pointing); swipe and keyboard hints rebuilt with icons and <kbd>
 - [x] Number lines read left → right: exemption gauge arc and 50–150 track, diagnostic level strip, practice difficulty picker, stats by-difficulty, vocabulary level filter; score ranges ("50–84") isolated LTR on home, results, practice and diagnostic
+
+# Visual QA audit, part 2 (`fix/visual-qa-audit-part2`)
+
+- [x] Exam date shown in Hebrew with the year ("24 בנובמבר 2026"); the date field shows a Hebrew label over the native picker (which formats by browser locale), and still opens the native picker on tap
+- [x] "הסר את תאריך המבחן" text button removed from the editor; a trash icon now sits next to the edit icon inside the date card, with errors shown in the card
+- [x] Text arrows: "התחל", "הבא", "התחל כאן" and the plan-screen list already render Lucide SVG icons with RTL-correct direction (verified in the browser: every button and list row has its SVG)
+- [x] Diagnostic plan: one encouraging sentence under the level strip; range, type comparison and calibration note moved into a collapsed "איך הרמה חושבה?"

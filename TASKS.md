@@ -109,3 +109,12 @@
 - [x] Category reset applied: 1,158/1,158 verified (494 academic, 664 general). The first run updated the 337 academic rows, then the 664-row update overflowed the request URL; updates are now chunked (both scripts) and the rerun finished the general rows. Backups: `backups/vocab-category-2026-09-25T15-57-34-395Z.json` (all 1,001 original values) and `…15-57-51-344Z.json` (the 664 still unchanged at the rerun)
 - [x] Migration `vocab_category_theme_only` applied: category NOT NULL, default general, check (academic | general)
 - [ ] Deploy (push)
+
+# Vocabulary expansion to 350 words per level (`feat/vocab-expansion`)
+
+- [x] Deficits (from the live database, 1,158 words): L1 103 → 247 missing, L2 243 → 107, L3 235 → 115, L4 238 → 112, L5 339 → 11; 592 new words in total
+- [x] Insert-only script `scripts/insert-vocab-batch.ts`: dry run by default; per-row checks (fields, allowed values, clean text, example uses the word, Hebrew), duplicates against the live database and inside the batch, family warnings that must be acknowledged, per-level cap of 350; one all-or-nothing insert with an id log; `--rollback` deletes exactly the logged rows
+- [x] Guards tested on a deliberately broken batch (nothing written, all 9 problems reported; found and fixed a bug where later rows went unchecked)
+- [x] Batch 1: 50 level-1 words (`scripts/data/vocab-batches/level1-batch01.json`), 0 errors against the live database; 3 family warnings to review (rate, quality, advantage)
+- [ ] **Approval** to insert batch 1
+- [ ] Batches 2–12 (197 more level 1, then levels 2–5)

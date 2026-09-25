@@ -9,7 +9,7 @@
 - [x] **Approval** to run `--apply` against production
 - [x] Run `--apply`: 7,064 rows updated, 0 failed; a second dry run finds 0 rows left to change
 - [x] Commit the backup file: `backups/explanations-2026-09-25T05-25-06-672Z.json` (7,064 original rows)
-- [ ] Spot-check a practice question's explanation in the browser after deploy
+- [x] Spot-check after deploy: live practice explanation shows the new format, no long dashes, English isolated with <bdi>
 
 ## Found along the way
 - "לא נפתר" in this data is subject matter ("the problem remains unsolved"), not feedback to the student, so it is deliberately left as is; there is no "you didn't solve" phrasing in the DB to turn into "שגית".

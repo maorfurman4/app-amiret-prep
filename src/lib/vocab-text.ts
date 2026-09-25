@@ -12,3 +12,16 @@ export function cleanSnippet(text: string | null | undefined, { keepPeriod = fal
   if (!keepPeriod && /[^.]\.$/.test(s)) s = s.slice(0, -1).trimEnd();
   return s;
 }
+
+/**
+ * The Hebrew gloss inside a sentence-completion explanation. Current format
+ * (after the explanations polish): "word (תרגום). …"; older rows may still
+ * read "word = תרגום. …". Returns '' when there is none.
+ */
+export function extractGloss(correctReason: string | null | undefined): string {
+  if (!correctReason) return '';
+  const paren = correctReason.match(/\(([^()]*[\u0590-\u05FF][^()]*)\)/);
+  if (paren) return paren[1].trim();
+  const eq = correctReason.match(/=\s*([^.—]{1,40})/);
+  return eq ? eq[1].trim() : '';
+}

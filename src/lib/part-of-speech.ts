@@ -33,10 +33,9 @@ const FROM_CATEGORY: Record<string, PartOfSpeech> = {
   connectors: 'connector',
 };
 
-/** Themes that live in `category` alongside the old part-of-speech values. */
+/** The theme in `category` ('academic' | 'general'); only academic gets a tag. */
 export const THEME_LABEL: Record<string, string> = {
   academic: 'אקדמי',
-  advanced: 'מתקדם',
 };
 
 export function partOfSpeechOf(w: { part_of_speech?: string | null; category?: string | null }): PartOfSpeech | null {

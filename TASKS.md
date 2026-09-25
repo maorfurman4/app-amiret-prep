@@ -93,3 +93,17 @@
 - [x] Migration applied on production (column empty, check constraint in place, no new security advisor findings); dry run: 1,158 rows to fill, 0 problems
 - [x] Backfill applied: 1,158 rows updated, verify 1,158/1,158 match; backup `backups/part-of-speech-2026-09-25T15-32-21-949Z.json` (all values were null before)
 - [ ] Deploy the app change (push) after the backfill
+
+# Vocabulary filter rebuild (`fix/vocab-cache-and-filters`)
+
+- [x] Bug: a 6-hour browser cache from before part_of_speech ("vocab_cache_v3") made "אקדמי" + any kind of word show nothing; cache is now v4 and refuses rows missing part_of_speech
+- [x] Filter model (`src/lib/vocab-filter.ts`, 9 tests): four independent questions — אילו מילים (all / mistakes / favorites), רק מילים אקדמיות, סוג המילה (multi), רמת קושי (multi). OR inside a question, AND across them
+- [x] Live count on every choice, computed against everything else already chosen; choices that would give 0 are turned off, so no combination ends empty (verified: academic → verbs 12, nouns 137, adverbs/connectors off; verbs + nouns = 149 = sum of the level counts)
+- [x] Human wording: "סוג המילה" instead of "חלקי דיבר"; "מילים שטעיתי בהן", "המועדפים שלי", "רק מילים אקדמיות" with a one-line explanation; removable chips for everything active
+- [x] "מתקדם" / "קל להתחלה" removed as sets: they were levels 4–5 / 1–2 and contradicted the level row
+- [x] Old ?pack= links still work (strategy tip "מילות קישור" link fixed: it pointed at a removed set)
+- [x] Quiz distractors: same kind of word (a verb against verbs) instead of the legacy category
+- [x] Found along the way: "מילים שטעיתי בהן" showed "—" as the translation since the explanations polish ("word (תרגום)"); `extractGloss` reads both formats (tested)
+- [x] Category reset prepared: `scripts/data/vocab-category.json` (494 academic = Academic Word List families + subject terms, 664 general) and `scripts/reset-vocab-categories.ts`; dry run 1,001 rows to change, 0 problems
+- [ ] **Approval** to run the category reset (`--apply`) and then migration `20260925140000_vocab_category_theme_only.sql`
+- [ ] Deploy (push)

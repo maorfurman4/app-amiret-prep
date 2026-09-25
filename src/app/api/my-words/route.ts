@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
+import { extractGloss } from '@/lib/vocab-text';
 
 /** A concept this stable (≈ 3 weeks until recall drops to 90%) is treated
  * as learned and leaves the list. */
@@ -37,14 +38,13 @@ export async function GET() {
   const words = (questions ?? []).map(qu => {
     const opts = qu.options as { text: string }[];
     const word = opts?.[qu.correct_answer as number]?.text ?? '';
-    // Hebrew gloss from the explanation convention: "word = תרגום. ..."
+    // Hebrew gloss from the explanation: "word (תרגום). ..." (older rows: "word = תרגום")
     let hebrew = '';
     let definition = '';
     try {
       const ex = JSON.parse(qu.explanation as string) as { correct_reason?: string };
       const cr = ex.correct_reason ?? '';
-      const m = cr.match(/=\s*([^.—]{1,40})/);
-      hebrew = m ? m[1].trim() : '';
+      hebrew = extractGloss(cr);
       definition = cr;
     } catch { /* no explanation */ }
     return {

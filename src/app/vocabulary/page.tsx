@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect, useRef, useCallback } from 'react';
+import { Suspense, useState, useEffect, useRef, useCallback, useMemo, type ReactNode } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
@@ -9,13 +9,14 @@ import { ensureGuestIdentity } from '@/lib/guest';
 import { nextInterval, addDays, isDue } from '@/lib/spaced-repetition';
 import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
-  RotateCcw, Trophy, ThumbsUp, Flame, Settings, Check, X, Target, Clock,
-  TrendingDown, GraduationCap, CheckCircle2,
-  AlertTriangle, ChevronUp, ChevronDown, Play, ChevronLeft, ArrowRight, ArrowLeft,
+  RotateCcw, Trophy, ThumbsUp, Settings, Check, X, Target, Clock,
+  TrendingDown, GraduationCap,
+  AlertTriangle, ChevronUp, ChevronDown, Play, ChevronLeft, ArrowRight, ArrowLeft, SlidersHorizontal,
 } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
 import { cleanSnippet } from '@/lib/vocab-text';
 import { PARTS_OF_SPEECH, PART_OF_SPEECH_LABEL, PART_OF_SPEECH_TAG, THEME_LABEL, partOfSpeechOf, type PartOfSpeech } from '@/lib/part-of-speech';
+import { EMPTY_FILTERS, LEVELS, activeFilterCount, applyFilters, countFor, filtersFromParams, isFiltered, toggle, type Source, type VocabFilters } from '@/lib/vocab-filter';
 import { Modal } from '@/components/ui/Modal';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
@@ -26,6 +27,50 @@ function StarRow({ n, size = 14 }: { n: number; size?: number }) {
         <Star key={i} width={size} height={size} className={i < n ? 'fill-current text-exam-alt' : 'text-exam-border'} aria-hidden />
       ))}
     </span>
+  );
+}
+
+const SOURCE_LABEL: Record<Source, string> = {
+  all: 'כל המילים',
+  mistakes: 'מילים שטעיתי בהן',
+  favorites: 'המועדפים שלי',
+};
+
+/** A short line for the timed-test history ("אקדמיות · פעלים · רמה 4"). */
+function describeFilters(f: VocabFilters): string {
+  const parts = [
+    ...(f.source !== 'all' ? [SOURCE_LABEL[f.source]] : []),
+    ...(f.academic ? ['אקדמיות'] : []),
+    ...f.pos.map(p => PART_OF_SPEECH_LABEL[p]),
+    ...(f.levels.length ? [`רמה ${[...f.levels].sort().join(', ')}`] : []),
+  ];
+  return parts.length ? parts.join(' · ') : 'כל המילים';
+}
+
+function FilterSection({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
+  return (
+    <section>
+      <h3 className="text-sm font-bold text-exam-ink">{title}</h3>
+      {hint && <p className="text-xs text-exam-ink-soft mt-0.5">{hint}</p>}
+      <div className="flex flex-wrap gap-2 mt-3">{children}</div>
+    </section>
+  );
+}
+
+function FilterChip({ selected, count, onClick, children }: { selected: boolean; count: number; onClick: () => void; children: ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={count === 0 && !selected}
+      aria-pressed={selected}
+      className={`hit-44 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium transition-[background-color,color,border-color,transform] duration-300 ease-spring active:scale-[0.94] disabled:opacity-35 disabled:pointer-events-none ${
+        selected ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink border-exam-border hover:border-exam-border-strong'
+      }`}
+    >
+      {children}
+      <span className={`text-xs tabular-nums ${selected ? 'opacity-80' : 'text-exam-ink-soft'}`}>{count.toLocaleString('he-IL')}</span>
+    </button>
   );
 }
 
@@ -48,9 +93,6 @@ interface TimedResult {
   correct: boolean;
   timeTaken: number;
 }
-
-/** Filter chips for "חלקי דיבר", from the part_of_speech column (see src/lib/part-of-speech.ts). */
-const PARTS_OF_SPEECH_FILTER = PARTS_OF_SPEECH.map(id => ({ id, label: PART_OF_SPEECH_LABEL[id] }));
 
 const PART_OF_SPEECH_COLORS: Record<PartOfSpeech, string> = {
   noun:      'bg-exam-accent/10 text-exam-accent',
@@ -148,15 +190,17 @@ function shuffle<T>(arr: T[]): T[] {
 function getWrongOptions(correct: VocabWord, pool: VocabWord[]): string[] {
   const notCorrect = pool.filter(w => w.id !== correct.id && w.hebrew_translation !== correct.hebrew_translation);
 
-  // Tier 1: same category + difficulty within 1
+  // Tier 1: same kind of word (verb for a verb) + difficulty within 1
+  const kind = partOfSpeechOf(correct);
+  const sameKind = (w: VocabWord) => kind !== null && partOfSpeechOf(w) === kind;
   const tier1 = shuffle(notCorrect.filter(w =>
-    w.category === correct.category &&
+    sameKind(w) &&
     Math.abs(w.difficulty_level - correct.difficulty_level) <= 1
   ));
 
-  // Tier 2: same category any difficulty
+  // Tier 2: same kind of word, any difficulty
   const tier2 = shuffle(notCorrect.filter(w =>
-    w.category === correct.category && !tier1.find(t => t.id === w.id)
+    sameKind(w) && !tier1.find(t => t.id === w.id)
   ));
 
   // Tier 3: same difficulty level, any category
@@ -236,10 +280,9 @@ function VocabularyContent() {
   const [userId, setUserId] = useState<string | null>(null);
 
   // Filters
-  const [filterCat, setFilterCat] = useState<string>('');
-  const [filterDiff, setFilterDiff] = useState<number>(0);
+  // Filters: see src/lib/vocab-filter.ts. Search has its own state (typed live).
+  const [filterAxes, setFilterAxes] = useState<VocabFilters>(() => filtersFromParams(params));
   const [search, setSearch] = useState('');
-  const [activePack, setActivePack] = useState<string>(params.get('pack') ?? '');
 
   // ─── Flashcard state ───────────────────────────────────────────────────────
   const [deck, setDeck] = useState<VocabWord[]>([]);
@@ -409,47 +452,19 @@ function VocabularyContent() {
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ─── Themed packs definition ───────────────────────────────────────────────
-  const THEMED_PACKS = [
-    ...(myWords.length > 0 ? [{ id: 'my-mistakes', icon: TrendingDown, label: `המילים שהפילו אותי (${myWords.length})`, filter: (w: VocabWord) => w.category === 'my-mistakes' }] : []),
-    { id: 'academic',   icon: GraduationCap,  label: 'אקדמי',           filter: (w: VocabWord) => w.category === 'academic' },
-    { id: 'advanced',   icon: Flame,          label: 'מתקדם',           filter: (w: VocabWord) => w.difficulty_level >= 4 },
-    { id: 'easy',       icon: CheckCircle2,   label: 'קל להתחלה',       filter: (w: VocabWord) => w.difficulty_level <= 2 },
-    // Reached from the Favorites window ("תרגל רק את המועדפים"), not listed as a set.
-    { id: 'favorites',  icon: Heart,          label: 'מועדפים',         filter: (w: VocabWord) => favorites.has(w.id), hidden: true },
-  ];
+  // ─── Filtering ─────────────────────────────────────────────────────────────
+  const filters = useMemo<VocabFilters>(() => ({ ...filterAxes, search }), [filterAxes, search]);
+  const pools = useMemo(() => ({ all: allWords, mistakes: myWords, favorites }), [allWords, myWords, favorites]);
+  const filteredWords = useMemo(() => applyFilters(pools, filters), [pools, filters]);
+  const filtered = isFiltered(filters);
+  const filtersKey = JSON.stringify(filters);
+  const resetFilters = () => { setFilterAxes({ ...EMPTY_FILTERS, pos: [], levels: [] }); setSearch(''); };
 
-  // ─── Compute filtered words ────────────────────────────────────────────────
-  const filteredWords = (() => {
-    // The personal mistakes pack is synthesized from wrong answers, not the vocab table
-    let filtered = activePack === 'my-mistakes' ? myWords : allWords;
-
-    // Apply themed pack first if active
-    if (activePack && activePack !== 'my-mistakes') {
-      const pack = THEMED_PACKS.find(p => p.id === activePack);
-      if (pack) filtered = filtered.filter(pack.filter);
-    }
-
-    if (filterCat) filtered = filtered.filter(w => partOfSpeechOf(w) === filterCat);
-    if (filterDiff) filtered = filtered.filter(w => w.difficulty_level === filterDiff);
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      filtered = filtered.filter(w =>
-        w.word.toLowerCase().includes(q) ||
-        w.hebrew_translation.includes(q) ||
-        w.definition.toLowerCase().includes(q) ||
-        w.example_sentence.toLowerCase().includes(q)
-      );
-    }
-    return filtered;
-  })();
-
-  // Progress ("ידעת X / Y") is scoped to the active filter/pack, not the full
-  // 1158-word bank — otherwise finishing a 20-word themed pack always showed
-  // ~0-2%, which read as broken rather than "you finished this set."
-  const hasActiveFilter = !!(filterCat || filterDiff || search.trim() || activePack);
-  const progressScopeTotal = hasActiveFilter ? filteredWords.length : allWords.length;
-  const progressScopeKnown = hasActiveFilter ? filteredWords.filter(w => known.has(w.id)).length : known.size;
+  // Progress ("ידעת X מתוך Y") is scoped to the active filter, not the full
+  // 1158-word bank — otherwise finishing a 20-word set always showed ~0-2%,
+  // which read as broken rather than "you finished this set."
+  const progressScopeTotal = filtered ? filteredWords.length : allWords.length;
+  const progressScopeKnown = filtered ? filteredWords.filter(w => known.has(w.id)).length : known.size;
 
   // ─── Rebuild flashcard deck on filter change ───────────────────────────────
   // Only depend on favorites contents when the favorites pack itself is active —
@@ -468,7 +483,7 @@ function VocabularyContent() {
   // swipe to re-trigger the rebuild itself. A known word only re-enters the
   // deck once its spaced-repetition interval says it's due again — otherwise
   // it stays hidden, same as before.
-  const favoritesSignature = activePack === 'favorites' ? Array.from(favorites).sort().join(',') : '';
+  const favoritesSignature = filterAxes.source === 'favorites' ? Array.from(favorites).sort().join(',') : '';
   useEffect(() => {
     if (!allWords.length) return;
     // Always shuffle from scratch so deck order is never derived from allWords order
@@ -483,7 +498,7 @@ function VocabularyContent() {
       setShowHint(false);
     });
     return () => cancelAnimationFrame(frame);
-  }, [allWords, filterCat, filterDiff, search, activePack, favoritesSignature, knownSyncVersion]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [allWords, filtersKey, favoritesSignature, knownSyncVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Build quiz options for current question ───────────────────────────────
   const buildQuizOptions = useCallback((word: VocabWord, pool: VocabWord[]): string[] => {
@@ -555,7 +570,7 @@ function VocabularyContent() {
         date: new Date().toLocaleDateString('he-IL'),
         score: finalScore,
         total: timedDeck.length,
-        pack: activePack || 'כל המילים',
+        pack: describeFilters(filters),
       };
       saveTimedHistory([...loadTimedHistory(), entry]);
       return;
@@ -568,7 +583,7 @@ function VocabularyContent() {
     setTimeLeft(timedTimePerWord);
     setWordStart(Date.now());
     setTimedOptions(buildQuizOptions(timedDeck[nextIndex], filteredWords.length > 0 ? filteredWords : timedDeck));
-  }, [timedDeck, filteredWords, buildQuizOptions, timedTimePerWord, activePack]);
+  }, [timedDeck, filteredWords, buildQuizOptions, timedTimePerWord, filters]);
 
   // ─── Timed quiz timer ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -866,7 +881,7 @@ function VocabularyContent() {
           footer={favorites.size > 0 ? (
             <div className="flex gap-2">
               <button
-                onClick={() => { setActivePack('favorites'); setShowFavoritesList(false); }}
+                onClick={() => { setFilterAxes({ ...EMPTY_FILTERS, pos: [], levels: [], source: 'favorites' }); setSearch(''); setShowFavoritesList(false); }}
                 className="flex-1 py-2.5 bg-exam-accent text-exam-accent-ink rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity inline-flex items-center justify-center gap-1"
               >תרגל רק את המועדפים<ChevronLeft className="w-4 h-4" aria-hidden /></button>
               <button
@@ -942,44 +957,30 @@ function VocabularyContent() {
         {mode === 'quiz' && quizDeck.length > 0 && !quizDone && (
           <p className="text-sm text-exam-ink-soft mb-3">שינויי סינון יחולו בחידון הבא. החידון הנוכחי נשמר.</p>
         )}
-        {/* ── Filter button + active chips ──────────────────────────────────── */}
+        {/* ── Filter button + what's active (each removable) ────────────────── */}
         {(() => {
-          const hasActive = !!(activePack || filterCat || filterDiff || search);
-          const activeCount = [activePack, filterCat, filterDiff > 0, search.trim()].filter(Boolean).length;
+          const count = activeFilterCount(filters);
+          const tags: { key: string; label: ReactNode; remove: () => void }[] = [
+            ...(filters.source !== 'all' ? [{ key: 'source', label: SOURCE_LABEL[filters.source], remove: () => setFilterAxes(f => ({ ...f, source: 'all' })) }] : []),
+            ...(filters.academic ? [{ key: 'academic', label: 'אקדמיות', remove: () => setFilterAxes(f => ({ ...f, academic: false })) }] : []),
+            ...filters.pos.map(p => ({ key: p, label: PART_OF_SPEECH_LABEL[p], remove: () => setFilterAxes(f => ({ ...f, pos: toggle(f.pos, p) })) })),
+            ...filters.levels.map(l => ({ key: `l${l}`, label: `רמה ${l}`, remove: () => setFilterAxes(f => ({ ...f, levels: toggle(f.levels, l) })) })),
+            ...(search.trim() ? [{ key: 'search', label: <bdi>{search}</bdi>, remove: () => setSearch('') }] : []),
+          ];
           return (
-            <div className="mb-5">
-              <div className="flex items-center gap-2 flex-wrap">
-                <button
-                  onClick={() => setShowFilterDrawer(true)}
-                  className={`hit-44 flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold shadow-surface hover:shadow-raised active:shadow-pressed active:scale-[0.96] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ${hasActive ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
-                >
-                  <Search className="inline w-4 h-4 ml-1" strokeWidth={1.75} aria-hidden />סינון{activeCount > 0 ? ` (${activeCount})` : ''}
-                </button>
-                {activePack && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-accent/10 text-exam-accent rounded-sm text-xs font-medium">
-                    {THEMED_PACKS.find(p => p.id === activePack)?.label}
-                    <button onClick={() => setActivePack('')} aria-label="הסרת הסט" className="hover:opacity-70 inline-flex"><X className="w-3.5 h-3.5" aria-hidden /></button>
-                  </span>
-                )}
-                {filterCat && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-paper-alt text-exam-ink-soft rounded-sm text-xs font-medium">
-                    {PART_OF_SPEECH_LABEL[filterCat as PartOfSpeech] ?? filterCat}
-                    <button onClick={() => setFilterCat('')} aria-label="הסרת הקטגוריה" className="hover:opacity-70 inline-flex"><X className="w-3.5 h-3.5" aria-hidden /></button>
-                  </span>
-                )}
-                {filterDiff > 0 && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-alt-bg text-exam-alt rounded-sm text-xs font-medium">
-                    <StarRow n={filterDiff} />
-                    <button onClick={() => setFilterDiff(0)} aria-label="הסרת סינון הרמה" className="hover:opacity-70 inline-flex"><X className="w-3.5 h-3.5" aria-hidden /></button>
-                  </span>
-                )}
-                {search.trim() && (
-                  <span className="flex items-center gap-1 px-2.5 py-1 bg-exam-sage-bg text-exam-sage-strong rounded-sm text-xs font-medium max-w-[140px]">
-                    <span className="truncate"><bdi>{search}</bdi></span>
-                    <button onClick={() => setSearch('')} aria-label="ניקוי החיפוש" className="hit-44 hover:text-exam-sage-strong inline-flex flex-shrink-0"><X className="w-3.5 h-3.5" aria-hidden /></button>
-                  </span>
-                )}
-              </div>
+            <div className="mb-5 flex items-center gap-2 flex-wrap">
+              <button
+                onClick={() => setShowFilterDrawer(true)}
+                className={`hit-44 flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold shadow-surface hover:shadow-raised active:shadow-pressed active:scale-[0.96] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ${count ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
+              >
+                <SlidersHorizontal className="w-4 h-4" strokeWidth={1.75} aria-hidden />סינון{count ? ` (${count})` : ''}
+              </button>
+              {tags.map(t => (
+                <span key={t.key} className="flex items-center gap-1 pr-2.5 pl-1 py-1 bg-exam-accent/10 text-exam-accent rounded-full text-xs font-medium max-w-[160px]">
+                  <span className="truncate">{t.label}</span>
+                  <button onClick={t.remove} aria-label="הסרה" className="hit-44 inline-flex flex-shrink-0 p-0.5 rounded-full hover:bg-exam-accent/15"><X className="w-3.5 h-3.5" aria-hidden /></button>
+                </span>
+              ))}
             </div>
           );
         })()}
@@ -988,11 +989,11 @@ function VocabularyContent() {
         <Modal
           open={showFilterDrawer}
           onClose={() => setShowFilterDrawer(false)}
-          icon={<Search className="w-5 h-5 text-exam-ink-soft flex-shrink-0" aria-hidden />}
+          icon={<SlidersHorizontal className="w-5 h-5 text-exam-ink-soft flex-shrink-0" aria-hidden />}
           title="סינון מילים"
-          actions={!!(activePack || filterCat || filterDiff || search) && (
+          actions={filtered && (
             <button
-              onClick={() => { setActivePack(''); setFilterCat(''); setFilterDiff(0); setSearch(''); }}
+              onClick={resetFilters}
               className="text-sm text-exam-wrong font-semibold px-2 py-1 rounded-lg hover:bg-exam-wrong-bg transition-colors"
             >נקה הכל</button>
           )}
@@ -1004,78 +1005,73 @@ function VocabularyContent() {
             >{filteredWords.length === 0 ? 'אין מילים שמתאימות לסינון' : `הצג ${heCount(filteredWords.length, 'word')}`}</button>
           }
         >
+          {/* Every chip shows how many words it would give with everything
+              else already chosen, and turns off when that is zero, so no
+              combination can lead to an empty list. */}
           <div className="px-5 py-5 space-y-6">
-                {/* Themed packs */}
-                <div>
-                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">סטים נושאיים</div>
-                  <div className="flex flex-wrap gap-2">
-                    {THEMED_PACKS.filter(pack => !('hidden' in pack && pack.hidden)).map(pack => (
-                      <button
-                        key={pack.id}
-                        onClick={() => setActivePack(activePack === pack.id ? '' : pack.id)}
-                        className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] flex items-center gap-1.5 ${activePack === pack.id ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}
-                      ><pack.icon className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />{pack.label}</button>
-                    ))}
-                  </div>
-                </div>
+            <FilterSection title="אילו מילים">
+              {(['all', 'mistakes', 'favorites'] as const).map(src => {
+                const n = countFor(pools, filters, { source: src });
+                return (
+                  <FilterChip key={src} selected={filters.source === src} count={n} onClick={() => setFilterAxes(f => ({ ...f, source: src }))}>
+                    {src === 'all' ? <BookOpen className="w-3.5 h-3.5" aria-hidden /> : src === 'mistakes' ? <TrendingDown className="w-3.5 h-3.5" aria-hidden /> : <Heart className="w-3.5 h-3.5" aria-hidden />}
+                    {SOURCE_LABEL[src]}
+                  </FilterChip>
+                );
+              })}
+            </FilterSection>
 
-                {/* Categories */}
-                <div>
-                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">חלקי דיבר</div>
-                  <div className="flex flex-wrap gap-2">
-                    <button onClick={() => setFilterCat('')} className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] ${!filterCat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>הכל</button>
-                    {PARTS_OF_SPEECH_FILTER.map(({ id: cat, label }) => (
-                      <button key={cat} onClick={() => setFilterCat(cat === filterCat ? '' : cat)} className={`px-3 py-1.5 rounded-xl text-sm font-medium border transition-[background-color,border-color,transform] duration-300 ease-spring active:scale-[0.94] ${filterCat === cat ? 'bg-exam-accent text-exam-accent-ink border-exam-accent' : 'bg-exam-surface text-exam-ink-soft border-exam-border hover:border-exam-border-strong'}`}>{label}</button>
-                    ))}
-                  </div>
-                </div>
+            <FilterSection title="מילים אקדמיות" hint="מילים מרשימת המילים האקדמיות ומונחים מתחומי המדע והמחקר, שחוזרים בקטעי הקריאה במבחן">
+              <FilterChip selected={filters.academic} count={countFor(pools, filters, { academic: true })} onClick={() => setFilterAxes(f => ({ ...f, academic: !f.academic }))}>
+                <GraduationCap className="w-3.5 h-3.5" aria-hidden />רק מילים אקדמיות
+              </FilterChip>
+            </FilterSection>
 
-                {/* Difficulty */}
-                <div>
-                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">רמה</div>
-                  {/* Six even columns: "all" + levels 1–5, each a number with a
-                      single star — a full 5-star row can't fit a chip this size. */}
-                  <div className="grid grid-cols-6 gap-2" dir="ltr">
-                    {[0, 1, 2, 3, 4, 5].map(d => {
-                      const selected = filterDiff === d;
-                      return (
-                        <button
-                          key={d}
-                          type="button"
-                          onClick={() => setFilterDiff(d === filterDiff ? 0 : d)}
-                          aria-pressed={selected}
-                          aria-label={d === 0 ? 'כל הרמות' : `רמה ${d} מתוך 5`}
-                          className={`h-11 rounded-xl border text-sm font-bold inline-flex items-center justify-center gap-1 transition-[background-color,color,border-color,box-shadow,transform] duration-300 ease-spring active:scale-[0.92] ${
-                            selected
-                              ? 'bg-exam-accent text-exam-accent-ink border-exam-accent shadow-surface'
-                              : 'bg-exam-surface text-exam-ink border-exam-border hover:border-exam-border-strong hover:shadow-surface'
-                          }`}
-                        >
-                          {d === 0 ? 'הכל' : (
-                            <>
-                              <span className="tabular-nums">{d}</span>
-                              <Star className={`w-3.5 h-3.5 fill-current ${selected ? '' : 'text-exam-alt'}`} aria-hidden />
-                            </>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+            <FilterSection title="סוג המילה" hint="אפשר לבחור כמה">
+              {PARTS_OF_SPEECH.map(p => (
+                <FilterChip key={p} selected={filters.pos.includes(p)} count={countFor(pools, filters, { pos: [p] })} onClick={() => setFilterAxes(f => ({ ...f, pos: toggle(f.pos, p) }))}>
+                  {PART_OF_SPEECH_LABEL[p]}
+                </FilterChip>
+              ))}
+            </FilterSection>
 
-                {/* Search */}
-                <div>
-                  <div className="text-xs font-bold text-exam-ink-soft uppercase tracking-wide mb-3">חיפוש</div>
-                  <input
-                    type="text"
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    dir="auto"
-                    placeholder="חפש מילה בעברית או באנגלית"
-                    className="w-full px-4 py-3 rounded-sm border border-exam-border bg-exam-paper-alt text-sm focus:outline-none focus:border-exam-accent text-start placeholder:text-right text-exam-ink"
-                  />
-                </div>
+            <FilterSection title="רמת קושי" hint="אפשר לבחור כמה">
+              {/* A scale: 1 → 5, left to right. */}
+              <div className="grid grid-cols-5 gap-2 w-full" dir="ltr">
+                {LEVELS.map(l => {
+                  const selected = filters.levels.includes(l);
+                  const n = countFor(pools, filters, { levels: [l] });
+                  return (
+                    <button
+                      key={l}
+                      type="button"
+                      onClick={() => setFilterAxes(f => ({ ...f, levels: toggle(f.levels, l) }))}
+                      disabled={n === 0 && !selected}
+                      aria-pressed={selected}
+                      aria-label={`רמה ${l}, ${heCount(n, 'word')}`}
+                      className={`py-2 rounded-xl border flex flex-col items-center gap-0.5 transition-[background-color,color,border-color,box-shadow,transform] duration-300 ease-spring active:scale-[0.94] disabled:opacity-35 disabled:pointer-events-none ${
+                        selected ? 'bg-exam-accent text-exam-accent-ink border-exam-accent shadow-surface' : 'bg-exam-surface text-exam-ink border-exam-border hover:border-exam-border-strong hover:shadow-surface'
+                      }`}
+                    >
+                      <span className="inline-flex items-center gap-1 text-sm font-bold tabular-nums">{l}<Star className={`w-3.5 h-3.5 fill-current ${selected ? '' : 'text-exam-alt'}`} aria-hidden /></span>
+                      <span className={`text-[10px] tabular-nums ${selected ? 'opacity-80' : 'text-exam-ink-soft'}`}>{n.toLocaleString('he-IL')}</span>
+                    </button>
+                  );
+                })}
               </div>
+            </FilterSection>
+
+            <FilterSection title="חיפוש">
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                dir="auto"
+                placeholder="חפש מילה בעברית או באנגלית"
+                className="w-full px-4 py-3 rounded-xl border border-exam-border bg-exam-paper-alt text-sm focus:outline-none focus:border-exam-accent text-start placeholder:text-right text-exam-ink"
+              />
+            </FilterSection>
+          </div>
         </Modal>
 
         {/* ════════════════════════════════════════════════════════════════════
@@ -1226,7 +1222,7 @@ function VocabularyContent() {
                   <>
                     <PartyPopper className="w-12 h-12 mx-auto mb-4 text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
                     <div className="text-xl font-bold text-exam-ink mb-2">
-                      {!filterCat && !filterDiff && !search && !activePack ? 'כל הכבוד! סיימת את כל הכרטיסיות' : 'כל הכבוד! סיימת את הסט הזה'}
+                      {!filtered ? 'כל הכבוד! סיימת את כל הכרטיסיות' : 'כל הכבוד! סיימת את כל המילים בסינון הזה'}
                     </div>
                     <p className="text-exam-ink-soft text-sm mb-6">{progressScopeKnown === 0 ? 'הפעם לא סימנת אף מילה כידועה. בסיבוב הבא זה כבר ייראה אחרת.' : `ידעת ${heCount(progressScopeKnown, 'word')}`}</p>
                     <button onClick={handleResetAll} className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-medium hover:opacity-90 transition-opacity inline-flex items-center gap-2">

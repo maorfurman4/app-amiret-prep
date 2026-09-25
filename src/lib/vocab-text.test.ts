@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cleanSnippet } from './vocab-text';
+import { cleanSnippet, extractGloss } from './vocab-text';
 
 describe('cleanSnippet', () => {
   it('drops the final period of a definition', () => {
@@ -25,5 +25,22 @@ describe('cleanSnippet', () => {
   it('handles empty input', () => {
     expect(cleanSnippet(null)).toBe('');
     expect(cleanSnippet('')).toBe('');
+  });
+});
+
+describe('extractGloss', () => {
+  it('reads the current "word (תרגום)" format', () => {
+    expect(extractGloss('despite (למרות). הצוות המשיך לעבוד למרות הגשם.')).toBe('למרות');
+    expect(extractGloss('נכון! premature (מוקדם מדי/פזיז). המסקנות נסתרו.')).toBe('מוקדם מדי/פזיז');
+  });
+
+  it('still reads the older "word = תרגום" format', () => {
+    expect(extractGloss('abandon = לנטוש. מחסור במימון.')).toBe('לנטוש');
+  });
+
+  it('skips English-only parentheses and handles empty input', () => {
+    expect(extractGloss('will be (future passive) — ייבדק (ייבדק)')).toBe('ייבדק');
+    expect(extractGloss('no gloss here')).toBe('');
+    expect(extractGloss(null)).toBe('');
   });
 });

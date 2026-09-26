@@ -129,5 +129,7 @@
 - [x] Level 3 batch 1 inserted: 58 words, 1,512 → 1,570 verified; level 3 now 293. Log: `backups/vocab-insert-2026-09-26T07-08-31-792Z.json`
 - [x] Level 3 batch 2 prepared: 57 words (6 academic from sublists 4–7, 51 general B2), 0 errors, level 3 would reach 350; 6 family warnings, all different words
 - [x] Level 3 batch 2 inserted: 57 words, 1,570 → 1,627 verified; level 3 complete at 350. Log: `backups/vocab-insert-2026-09-26T07-11-56-908Z.json`
-- [ ] Levels 4–5 (112, 11)
+- [x] Level 4 batch 1 prepared: 56 words (42 from Academic Word List sublists 8–10, easy members left out; 14 general C1), 0 errors; 8 family warnings, all different words
+- [ ] **Approval** to insert level 4 batch 1
+- [ ] Level 4 batch 2 (56), then level 5 (11)
 - [x] Definitions cleanup (`scripts/clean-vocab-definitions.ts`): 635 trailing periods removed, 0 failed, verify 0 left; parsimonious's two sentences joined with a semicolon. Backup `backups/vocab-definitions-2026-09-25T16-19-10-685Z.json`. Audit before the run: no ellipses, quote marks, stray spaces or uppercase words anywhere

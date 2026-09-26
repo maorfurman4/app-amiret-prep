@@ -121,5 +121,7 @@
 - [x] Batch 2 inserted: 100 words, 1,208 → 1,308 verified; level 1 now 253 (97 to go). Log: `backups/vocab-insert-2026-09-25T16-25-07-162Z.json`
 - [x] Batch 3 prepared: the last 97 level-1 words, 0 errors, level 1 would reach exactly 350; 4 family warnings for review (promise, reason, alone, soon)
 - [x] Batch 3 inserted: 97 words, 1,308 → 1,405 verified; level 1 complete at 350. Log: `backups/vocab-insert-2026-09-26T06-52-27-709Z.json`
-- [ ] Levels 2–5 (107, 115, 112, 11)
+- [x] Level 2 batch 1 prepared: 54 words from Academic Word List sublists 1–4, 0 errors; 6 family warnings for review (contract, percent, credit, invest, participate, shift)
+- [ ] **Approval** to insert level 2 batch 1
+- [ ] Level 2 batch 2 (53), then levels 3–5 (115, 112, 11)
 - [x] Definitions cleanup (`scripts/clean-vocab-definitions.ts`): 635 trailing periods removed, 0 failed, verify 0 left; parsimonious's two sentences joined with a semicolon. Backup `backups/vocab-definitions-2026-09-25T16-19-10-685Z.json`. Audit before the run: no ellipses, quote marks, stray spaces or uppercase words anywhere

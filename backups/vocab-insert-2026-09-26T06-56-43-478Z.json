@@ -1,0 +1,221 @@
+{
+  "batch": "scripts/data/vocab-batches/level2-batch01.json",
+  "inserted": [
+    {
+      "id": "f438f8dc-44a4-4afd-b955-07b2c52796ad",
+      "word": "authority"
+    },
+    {
+      "id": "719807b8-ead8-45f9-b73e-c1598c906a2f",
+      "word": "contract"
+    },
+    {
+      "id": "8ab339d1-4331-4fd9-8293-39bd6cb72f85",
+      "word": "export"
+    },
+    {
+      "id": "c5c1d8b6-59a2-48f4-ad0e-f5f1e5ba994e",
+      "word": "finance"
+    },
+    {
+      "id": "4df939e7-0be6-49a7-a428-dda4d592a982",
+      "word": "labor"
+    },
+    {
+      "id": "3794b035-05a2-42c4-82fe-41280c192875",
+      "word": "legal"
+    },
+    {
+      "id": "796e6ecc-aec3-4773-bff8-a8fa4ccec6af",
+      "word": "percent"
+    },
+    {
+      "id": "7c4cf420-8988-4c04-b410-c9d82201102d",
+      "word": "section"
+    },
+    {
+      "id": "0fd8253b-70c3-49ec-90d0-760176055759",
+      "word": "sector"
+    },
+    {
+      "id": "722524b8-271d-4a66-b5bb-036742d0eb59",
+      "word": "assist"
+    },
+    {
+      "id": "822ae19f-ae5b-4cbc-9ec5-fd5959cfabc7",
+      "word": "chapter"
+    },
+    {
+      "id": "b4a2a932-5176-4427-993f-45db22ee228d",
+      "word": "consume"
+    },
+    {
+      "id": "1e84634a-d7b4-40bf-a8ce-4d3f6888830b",
+      "word": "credit"
+    },
+    {
+      "id": "bf94fdd0-baae-417e-859f-a40f530db541",
+      "word": "injure"
+    },
+    {
+      "id": "0a994e8e-d16b-432e-94e1-245d943e4dff",
+      "word": "invest"
+    },
+    {
+      "id": "28abb91d-8a7c-4d2a-b831-3f90809b4d5d",
+      "word": "item"
+    },
+    {
+      "id": "9948deb3-03d9-42b4-afaa-7ba52d8d1fd8",
+      "word": "journal"
+    },
+    {
+      "id": "87b19eec-ccf4-4e16-9084-faed4b4f330d",
+      "word": "participate"
+    },
+    {
+      "id": "b0fa10f7-176e-4c94-a174-effdffb353f3",
+      "word": "purchase"
+    },
+    {
+      "id": "9c143f6c-8619-418d-b743-0fcd31bd1de1",
+      "word": "range"
+    },
+    {
+      "id": "f2b539ac-3e32-4ce3-afdb-99853fed5703",
+      "word": "restrict"
+    },
+    {
+      "id": "312d31dc-5c90-424b-9b34-8c5221a06d6a",
+      "word": "secure"
+    },
+    {
+      "id": "cd04f97f-fb07-47d2-83fa-37ec7b8240b2",
+      "word": "site"
+    },
+    {
+      "id": "48c0c37e-ef1c-4644-a684-9d078d8e4473",
+      "word": "survey"
+    },
+    {
+      "id": "bace1f24-cd39-4085-afeb-4445b7c7bc8d",
+      "word": "text"
+    },
+    {
+      "id": "0434da81-7788-4b1a-afd3-73e630ff761d",
+      "word": "comment"
+    },
+    {
+      "id": "0c71c029-bb0f-4ced-9ecd-aa5bc9a48789",
+      "word": "constant"
+    },
+    {
+      "id": "a23053b8-3e94-4e74-b5e3-459131599406",
+      "word": "core"
+    },
+    {
+      "id": "c4c8263b-464a-4bbc-9bc1-43aace93a98f",
+      "word": "correspond"
+    },
+    {
+      "id": "002a6b6f-36fb-4542-9a8f-6502b1d791ce",
+      "word": "fund"
+    },
+    {
+      "id": "04e083a7-2265-4053-a445-de57687fd1a6",
+      "word": "immigration"
+    },
+    {
+      "id": "9b7be5b9-137c-41bd-a977-c3ad408b7817",
+      "word": "layer"
+    },
+    {
+      "id": "be5a9247-6a5d-4842-a388-dd16a0097ddc",
+      "word": "link"
+    },
+    {
+      "id": "8ae9443c-f529-4269-97f2-26c6650e47e5",
+      "word": "locate"
+    },
+    {
+      "id": "cb96016e-59fe-4cd9-a98a-c09be180cb4c",
+      "word": "maximize"
+    },
+    {
+      "id": "001ec1c3-9e4b-49c8-bcdf-4273456878c5",
+      "word": "minor"
+    },
+    {
+      "id": "20322893-3348-4f01-87bb-bc9f9ae41e10",
+      "word": "partner"
+    },
+    {
+      "id": "8044aa6c-b1c3-4c4d-b597-9f101548236c",
+      "word": "react"
+    },
+    {
+      "id": "e878efb2-c996-4de7-99c7-50e4ce4e27f9",
+      "word": "register"
+    },
+    {
+      "id": "8d563425-d4d7-4db3-ab8e-976de07001d1",
+      "word": "shift"
+    },
+    {
+      "id": "8068fbee-00e3-4596-b836-106abe83a666",
+      "word": "access"
+    },
+    {
+      "id": "f904373f-f126-49c7-88a5-3d1498b717dc",
+      "word": "annual"
+    },
+    {
+      "id": "a7701a74-0ed4-4b44-b1d4-ea8f745b194c",
+      "word": "attitude"
+    },
+    {
+      "id": "49c1c9ac-8ff7-4f98-a493-1025d4426183",
+      "word": "commit"
+    },
+    {
+      "id": "0d47d66b-5640-4177-88fc-b0e81913be14",
+      "word": "cycle"
+    },
+    {
+      "id": "26902509-3ff6-4a7f-99fe-bb420f3420cd",
+      "word": "debate"
+    },
+    {
+      "id": "5b047364-b9c2-489f-bf88-90b5ebd74839",
+      "word": "domestic"
+    },
+    {
+      "id": "d44e83de-f932-46ec-9d10-563fa0107bea",
+      "word": "internal"
+    },
+    {
+      "id": "6140d1f3-9da4-4240-92ee-8a7806434932",
+      "word": "output"
+    },
+    {
+      "id": "910b5dba-ea9c-42b5-8597-6c0bccbb8c88",
+      "word": "phase"
+    },
+    {
+      "id": "2fa92e03-4117-4c91-a287-900e1dcd9663",
+      "word": "project"
+    },
+    {
+      "id": "9f74573a-dff5-4b59-9163-1763f73ff68d",
+      "word": "series"
+    },
+    {
+      "id": "863a13e4-c3aa-4ea0-b35d-e5dcdc5ebfec",
+      "word": "status"
+    },
+    {
+      "id": "177b5b83-6194-4b78-b046-125ca3004c88",
+      "word": "stress"
+    }
+  ]
+}

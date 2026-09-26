@@ -144,4 +144,6 @@
 - [x] Finding: level 5 holds dozens of B2–C1 words, but only 11 truly C2 words sit lower (10 at level 4, 1 at level 3), so at most 11 can leave level 5; level 4 holds many basic connectors (as a result, even though, in addition…), level 1 a few hard words (novel, precise, progressive, uniform)
 - [x] `scripts/swap-vocab-levels.ts` + `scripts/data/vocab-level-swaps.json`: 33 pairs, 66 words; dry run 0 errors, 350 per level before and after; guards proven on a broken file (5 errors caught, nothing written)
 - [x] Applied: 66/66 words at their new level, 350 per level verified. Backup `backups/vocab-levels-2026-09-26T07-40-12-552Z.json`
-- [ ] Open question: 3-word cycles (A→B→C→A) would place the remaining connectors and easy level-5 words exactly, but break the strict 1-to-1 rule
+- [x] Cycles allowed. Every moved word lands exactly on its true level. Bottleneck found: no C2 words remain outside level 5 and only 6 level-4-grade words sit lower, so level 5 cannot shed words and level 4 can shed only 6. Maximum under those limits: 64 moves = 5 swaps (1↔2) + 18 swaps (2↔3) + 6 cycles (4→2→3→4) — computed from the level balance, not guessed
+- [x] Script generalized to closed groups (swaps and cycles), guard proven on an open cycle; `scripts/data/vocab-level-cycles.json` dry run 0 errors, 350 per level
+- [ ] **Approval** of the cycle plan, then `--apply`

@@ -1,17 +1,19 @@
 /**
- * Moves vocabulary words between difficulty levels in strict 1-to-1 swaps,
- * so every level keeps exactly the same number of words (350).
+ * Moves vocabulary words between difficulty levels in closed groups — 1-to-1
+ * swaps or cycles (A→B, B→C, C→A) — so every level keeps exactly the same
+ * number of words (350).
  *
  * Usage:
- *   npx tsx --env-file=.env.local scripts/swap-vocab-levels.ts            # dry run (default)
- *   npx tsx --env-file=.env.local scripts/swap-vocab-levels.ts --apply    # write
+ *   npx tsx --env-file=.env.local scripts/swap-vocab-levels.ts [file]            # dry run (default)
+ *   npx tsx --env-file=.env.local scripts/swap-vocab-levels.ts [file] --apply    # write
  *
- * Input: scripts/data/vocab-level-swaps.json — a list of pairs
- *   { a: { word, from, to, why }, b: { word, from, to, why } }
- * where a.from === b.to and a.to === b.from (a true swap).
+ * Input (default scripts/data/vocab-level-swaps.json), either
+ *   [{ a: { word, from, to, why }, b: {…} }]            — pairs
+ *   { groups: [{ kind, moves: [{ word, from, to, why }] }] } — swaps and cycles
  *
  * Checks (any failure stops the run; nothing is written):
- *   - every pair is a mirror swap, and every level is 1–5
+ *   - every group is closed: for each level, as many words enter as leave
+ *   - every level is 1–5, and no move stays in place
  *   - no word appears in more than one pair
  *   - every word exists and is still at its "from" level
  *   - level counts after the swaps equal the counts before
@@ -29,6 +31,7 @@ const PAGE = 1000;
 
 type Side = { word: string; from: number; to: number; why: string };
 type Pair = { a: Side; b: Side };
+type Group = { kind?: string; moves: Side[] };
 type Row = { id: string; word: string; difficulty_level: number };
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -49,19 +52,25 @@ async function fetchAll(): Promise<Row[]> {
 const counts = (rows: { difficulty_level: number }[]) => [1, 2, 3, 4, 5].map(l => rows.filter(r => r.difficulty_level === l).length);
 
 async function main() {
-  const pairs = JSON.parse(readFileSync(join(process.cwd(), 'scripts', 'data', 'vocab-level-swaps.json'), 'utf8')) as Pair[];
+  const fileArg = process.argv.slice(2).find(a => !a.startsWith('--'));
+  const raw = JSON.parse(readFileSync(fileArg ?? join(process.cwd(), 'scripts', 'data', 'vocab-level-swaps.json'), 'utf8')) as Pair[] | { groups: Group[] };
+  const groups: Group[] = Array.isArray(raw) ? raw.map(p => ({ kind: 'swap', moves: [p.a, p.b] })) : raw.groups;
   const rows = await fetchAll();
   const byWord = new Map(rows.map(r => [r.word, r]));
   const errors: string[] = [];
   const seen = new Set<string>();
 
-  for (const [i, { a, b }] of pairs.entries()) {
-    const at = `pair ${i + 1} (${a.word} ↔ ${b.word})`;
-    if (a.from !== b.to || a.to !== b.from) errors.push(`${at}: not a mirror swap`);
-    if (a.from === a.to) errors.push(`${at}: moves nothing`);
-    for (const s of [a, b]) {
+  for (const [i, { moves: group }] of groups.entries()) {
+    const at = `group ${i + 1} (${group.map(m => m.word).join(' → ')})`;
+    for (const level of [1, 2, 3, 4, 5]) {
+      const out = group.filter(m => m.from === level).length;
+      const inn = group.filter(m => m.to === level).length;
+      if (out !== inn) errors.push(`${at}: level ${level} loses ${out} but gains ${inn} (not a closed swap/cycle)`);
+    }
+    for (const s of group) {
+      if (s.from === s.to) errors.push(`${at}: "${s.word}" moves nothing`);
       if (![s.from, s.to].every(l => Number.isInteger(l) && l >= 1 && l <= 5)) errors.push(`${at}: level out of range`);
-      if (seen.has(s.word)) errors.push(`${at}: "${s.word}" appears in more than one pair`);
+      if (seen.has(s.word)) errors.push(`${at}: "${s.word}" appears in more than one group`);
       seen.add(s.word);
       const row = byWord.get(s.word);
       if (!row) errors.push(`${at}: "${s.word}" not in the database`);
@@ -69,13 +78,13 @@ async function main() {
     }
   }
 
-  const moves = pairs.flatMap(({ a, b }) => [a, b]).map(s => ({ ...s, id: byWord.get(s.word)?.id }));
+  const moves = groups.flatMap(g => g.moves).map(s => ({ ...s, id: byWord.get(s.word)?.id }));
   const before = counts(rows);
   const simulated = rows.map(r => ({ difficulty_level: moves.find(m => m.id === r.id)?.to ?? r.difficulty_level }));
   const after = counts(simulated);
   if (before.join() !== after.join()) errors.push(`level counts would change: ${before.join('/')} → ${after.join('/')}`);
 
-  console.log(`pairs: ${pairs.length} · words moving: ${moves.length}`);
+  console.log(`groups: ${groups.length} (${groups.filter(g => g.moves.length === 2).length} swaps, ${groups.filter(g => g.moves.length > 2).length} cycles) · words moving: ${moves.length}`);
   console.log(`levels before: ${before.join(' / ')} · after: ${after.join(' / ')}`);
   const flows = new Map<string, number>();
   for (const m of moves) flows.set(`${m.from}→${m.to}`, (flows.get(`${m.from}→${m.to}`) ?? 0) + 1);

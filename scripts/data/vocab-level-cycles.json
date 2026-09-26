@@ -1,0 +1,533 @@
+{
+ "groups": [
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "context",
+     "from": 1,
+     "to": 2,
+     "why": "B2 word, harder than the basic phrase it swaps with"
+    },
+    {
+     "word": "because of",
+     "from": 2,
+     "to": 1,
+     "why": "Basic A2–B1 phrase"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "contrast",
+     "from": 1,
+     "to": 2,
+     "why": "B2 word, harder than the basic phrase it swaps with"
+    },
+    {
+     "word": "such as",
+     "from": 2,
+     "to": 1,
+     "why": "Basic A2–B1 phrase"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "consequence",
+     "from": 1,
+     "to": 2,
+     "why": "B2 word, harder than the basic phrase it swaps with"
+    },
+    {
+     "word": "at first",
+     "from": 2,
+     "to": 1,
+     "why": "Basic A2–B1 phrase"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "concentrate",
+     "from": 1,
+     "to": 2,
+     "why": "B2 word, harder than the basic phrase it swaps with"
+    },
+    {
+     "word": "at last",
+     "from": 2,
+     "to": 1,
+     "why": "Basic A2–B1 phrase"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "gradually",
+     "from": 1,
+     "to": 2,
+     "why": "B2 word, harder than the basic phrase it swaps with"
+    },
+    {
+     "word": "in fact",
+     "from": 2,
+     "to": 1,
+     "why": "Basic A2–B1 phrase"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "even though",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "molecule",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "as well as",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "nucleus",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "in addition",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "orbit",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "for instance",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "organism",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "on the other hand",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "radiation",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "in general",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "ecosystem",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "in other words",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "ecology",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "in particular",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "geology",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "in contrast",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "inevitable",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "due to",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "convey",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "as long as",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "notion",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "even if",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "rational",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "not only",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "vague",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "for this reason",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "thorough",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "exaggerate",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "gratitude",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "identify",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "scope",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "factor",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "remedy",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "swap",
+   "moves": [
+    {
+     "word": "version",
+     "from": 3,
+     "to": 2,
+     "why": "B1–B2, basic for level 3"
+    },
+    {
+     "word": "fragment",
+     "from": 2,
+     "to": 3,
+     "why": "B2 (science term or harder word), too hard for level 2"
+    }
+   ]
+  },
+  {
+   "kind": "cycle",
+   "moves": [
+    {
+     "word": "in spite of",
+     "from": 4,
+     "to": 2,
+     "why": "B1–B2 connector, far too easy for level 4"
+    },
+    {
+     "word": "abstract",
+     "from": 2,
+     "to": 3,
+     "why": "B2 academic word, too hard for level 2"
+    },
+    {
+     "word": "endorse",
+     "from": 3,
+     "to": 4,
+     "why": "C1 word, too hard for level 3"
+    }
+   ]
+  },
+  {
+   "kind": "cycle",
+   "moves": [
+    {
+     "word": "in conclusion",
+     "from": 4,
+     "to": 2,
+     "why": "B1–B2 connector, far too easy for level 4"
+    },
+    {
+     "word": "constitute",
+     "from": 2,
+     "to": 3,
+     "why": "B2 academic word, too hard for level 2"
+    },
+    {
+     "word": "transient",
+     "from": 3,
+     "to": 4,
+     "why": "C1 word, too hard for level 3"
+    }
+   ]
+  },
+  {
+   "kind": "cycle",
+   "moves": [
+    {
+     "word": "to begin with",
+     "from": 4,
+     "to": 2,
+     "why": "B1–B2 connector, far too easy for level 4"
+    },
+    {
+     "word": "derive",
+     "from": 2,
+     "to": 3,
+     "why": "B2 academic word, too hard for level 2"
+    },
+    {
+     "word": "concede",
+     "from": 3,
+     "to": 4,
+     "why": "C1 word, too hard for level 3"
+    }
+   ]
+  },
+  {
+   "kind": "cycle",
+   "moves": [
+    {
+     "word": "together with",
+     "from": 4,
+     "to": 2,
+     "why": "B1–B2 connector, far too easy for level 4"
+    },
+    {
+     "word": "distinction",
+     "from": 2,
+     "to": 3,
+     "why": "B2 academic word, too hard for level 2"
+    },
+    {
+     "word": "divert",
+     "from": 3,
+     "to": 4,
+     "why": "C1 word, too hard for level 3"
+    }
+   ]
+  },
+  {
+   "kind": "cycle",
+   "moves": [
+    {
+     "word": "above all",
+     "from": 4,
+     "to": 2,
+     "why": "B1–B2 connector, far too easy for level 4"
+    },
+    {
+     "word": "attain",
+     "from": 2,
+     "to": 3,
+     "why": "B2 academic word, too hard for level 2"
+    },
+    {
+     "word": "instill",
+     "from": 3,
+     "to": 4,
+     "why": "C1 word, too hard for level 3"
+    }
+   ]
+  },
+  {
+   "kind": "cycle",
+   "moves": [
+    {
+     "word": "what is more",
+     "from": 4,
+     "to": 2,
+     "why": "B1–B2 connector, far too easy for level 4"
+    },
+    {
+     "word": "acknowledge",
+     "from": 2,
+     "to": 3,
+     "why": "B2 academic word, too hard for level 2"
+    },
+    {
+     "word": "methodical",
+     "from": 3,
+     "to": 4,
+     "why": "C1 word, too hard for level 3"
+    }
+   ]
+  }
+ ]
+}

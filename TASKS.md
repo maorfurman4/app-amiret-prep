@@ -146,4 +146,5 @@
 - [x] Applied: 66/66 words at their new level, 350 per level verified. Backup `backups/vocab-levels-2026-09-26T07-40-12-552Z.json`
 - [x] Cycles allowed. Every moved word lands exactly on its true level. Bottleneck found: no C2 words remain outside level 5 and only 6 level-4-grade words sit lower, so level 5 cannot shed words and level 4 can shed only 6. Maximum under those limits: 64 moves = 5 swaps (1↔2) + 18 swaps (2↔3) + 6 cycles (4→2→3→4) — computed from the level balance, not guessed
 - [x] Script generalized to closed groups (swaps and cycles), guard proven on an open cycle; `scripts/data/vocab-level-cycles.json` dry run 0 errors, 350 per level
-- [ ] **Approval** of the cycle plan, then `--apply`
+- [x] Round 2 applied: 64/64 words at their new level, 350 per level verified. Backup `backups/vocab-levels-2026-09-26T07-44-39-432Z.json`
+- [ ] Remaining (content decision, not placement): ~55 too-easy words in level 4 and ~26 in level 5 cannot move without harder words to replace them

@@ -1,0 +1,322 @@
+[
+  {
+    "id": "37c9712f-5d58-40c2-bcff-5434bf26831a",
+    "word": "context",
+    "difficulty_level": 1
+  },
+  {
+    "id": "6a0b4893-eafe-4121-9022-97254026714f",
+    "word": "because of",
+    "difficulty_level": 2
+  },
+  {
+    "id": "4e8bf2cc-7894-43f2-9847-c15471337c67",
+    "word": "contrast",
+    "difficulty_level": 1
+  },
+  {
+    "id": "cf394007-3627-48ce-98ac-5432883bece4",
+    "word": "such as",
+    "difficulty_level": 2
+  },
+  {
+    "id": "b6859ce7-8f83-4573-afce-5a56709efe95",
+    "word": "consequence",
+    "difficulty_level": 1
+  },
+  {
+    "id": "7cd25806-1d3e-4d1d-8035-30fcb91ad89e",
+    "word": "at first",
+    "difficulty_level": 2
+  },
+  {
+    "id": "4551b81c-310b-4931-baac-4640968fa09e",
+    "word": "concentrate",
+    "difficulty_level": 1
+  },
+  {
+    "id": "1a2d9d54-42c2-4660-911c-1a410d027f4b",
+    "word": "at last",
+    "difficulty_level": 2
+  },
+  {
+    "id": "a6a11d95-66af-4acb-a3c7-7b7979c24057",
+    "word": "gradually",
+    "difficulty_level": 1
+  },
+  {
+    "id": "36948428-380b-4a39-9c70-9131d0c50aa4",
+    "word": "in fact",
+    "difficulty_level": 2
+  },
+  {
+    "id": "b585beb1-4233-4e22-bb37-e5ca795014c2",
+    "word": "even though",
+    "difficulty_level": 3
+  },
+  {
+    "id": "7b50af76-3994-49ca-a90f-8adf6d094496",
+    "word": "molecule",
+    "difficulty_level": 2
+  },
+  {
+    "id": "1373f3a0-2e4a-4ff7-88e5-023e97aa3e28",
+    "word": "as well as",
+    "difficulty_level": 3
+  },
+  {
+    "id": "a066451e-7a15-433d-a325-a708dc1a9fd7",
+    "word": "nucleus",
+    "difficulty_level": 2
+  },
+  {
+    "id": "79bae31b-1b8f-43d1-875c-9725f5f0d1ea",
+    "word": "in addition",
+    "difficulty_level": 3
+  },
+  {
+    "id": "1d0c2643-b71e-488e-b2a8-dd8f3f5a0da0",
+    "word": "orbit",
+    "difficulty_level": 2
+  },
+  {
+    "id": "ebd75c13-d5cb-461e-bc74-42fe186ec8ec",
+    "word": "for instance",
+    "difficulty_level": 3
+  },
+  {
+    "id": "19545f52-740e-47e6-ab3d-c07b9f815291",
+    "word": "organism",
+    "difficulty_level": 2
+  },
+  {
+    "id": "126abd12-09da-45c7-b273-1dd175200387",
+    "word": "on the other hand",
+    "difficulty_level": 3
+  },
+  {
+    "id": "d698e145-fd55-4447-8f5a-17387f9a265f",
+    "word": "radiation",
+    "difficulty_level": 2
+  },
+  {
+    "id": "023f9c89-3060-46d7-9e35-860f2880b67c",
+    "word": "in general",
+    "difficulty_level": 3
+  },
+  {
+    "id": "89a68c3b-7386-4904-990a-fb2ba1bc1fba",
+    "word": "ecosystem",
+    "difficulty_level": 2
+  },
+  {
+    "id": "c4ff5250-4a73-4548-9dc8-de98bc504339",
+    "word": "in other words",
+    "difficulty_level": 3
+  },
+  {
+    "id": "d851d09d-f4b6-4047-b466-039be0c3b06d",
+    "word": "ecology",
+    "difficulty_level": 2
+  },
+  {
+    "id": "8eddd2d3-12bf-47eb-9eff-9c3a3d8b4307",
+    "word": "in particular",
+    "difficulty_level": 3
+  },
+  {
+    "id": "306e7754-2cd4-4bfe-82c4-bea69d17dc2e",
+    "word": "geology",
+    "difficulty_level": 2
+  },
+  {
+    "id": "b15ae7fe-e368-4d0c-85fe-bdd1515fc143",
+    "word": "in contrast",
+    "difficulty_level": 3
+  },
+  {
+    "id": "662cfc1b-6835-43a2-96ff-e9f32789569d",
+    "word": "inevitable",
+    "difficulty_level": 2
+  },
+  {
+    "id": "3529ec7b-3ab5-44c1-803f-7ad3bc1ca467",
+    "word": "due to",
+    "difficulty_level": 3
+  },
+  {
+    "id": "2b8999c0-ff73-44fc-bcc6-78b7f622c94d",
+    "word": "convey",
+    "difficulty_level": 2
+  },
+  {
+    "id": "0a4d4890-6734-49f4-a8b8-296461c20dbd",
+    "word": "as long as",
+    "difficulty_level": 3
+  },
+  {
+    "id": "8d36fa98-c7d1-4144-ac63-50a82a122014",
+    "word": "notion",
+    "difficulty_level": 2
+  },
+  {
+    "id": "7f860703-6efd-4e86-b455-878ece566c35",
+    "word": "even if",
+    "difficulty_level": 3
+  },
+  {
+    "id": "9404fe67-6b62-4951-8f3f-1817254bbf0f",
+    "word": "rational",
+    "difficulty_level": 2
+  },
+  {
+    "id": "6a0e9ef3-fdd3-4178-8d46-bd28c224a1d8",
+    "word": "not only",
+    "difficulty_level": 3
+  },
+  {
+    "id": "199b36b3-d41b-44b3-a38c-bb4596829e97",
+    "word": "vague",
+    "difficulty_level": 2
+  },
+  {
+    "id": "4e410cd7-ebcd-41c5-a86a-d313bc1ed39c",
+    "word": "for this reason",
+    "difficulty_level": 3
+  },
+  {
+    "id": "0f85f095-cdda-4e3f-a7b3-d953139b60db",
+    "word": "thorough",
+    "difficulty_level": 2
+  },
+  {
+    "id": "ea1630d3-4687-44af-9c89-c34b59bfd371",
+    "word": "exaggerate",
+    "difficulty_level": 3
+  },
+  {
+    "id": "91a2ee32-badd-412d-abf1-030b70f99450",
+    "word": "gratitude",
+    "difficulty_level": 2
+  },
+  {
+    "id": "33e66cac-7d74-446d-8b45-9b5f15c1b7d9",
+    "word": "identify",
+    "difficulty_level": 3
+  },
+  {
+    "id": "34f16fcc-ce03-46b5-8062-96dce3641d2b",
+    "word": "scope",
+    "difficulty_level": 2
+  },
+  {
+    "id": "8873189d-14d5-4dd3-b4a1-fb4f7b8e69b4",
+    "word": "factor",
+    "difficulty_level": 3
+  },
+  {
+    "id": "246bd718-1c1f-45e8-b278-1b425f4fe843",
+    "word": "remedy",
+    "difficulty_level": 2
+  },
+  {
+    "id": "26f06910-0512-4216-9d0c-aa08fe479ec9",
+    "word": "version",
+    "difficulty_level": 3
+  },
+  {
+    "id": "6cae829b-d868-462e-8fbd-4b99763ae615",
+    "word": "fragment",
+    "difficulty_level": 2
+  },
+  {
+    "id": "7e0caa58-f268-49ba-af22-87f96bfca859",
+    "word": "in spite of",
+    "difficulty_level": 4
+  },
+  {
+    "id": "600ce6df-4058-42cd-9e04-82c3fab16388",
+    "word": "abstract",
+    "difficulty_level": 2
+  },
+  {
+    "id": "0987db94-58fb-4138-8f67-36d4f369205d",
+    "word": "endorse",
+    "difficulty_level": 3
+  },
+  {
+    "id": "bbe9ef8e-685f-4395-8441-948991bbc2b1",
+    "word": "in conclusion",
+    "difficulty_level": 4
+  },
+  {
+    "id": "75c2975a-64ad-44e2-bbb9-75f15e26268a",
+    "word": "constitute",
+    "difficulty_level": 2
+  },
+  {
+    "id": "664aa7e8-ec82-4b38-814b-c326430fc2f3",
+    "word": "transient",
+    "difficulty_level": 3
+  },
+  {
+    "id": "d3dff670-a547-402b-b9d0-59014a8d211b",
+    "word": "to begin with",
+    "difficulty_level": 4
+  },
+  {
+    "id": "6271503f-809a-4267-9830-c4e8c396e535",
+    "word": "derive",
+    "difficulty_level": 2
+  },
+  {
+    "id": "01ad0be0-93da-457b-afc3-5d6d6c7aff80",
+    "word": "concede",
+    "difficulty_level": 3
+  },
+  {
+    "id": "f368dab4-3a52-4eb6-b05f-3d6f54073366",
+    "word": "together with",
+    "difficulty_level": 4
+  },
+  {
+    "id": "62fea668-df52-4054-92d5-81e434339546",
+    "word": "distinction",
+    "difficulty_level": 2
+  },
+  {
+    "id": "b50a8ef3-def7-4286-a2e0-465c7f415959",
+    "word": "divert",
+    "difficulty_level": 3
+  },
+  {
+    "id": "34f13886-9bcf-4de8-b200-c350e451fee7",
+    "word": "above all",
+    "difficulty_level": 4
+  },
+  {
+    "id": "e8277264-70f6-417a-bb34-b53a26b447e2",
+    "word": "attain",
+    "difficulty_level": 2
+  },
+  {
+    "id": "40fb47fa-b0e5-4515-8ea3-fcd57e027b3b",
+    "word": "instill",
+    "difficulty_level": 3
+  },
+  {
+    "id": "20fd6928-16c0-462d-af90-4d6bf4979162",
+    "word": "what is more",
+    "difficulty_level": 4
+  },
+  {
+    "id": "7a0d6d11-6c41-4b63-9701-64fa05f3f74e",
+    "word": "acknowledge",
+    "difficulty_level": 2
+  },
+  {
+    "id": "cdf7157f-624a-4a9b-bc42-d3c4b27433df",
+    "word": "methodical",
+    "difficulty_level": 3
+  }
+]

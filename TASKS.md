@@ -137,3 +137,10 @@
 - [x] Level 5 batch inserted: 11 words, 1,739 → 1,750 verified. Log: `backups/vocab-insert-2026-09-26T07-30-00-972Z.json`
 - [x] Final audit (live database): 1,750 words, 350 per level, 1,750 distinct (case-insensitive), 0 without part of speech, 0 trailing periods, 0 quote marks, 0 without Hebrew; 686 academic / 1,064 general; verbs 544, nouns 509, adjectives 453, connectors 134, adverbs 110
 - [x] Definitions cleanup (`scripts/clean-vocab-definitions.ts`): 635 trailing periods removed, 0 failed, verify 0 left; parsimonious's two sentences joined with a semicolon. Backup `backups/vocab-definitions-2026-09-25T16-19-10-685Z.json`. Audit before the run: no ellipses, quote marks, stray spaces or uppercase words anywhere
+
+# Level audit of the original 1,158 words (`fix/vocab-level-audit`)
+
+- [x] Plan approved: scale = project scale (1 top-2000 · 2 Academic Word List 1–3 / B1–B2 · 3 AWL 4–7 / B2 · 4 AWL 8–10 / C1 · 5 C2 / GRE); only the original words; high-confidence moves only; strict 1-to-1 swaps where both words end up closer to their true level
+- [x] Finding: level 5 holds dozens of B2–C1 words, but only 11 truly C2 words sit lower (10 at level 4, 1 at level 3), so at most 11 can leave level 5; level 4 holds many basic connectors (as a result, even though, in addition…), level 1 a few hard words (novel, precise, progressive, uniform)
+- [x] `scripts/swap-vocab-levels.ts` + `scripts/data/vocab-level-swaps.json`: 33 pairs, 66 words; dry run 0 errors, 350 per level before and after; guards proven on a broken file (5 errors caught, nothing written)
+- [ ] **Approval** of the pairs, then `--apply`

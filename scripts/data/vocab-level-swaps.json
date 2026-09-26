@@ -1,0 +1,464 @@
+[
+ {
+  "a": {
+   "word": "novel",
+   "from": 1,
+   "to": 4,
+   "why": "As an adjective (new and original) it is C1, not basic vocabulary"
+  },
+  "b": {
+   "word": "as a result",
+   "from": 4,
+   "to": 1,
+   "why": "One of the most common linking phrases, A2–B1"
+  }
+ },
+ {
+  "a": {
+   "word": "precise",
+   "from": 1,
+   "to": 3,
+   "why": "B2 academic word (Academic Word List sublist 5)"
+  },
+  "b": {
+   "word": "data",
+   "from": 3,
+   "to": 1,
+   "why": "Very common word (top 1,000)"
+  }
+ },
+ {
+  "a": {
+   "word": "progressive",
+   "from": 1,
+   "to": 3,
+   "why": "B2 (gradual, or favoring change)"
+  },
+  "b": {
+   "word": "energy",
+   "from": 3,
+   "to": 1,
+   "why": "Very common word (top 1,000)"
+  }
+ },
+ {
+  "a": {
+   "word": "uniform",
+   "from": 1,
+   "to": 3,
+   "why": "As an adjective (the same everywhere) it is B2–C1"
+  },
+  "b": {
+   "word": "environment",
+   "from": 3,
+   "to": 1,
+   "why": "Very common word (top 1,000)"
+  }
+ },
+ {
+  "a": {
+   "word": "atom",
+   "from": 1,
+   "to": 2,
+   "why": "B2 science term, not everyday vocabulary"
+  },
+  "b": {
+   "word": "reduce",
+   "from": 2,
+   "to": 1,
+   "why": "Very common verb (top 1,000)"
+  }
+ },
+ {
+  "a": {
+   "word": "logical",
+   "from": 1,
+   "to": 2,
+   "why": "B2 adjective"
+  },
+  "b": {
+   "word": "require",
+   "from": 2,
+   "to": 1,
+   "why": "Very common verb (top 1,000)"
+  }
+ },
+ {
+  "a": {
+   "word": "formidable",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "even though",
+   "from": 4,
+   "to": 3,
+   "why": "B1 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "contempt",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "as well as",
+   "from": 4,
+   "to": 3,
+   "why": "B1 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "eloquence",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "in addition",
+   "from": 4,
+   "to": 3,
+   "why": "B1 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "eloquent",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "for instance",
+   "from": 4,
+   "to": 3,
+   "why": "B1–B2 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "impartial",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "on the other hand",
+   "from": 4,
+   "to": 3,
+   "why": "B1 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "innate",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "in general",
+   "from": 4,
+   "to": 3,
+   "why": "B1 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "indispensable",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "in other words",
+   "from": 4,
+   "to": 3,
+   "why": "B1–B2 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "refute",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "in particular",
+   "from": 4,
+   "to": 3,
+   "why": "B1–B2 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "redundant",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "in contrast",
+   "from": 4,
+   "to": 3,
+   "why": "B2 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "articulate",
+   "from": 3,
+   "to": 4,
+   "why": "C1 (to express clearly)"
+  },
+  "b": {
+   "word": "due to",
+   "from": 4,
+   "to": 3,
+   "why": "B1–B2 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "abolish",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "as long as",
+   "from": 4,
+   "to": 3,
+   "why": "B1 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "acute",
+   "from": 3,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "even if",
+   "from": 4,
+   "to": 3,
+   "why": "B1 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "benevolent",
+   "from": 3,
+   "to": 4,
+   "why": "C1–C2"
+  },
+  "b": {
+   "word": "not only",
+   "from": 4,
+   "to": 3,
+   "why": "B1 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "frugal",
+   "from": 3,
+   "to": 4,
+   "why": "C1–C2"
+  },
+  "b": {
+   "word": "for this reason",
+   "from": 4,
+   "to": 3,
+   "why": "B1 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "abundant",
+   "from": 2,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "after all",
+   "from": 4,
+   "to": 2,
+   "why": "B1–B2 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "diligent",
+   "from": 2,
+   "to": 4,
+   "why": "C1"
+  },
+  "b": {
+   "word": "in short",
+   "from": 4,
+   "to": 2,
+   "why": "B2 connector"
+  }
+ },
+ {
+  "a": {
+   "word": "abate",
+   "from": 4,
+   "to": 5,
+   "why": "C2, rare"
+  },
+  "b": {
+   "word": "historically",
+   "from": 5,
+   "to": 4,
+   "why": "B2 adverb; far too easy for level 5"
+  }
+ },
+ {
+  "a": {
+   "word": "abhor",
+   "from": 4,
+   "to": 5,
+   "why": "C2, rare"
+  },
+  "b": {
+   "word": "accelerate",
+   "from": 5,
+   "to": 4,
+   "why": "B2 verb"
+  }
+ },
+ {
+  "a": {
+   "word": "aloof",
+   "from": 4,
+   "to": 5,
+   "why": "C2, rare"
+  },
+  "b": {
+   "word": "activate",
+   "from": 5,
+   "to": 4,
+   "why": "B2 verb"
+  }
+ },
+ {
+  "a": {
+   "word": "banal",
+   "from": 4,
+   "to": 5,
+   "why": "C2, rare"
+  },
+  "b": {
+   "word": "collaborate",
+   "from": 5,
+   "to": 4,
+   "why": "B2 verb"
+  }
+ },
+ {
+  "a": {
+   "word": "covet",
+   "from": 4,
+   "to": 5,
+   "why": "C2, rare"
+  },
+  "b": {
+   "word": "collectively",
+   "from": 5,
+   "to": 4,
+   "why": "B2 adverb"
+  }
+ },
+ {
+  "a": {
+   "word": "ennui",
+   "from": 4,
+   "to": 5,
+   "why": "C2, rare"
+  },
+  "b": {
+   "word": "hostile",
+   "from": 5,
+   "to": 4,
+   "why": "B2 adjective"
+  }
+ },
+ {
+  "a": {
+   "word": "stoic",
+   "from": 4,
+   "to": 5,
+   "why": "C2"
+  },
+  "b": {
+   "word": "credible",
+   "from": 5,
+   "to": 4,
+   "why": "B2–C1 adjective"
+  }
+ },
+ {
+  "a": {
+   "word": "vapid",
+   "from": 4,
+   "to": 5,
+   "why": "C2, rare"
+  },
+  "b": {
+   "word": "harmonious",
+   "from": 5,
+   "to": 4,
+   "why": "B2 adjective"
+  }
+ },
+ {
+  "a": {
+   "word": "venal",
+   "from": 4,
+   "to": 5,
+   "why": "C2, rare"
+  },
+  "b": {
+   "word": "spontaneous",
+   "from": 5,
+   "to": 4,
+   "why": "B2 adjective"
+  }
+ },
+ {
+  "a": {
+   "word": "presumptuous",
+   "from": 4,
+   "to": 5,
+   "why": "C2"
+  },
+  "b": {
+   "word": "inequality",
+   "from": 5,
+   "to": 4,
+   "why": "B2 noun"
+  }
+ },
+ {
+  "a": {
+   "word": "pedantic",
+   "from": 3,
+   "to": 5,
+   "why": "C2, rare"
+  },
+  "b": {
+   "word": "realistically",
+   "from": 5,
+   "to": 3,
+   "why": "B2 adverb"
+  }
+ }
+]

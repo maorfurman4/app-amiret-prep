@@ -169,4 +169,4 @@ Research (read-only): the 58 is consistent with the model; item difficulties are
 - [x] Fix 1 deployed (a4e2f8f)
 - [x] Migration `exam_level_accuracy` applied: `exam_eligible` (default true) + filter in pick_informative_items / pick_informative_passage; passage draw prefers the routed level among passages within 95% of the best information. Verified live: at θ −0.19 10/10 passages level 3 (was a 1-in-5 chance of level 2), at −0.5 falls back to level 2 as designed (best level-3 passage only 85.7%); grants unchanged; no new advisor findings
 - [x] `scripts/exclude-contradictory-items.ts` dry run: exactly 194 (SC L2 106, RS L2 67, SC L3 13, RS L1 3, SC L1 2, SC L5 2, RS L5 1); exam pool 7,428 → 7,234
-- [ ] **Approval** to run it with `--apply`
+- [x] Applied: 194 excluded, 0 out of place; exam pool 7,234; no excluded item drawn by the live selection; items stay active for practice. Backup `backups/exam-eligible-2026-09-26T08-37-27-064Z.json`

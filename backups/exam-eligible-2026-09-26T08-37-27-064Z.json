@@ -1,0 +1,1360 @@
+[
+  {
+    "id": "00a9509e-5df8-4aa5-bfd8-4dbbaffcc699",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "019f915a-ce7c-4407-a1a1-e0632026a3fd",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 1.3,
+    "exam_eligible": true
+  },
+  {
+    "id": "04740d63-1ac9-47d9-9141-a4fbd7f01d1f",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "050bb6c8-b592-4f64-98e6-085695acec11",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "086a1d72-fa38-4f5b-958d-88240a346a8f",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "0b5f8ba8-d5e1-4e85-83d4-a09543a77e67",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "0e065a75-de0f-4e3c-940a-36399e78d000",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "0e893b8e-d623-4c50-9993-76bd5b655f73",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "0f256a82-ddb5-47ec-957f-0ae35af71c73",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "1075ade4-7465-416e-a221-73fdd6895696",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "110aa536-5b94-4c11-88f6-2b34f23f8587",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "11aaabfc-7616-457f-977b-08e4ff637b64",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "12278768-9c31-4cd8-b6d0-8aa861eb59b5",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "12445251-9289-42b9-a9c7-917294e8fb33",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "132b1315-bce5-46a1-8844-bf91414f7b8c",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": -1,
+    "exam_eligible": true
+  },
+  {
+    "id": "135f8fe5-01da-49a6-901c-0bb044655b9b",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "13ba798a-d890-43d1-8945-d03ae0eb56c2",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "13f324a8-75d8-46dd-9c3a-4b17173bca8a",
+    "type": "sentence_completion",
+    "difficulty_level": 1,
+    "b": -1.24,
+    "exam_eligible": true
+  },
+  {
+    "id": "14c7f42d-9761-4123-b5bf-02cf74fd76a0",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "174df793-308c-41d0-bd25-2e78aa0bc0ce",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "1909621a-1d23-418f-bf28-9d1b7966b651",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "1a8c9964-c202-4760-abc6-a6ff519b5280",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "1aa547ff-21f7-4460-a4ce-505a131b7f74",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "1b84d37c-2928-4ec2-9e29-eb9a731030d4",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "1b86c327-6292-4b33-9b1d-b852eda35de0",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "1d37d3f5-3be1-4e1f-9a88-0e2392332ba4",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "1df06c26-fbef-4b50-acce-644f57306f51",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "1fefb96c-933f-43f1-bac5-b2563203d9ad",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "244c3654-27ea-4508-ab02-8dd043b95ee4",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1.88,
+    "exam_eligible": true
+  },
+  {
+    "id": "2597c307-d973-4cb0-a9aa-73bcd9b60d0b",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "25ce622e-7e8c-4469-8c36-1eb59bc77fac",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "26ef0c34-71ac-4c38-ba29-e8b61f900e51",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "27612948-3022-4940-83ed-f96842846cf2",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "28902f16-23de-4498-bc3b-47a6aff17934",
+    "type": "restatement",
+    "difficulty_level": 5,
+    "b": 1.22,
+    "exam_eligible": true
+  },
+  {
+    "id": "29c53956-c441-4747-9438-39abbf4c5f24",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "2a74af88-c231-4a38-92fd-0b4242b60801",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "2b2f2a50-c8b6-4e34-8195-3c3c0e5eb938",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "2b91046c-9736-464f-a38d-0886d070a8cb",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "2bae5459-9816-4506-b391-f6fb7b8b198b",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "2c0a80a5-63ad-4c93-bf92-e822da658dab",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.46,
+    "exam_eligible": true
+  },
+  {
+    "id": "2dc5c5fd-2774-44ab-ba24-de0f552310b7",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "2de1a3fe-a8bd-41f8-96b6-ae2e8e54f915",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "2e24af02-a556-4b1a-9c8e-428575671248",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "2e5825a5-6e73-4a92-9450-ae831a5dbd29",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.69,
+    "exam_eligible": true
+  },
+  {
+    "id": "2eab79e3-6fe9-45fe-aab8-7dbe9331b1e0",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "2ef3fda4-ca0e-4b18-bc1b-b0b4c64d5562",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "2ef827d9-3b85-4c84-9c06-4c60895990ae",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "2f07399b-bd11-41b8-8eb2-80672779d935",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "307d1dbd-c9f8-444e-9bde-d522bcab7a5e",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "34dc5552-83c9-481a-a9f7-54d69f2c4b57",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "34ec2490-2ce1-4378-9bb7-5dddfd55ddfc",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "36b39324-0e7c-4fad-b557-5927a10b7bb0",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "36d69275-9e52-44fd-bf2b-810acd1f8e45",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "36f39c88-64aa-41f6-b1c5-271d892982d2",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "379452c2-99af-48f5-bbef-4f75d38de1f6",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "383a821a-0b5f-4216-be1d-3fac1c38a520",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "389b83f1-b4cd-452d-b6d4-78c73a8dedf2",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "39764865-938f-4499-80f2-57901b4d5aed",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "3b0ffe84-70fc-4fa5-9d42-13fd96cfc305",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1.57,
+    "exam_eligible": true
+  },
+  {
+    "id": "3b6d25dd-95eb-43fa-bb2b-8ad66e72054f",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "3be95e45-1384-458b-a4b8-b1d56a62856b",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "3f518c6a-7568-499f-bbd1-dfeff4338df9",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "3fc09ea4-22bf-41b7-9d38-f01998d6191c",
+    "type": "sentence_completion",
+    "difficulty_level": 5,
+    "b": 2.79,
+    "exam_eligible": true
+  },
+  {
+    "id": "3fd33061-d28f-4536-b400-6ac2c9b09fa5",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "4095b068-b932-4df6-8194-859d660177d3",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "41b337de-b283-4488-ad02-68cc51e23740",
+    "type": "restatement",
+    "difficulty_level": 1,
+    "b": -1,
+    "exam_eligible": true
+  },
+  {
+    "id": "42ae66f5-6c93-42e8-ad29-7d09a95fd791",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "46e5b7e9-8a27-4b90-977b-43fca8a55340",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "46f13f38-de16-4bb0-b0f5-2a67926e0fc4",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "46f331d7-ce9b-4152-984c-cf98647136b8",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "471f7901-bd83-4595-bbf1-bf9c68c79bef",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "47a58bc4-8ac5-4d46-af85-9207e53d9774",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "4838b4a7-14ca-4bf4-9d5a-30f249e6bdc9",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "486b33d7-22db-488d-a5a2-89a4dc6514b2",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "4eece46d-53ea-4935-ae2a-2f4a0d2229e7",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "4fe694e4-a9d9-4d2e-9563-170d9e56e9d7",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "5022b1bc-49bd-46dd-a38b-b281cc069d62",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "5297540d-e0fe-466c-89f2-fb6bb974b447",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "537fa8d5-6465-4c54-86bf-503a3e007c99",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.3,
+    "exam_eligible": true
+  },
+  {
+    "id": "54670302-6659-4c52-9067-08146d5d2744",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "5566c6f4-4cf3-410e-ad78-bc7c45b0dadd",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "55e8c7e3-4534-4893-84a0-088d9b3977be",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "563c5de9-5129-4d57-bd37-41de9d70832d",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "56e94b5d-5762-46ea-8ce0-8e55ae039d28",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "582d63b7-689f-4c43-a786-1a39d662487b",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "58af1ff7-c524-405b-9096-dc2964289e8e",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "59f29764-d00f-460f-a55c-d17d80a96a54",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "5bcdcc69-4d87-463e-beb2-d70d8fae98a3",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "5c324c23-9a2a-4566-984f-f04ae8369cf3",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "64339eba-b72b-41ae-8d59-3c35f8f2449a",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": 0,
+    "exam_eligible": true
+  },
+  {
+    "id": "68795ee7-85f3-4a8f-88b4-c171b22273b2",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "6c14a0ec-922d-4980-b703-2d6b9a511869",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "6d62b085-4d56-4a32-8753-a6127ef27639",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "6e87de86-49d7-4e78-96d1-c0f844d58073",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "6f569877-6c20-4db7-9b3e-f3f1a3ecc65e",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "6f6efc2b-5dd7-45fd-9cf1-e23fa1086fef",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "6fcc55d7-bf5a-4da4-9119-a20bebd2d117",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "71312d52-2de5-4a1c-8b68-47687f034a34",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "734e74ea-c294-4596-879a-848d5b3d6630",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "757b042d-99d8-4685-8cf7-b75471264c51",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "759c8a64-773c-4981-adaf-038365f245ca",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": 0.39,
+    "exam_eligible": true
+  },
+  {
+    "id": "77bc6b3b-b067-4dc6-b0b1-4e10fd0a2b8b",
+    "type": "restatement",
+    "difficulty_level": 1,
+    "b": -1.09,
+    "exam_eligible": true
+  },
+  {
+    "id": "78cddc96-83a9-4642-add6-9d486e46377d",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "78f805ba-75f5-4dc1-8450-897f9e6a8176",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "7c05f186-a7e4-426b-bd5d-5791915f1274",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "7f251b1d-2f1b-4aac-99e3-3febb238092d",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "80969083-909f-47fc-b155-342ca089d15f",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "82892570-8ff4-4d2a-ac11-df84d65e56de",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "84d643fe-0441-4319-969c-85dad7cf183d",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1.35,
+    "exam_eligible": true
+  },
+  {
+    "id": "84da61ea-9c9c-4641-9ee5-f30ab5af340e",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "8936583f-c8ba-4b87-a56e-6238800d6870",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.3,
+    "exam_eligible": true
+  },
+  {
+    "id": "89720fcf-4c72-48a6-83be-9aa890a25c56",
+    "type": "sentence_completion",
+    "difficulty_level": 1,
+    "b": 0.12,
+    "exam_eligible": true
+  },
+  {
+    "id": "89aad57d-1ce3-4693-a24a-e42d79e9b4bc",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -0.202301514161057,
+    "exam_eligible": true
+  },
+  {
+    "id": "8b3342d9-a1aa-41ac-aec6-17dc23a28aa2",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "8e0b3d4b-3bf6-4299-9d1e-716401e2ba71",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "8e10d5fc-77b3-4b4f-b292-5bcbe376989d",
+    "type": "restatement",
+    "difficulty_level": 1,
+    "b": -1,
+    "exam_eligible": true
+  },
+  {
+    "id": "8ece7089-31ba-46b7-af60-2132423d18ed",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "901615d8-5dea-4a9c-a031-97f31a1087b5",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "9022be1e-70b6-406c-a3d5-85268638f3ac",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "90bef223-8a22-4360-baca-43e789781388",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.49,
+    "exam_eligible": true
+  },
+  {
+    "id": "915746f4-8171-4ec6-aec4-650f7754f52f",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "915b4a0d-b667-42df-835d-a737cc966333",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "938b2ea3-5dbb-4fa7-b081-26a11c0104d1",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "94c5fa53-47d6-4cd3-a246-b11e84fce28e",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "964fd760-e4c0-481f-9384-42e7aa4c558b",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "9c0b1323-ea5c-4172-907b-d266dca3a136",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "9d662589-3188-4599-9a28-100d3027222f",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "a078b6a7-2755-4166-8c43-ae65f97b6a6e",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.19,
+    "exam_eligible": true
+  },
+  {
+    "id": "a0be1b5d-ce66-42b5-9ac6-77ff09c35762",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "a298f88d-285b-4566-9644-ab9caf2c7049",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "a3bba714-02c6-4da6-899a-6f2d604ef8f5",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "a55aabd6-2d97-4483-8253-663c537e2ec1",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "a5c13ac0-09cd-45c9-9476-708c1ea29e93",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.3,
+    "exam_eligible": true
+  },
+  {
+    "id": "a922ac0a-a55b-4e49-894e-386eace9f63f",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "af443670-e4f9-4d77-b73a-aae3a712e6ae",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "b06936d4-666f-45c6-834c-0d222fac6556",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "b0ff79b3-f50a-4e59-91f9-c537b1bd317f",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "b1b15bd2-38e5-43d3-a60e-54e548adc3f5",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.3,
+    "exam_eligible": true
+  },
+  {
+    "id": "b34e6e95-8710-472c-8b78-8c61a8e623ab",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "b38884ac-9388-44b5-aaf9-c02d2d0f7e5e",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "b50ca282-646a-4aea-8890-8a1fcd3b01ef",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "b683aa17-8d42-4b90-89b4-3ee66c2b3597",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "ba1b46bd-83b1-48da-811f-74845fd77b29",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "bbabb0f0-7cae-467c-bac8-e5cf3972a648",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "bbc293f1-ac05-49b8-b80f-b295c31a66b2",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "bc3fdadb-fd63-4bd8-974a-b9745a0fcae9",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "bc41b397-7de3-4327-986b-97c709e40507",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "bce6bd20-0b30-43fd-bae3-63e75344edcb",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "bd06c89a-cb28-4c0c-b7bd-0a1f679d4e3f",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "bda28225-b9a6-49e5-bc23-13c7c402744b",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "bdcc3057-32b2-4496-97a4-e96b65032ab7",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 1,
+    "exam_eligible": true
+  },
+  {
+    "id": "c218df12-9201-49fe-ae74-3933f6fece8c",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "c3f7ee5e-6231-4ada-bb20-26c6c61fcc68",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "c40693fb-7ac6-403f-ad18-1b0cd2e112b0",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "cacb778d-7c4e-467c-be71-80dc7274bd98",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "cedf3a68-a851-41ca-9b84-468e5f3e2d11",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 0.87,
+    "exam_eligible": true
+  },
+  {
+    "id": "cfaaf381-7e68-4144-aaf5-2d1cd02c3e07",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "d00048fa-ab0a-4dc6-b9b4-74a73e7377a1",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "d075d21d-281c-4256-9495-6a5ef572bf2d",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "d2020ace-e986-4441-9fa7-2fe123afaeb8",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "d38f3fe1-6fda-46d3-92ea-c4ea714409ee",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "d3cf3e36-e27a-4828-9b95-dcedff5c84ab",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "d5e42be4-5be3-4fd5-aa17-65951feb60e6",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "d7c7681c-0f1b-48e8-9bf0-feb6a61f7c0a",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "d89c6270-38ca-4684-ad75-9caefb8e6e6e",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "d8b1643c-cd82-4328-b02b-c46650ed1031",
+    "type": "sentence_completion",
+    "difficulty_level": 3,
+    "b": 2.73,
+    "exam_eligible": true
+  },
+  {
+    "id": "dad9172e-6b65-419e-bdcd-e632af5d345e",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "db4b91da-4bf9-4778-a7bb-b7980a3eae14",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "db6414be-98ce-4b22-9b47-d652b44dbc0e",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "db958995-1e4e-4262-9557-b08a763cc47d",
+    "type": "sentence_completion",
+    "difficulty_level": 5,
+    "b": 1.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "dbb917dd-5941-4f78-be81-a6f3796dffd9",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "dc496b81-15ed-4710-805e-28bda491bda9",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "dde306ed-f055-41d8-ad83-5138db4e2085",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "de0cfba1-61a7-4494-ab2e-52abd4450120",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "dea15cc7-618e-4a56-a890-43224dcc98e4",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "df01894d-6e92-4c7a-880c-4bc34064c22c",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "e2bb7b6e-90da-4693-905f-41fda0ee89b4",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "e5b4cf51-eb20-4888-a038-0d54f84efb29",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "e5e8740a-0519-40c1-acf9-70956e78a696",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "e602340b-891f-4d51-8e2f-0dc34755c330",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "e6732160-30da-4577-b910-df7ac77f8147",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "e674d8e0-e568-441a-bf70-56a58e243765",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "ea1b3890-8240-4aa2-b465-0e751dd94338",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "ebc15858-2ede-4d95-bc1f-69bfc53aa720",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "ecbe7eb4-4fa3-44c5-a0da-d6cbae8d17b1",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "ef44452d-24ba-49a7-920a-c3796be2eae9",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "f063abeb-3560-4e2e-8207-2d1cbb173029",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "f0826ac2-491a-416c-82b5-72e0e692ce32",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.2,
+    "exam_eligible": true
+  },
+  {
+    "id": "f8753490-f09c-44cb-9e51-729fb6a553f9",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.8,
+    "exam_eligible": true
+  },
+  {
+    "id": "f953f47a-6a7a-493f-95ca-8fa3777df60a",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  },
+  {
+    "id": "fabab2c3-5617-403f-964a-c8ee81cc3218",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.3,
+    "exam_eligible": true
+  },
+  {
+    "id": "fb81f646-9a10-4b52-bce4-22a41887c2e2",
+    "type": "restatement",
+    "difficulty_level": 2,
+    "b": -2.1,
+    "exam_eligible": true
+  },
+  {
+    "id": "fbf1199a-cf8d-4102-aa5c-b3207c66800d",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -2,
+    "exam_eligible": true
+  },
+  {
+    "id": "fd4d537a-8548-4ebc-8156-aca44b20b82e",
+    "type": "sentence_completion",
+    "difficulty_level": 2,
+    "b": -1.9,
+    "exam_eligible": true
+  }
+]

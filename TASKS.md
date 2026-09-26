@@ -170,3 +170,11 @@ Research (read-only): the 58 is consistent with the model; item difficulties are
 - [x] Migration `exam_level_accuracy` applied: `exam_eligible` (default true) + filter in pick_informative_items / pick_informative_passage; passage draw prefers the routed level among passages within 95% of the best information. Verified live: at θ −0.19 10/10 passages level 3 (was a 1-in-5 chance of level 2), at −0.5 falls back to level 2 as designed (best level-3 passage only 85.7%); grants unchanged; no new advisor findings
 - [x] `scripts/exclude-contradictory-items.ts` dry run: exactly 194 (SC L2 106, RS L2 67, SC L3 13, RS L1 3, SC L1 2, SC L5 2, RS L5 1); exam pool 7,428 → 7,234
 - [x] Applied: 194 excluded, 0 out of place; exam pool 7,234; no excluded item drawn by the live selection; items stay active for practice. Backup `backups/exam-eligible-2026-09-26T08-37-27-064Z.json`
+
+# NITE score linking — collection upgrade (`feat/official-score-linking`)
+
+Why nothing was collected: the only prompt fired after an exam date set in the app had passed; 1 of 6 accounts set a date and it has not passed. Students who already took the real test were never asked.
+
+- [x] Step 1 — migration `official_score_linking_v2` (additive): `official_scores.source` (exam_date_prompt | results | stats | menu, default exam_date_prompt so the current API is unchanged), `excluded_from_linking` + `exclusion_reason` (a reason is required to exclude), `user_goals.score_prompt_dismissed_at`; `official_score_linking` view keeps its columns, appends `source`, drops excluded reports. Dry run inside a rolled-back block (default source, unknown source rejected, exclusion without reason rejected, view 1 → 0 after exclusion, column order kept), confirmed nothing left behind, applied, verified live (RLS on, no client grants, view service-role only, no new advisor findings)
+- [ ] Step 2 — UI: results-page line (accounts, at most once every 5 exams), "הציונים הרשמיים שלי" on the stats page (add / edit / delete), user-menu item, prediction-vs-actual shown after saving, 60-day "prefer not to", rate limit on the API
+- [ ] Step 3 — linking fit, only once enough pairs exist (≈30 for the shift, ≈80–100 for the slope)

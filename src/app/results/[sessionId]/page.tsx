@@ -9,7 +9,8 @@ import { AlertTriangle, CheckCircle2, BookOpen, Clock, Trophy, Target, ChevronLe
 import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
-import { sessionMeasurement } from '@/lib/exemption';
+import { scoreInterval, sessionMeasurement } from '@/lib/exemption';
+import { routedLevel } from '@/lib/routed-level';
 import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
 import { heCount, agree } from '@/lib/hebrew-count';
 
@@ -18,7 +19,7 @@ interface SessionData {
   theta_final: number;
   theta_se?: number | null;
   p_exempt?: number | null;
-  theta_history: { after_section: number; theta: number }[];
+  theta_history: { after_section: number; theta: number; target_theta?: number }[];
   section_results: SectionResult[];
   answers_by_section: Record<number, (number | null)[]>;
   questions_by_section: Record<number, Question[]>;
@@ -79,6 +80,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   const score = session.score ?? thetaToScore(session.theta_final ?? 0);
   const classification = classifyScore(score);
   const exemption = sessionMeasurement(session);
+  // The likely range of the score (same 80% interval as the exemption card).
+  const interval = exemption ? scoreInterval(exemption) : null;
   const sectionResults = session.section_results as SectionResult[];
   const totalCorrect = sectionResults.reduce((a, s) => a + (s.correctCount ?? 0), 0);
   const totalQuestions = sectionResults.reduce((a, s) => a + (s.totalCount ?? 0), 0);
@@ -126,6 +129,11 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             </div>
             <div className="text-xs text-exam-ink-soft mb-1 animate-fade-up [animation-delay:80ms]">אומדן פנימי של האתר</div>
             <div className="text-7xl font-black text-exam-ink mb-2 tabular-nums animate-score-reveal [animation-delay:120ms]" dir="ltr">{score}</div>
+            {interval && interval.lo !== interval.hi && (
+              <div className="text-sm text-exam-ink-soft -mt-1 mb-2 animate-fade-up [animation-delay:200ms]">
+                טווח סביר: <bdi dir="ltr" className="font-semibold text-exam-ink tabular-nums">{interval.lo}–{interval.hi}</bdi>
+              </div>
+            )}
             <div className={`text-xl font-bold mb-1 animate-fade-up [animation-delay:280ms] ${classification.color}`}>{classification.label}</div>
             <div className="text-exam-ink-soft text-sm mb-6 animate-fade-up [animation-delay:340ms]">{classification.description}</div>
             <div className="text-exam-ink font-medium animate-fade-up [animation-delay:400ms]">
@@ -202,13 +210,15 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
           <h3 className="font-semibold text-exam-ink text-sm mb-3">פירוט לפי פרק, והמסלול האדפטיבי שלך</h3>
           <p className="text-xs text-exam-ink-soft mb-3">
-            התגית &quot;רמה X/5&quot; היא רמת הקושי שאליה ניתב אותך האלגוריתם בכל פרק. במבחן האמיתי, רק הגעה לרמות הגבוהות מאפשרת ציון גבוה.
+            התגית &quot;רמה X/5&quot; היא הרמה שאליה כיוון אותך האלגוריתם בכל פרק, לפי התשובות שלך עד אותו רגע. במבחן האמיתי, רק הגעה לרמות הגבוהות מאפשרת ציון גבוה.
           </p>
           <div className="space-y-3">
             {sectionResults.filter(sr => sr.totalCount > 0).map((sr) => {
               const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
               const pct = sr.totalCount > 0 ? Math.round((sr.correctCount / sr.totalCount) * 100) : 0;
-              const difficulty = sr.questions?.[0]?.difficulty_level;
+              // The level the section was aimed at; exams from before targets
+              // were stored fall back to the first question's label.
+              const difficulty = routedLevel(sr.sectionIndex, session.theta_history) ?? sr.questions?.[0]?.difficulty_level;
               const isExperimental = cfg?.experimental === true;
               return (
                 <div key={sr.sectionIndex} className="flex items-center gap-3">

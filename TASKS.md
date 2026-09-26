@@ -160,3 +160,12 @@
 - [x] Step 1: migration `vocab_archive` applied (0 archived, 350 active per level)
 - [x] Step 2: app deployed (2f0d9bc); the live query returns 1,750 active words with the anon key
 - [x] Step 3: operation SQL ran as one block, all assertions passed. Verified: 1,782 rows, 32 archived, 350 active per level, 0 dirty active rows, all words unique, subjectively = adverb, user rows kept (7 known, 4 favorites). The site sees 1,750 words: archived hidden, new ones visible. Revert: `supabase/data-ops/vocab-archive-replace.revert.sql`
+
+# Exam level accuracy (`fix/exam-level-accuracy`)
+
+Research (read-only): the 58 is consistent with the model; item difficulties are authored, not measured (≈30 of 7,428 items ever calibrated, from 1 answer each); the section tag showed the first question's label, not the routed level; the passage draw can cross a level at a 3% information cost; 194 items have a label that contradicts their difficulty.
+
+- [x] Fix 1: results page shows the routed level per section (`src/lib/routed-level.ts`, tested on the real θ trail of the 58 exam: sections 3–4 now read level 3), falls back to the question label for exams without stored targets; likely score range under the score (same 80% interval as the exemption card, 50–78 for the 58 exam); caption reworded; start route shares the start θ constant
+- [ ] Deploy fix 1 (push)
+- [ ] Migration: passage draw prefers the routed level among passages within 95% of the best information; `exam_eligible` column + filter in item selection
+- [ ] Data: exclude the 194 contradictory items from the exam (dry run, backup, apply)

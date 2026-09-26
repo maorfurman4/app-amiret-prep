@@ -3,10 +3,12 @@ import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, type ExamMode, type Question } from '@/types/exam';
 import { recordSeenQuestions } from '@/lib/question-history';
 import { planInformativeQuestions } from '@/lib/item-selection';
+import { EXAM_START_THETA } from '@/lib/routed-level';
 
 /** Every exam starts where the ability prior is centred: the real test
- * knows nothing about the candidate yet, and neither do we. */
-const START_THETA = 0;
+ * knows nothing about the candidate yet, and neither do we. Shared with the
+ * results page, which shows section 1's routed level from it. */
+const START_THETA = EXAM_START_THETA;
 
 /**
  * POST /api/exam/start

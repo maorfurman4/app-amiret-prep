@@ -158,5 +158,5 @@
 - [x] App: vocabulary page and today's session skip archived words; cache v5
 - [x] Approved; subjectively (adjective → adverb) added to the same statement
 - [x] Step 1: migration `vocab_archive` applied (0 archived, 350 active per level)
-- [ ] Step 2: deploy app
-- [ ] Step 3: run the operation SQL
+- [x] Step 2: app deployed (2f0d9bc); the live query returns 1,750 active words with the anon key
+- [x] Step 3: operation SQL ran as one block, all assertions passed. Verified: 1,782 rows, 32 archived, 350 active per level, 0 dirty active rows, all words unique, subjectively = adverb, user rows kept (7 known, 4 favorites). The site sees 1,750 words: archived hidden, new ones visible. Revert: `supabase/data-ops/vocab-archive-replace.revert.sql`

@@ -1,0 +1,229 @@
+{
+  "batch": "scripts/data/vocab-batches/level4-batch02.json",
+  "inserted": [
+    {
+      "id": "3c409434-4269-40b2-bebc-7a3e5ce108b1",
+      "word": "lament"
+    },
+    {
+      "id": "93fd2d90-fa61-4ea5-af53-27ba223dd3fd",
+      "word": "relinquish"
+    },
+    {
+      "id": "134eabe5-a016-4078-be8b-2b9680df1d0a",
+      "word": "soar"
+    },
+    {
+      "id": "a9265f47-8645-4bb8-93f4-be267ca3c542",
+      "word": "stagnate"
+    },
+    {
+      "id": "54dc5f33-c942-4fcf-90af-6c52e949ae41",
+      "word": "wane"
+    },
+    {
+      "id": "7ff72501-eb97-44e6-9984-59c7c1798caf",
+      "word": "attest"
+    },
+    {
+      "id": "7fdef644-9ea6-41d4-9e8e-a7e9d03aa198",
+      "word": "deplore"
+    },
+    {
+      "id": "06f0140d-0ae6-4579-b3cd-62be462405c9",
+      "word": "disrupt"
+    },
+    {
+      "id": "08f92ec3-4bb0-46f9-9f98-e2e2909d5b41",
+      "word": "embark"
+    },
+    {
+      "id": "49f4217e-02ca-43b8-b87b-397550d7cd97",
+      "word": "envisage"
+    },
+    {
+      "id": "b12a2cdf-b6c5-46bd-9c52-58c54fc07edf",
+      "word": "foresee"
+    },
+    {
+      "id": "ec41b036-e9f9-4e9b-8969-da3b15108124",
+      "word": "harness"
+    },
+    {
+      "id": "b03c29ce-4258-48e8-ac6f-2ba9a386e057",
+      "word": "impair"
+    },
+    {
+      "id": "b9bb3c3a-0934-4f22-8b0d-b718491e7ef7",
+      "word": "infringe"
+    },
+    {
+      "id": "75150502-2cc7-4bdd-b093-f7499c094ede",
+      "word": "perpetuate"
+    },
+    {
+      "id": "1901edd0-1e50-4669-bbcd-1f04032b6fea",
+      "word": "refrain"
+    },
+    {
+      "id": "1f5e99ca-197c-4fb5-bef9-7892fa119298",
+      "word": "retaliate"
+    },
+    {
+      "id": "6c1da0c0-a9a4-4688-b396-ca009dd777f1",
+      "word": "revoke"
+    },
+    {
+      "id": "e2c2f659-de83-4f12-8a63-871407462d4a",
+      "word": "streamline"
+    },
+    {
+      "id": "32831abd-675e-44da-b28e-62b0e7d8f67e",
+      "word": "tackle"
+    },
+    {
+      "id": "5ae24fba-8e7a-4ebf-a28f-31e6f751d2dc",
+      "word": "uphold"
+    },
+    {
+      "id": "6353212f-9003-447a-b189-c5b5a7d201a9",
+      "word": "withstand"
+    },
+    {
+      "id": "9545c0a8-881a-4f39-8d4d-75f4e3db6766",
+      "word": "backlash"
+    },
+    {
+      "id": "bf8302ba-437f-41da-a926-ccc614a107b3",
+      "word": "caveat"
+    },
+    {
+      "id": "25d297b4-daa8-41f0-9e22-ce2b207f43bd",
+      "word": "contingency"
+    },
+    {
+      "id": "7d7c0d1c-38bd-41ab-a343-350168c3de09",
+      "word": "dearth"
+    },
+    {
+      "id": "69300367-cc63-4c87-a4c9-ca8783981e6f",
+      "word": "downturn"
+    },
+    {
+      "id": "f7af0597-5334-41f0-8bb2-1c0a2d7f2ea7",
+      "word": "facet"
+    },
+    {
+      "id": "72370d83-15a3-49fc-9950-060708753fa9",
+      "word": "leverage"
+    },
+    {
+      "id": "725e3eb6-1717-4e40-bc92-e559e083faa0",
+      "word": "loophole"
+    },
+    {
+      "id": "6ee5ff7f-2100-4c42-999f-be56f676513e",
+      "word": "nuance"
+    },
+    {
+      "id": "4fa6b225-fcff-420e-904a-4e061fa40d63",
+      "word": "onset"
+    },
+    {
+      "id": "b73de6b8-762b-4b6a-982c-9f5ec285ec1c",
+      "word": "outset"
+    },
+    {
+      "id": "91f467d2-5711-41f1-9bb3-dcec53f9d64d",
+      "word": "pitfall"
+    },
+    {
+      "id": "8ad2ac10-0001-4925-a7c6-e7205e734b5a",
+      "word": "repercussion"
+    },
+    {
+      "id": "6b1fa224-6339-40b0-9250-a6dc3252ccd2",
+      "word": "safeguard"
+    },
+    {
+      "id": "72f0ba0c-2062-4b14-a44d-5f3b5d6ff9bb",
+      "word": "stance"
+    },
+    {
+      "id": "62474196-1eb5-460c-9630-d490013ac892",
+      "word": "stigma"
+    },
+    {
+      "id": "6f728a9c-623d-4617-82a0-e2e91e7c9b47",
+      "word": "surge"
+    },
+    {
+      "id": "9158099e-4dfa-42d5-8f77-009631d1a5e0",
+      "word": "threshold"
+    },
+    {
+      "id": "16644118-0b0a-4b1f-b0fe-7c34f374c4f1",
+      "word": "turmoil"
+    },
+    {
+      "id": "a52ab1c5-a343-42ab-aa0b-3de3eecb5bb2",
+      "word": "upheaval"
+    },
+    {
+      "id": "935b72d1-bbbc-4083-a79d-738d89c9df61",
+      "word": "imperative"
+    },
+    {
+      "id": "a5e0c043-eaa2-4541-ace5-6a1a6caebafe",
+      "word": "rampant"
+    },
+    {
+      "id": "36b5e9f8-c675-47ee-9b36-c066e98992c6",
+      "word": "stringent"
+    },
+    {
+      "id": "6450dcf1-3e78-42d4-abc0-082e134f852b",
+      "word": "tentative"
+    },
+    {
+      "id": "5850ada0-8e7d-4cf0-ab08-e5765fa83ee6",
+      "word": "volatile"
+    },
+    {
+      "id": "5fa90591-f426-4c80-8626-f5dc976ab843",
+      "word": "prudent"
+    },
+    {
+      "id": "a9a6a2d1-8ee4-40cb-ab0e-eaa997e8d0ef",
+      "word": "salient"
+    },
+    {
+      "id": "149341bd-015c-47a6-ab76-d4c3d90c2d65",
+      "word": "stark"
+    },
+    {
+      "id": "a33f7e3b-dbfa-4139-b3eb-98ff4bec4757",
+      "word": "conspicuous"
+    },
+    {
+      "id": "5437c819-21b7-4462-9567-f75317ddbc22",
+      "word": "elusive"
+    },
+    {
+      "id": "eaf7118b-67d8-478a-a16b-6de24f97f4c4",
+      "word": "lucrative"
+    },
+    {
+      "id": "6aa4a3b1-0a7b-4f14-8105-eec1022a1813",
+      "word": "inadvertently"
+    },
+    {
+      "id": "f9abfe3a-df19-4f5e-9611-fa34510404b7",
+      "word": "invariably"
+    },
+    {
+      "id": "db84d616-bd27-4be3-a92a-41d850736d57",
+      "word": "on the grounds that"
+    }
+  ]
+}

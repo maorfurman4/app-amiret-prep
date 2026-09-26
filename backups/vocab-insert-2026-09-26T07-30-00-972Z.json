@@ -1,0 +1,49 @@
+{
+  "batch": "scripts/data/vocab-batches/level5-batch01.json",
+  "inserted": [
+    {
+      "id": "b610a8de-38c7-4c74-8950-046f994c3e0a",
+      "word": "magnanimous"
+    },
+    {
+      "id": "c7f2beac-e30e-4c82-ae5d-e3831120343a",
+      "word": "ebullient"
+    },
+    {
+      "id": "fbf4667f-3a1b-4d64-9c6d-005e0fcba62b",
+      "word": "obdurate"
+    },
+    {
+      "id": "2e5b9ece-e88b-4c5f-ad09-7a8368187c43",
+      "word": "pusillanimous"
+    },
+    {
+      "id": "440a8ed3-833b-4eb7-b0d7-5369b0e8efb8",
+      "word": "fortuitous"
+    },
+    {
+      "id": "66ea594d-704c-4a30-be22-51741adc0e66",
+      "word": "equanimity"
+    },
+    {
+      "id": "0bb38222-899f-4588-8983-2782e0170a6d",
+      "word": "iconoclast"
+    },
+    {
+      "id": "91c4c9f6-dfb6-4d95-be99-a12dd8061099",
+      "word": "harbinger"
+    },
+    {
+      "id": "b6aa924e-be27-43cc-80ec-3fa5eb4d8e92",
+      "word": "hubris"
+    },
+    {
+      "id": "a6f554b2-22ad-4b7c-9e08-7a3e9868f3a2",
+      "word": "exonerate"
+    },
+    {
+      "id": "06d56f3b-e8e8-424f-a4ff-8a520f22c3fc",
+      "word": "denigrate"
+    }
+  ]
+}

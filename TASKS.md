@@ -134,5 +134,6 @@
 - [x] Level 4 batch 2 prepared: 56 general C1 words (the Academic Word List is used up for this level), 0 errors, level 4 would reach 350; 1 family warning (contingency, a look-alike). Left out for families: commend, concur, reassure, impetus, influx, unprecedented, subside
 - [x] Level 4 batch 2 inserted: 56 words, 1,683 → 1,739 verified; level 4 complete at 350. Log: `backups/vocab-insert-2026-09-26T07-25-04-349Z.json`
 - [x] Level 5 batch prepared: the last 11 words (GRE level), 0 errors, 0 family warnings; disparage swapped for denigrate (too close to disparate / disparity)
-- [ ] **Approval** to insert the level 5 batch (reaches 1,750)
+- [x] Level 5 batch inserted: 11 words, 1,739 → 1,750 verified. Log: `backups/vocab-insert-2026-09-26T07-30-00-972Z.json`
+- [x] Final audit (live database): 1,750 words, 350 per level, 1,750 distinct (case-insensitive), 0 without part of speech, 0 trailing periods, 0 quote marks, 0 without Hebrew; 686 academic / 1,064 general; verbs 544, nouns 509, adjectives 453, connectors 134, adverbs 110
 - [x] Definitions cleanup (`scripts/clean-vocab-definitions.ts`): 635 trailing periods removed, 0 failed, verify 0 left; parsimonious's two sentences joined with a semicolon. Backup `backups/vocab-definitions-2026-09-25T16-19-10-685Z.json`. Audit before the run: no ellipses, quote marks, stray spaces or uppercase words anywhere

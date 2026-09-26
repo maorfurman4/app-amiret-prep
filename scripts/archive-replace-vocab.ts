@@ -6,7 +6,8 @@
  *   npx tsx --env-file=.env.local scripts/archive-replace-vocab.ts [file] [--allow-family=w1,w2]
  *
  * Input (default scripts/data/vocab-archive-replace.json):
- *   { archive: [{ word, difficulty_level, why }], add: [new words, same fields as insert-vocab-batch] }
+ *   { archive: [{ word, difficulty_level, why }], add: [new words, same fields as insert-vocab-batch],
+ *     pos_fixes?: [{ word, from, to, why }] }   — part-of-speech corrections in the same statement
  *
  * Read-only. Checks everything, then writes two SQL files to supabase/data-ops/:
  *   <name>.sql         — the operation: one DO block (all or nothing) that
@@ -30,6 +31,7 @@ import { basename, join } from 'path';
 import { fetchAllWords, isActive, levelCounts, validateNewWords, LEVEL_TARGET, type NewWord } from './lib/vocab-rules';
 
 type ArchiveItem = { word: string; difficulty_level: number; why: string };
+type PosFix = { word: string; from: string; to: string; why: string };
 
 const args = process.argv.slice(2);
 const file = args.find(a => !a.startsWith('--')) ?? join(process.cwd(), 'scripts', 'data', 'vocab-archive-replace.json');
@@ -43,7 +45,7 @@ const supabase = createClient(url, key, { auth: { persistSession: false } });
 const lit = (s: string) => `'${s.replace(/'/g, "''")}'`;
 
 async function main() {
-  const { archive, add } = JSON.parse(readFileSync(file, 'utf8')) as { archive: ArchiveItem[]; add: unknown[] };
+  const { archive, add, pos_fixes: posFixes = [] } = JSON.parse(readFileSync(file, 'utf8')) as { archive: ArchiveItem[]; add: unknown[]; pos_fixes?: PosFix[] };
   const all = await fetchAllWords(supabase);
   const hasColumn = all.some(w => w.is_archived !== undefined);
   const active = all.filter(isActive);
@@ -62,6 +64,13 @@ async function main() {
     if (w.part_of_speech === 'connector') errors.push(`archive "${a.word}": is a connector, outside the agreed scope`);
   }
 
+  for (const f of posFixes) {
+    const w = byWord.get(f.word);
+    if (!w) errors.push(`pos fix "${f.word}": not in the database`);
+    else if (w.part_of_speech !== f.from) errors.push(`pos fix "${f.word}": is ${w.part_of_speech}, not ${f.from}`);
+    if (!['noun', 'verb', 'adjective', 'adverb', 'connector'].includes(f.to)) errors.push(`pos fix "${f.word}": ${f.to} is not a part of speech`);
+  }
+
   const archivedPerLevel = levelCounts(archive);
   const activeNow = levelCounts(active);
   const activeAfterArchive = activeNow.map((n, i) => n - archivedPerLevel[i]);
@@ -76,6 +85,7 @@ async function main() {
 
   console.log(`database: ${all.length} words, ${active.length} active${hasColumn ? '' : ' (is_archived column not added yet: every word counts as active)'}`);
   console.table([1, 2, 3, 4, 5].map((l, i) => ({ level: l, activeNow: activeNow[i], archive: archivedPerLevel[i], add: addedPerLevel[i], activeAfter: final[i] })));
+  if (posFixes.length) console.log(`part-of-speech fixes: ${posFixes.map(f => `${f.word} ${f.from} → ${f.to}`).join(', ')}`);
   console.log(`errors: ${errors.length}`);
   errors.forEach(e => console.log('  ✗', e));
   console.log(`family warnings: ${family.length}${family.length ? ' (acknowledge with --allow-family=… after review)' : ''}`);
@@ -115,6 +125,10 @@ begin
       ${insertValues};
   get diagnostics n = row_count;
   if n <> ${rows.length} then raise exception 'inserted % words, expected ${rows.length}', n; end if;
+${posFixes.map(f => `
+  update public.vocabulary set part_of_speech = ${lit(f.to)} where word = ${lit(f.word)} and part_of_speech = ${lit(f.from)};
+  get diagnostics n = row_count;
+  if n <> 1 then raise exception 'part of speech fix for ${f.word.replace(/'/g, "''")} matched % rows, expected 1', n; end if;`).join('')}
 ${levelCheck}
 end $$;
 `;
@@ -131,6 +145,8 @@ begin
   delete from public.vocabulary where word in (${rows.map(r => lit(r.word)).join(', ')});
   get diagnostics n = row_count;
   if n <> ${rows.length} then raise exception 'removed % words, expected ${rows.length}', n; end if;
+${posFixes.map(f => `
+  update public.vocabulary set part_of_speech = ${lit(f.from)} where word = ${lit(f.word)} and part_of_speech = ${lit(f.to)};`).join('')}
 ${levelCheck}
 end $$;
 `;

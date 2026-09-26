@@ -156,4 +156,7 @@
 - [x] 32 replacements: 18 true C1 for level 4, 14 true C2 / GRE for level 5; same validation as every batch (shared `scripts/lib/vocab-rules.ts`), duplicates and families checked against all words; 2 family warnings reviewed (conducive/conduct, disseminate/dissent)
 - [x] `scripts/archive-replace-vocab.ts`: read-only checks, generates one all-or-nothing SQL block (`supabase/data-ops/vocab-archive-replace.sql`) that raises unless exactly 32 archived, 32 inserted and 350 active per level; plus a revert block
 - [x] App: vocabulary page and today's session skip archived words; cache v5
-- [ ] **Approval**, then in order: migration → deploy app (push) → run the operation SQL
+- [x] Approved; subjectively (adjective → adverb) added to the same statement
+- [x] Step 1: migration `vocab_archive` applied (0 archived, 350 active per level)
+- [ ] Step 2: deploy app
+- [ ] Step 3: run the operation SQL

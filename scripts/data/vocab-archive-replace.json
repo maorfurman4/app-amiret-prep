@@ -450,5 +450,13 @@
    "category": "general",
    "difficulty_level": 5
   }
+ ],
+ "pos_fixes": [
+  {
+   "word": "subjectively",
+   "from": "adjective",
+   "to": "adverb",
+   "why": "An -ly adverb stored as an adjective"
+  }
  ]
 }

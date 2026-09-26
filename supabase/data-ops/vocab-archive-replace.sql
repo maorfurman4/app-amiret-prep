@@ -80,6 +80,10 @@ begin
   get diagnostics n = row_count;
   if n <> 32 then raise exception 'inserted % words, expected 32', n; end if;
 
+  update public.vocabulary set part_of_speech = 'adverb' where word = 'subjectively' and part_of_speech = 'adjective';
+  get diagnostics n = row_count;
+  if n <> 1 then raise exception 'part of speech fix for subjectively matched % rows, expected 1', n; end if;
+
   -- Every level must end with exactly 350 active words.
   if (select count(*) from (select difficulty_level from public.vocabulary where not is_archived group by difficulty_level having count(*) = 350) ok) <> 5 then
     raise exception 'level counts are not 350 each: %', (select string_agg(difficulty_level || '=' || c, ' ' order by difficulty_level) from (select difficulty_level, count(*) c from public.vocabulary where not is_archived group by 1) t);

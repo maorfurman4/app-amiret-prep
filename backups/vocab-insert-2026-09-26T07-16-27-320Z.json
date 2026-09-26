@@ -1,0 +1,229 @@
+{
+  "batch": "scripts/data/vocab-batches/level4-batch01.json",
+  "inserted": [
+    {
+      "id": "dd7fdc1e-ab3d-416d-9982-8de4a3e6a57b",
+      "word": "append"
+    },
+    {
+      "id": "f416f385-1c6b-488a-8af9-1d13e3c3151e",
+      "word": "automate"
+    },
+    {
+      "id": "4c0ed356-90b1-4efa-8680-05b4931fc9e9",
+      "word": "commodity"
+    },
+    {
+      "id": "916d957c-bdf1-4d1e-bd86-987d8ee9ba56",
+      "word": "conform"
+    },
+    {
+      "id": "015ddda6-926f-41df-a0ec-a5794a4f5162",
+      "word": "denote"
+    },
+    {
+      "id": "482fc5be-0b49-4caa-aa8f-b41c5debd1c5",
+      "word": "displace"
+    },
+    {
+      "id": "9ad846d8-16a3-49da-aa97-d238414c5003",
+      "word": "offset"
+    },
+    {
+      "id": "41269565-dd6b-4efb-a7b9-74a3c8beb5b4",
+      "word": "practitioner"
+    },
+    {
+      "id": "4d51b43f-7a27-4199-8ca0-409ac903db9b",
+      "word": "prospect"
+    },
+    {
+      "id": "483a04d3-17ad-44fd-a2e0-3c5986e839e5",
+      "word": "radical"
+    },
+    {
+      "id": "a406b0ba-4b24-46ed-8df3-160996e477b6",
+      "word": "terminate"
+    },
+    {
+      "id": "7d1a9a83-0510-49fa-8a76-1f0f10da9ed4",
+      "word": "abandon"
+    },
+    {
+      "id": "cc23f206-a078-40be-b868-c79bf5bbdae1",
+      "word": "tension"
+    },
+    {
+      "id": "8eea716d-6e29-4ac1-9a79-dcaa6f1f0a29",
+      "word": "assure"
+    },
+    {
+      "id": "9e730103-dba0-49a9-99ce-a36237305f70",
+      "word": "cease"
+    },
+    {
+      "id": "01d45902-368f-4f12-b653-321135464794",
+      "word": "coincide"
+    },
+    {
+      "id": "03a04a31-ff45-4876-be58-9ad17fec1349",
+      "word": "commence"
+    },
+    {
+      "id": "1052db47-35e1-4092-8cce-5094b357e23d",
+      "word": "duration"
+    },
+    {
+      "id": "51eceaf5-e272-4cf7-80fc-f54f3ca3b5b1",
+      "word": "erode"
+    },
+    {
+      "id": "8f4abae6-f196-49b4-9755-b09e13f492f0",
+      "word": "intermediate"
+    },
+    {
+      "id": "2d358bfe-2ad0-4dfd-8126-ba869af183ee",
+      "word": "mediate"
+    },
+    {
+      "id": "5fa5d99a-411c-4341-9399-42076231e306",
+      "word": "overlap"
+    },
+    {
+      "id": "704b41fe-7b36-4bb2-a82d-63318a5fcf09",
+      "word": "portion"
+    },
+    {
+      "id": "729ba5a4-bc96-46fc-b497-39ad70b8b040",
+      "word": "protocol"
+    },
+    {
+      "id": "1c44d1bd-2eff-4fd7-b64a-50e457d27eb4",
+      "word": "restrain"
+    },
+    {
+      "id": "7341108b-8b08-40cd-abae-cfc5b7c0ce33",
+      "word": "scenario"
+    },
+    {
+      "id": "a5c7b262-5364-419f-9a87-34a4477f680d",
+      "word": "sphere"
+    },
+    {
+      "id": "8772d5e1-8cad-4db8-adde-063b4fd9b749",
+      "word": "subordinate"
+    },
+    {
+      "id": "1a42a024-0af7-4d18-8d8d-4b42b0fdc069",
+      "word": "suspend"
+    },
+    {
+      "id": "99b96d77-2994-4185-97ec-7db495432d92",
+      "word": "unify"
+    },
+    {
+      "id": "35a05509-f6d8-496c-908b-1f2ccff940f6",
+      "word": "violate"
+    },
+    {
+      "id": "48822b1f-4fe6-4884-b8d4-6564e1eee0d8",
+      "word": "adjacent"
+    },
+    {
+      "id": "0db15ccd-4b67-4c7d-8b9e-1bc2f7b34abf",
+      "word": "conceive"
+    },
+    {
+      "id": "c1c0e925-0144-4acd-8371-63b572ac4ce0",
+      "word": "forthcoming"
+    },
+    {
+      "id": "c42dfb77-4eb8-434d-b6c4-60051778c78c",
+      "word": "incline"
+    },
+    {
+      "id": "3a3de632-caed-49a5-91a3-ba9515cb3a76",
+      "word": "invoke"
+    },
+    {
+      "id": "4a67a464-82cf-4ae3-ac66-7621aa38b562",
+      "word": "levy"
+    },
+    {
+      "id": "1781f1b9-4f4a-4fb7-8ab9-a488e048edca",
+      "word": "ongoing"
+    },
+    {
+      "id": "fb2f66b5-3be8-4a16-b991-6ef42f630e71",
+      "word": "pose"
+    },
+    {
+      "id": "86622cba-4155-4752-9a9f-9f889e4ff270",
+      "word": "straightforward"
+    },
+    {
+      "id": "a0f31179-4130-496d-8f73-774bc46e2a43",
+      "word": "undergo"
+    },
+    {
+      "id": "c24a5c7b-ccfe-40f2-8b82-aba2b7b68b7f",
+      "word": "whereby"
+    },
+    {
+      "id": "054a1976-75e3-4db9-806d-c5df64bfda0d",
+      "word": "bolster"
+    },
+    {
+      "id": "f82d5a82-3a5c-4b1d-b048-188ecbba2559",
+      "word": "curb"
+    },
+    {
+      "id": "c7fd5f2e-97c3-4eb9-8bec-41e31cc1b952",
+      "word": "deem"
+    },
+    {
+      "id": "9a25a797-b6fd-45d1-9e8e-d024693e472b",
+      "word": "dwindle"
+    },
+    {
+      "id": "78cf4ff8-2c35-4925-babc-98d980380c5f",
+      "word": "plummet"
+    },
+    {
+      "id": "9c7b14a9-19a7-4d38-8279-aefe8437433b",
+      "word": "reconcile"
+    },
+    {
+      "id": "7c007bb4-9b57-4469-a388-7c493d7bc6eb",
+      "word": "thwart"
+    },
+    {
+      "id": "3253725d-837d-4481-99ae-fafe925b720c",
+      "word": "entail"
+    },
+    {
+      "id": "135136fd-ef10-4314-aa27-5637353d3eab",
+      "word": "jeopardize"
+    },
+    {
+      "id": "86b6a7d4-703f-413f-b7ea-635b5ccfdf87",
+      "word": "outweigh"
+    },
+    {
+      "id": "dabfec29-1953-45c2-95c0-7b9187a23183",
+      "word": "drawback"
+    },
+    {
+      "id": "7b3c0380-71c7-428f-9139-425ca30a14d7",
+      "word": "setback"
+    },
+    {
+      "id": "2cef187c-9882-45ed-9f52-6030ad41dd3b",
+      "word": "pivotal"
+    },
+    {
+      "id": "d17bc29e-8046-4aa1-a76d-489d1bff72f6",
+      "word": "markedly"
+    }
+  ]
+}

@@ -398,12 +398,12 @@ function VocabularyContent() {
   // ─── Load from storage and DB ──────────────────────────────────────────────
   useEffect(() => {
 
-    // Bump the version whenever the row shape changes: v4 added part_of_speech.
-    // A v3 cache (no part_of_speech) left themed words with no part of speech
-    // for up to 6 hours, so "אקדמי" + any part of speech showed nothing.
-    const VOCAB_CACHE_KEY = 'vocab_cache_v4';
+    // Bump the version whenever the set or shape of words changes: v4 added
+    // part_of_speech (a v3 cache left "אקדמי" + any part of speech empty for
+    // up to 6 hours); v5 drops archived words.
+    const VOCAB_CACHE_KEY = 'vocab_cache_v5';
     const VOCAB_CACHE_TTL = 6 * 60 * 60 * 1000; // 6h
-    try { localStorage.removeItem('vocab_cache_v3'); } catch { /* storage blocked */ }
+    try { localStorage.removeItem('vocab_cache_v3'); localStorage.removeItem('vocab_cache_v4'); } catch { /* storage blocked */ }
 
     const fetchAll = async () => {
       // Try cache first
@@ -428,6 +428,7 @@ function VocabularyContent() {
         const { data } = await supabase
           .from('vocabulary')
           .select('*')
+          .eq('is_archived', false) // archived words stay in the table for users' progress, but are not shown
           .order('id')
           .range(from, from + PAGE - 1);
         const rows = (data ?? []) as VocabWord[];

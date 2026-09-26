@@ -1,0 +1,454 @@
+{
+ "archive": [
+  {
+   "word": "accelerate",
+   "difficulty_level": 4,
+   "why": "B2 verb"
+  },
+  {
+   "word": "activate",
+   "difficulty_level": 4,
+   "why": "B2 verb"
+  },
+  {
+   "word": "collaborate",
+   "difficulty_level": 4,
+   "why": "B2 verb"
+  },
+  {
+   "word": "collaborative",
+   "difficulty_level": 4,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "collectively",
+   "difficulty_level": 4,
+   "why": "B2 adverb"
+  },
+  {
+   "word": "efficiently",
+   "difficulty_level": 4,
+   "why": "B2 adverb"
+  },
+  {
+   "word": "focused",
+   "difficulty_level": 4,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "historically",
+   "difficulty_level": 4,
+   "why": "B2 adverb"
+  },
+  {
+   "word": "hostile",
+   "difficulty_level": 4,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "immune",
+   "difficulty_level": 4,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "irony",
+   "difficulty_level": 4,
+   "why": "B2 noun"
+  },
+  {
+   "word": "representation",
+   "difficulty_level": 4,
+   "why": "B2 noun"
+  },
+  {
+   "word": "spontaneous",
+   "difficulty_level": 4,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "timid",
+   "difficulty_level": 4,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "verify",
+   "difficulty_level": 4,
+   "why": "B2 verb"
+  },
+  {
+   "word": "authentic",
+   "difficulty_level": 4,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "omit",
+   "difficulty_level": 4,
+   "why": "B2 verb"
+  },
+  {
+   "word": "respectively",
+   "difficulty_level": 4,
+   "why": "B2 adverb"
+  },
+  {
+   "word": "comprehend",
+   "difficulty_level": 5,
+   "why": "B2 verb"
+  },
+  {
+   "word": "cynical",
+   "difficulty_level": 5,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "disciplined",
+   "difficulty_level": 5,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "elaborate",
+   "difficulty_level": 5,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "empathetic",
+   "difficulty_level": 5,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "portray",
+   "difficulty_level": 5,
+   "why": "B2 verb"
+  },
+  {
+   "word": "progressively",
+   "difficulty_level": 5,
+   "why": "B2 adverb"
+  },
+  {
+   "word": "systematically",
+   "difficulty_level": 5,
+   "why": "B2 adverb"
+  },
+  {
+   "word": "eccentric",
+   "difficulty_level": 5,
+   "why": "B2 adjective"
+  },
+  {
+   "word": "anarchy",
+   "difficulty_level": 5,
+   "why": "B2 noun"
+  },
+  {
+   "word": "abbreviate",
+   "difficulty_level": 5,
+   "why": "B2 verb"
+  },
+  {
+   "word": "initialize",
+   "difficulty_level": 5,
+   "why": "B2 technical verb"
+  },
+  {
+   "word": "notably",
+   "difficulty_level": 5,
+   "why": "B2 adverb"
+  },
+  {
+   "word": "proactive",
+   "difficulty_level": 5,
+   "why": "B2 adjective"
+  }
+ ],
+ "add": [
+  {
+   "word": "benchmark",
+   "hebrew_translation": "נקודת ייחוס; אמת מידה",
+   "definition": "A standard used to measure or judge other things",
+   "example_sentence": "The test is a benchmark for comparing schools.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "clout",
+   "hebrew_translation": "השפעה; כוח",
+   "definition": "Power or influence, especially in politics or business",
+   "example_sentence": "Large companies have considerable political clout.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "conducive",
+   "hebrew_translation": "מסייע ל-; תורם ל-",
+   "definition": "Making a particular result likely or possible",
+   "example_sentence": "A quiet room is conducive to concentration.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "trajectory",
+   "hebrew_translation": "מסלול; כיוון התפתחות",
+   "definition": "The path something follows, or the way it develops over time",
+   "example_sentence": "The report describes the career trajectory of young doctors.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "deprivation",
+   "hebrew_translation": "מחסור; שלילה",
+   "definition": "The lack of something needed, such as food, sleep or rights",
+   "example_sentence": "Sleep deprivation affects memory and mood.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "disdain",
+   "hebrew_translation": "בוז",
+   "definition": "The feeling that someone or something is not worth respect",
+   "example_sentence": "The critic wrote about the film with open disdain.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "dispel",
+   "hebrew_translation": "להפיג; להפריך",
+   "definition": "To make a feeling or belief disappear",
+   "example_sentence": "The study helped dispel several myths about diet.",
+   "part_of_speech": "verb",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "disseminate",
+   "hebrew_translation": "להפיץ",
+   "definition": "To spread information or knowledge widely",
+   "example_sentence": "The results were disseminated through academic journals.",
+   "part_of_speech": "verb",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "superficial",
+   "hebrew_translation": "שטחי",
+   "definition": "Relating only to the surface, not deep or thorough",
+   "example_sentence": "The report offers only a superficial analysis of the problem.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "embody",
+   "hebrew_translation": "לגלם",
+   "definition": "To represent an idea or quality in a clear way",
+   "example_sentence": "The new museum embodies the spirit of the city.",
+   "part_of_speech": "verb",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "endemic",
+   "hebrew_translation": "אנדמי; נפוץ באופן קבוע",
+   "definition": "Regularly found in a particular place or group",
+   "example_sentence": "Malaria is endemic in parts of Africa.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "incremental",
+   "hebrew_translation": "הדרגתי; מצטבר",
+   "definition": "Increasing gradually by small amounts",
+   "example_sentence": "The company made incremental improvements to its product.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "notorious",
+   "hebrew_translation": "ידוע לשמצה",
+   "definition": "Famous for something bad",
+   "example_sentence": "The road is notorious for accidents.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "peripheral",
+   "hebrew_translation": "שולי; היקפי",
+   "definition": "Not central or most important, or at the outer edge",
+   "example_sentence": "The issue is peripheral to the main debate.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "plight",
+   "hebrew_translation": "מצוקה",
+   "definition": "A difficult or dangerous situation",
+   "example_sentence": "The article describes the plight of refugees.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "onus",
+   "hebrew_translation": "אחריות; נטל (הוכחה)",
+   "definition": "The responsibility or duty to do something",
+   "example_sentence": "The onus is on the company to prove the product is safe.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "skeptical",
+   "hebrew_translation": "ספקני",
+   "definition": "Having doubts that something is true or useful",
+   "example_sentence": "Many scientists remain skeptical about the new theory.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "succinct",
+   "hebrew_translation": "תמציתי",
+   "definition": "Clearly expressed in few words",
+   "example_sentence": "The report ends with a succinct summary.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 4
+  },
+  {
+   "word": "enervate",
+   "hebrew_translation": "להתיש; להחליש",
+   "definition": "To make someone feel weak and tired",
+   "example_sentence": "The long heat wave enervated the whole city.",
+   "part_of_speech": "verb",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "anathema",
+   "hebrew_translation": "תועבה; דבר שנוא",
+   "definition": "Something that someone strongly dislikes or disapproves of",
+   "example_sentence": "Censorship is anathema to a free press.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "cacophony",
+   "hebrew_translation": "צרימה; רעש צורם",
+   "definition": "A loud, unpleasant mixture of sounds",
+   "example_sentence": "A cacophony of car horns filled the street.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "capitulate",
+   "hebrew_translation": "להיכנע",
+   "definition": "To stop resisting and accept what someone demands",
+   "example_sentence": "The government refused to capitulate to the strikers.",
+   "part_of_speech": "verb",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "feckless",
+   "hebrew_translation": "חסר אחריות; חסר תועלת",
+   "definition": "Lacking energy, ability or a sense of responsibility",
+   "example_sentence": "Critics described the leadership as feckless.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "harangue",
+   "hebrew_translation": "נאום תוכחה ארוך",
+   "definition": "A long, loud and angry speech that criticizes someone",
+   "example_sentence": "The coach delivered a harangue after the defeat.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "implacable",
+   "hebrew_translation": "שאין לפייסו; עיקש",
+   "definition": "Impossible to calm, satisfy or stop",
+   "example_sentence": "The rebels faced an implacable enemy.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "nefarious",
+   "hebrew_translation": "נפשע; שפל",
+   "definition": "Wicked or criminal",
+   "example_sentence": "The group was involved in several nefarious schemes.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "obstinate",
+   "hebrew_translation": "עקשן",
+   "definition": "Refusing to change your opinion or behavior",
+   "example_sentence": "The obstinate child refused to eat anything green.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "paucity",
+   "hebrew_translation": "דלות; מיעוט",
+   "definition": "The state of having too little of something",
+   "example_sentence": "The paucity of evidence made the case weak.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "placate",
+   "hebrew_translation": "לפייס; להרגיע",
+   "definition": "To make someone less angry by doing or saying something",
+   "example_sentence": "The company offered refunds to placate angry customers.",
+   "part_of_speech": "verb",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "prosaic",
+   "hebrew_translation": "משעמם; חסר דמיון",
+   "definition": "Ordinary and dull, without imagination",
+   "example_sentence": "The truth turned out to be far more prosaic.",
+   "part_of_speech": "adjective",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "quandary",
+   "hebrew_translation": "דילמה; מבוכה",
+   "definition": "A state of not knowing what to do in a difficult situation",
+   "example_sentence": "The new law left many employers in a quandary.",
+   "part_of_speech": "noun",
+   "category": "general",
+   "difficulty_level": 5
+  },
+  {
+   "word": "vacillate",
+   "hebrew_translation": "להסס; להתנדנד (בין אפשרויות)",
+   "definition": "To keep changing your opinion or decision",
+   "example_sentence": "Voters vacillate between the two main parties.",
+   "part_of_speech": "verb",
+   "category": "general",
+   "difficulty_level": 5
+  }
+ ]
+}

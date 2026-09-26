@@ -25,31 +25,24 @@
 import { createClient } from '@supabase/supabase-js';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import { fetchAllWords } from './lib/vocab-rules';
 
 const APPLY = process.argv.includes('--apply');
-const PAGE = 1000;
 
 type Side = { word: string; from: number; to: number; why: string };
 type Pair = { a: Side; b: Side };
 type Group = { kind?: string; moves: Side[] };
-type Row = { id: string; word: string; difficulty_level: number };
+type Row = { id: string; word: string; difficulty_level: number; is_archived?: boolean };
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!url || !key) throw new Error('NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required');
 const supabase = createClient(url, key, { auth: { persistSession: false } });
 
-async function fetchAll(): Promise<Row[]> {
-  const rows: Row[] = [];
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await supabase.from('vocabulary').select('id, word, difficulty_level').order('id').range(from, from + PAGE - 1);
-    if (error) throw error;
-    rows.push(...(data as Row[]));
-    if (data.length < PAGE) return rows;
-  }
-}
+const fetchAll = async (): Promise<Row[]> => (await fetchAllWords(supabase)) as Row[];
 
-const counts = (rows: { difficulty_level: number }[]) => [1, 2, 3, 4, 5].map(l => rows.filter(r => r.difficulty_level === l).length);
+// Active words only: archived words do not count toward the 350 per level.
+const counts = (rows: { difficulty_level: number; is_archived?: boolean }[]) => [1, 2, 3, 4, 5].map(l => rows.filter(r => r.difficulty_level === l && !r.is_archived).length);
 
 async function main() {
   const fileArg = process.argv.slice(2).find(a => !a.startsWith('--'));

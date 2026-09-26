@@ -67,7 +67,8 @@ export async function GET() {
       .limit(VOCAB_LIMIT);
     const wordIds = (dueVocab ?? []).map(r => r.word_id as string);
     if (wordIds.length > 0) {
-      const { data: words } = await supabase.from('vocabulary').select('*').in('id', wordIds);
+      // Archived words keep their review rows (so nothing is lost) but are not reviewed.
+      const { data: words } = await supabase.from('vocabulary').select('*').in('id', wordIds).eq('is_archived', false);
       const intervalByWordId = Object.fromEntries((dueVocab ?? []).map(r => [r.word_id as string, r.interval_days as number]));
       vocabWords = (words ?? []).map(w => ({ ...w, interval_days: intervalByWordId[w.id] ?? 1 })) as VocabWord[];
     }

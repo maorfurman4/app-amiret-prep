@@ -148,3 +148,12 @@
 - [x] Script generalized to closed groups (swaps and cycles), guard proven on an open cycle; `scripts/data/vocab-level-cycles.json` dry run 0 errors, 350 per level
 - [x] Round 2 applied: 64/64 words at their new level, 350 per level verified. Backup `backups/vocab-levels-2026-09-26T07-44-39-432Z.json`
 - [ ] Remaining (content decision, not placement): ~55 too-easy words in level 4 and ~26 in level 5 cannot move without harder words to replace them
+
+# Archive and replace easy words in levels 4–5 (Option C, `fix/vocab-level-audit`)
+
+- [x] Scope agreed: only general, non-connector words that are clearly B2 or easier; academic words and connectors stay. Exact count from the database: 32 (18 in level 4, 14 in level 5), not ~55 — the rest of the earlier estimate were academic science terms
+- [x] Archive, not delete: `user_vocab_known` / `user_vocab_favorites` cascade on delete, so migration `20260926090000_vocab_archive.sql` adds `is_archived` (default false); archived words keep users' progress and are hidden from the app
+- [x] 32 replacements: 18 true C1 for level 4, 14 true C2 / GRE for level 5; same validation as every batch (shared `scripts/lib/vocab-rules.ts`), duplicates and families checked against all words; 2 family warnings reviewed (conducive/conduct, disseminate/dissent)
+- [x] `scripts/archive-replace-vocab.ts`: read-only checks, generates one all-or-nothing SQL block (`supabase/data-ops/vocab-archive-replace.sql`) that raises unless exactly 32 archived, 32 inserted and 350 active per level; plus a revert block
+- [x] App: vocabulary page and today's session skip archived words; cache v5
+- [ ] **Approval**, then in order: migration → deploy app (push) → run the operation SQL

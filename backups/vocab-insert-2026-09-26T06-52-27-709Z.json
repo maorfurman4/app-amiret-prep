@@ -1,0 +1,393 @@
+{
+  "batch": "scripts/data/vocab-batches/level1-batch03.json",
+  "inserted": [
+    {
+      "id": "7c829c95-49aa-4d9d-8abe-75e651b9951f",
+      "word": "arrive"
+    },
+    {
+      "id": "9017d3b2-59fd-4a69-b3e2-773b7a06aa3f",
+      "word": "belong"
+    },
+    {
+      "id": "82dc3aef-da51-4409-983f-3e79b05a6aff",
+      "word": "borrow"
+    },
+    {
+      "id": "a4a7f614-50bd-48dc-a9f1-3d3350532077",
+      "word": "count"
+    },
+    {
+      "id": "9a54170f-9fe5-44b4-ac0c-21531e94d83a",
+      "word": "earn"
+    },
+    {
+      "id": "a03451f6-00e5-4c0c-a5f5-1d932e537370",
+      "word": "fall"
+    },
+    {
+      "id": "fc65f224-83dd-45d3-9cce-702fa4095573",
+      "word": "fight"
+    },
+    {
+      "id": "fcda5b0d-92ae-4d98-9d6f-8baef14fc3e7",
+      "word": "gather"
+    },
+    {
+      "id": "2d076846-2efd-4b56-a704-612d9615e376",
+      "word": "happen"
+    },
+    {
+      "id": "1ee4f01c-3a95-4f1b-9b7d-2e1c2378a006",
+      "word": "hope"
+    },
+    {
+      "id": "d03ff7d7-8f1f-4a49-bdd1-8543fd382da5",
+      "word": "imagine"
+    },
+    {
+      "id": "ef8186c2-f131-491c-b00d-23c51edf2d9b",
+      "word": "invite"
+    },
+    {
+      "id": "e9aa21f1-1ba2-47ba-88c6-fdc72d2db818",
+      "word": "keep"
+    },
+    {
+      "id": "68fdef65-e7b0-45f6-82f0-750d76985f9f",
+      "word": "marry"
+    },
+    {
+      "id": "f2588e03-c29c-4da3-8cbc-4df36d443e2f",
+      "word": "miss"
+    },
+    {
+      "id": "acf88df0-5e88-4cd0-9d90-032a02f615fb",
+      "word": "notice"
+    },
+    {
+      "id": "06e99418-ff77-4872-b1d2-e213f757562e",
+      "word": "own"
+    },
+    {
+      "id": "88293d5e-5e1d-4774-a125-ed34b6c64d94",
+      "word": "pay"
+    },
+    {
+      "id": "dd6c7bab-9d4c-4936-8f32-7019bcf30f66",
+      "word": "promise"
+    },
+    {
+      "id": "741bc133-949f-43b8-bb3a-2eaad9b7ccac",
+      "word": "remember"
+    },
+    {
+      "id": "f7a395ff-efaf-4f8c-8f0c-8d7099d27f51",
+      "word": "repeat"
+    },
+    {
+      "id": "b319f372-0330-4dad-bd2c-14d7b160ef5a",
+      "word": "rise"
+    },
+    {
+      "id": "90350c3f-c25f-4fd5-9538-780443d14d2e",
+      "word": "seem"
+    },
+    {
+      "id": "da7d3394-b3ba-4033-abaa-ee723ab537ee",
+      "word": "sell"
+    },
+    {
+      "id": "5c691f66-0fee-4d14-af7c-9f105d31af7d",
+      "word": "send"
+    },
+    {
+      "id": "42421df0-fda9-4736-a778-a391803df484",
+      "word": "stay"
+    },
+    {
+      "id": "5def7360-c0b0-4de0-8083-65e3a1210e38",
+      "word": "steal"
+    },
+    {
+      "id": "9190a658-551d-417b-b83f-63a2e39220d4",
+      "word": "teach"
+    },
+    {
+      "id": "71fca753-70c9-4dcd-b758-528c4b829d94",
+      "word": "throw"
+    },
+    {
+      "id": "d6a81af1-98f1-4bcc-a994-9e496303a3bc",
+      "word": "travel"
+    },
+    {
+      "id": "d539454c-eb2d-407c-a0c3-c0bfe98c5ae4",
+      "word": "visit"
+    },
+    {
+      "id": "3e2807af-4d11-4397-a753-0a6e7715901b",
+      "word": "wait"
+    },
+    {
+      "id": "ba0c2384-87c0-46c2-b65c-f1b9d37525fb",
+      "word": "wear"
+    },
+    {
+      "id": "be6be74a-3d87-4aac-a2ff-dcf4153bc95b",
+      "word": "win"
+    },
+    {
+      "id": "3f409f0e-f497-48c7-9feb-f90cb908cb13",
+      "word": "wonder"
+    },
+    {
+      "id": "6697f76a-bcee-41af-98de-4628a13667a7",
+      "word": "worry"
+    },
+    {
+      "id": "7093ebc5-51b0-4ac7-97e9-e1a9512a3cd5",
+      "word": "attention"
+    },
+    {
+      "id": "aa99be9f-1312-4a70-9679-1aabc59b4cbc",
+      "word": "audience"
+    },
+    {
+      "id": "c6f3b29c-b40b-4e32-ba3d-b279f55842dc",
+      "word": "border"
+    },
+    {
+      "id": "796bb1d9-de34-4421-a792-83a1477b7c58",
+      "word": "budget"
+    },
+    {
+      "id": "120ec8f9-d211-4824-9ead-cb8f850631bf",
+      "word": "career"
+    },
+    {
+      "id": "be834660-899e-4e2b-a2df-99a664033b3e",
+      "word": "chance"
+    },
+    {
+      "id": "23f6c267-cd66-4841-9eb1-92c32cce563e",
+      "word": "crime"
+    },
+    {
+      "id": "adaf556d-83c8-412a-81f0-ffe366c54de9",
+      "word": "crisis"
+    },
+    {
+      "id": "e9979b5a-270c-42e8-b917-15029edae029",
+      "word": "danger"
+    },
+    {
+      "id": "d3fcc555-bd81-472e-af7d-b2bf5183c2fa",
+      "word": "debt"
+    },
+    {
+      "id": "b8bfc073-f358-4719-a199-1d8cd570340b",
+      "word": "degree"
+    },
+    {
+      "id": "dfeab677-90b8-4c3f-9359-eadd0bc6a368",
+      "word": "detail"
+    },
+    {
+      "id": "118787d7-e2d3-4d39-ba4e-90eca811bc0e",
+      "word": "distance"
+    },
+    {
+      "id": "412c0a0f-82b9-47f3-93e4-f4bb45ccb8f9",
+      "word": "duty"
+    },
+    {
+      "id": "0fbe6c3a-6953-4c6d-b221-68337dd57ecd",
+      "word": "election"
+    },
+    {
+      "id": "0d7f59bd-8146-4916-8878-a81a50e3836d",
+      "word": "emotion"
+    },
+    {
+      "id": "8594bc7d-27b5-4bfb-a987-53649d70a8a4",
+      "word": "enemy"
+    },
+    {
+      "id": "67d9f92f-a867-4b5d-9543-be044e842dcb",
+      "word": "fear"
+    },
+    {
+      "id": "9a9f7da1-760b-4eef-9350-1e13c0493332",
+      "word": "freedom"
+    },
+    {
+      "id": "eaec50ef-d558-41f0-ac59-8ce17c6045d6",
+      "word": "language"
+    },
+    {
+      "id": "6dfa9fa9-053f-4c42-a397-eaa7acf4aa0b",
+      "word": "meaning"
+    },
+    {
+      "id": "cb42787e-9c7a-4861-b3b3-98cc604cfb08",
+      "word": "mistake"
+    },
+    {
+      "id": "00026ff1-996e-4df4-a07a-62cc87aecdc8",
+      "word": "nature"
+    },
+    {
+      "id": "a245a912-f710-4331-b790-1aca4fa088c4",
+      "word": "pain"
+    },
+    {
+      "id": "12afe34e-6808-4a73-b7d3-8fa42cccae41",
+      "word": "peace"
+    },
+    {
+      "id": "f0be9c1f-e6c7-4cf0-9a87-1b962bf4bb00",
+      "word": "poverty"
+    },
+    {
+      "id": "5c8d35aa-4d4d-4640-8330-54755dd32924",
+      "word": "price"
+    },
+    {
+      "id": "ad9ee1a1-8ca4-49dc-a04b-f591694f6314",
+      "word": "reason"
+    },
+    {
+      "id": "7e652629-2f2a-4892-9fa4-8454af7ff0c4",
+      "word": "safety"
+    },
+    {
+      "id": "f87bdc65-d3d8-4cb1-b29e-e027ac943045",
+      "word": "salary"
+    },
+    {
+      "id": "583f1c08-6218-4346-923b-51287c812873",
+      "word": "speed"
+    },
+    {
+      "id": "bd16a89b-f065-4c24-be6a-a9d24a4d8627",
+      "word": "surface"
+    },
+    {
+      "id": "29646997-4351-440e-82c4-ed285e856168",
+      "word": "trade"
+    },
+    {
+      "id": "492c3596-dbdd-48fa-8b8a-20d46f739980",
+      "word": "war"
+    },
+    {
+      "id": "b9ab9cc0-9e07-4d86-a3b4-a73942e3a41e",
+      "word": "weather"
+    },
+    {
+      "id": "3697ebad-4d37-4ebc-ad83-f101e0769436",
+      "word": "weight"
+    },
+    {
+      "id": "24a8890f-d9b1-43d1-95fe-4f6849a33c6e",
+      "word": "afraid"
+    },
+    {
+      "id": "22546a95-2e61-423a-ae6f-05d425cb2208",
+      "word": "alone"
+    },
+    {
+      "id": "8f324ae1-291c-459a-a52d-d307ef8adfbb",
+      "word": "aware"
+    },
+    {
+      "id": "881f6954-9718-497e-82b6-57d75c581037",
+      "word": "cheap"
+    },
+    {
+      "id": "16a82bfb-e392-4cf5-a431-434895bf1516",
+      "word": "deep"
+    },
+    {
+      "id": "a142d400-df5d-48a7-8c3e-25c5c4f8054d",
+      "word": "empty"
+    },
+    {
+      "id": "14f5eafc-3834-4be5-8f82-d143e12c86e2",
+      "word": "expensive"
+    },
+    {
+      "id": "4caffd99-131b-438f-b1a0-9a6920849fb1",
+      "word": "fair"
+    },
+    {
+      "id": "677c7e83-fdd5-4635-89ec-3e04e8ec4be1",
+      "word": "familiar"
+    },
+    {
+      "id": "bd5f04cf-ad23-4c74-86b9-6b6e38c4dc9d",
+      "word": "heavy"
+    },
+    {
+      "id": "6cdbf67a-c742-4e54-998c-b54a265cda71",
+      "word": "narrow"
+    },
+    {
+      "id": "32460e92-4952-4d73-9c5c-f528c887f6bf",
+      "word": "proud"
+    },
+    {
+      "id": "d90ebe15-e1c9-431a-9f91-1d131b667973",
+      "word": "strange"
+    },
+    {
+      "id": "23da819a-50e5-4faa-843f-4f2d47ec6dca",
+      "word": "strict"
+    },
+    {
+      "id": "3c2943a1-6a9b-4770-a979-6053582fa0cd",
+      "word": "sudden"
+    },
+    {
+      "id": "0caa4361-d7f6-469c-bf44-5c6823b4fd14",
+      "word": "weak"
+    },
+    {
+      "id": "ce6963d9-a272-4c63-aeae-db5191cc0b92",
+      "word": "exactly"
+    },
+    {
+      "id": "da7863b5-a5ac-4b9a-aa25-45c91f3651ca",
+      "word": "hardly"
+    },
+    {
+      "id": "4eb47c79-283f-4f4c-a7bc-bdd521910be6",
+      "word": "later"
+    },
+    {
+      "id": "1aaa866c-77c8-4a24-a489-1720d24af7b0",
+      "word": "quite"
+    },
+    {
+      "id": "5e2feb52-217c-45c0-b27e-880f580f5e91",
+      "word": "slowly"
+    },
+    {
+      "id": "3353eefa-d307-47a8-bda1-694d8a30330e",
+      "word": "sometimes"
+    },
+    {
+      "id": "6876ebc8-befb-431e-bfc2-62a1640460d5",
+      "word": "soon"
+    },
+    {
+      "id": "20ddc4e6-6522-4f28-9251-6c45b3ee0c1a",
+      "word": "first of all"
+    },
+    {
+      "id": "4d459e98-94fd-41d9-82b4-59470c030824",
+      "word": "in the end"
+    }
+  ]
+}

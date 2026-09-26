@@ -1,0 +1,233 @@
+{
+  "batch": "scripts/data/vocab-batches/level3-batch02.json",
+  "inserted": [
+    {
+      "id": "7ab32dbf-2cd4-462c-b3cd-e1cd0e15f7cd",
+      "word": "sum"
+    },
+    {
+      "id": "cfb174cf-6c5e-42a1-998c-6ef952f0e4a5",
+      "word": "estate"
+    },
+    {
+      "id": "92cc0d21-7c01-4ece-9ce6-506a51e4ea6a",
+      "word": "federal"
+    },
+    {
+      "id": "0ba09398-0ec7-4822-84fd-39c1bf19fb8e",
+      "word": "ministry"
+    },
+    {
+      "id": "f4db4642-3324-4023-9edd-6dc836f19275",
+      "word": "successor"
+    },
+    {
+      "id": "9ec6f63a-5669-4ff8-9787-36b8cba9cf59",
+      "word": "academy"
+    },
+    {
+      "id": "f96cecb7-b920-42b8-89a5-6f5e260c4747",
+      "word": "accuse"
+    },
+    {
+      "id": "ba190a96-23d5-4027-8f8a-5a2cdf32c4d1",
+      "word": "appoint"
+    },
+    {
+      "id": "70bfa76c-67ea-4240-a66c-ca90a23cc12c",
+      "word": "boost"
+    },
+    {
+      "id": "682eebdf-af84-4041-8345-2371ddea968d",
+      "word": "conceal"
+    },
+    {
+      "id": "8e4ca396-6aee-4070-843e-661f23afce8a",
+      "word": "confront"
+    },
+    {
+      "id": "bcf1cfc5-3558-4bf9-a859-d1a9157c13eb",
+      "word": "dismiss"
+    },
+    {
+      "id": "c8790245-b5cb-42d4-a376-eb9e5ca70e8e",
+      "word": "donate"
+    },
+    {
+      "id": "29462ba1-7923-4030-b53f-f3d4853f3570",
+      "word": "endure"
+    },
+    {
+      "id": "9faad5c1-f9e7-41dc-a7b5-d2340fab3d2d",
+      "word": "evacuate"
+    },
+    {
+      "id": "89bb9bb3-e194-4523-8df8-0f8695fc15e0",
+      "word": "flee"
+    },
+    {
+      "id": "9ca3a798-2c21-4258-9880-eed41f0fdef4",
+      "word": "inherit"
+    },
+    {
+      "id": "945d4a64-ab9a-4bf6-9637-2440b12d75a4",
+      "word": "interfere"
+    },
+    {
+      "id": "04d6fec9-fe13-4597-a2de-f5f8dab0fd08",
+      "word": "overcome"
+    },
+    {
+      "id": "3974872b-76a6-40d7-9a03-9e4fe8214892",
+      "word": "postpone"
+    },
+    {
+      "id": "fb4c032c-669c-4d17-8867-39836ad11de7",
+      "word": "preserve"
+    },
+    {
+      "id": "f4b14014-7e73-4270-940a-391bec70123c",
+      "word": "recruit"
+    },
+    {
+      "id": "7155b43d-447b-479d-ac02-9ac57424ab72",
+      "word": "resign"
+    },
+    {
+      "id": "39abc9a7-46f8-4cf4-b2c0-029a97f890b5",
+      "word": "surrender"
+    },
+    {
+      "id": "d299d600-7d57-462a-9f0b-ffb5ec90c3d1",
+      "word": "agenda"
+    },
+    {
+      "id": "28ba4a7d-5f28-41e9-9614-749be064b058",
+      "word": "asset"
+    },
+    {
+      "id": "0c464354-4a63-40b4-9ff5-aabbba00b9d9",
+      "word": "boundary"
+    },
+    {
+      "id": "d5d471b5-24a6-44e4-8a9b-5d75e9db93a2",
+      "word": "breakthrough"
+    },
+    {
+      "id": "fdcec2a6-1a31-49ea-9028-bfe520c4f9de",
+      "word": "campaign"
+    },
+    {
+      "id": "518be09d-395c-4e93-8c13-83dbea9f7793",
+      "word": "candidate"
+    },
+    {
+      "id": "d1d13c3b-e37c-40a3-a79f-cea8a7b867d4",
+      "word": "drought"
+    },
+    {
+      "id": "06209d8c-d42b-4937-851c-f5087da6eb03",
+      "word": "enterprise"
+    },
+    {
+      "id": "578d1fac-85ef-4155-8287-4e97ce4120b4",
+      "word": "epidemic"
+    },
+    {
+      "id": "c4ca4c88-5089-43ed-9ccf-62ff99cf8a45",
+      "word": "era"
+    },
+    {
+      "id": "240b2c55-3a6c-4b26-b676-3c5e83ee17fc",
+      "word": "fraud"
+    },
+    {
+      "id": "02da411f-e603-4264-9e6f-a126f71431d1",
+      "word": "heritage"
+    },
+    {
+      "id": "28cd8ff2-5022-45a5-b24b-82fdf5db3776",
+      "word": "inflation"
+    },
+    {
+      "id": "436a357f-d3dd-4f1c-9cd9-27787f4bdf08",
+      "word": "legacy"
+    },
+    {
+      "id": "886ffbe6-e836-4d34-b7ac-401ac4d9efdb",
+      "word": "obligation"
+    },
+    {
+      "id": "70ee9be1-038e-4ae0-a484-98045d5f10bc",
+      "word": "reputation"
+    },
+    {
+      "id": "84c02193-9bf0-41ea-bf53-d097e75d8e2c",
+      "word": "shelter"
+    },
+    {
+      "id": "670632f4-7f6a-4baa-96e9-e629fb7d1549",
+      "word": "treaty"
+    },
+    {
+      "id": "632d3634-4726-4cc8-9fdd-e7a0bc93c694",
+      "word": "witness"
+    },
+    {
+      "id": "42abdd91-09fe-4317-b520-925657ca8af0",
+      "word": "desperate"
+    },
+    {
+      "id": "29ec9b52-1904-4b79-b89b-ffa94b84ca8e",
+      "word": "drastic"
+    },
+    {
+      "id": "655ce8ec-5e2b-4a83-bf2b-09ed4cc1e5d1",
+      "word": "eligible"
+    },
+    {
+      "id": "bf575ed2-caaf-423b-9651-7c8b7dd54abc",
+      "word": "fierce"
+    },
+    {
+      "id": "7492f8fd-3140-4bba-984f-e094d417dfd5",
+      "word": "fragile"
+    },
+    {
+      "id": "7d8e9cb9-19c0-4034-b919-44552e742532",
+      "word": "rural"
+    },
+    {
+      "id": "80740408-ec99-48a4-bb3d-8296dcb333ea",
+      "word": "urban"
+    },
+    {
+      "id": "3612e3bd-9b13-4357-bcbf-51e3b6d9c617",
+      "word": "vast"
+    },
+    {
+      "id": "26714303-d125-4bb3-8310-59fb01927a4e",
+      "word": "vital"
+    },
+    {
+      "id": "fbbc8a0e-df48-4135-88d7-bf3ac9e87ac1",
+      "word": "vulnerable"
+    },
+    {
+      "id": "d9a691d1-d14f-4356-8c6b-5781b56465a3",
+      "word": "barely"
+    },
+    {
+      "id": "2a6060d3-70f7-40c0-9231-3e53d62e5440",
+      "word": "readily"
+    },
+    {
+      "id": "88f7f6bf-a038-4d07-9a50-41068a3c70e3",
+      "word": "by no means"
+    },
+    {
+      "id": "73c39b53-df20-4489-967b-628f36230131",
+      "word": "in the long run"
+    }
+  ]
+}

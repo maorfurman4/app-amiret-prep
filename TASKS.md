@@ -119,5 +119,7 @@
 - [x] Batch 1 inserted: 50 words (rate, quality, advantage acknowledged), 1,158 → 1,208 verified; level 1 now 153 (197 to go). Log for --rollback: `backups/vocab-insert-2026-09-25T16-16-26-310Z.json`
 - [x] Batch 2 prepared: 100 level-1 words, 0 errors; 9 family warnings reviewed (6 false matches, 3 shared roots kept); government, probably, popular (true families) and reduce (exists) replaced
 - [x] Batch 2 inserted: 100 words, 1,208 → 1,308 verified; level 1 now 253 (97 to go). Log: `backups/vocab-insert-2026-09-25T16-25-07-162Z.json`
-- [ ] Batches 3+ (97 more level 1, then levels 2–5)
+- [x] Batch 3 prepared: the last 97 level-1 words, 0 errors, level 1 would reach exactly 350; 4 family warnings for review (promise, reason, alone, soon)
+- [ ] **Approval** to insert batch 3
+- [ ] Levels 2–5 (107, 115, 112, 11)
 - [x] Definitions cleanup (`scripts/clean-vocab-definitions.ts`): 635 trailing periods removed, 0 failed, verify 0 left; parsimonious's two sentences joined with a semicolon. Backup `backups/vocab-definitions-2026-09-25T16-19-10-685Z.json`. Audit before the run: no ellipses, quote marks, stray spaces or uppercase words anywhere

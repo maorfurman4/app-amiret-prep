@@ -166,6 +166,7 @@
 Research (read-only): the 58 is consistent with the model; item difficulties are authored, not measured (≈30 of 7,428 items ever calibrated, from 1 answer each); the section tag showed the first question's label, not the routed level; the passage draw can cross a level at a 3% information cost; 194 items have a label that contradicts their difficulty.
 
 - [x] Fix 1: results page shows the routed level per section (`src/lib/routed-level.ts`, tested on the real θ trail of the 58 exam: sections 3–4 now read level 3), falls back to the question label for exams without stored targets; likely score range under the score (same 80% interval as the exemption card, 50–78 for the 58 exam); caption reworded; start route shares the start θ constant
-- [ ] Deploy fix 1 (push)
-- [ ] Migration: passage draw prefers the routed level among passages within 95% of the best information; `exam_eligible` column + filter in item selection
-- [ ] Data: exclude the 194 contradictory items from the exam (dry run, backup, apply)
+- [x] Fix 1 deployed (a4e2f8f)
+- [x] Migration `exam_level_accuracy` applied: `exam_eligible` (default true) + filter in pick_informative_items / pick_informative_passage; passage draw prefers the routed level among passages within 95% of the best information. Verified live: at θ −0.19 10/10 passages level 3 (was a 1-in-5 chance of level 2), at −0.5 falls back to level 2 as designed (best level-3 passage only 85.7%); grants unchanged; no new advisor findings
+- [x] `scripts/exclude-contradictory-items.ts` dry run: exactly 194 (SC L2 106, RS L2 67, SC L3 13, RS L1 3, SC L1 2, SC L5 2, RS L5 1); exam pool 7,428 → 7,234
+- [ ] **Approval** to run it with `--apply`

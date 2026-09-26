@@ -1,0 +1,237 @@
+{
+  "batch": "scripts/data/vocab-batches/level3-batch01.json",
+  "inserted": [
+    {
+      "id": "482eaf70-ae90-409e-9611-cb6a0f186f52",
+      "word": "civil"
+    },
+    {
+      "id": "60365ce1-e474-4cc6-9a34-375ac4331202",
+      "word": "confer"
+    },
+    {
+      "id": "b18ad756-f567-4090-bfb5-17443cdf4976",
+      "word": "ethnic"
+    },
+    {
+      "id": "92f0ca44-1161-4600-9322-f2725ff69a78",
+      "word": "occupy"
+    },
+    {
+      "id": "fa884906-93e3-41c4-bcec-86f3584dbead",
+      "word": "regime"
+    },
+    {
+      "id": "8f1b1384-74c4-443c-a3a0-417e2717c859",
+      "word": "undertake"
+    },
+    {
+      "id": "c5eea359-d150-41de-aa55-8e76919b1686",
+      "word": "amend"
+    },
+    {
+      "id": "2082d0c2-3321-4090-957b-208a246ef7a1",
+      "word": "clause"
+    },
+    {
+      "id": "7619ae4a-38f1-4338-a5dc-3a562d94b4dc",
+      "word": "conflict"
+    },
+    {
+      "id": "33a980e0-2b02-4bfe-8f5c-1272dd7d0aff",
+      "word": "consult"
+    },
+    {
+      "id": "b91da848-e26a-4859-b8f2-903c4e96061a",
+      "word": "draft"
+    },
+    {
+      "id": "80d628b9-2672-450f-ac43-b144a780dc9e",
+      "word": "enforce"
+    },
+    {
+      "id": "b60fa119-dc2b-42b8-8fa2-8564c111ec5e",
+      "word": "external"
+    },
+    {
+      "id": "13e4a2c9-1427-4ee3-b3e5-3249128605c5",
+      "word": "liberal"
+    },
+    {
+      "id": "8efb0af3-1558-4ee9-ae29-7afee0acb2cd",
+      "word": "license"
+    },
+    {
+      "id": "edb5ee26-70a3-4434-89bc-f0032e811e80",
+      "word": "mental"
+    },
+    {
+      "id": "d9984ed6-4594-4a66-8935-686d545924e9",
+      "word": "orient"
+    },
+    {
+      "id": "f66f7049-711f-46e0-9d18-53057e73888a",
+      "word": "pursue"
+    },
+    {
+      "id": "9bb6e373-cbc4-40d0-b189-2179634313be",
+      "word": "revenue"
+    },
+    {
+      "id": "5dcdd279-59c6-4f9b-84eb-64e7f19b319e",
+      "word": "substitute"
+    },
+    {
+      "id": "e4a35c1b-b8a9-4fe4-9342-ed50300d8c1d",
+      "word": "transit"
+    },
+    {
+      "id": "e4de1577-9dfd-402a-8a94-33ad64b8d32a",
+      "word": "welfare"
+    },
+    {
+      "id": "49fca4a3-be87-43fe-abe3-3df37b9f872f",
+      "word": "attach"
+    },
+    {
+      "id": "c80f7bde-9071-4717-8928-146a431e0b09",
+      "word": "capable"
+    },
+    {
+      "id": "1e36f0b4-004e-4134-9d7f-b0549b8e949b",
+      "word": "cooperate"
+    },
+    {
+      "id": "5929bbce-f168-4015-a749-cc56f35b733f",
+      "word": "display"
+    },
+    {
+      "id": "74f18d63-7346-4e95-99e9-5f831d2a8ff7",
+      "word": "gender"
+    },
+    {
+      "id": "76f2360d-fc00-438a-a5ae-7daf5c5f6e70",
+      "word": "input"
+    },
+    {
+      "id": "4107be6d-2d4a-4594-b58f-492ebfe0940a",
+      "word": "instruct"
+    },
+    {
+      "id": "4b3bdef9-eed4-4f9c-b3ef-5bd51996f403",
+      "word": "interval"
+    },
+    {
+      "id": "bca4f861-56fb-4e65-adf6-e7574fe01b6c",
+      "word": "reveal"
+    },
+    {
+      "id": "3c0ececa-56dd-4d09-9dcc-e97ef1e13688",
+      "word": "recover"
+    },
+    {
+      "id": "21bf51a3-eb6a-4bdf-ba99-eec70e37fd2a",
+      "word": "trace"
+    },
+    {
+      "id": "ac872231-fd88-49db-bea7-7c3b367e23c7",
+      "word": "incidence"
+    },
+    {
+      "id": "e6494324-5677-44da-aa33-b2fe2b20e4c2",
+      "word": "subsidy"
+    },
+    {
+      "id": "fcb0961f-492e-4d5d-adce-81d7dc7de5df",
+      "word": "underlie"
+    },
+    {
+      "id": "412b1d12-7493-445c-b214-17dc4b9a4763",
+      "word": "channel"
+    },
+    {
+      "id": "ae1fd128-2125-4860-bd52-cc6207eaad92",
+      "word": "comprise"
+    },
+    {
+      "id": "b39314b4-7aa5-49cf-b7a6-41e4bdf309ec",
+      "word": "decade"
+    },
+    {
+      "id": "2ad6b72f-036d-4de3-b06f-13103b3c4a2b",
+      "word": "deny"
+    },
+    {
+      "id": "4f10e37c-2129-4785-b555-2635c3f24748",
+      "word": "dispose"
+    },
+    {
+      "id": "0831ee9f-2ab5-4b0b-a80e-2438bb8a518d",
+      "word": "equip"
+    },
+    {
+      "id": "4172e08b-627b-4f44-ad31-7ab5711ecefe",
+      "word": "extract"
+    },
+    {
+      "id": "9f6d99af-689b-457c-86c5-60a2919412cf",
+      "word": "foundation"
+    },
+    {
+      "id": "6e17a0f8-e7ed-4ec1-bc44-01750d92261d",
+      "word": "guarantee"
+    },
+    {
+      "id": "d894ccef-50bd-4538-a255-b1165fbe8d3a",
+      "word": "insert"
+    },
+    {
+      "id": "b1a470f5-be58-4093-ab6c-04d22cf00146",
+      "word": "intervene"
+    },
+    {
+      "id": "71460a9e-2d85-4397-ba44-f0a9e439bf33",
+      "word": "mode"
+    },
+    {
+      "id": "d87570eb-e313-463a-b44a-1e417bad1e1e",
+      "word": "quote"
+    },
+    {
+      "id": "8b258908-398f-4907-a212-5c357e0b6e3a",
+      "word": "reverse"
+    },
+    {
+      "id": "f164b2ef-2d1c-451c-b483-9f3c25163d56",
+      "word": "sole"
+    },
+    {
+      "id": "0e711912-d427-43ab-b001-4d17f7074e42",
+      "word": "somewhat"
+    },
+    {
+      "id": "d8afbf43-dab1-4c51-814c-eb9d61de1bf5",
+      "word": "submit"
+    },
+    {
+      "id": "dd5688bb-2f3c-4ad3-84c0-f9b672ca41e2",
+      "word": "transmit"
+    },
+    {
+      "id": "783fdcf5-143c-4b92-a061-642a7b45c253",
+      "word": "bond"
+    },
+    {
+      "id": "0b32ff76-4c10-4c57-88b9-71ec8c642e86",
+      "word": "index"
+    },
+    {
+      "id": "c7846962-1a7a-404e-96a9-dfbc69a2bcf6",
+      "word": "intelligence"
+    },
+    {
+      "id": "9aa9c62b-a871-4e51-85bc-eec1ca9a1280",
+      "word": "overseas"
+    }
+  ]
+}

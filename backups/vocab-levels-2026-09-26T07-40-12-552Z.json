@@ -1,0 +1,332 @@
+[
+  {
+    "id": "a4850e1f-4ae3-485b-b133-f984728d1cfb",
+    "word": "novel",
+    "difficulty_level": 1
+  },
+  {
+    "id": "30e0247b-a6c7-4709-8fd8-be7b6a6a2d3f",
+    "word": "as a result",
+    "difficulty_level": 4
+  },
+  {
+    "id": "874480a7-a861-4f6c-a7fa-e911fecc40d9",
+    "word": "precise",
+    "difficulty_level": 1
+  },
+  {
+    "id": "37e5e2eb-a1c7-45fd-be91-d3961af5018d",
+    "word": "data",
+    "difficulty_level": 3
+  },
+  {
+    "id": "90f8d2d6-6ef3-4abe-b8b2-f330ca479960",
+    "word": "progressive",
+    "difficulty_level": 1
+  },
+  {
+    "id": "8bb9ff78-e456-41c6-af74-280bce6e647e",
+    "word": "energy",
+    "difficulty_level": 3
+  },
+  {
+    "id": "1a85f71b-c08a-44af-b806-5560ff569b8d",
+    "word": "uniform",
+    "difficulty_level": 1
+  },
+  {
+    "id": "3219120f-0edd-4aae-8e45-cc334cd67f1e",
+    "word": "environment",
+    "difficulty_level": 3
+  },
+  {
+    "id": "0103f0dc-17cd-4dcd-80d6-bf054f158c5e",
+    "word": "atom",
+    "difficulty_level": 1
+  },
+  {
+    "id": "7230c962-ea7a-43cd-a2c3-edd5e096e4c7",
+    "word": "reduce",
+    "difficulty_level": 2
+  },
+  {
+    "id": "7c75fb94-b4a3-44a0-99ae-9c2ba5f8b5c1",
+    "word": "logical",
+    "difficulty_level": 1
+  },
+  {
+    "id": "49e88f78-d6bd-4d7d-a31c-919a761c1311",
+    "word": "require",
+    "difficulty_level": 2
+  },
+  {
+    "id": "5969ce20-1a6b-4002-a120-f1e0fd8272b6",
+    "word": "formidable",
+    "difficulty_level": 3
+  },
+  {
+    "id": "b585beb1-4233-4e22-bb37-e5ca795014c2",
+    "word": "even though",
+    "difficulty_level": 4
+  },
+  {
+    "id": "d419666d-77fc-4233-b9ca-f5bc44b89d2f",
+    "word": "contempt",
+    "difficulty_level": 3
+  },
+  {
+    "id": "1373f3a0-2e4a-4ff7-88e5-023e97aa3e28",
+    "word": "as well as",
+    "difficulty_level": 4
+  },
+  {
+    "id": "49571e66-c9b6-4ea7-ac71-e38fb96364bf",
+    "word": "eloquence",
+    "difficulty_level": 3
+  },
+  {
+    "id": "79bae31b-1b8f-43d1-875c-9725f5f0d1ea",
+    "word": "in addition",
+    "difficulty_level": 4
+  },
+  {
+    "id": "cbc230b0-2a3f-41a5-b1ff-edca456dc0fc",
+    "word": "eloquent",
+    "difficulty_level": 3
+  },
+  {
+    "id": "ebd75c13-d5cb-461e-bc74-42fe186ec8ec",
+    "word": "for instance",
+    "difficulty_level": 4
+  },
+  {
+    "id": "52145ceb-a970-4e04-bd5b-04cab9b5a545",
+    "word": "impartial",
+    "difficulty_level": 3
+  },
+  {
+    "id": "126abd12-09da-45c7-b273-1dd175200387",
+    "word": "on the other hand",
+    "difficulty_level": 4
+  },
+  {
+    "id": "2c71356f-31a8-4c47-9a41-b0d44512b9e9",
+    "word": "innate",
+    "difficulty_level": 3
+  },
+  {
+    "id": "023f9c89-3060-46d7-9e35-860f2880b67c",
+    "word": "in general",
+    "difficulty_level": 4
+  },
+  {
+    "id": "42da33dc-10ec-44b9-8e2c-57fd0c158692",
+    "word": "indispensable",
+    "difficulty_level": 3
+  },
+  {
+    "id": "c4ff5250-4a73-4548-9dc8-de98bc504339",
+    "word": "in other words",
+    "difficulty_level": 4
+  },
+  {
+    "id": "5693793c-4ede-4054-aa8c-029d17dca85d",
+    "word": "refute",
+    "difficulty_level": 3
+  },
+  {
+    "id": "8eddd2d3-12bf-47eb-9eff-9c3a3d8b4307",
+    "word": "in particular",
+    "difficulty_level": 4
+  },
+  {
+    "id": "1016a582-68cd-42fb-ac44-a348d5196f35",
+    "word": "redundant",
+    "difficulty_level": 3
+  },
+  {
+    "id": "b15ae7fe-e368-4d0c-85fe-bdd1515fc143",
+    "word": "in contrast",
+    "difficulty_level": 4
+  },
+  {
+    "id": "7066179c-600e-4690-b83a-b60abd8a7d00",
+    "word": "articulate",
+    "difficulty_level": 3
+  },
+  {
+    "id": "3529ec7b-3ab5-44c1-803f-7ad3bc1ca467",
+    "word": "due to",
+    "difficulty_level": 4
+  },
+  {
+    "id": "f3c51462-14ff-4243-8c39-7f056aed3430",
+    "word": "abolish",
+    "difficulty_level": 3
+  },
+  {
+    "id": "0a4d4890-6734-49f4-a8b8-296461c20dbd",
+    "word": "as long as",
+    "difficulty_level": 4
+  },
+  {
+    "id": "e74ff067-3cc2-4cdf-ab47-15417c0dc06b",
+    "word": "acute",
+    "difficulty_level": 3
+  },
+  {
+    "id": "7f860703-6efd-4e86-b455-878ece566c35",
+    "word": "even if",
+    "difficulty_level": 4
+  },
+  {
+    "id": "bcad513a-616a-4917-9321-924f69f414c3",
+    "word": "benevolent",
+    "difficulty_level": 3
+  },
+  {
+    "id": "6a0e9ef3-fdd3-4178-8d46-bd28c224a1d8",
+    "word": "not only",
+    "difficulty_level": 4
+  },
+  {
+    "id": "a93412ae-1c2e-4e09-a377-73f1c735e86a",
+    "word": "frugal",
+    "difficulty_level": 3
+  },
+  {
+    "id": "4e410cd7-ebcd-41c5-a86a-d313bc1ed39c",
+    "word": "for this reason",
+    "difficulty_level": 4
+  },
+  {
+    "id": "bf408ee1-9cb5-4e60-90c8-d2cfbb0f7e45",
+    "word": "abundant",
+    "difficulty_level": 2
+  },
+  {
+    "id": "c1f6aa5b-8f29-46d7-95d4-c7e599465dba",
+    "word": "after all",
+    "difficulty_level": 4
+  },
+  {
+    "id": "fa0c228c-3bdd-4dfd-8b88-aa7fea513ccb",
+    "word": "diligent",
+    "difficulty_level": 2
+  },
+  {
+    "id": "0c1fe1f2-b67d-4af2-a925-4d42aefa63e9",
+    "word": "in short",
+    "difficulty_level": 4
+  },
+  {
+    "id": "6fd365ce-3cef-4221-94f5-f664af29637f",
+    "word": "abate",
+    "difficulty_level": 4
+  },
+  {
+    "id": "a8ad620a-62a3-442f-a853-a328a6df523c",
+    "word": "historically",
+    "difficulty_level": 5
+  },
+  {
+    "id": "c67a8578-c6d6-4f97-824d-a2e5a5b54df1",
+    "word": "abhor",
+    "difficulty_level": 4
+  },
+  {
+    "id": "66af7898-0a26-493a-b832-5afaaa8af64d",
+    "word": "accelerate",
+    "difficulty_level": 5
+  },
+  {
+    "id": "7e6509c7-7aaf-4630-98b2-012431666eb0",
+    "word": "aloof",
+    "difficulty_level": 4
+  },
+  {
+    "id": "3eba1da0-f04d-4798-89e1-fb81b13961f5",
+    "word": "activate",
+    "difficulty_level": 5
+  },
+  {
+    "id": "1ac50e4d-00ba-4e4b-8c8d-edcfc291dac9",
+    "word": "banal",
+    "difficulty_level": 4
+  },
+  {
+    "id": "4beebc42-c4cf-4c19-ae8c-4095943048d5",
+    "word": "collaborate",
+    "difficulty_level": 5
+  },
+  {
+    "id": "1189da6d-3f54-4937-ad3f-fcfb39081c81",
+    "word": "covet",
+    "difficulty_level": 4
+  },
+  {
+    "id": "9b2d0830-87ca-414d-90d8-84a72c252595",
+    "word": "collectively",
+    "difficulty_level": 5
+  },
+  {
+    "id": "cda78b8a-c376-405d-832a-ea9749e69aee",
+    "word": "ennui",
+    "difficulty_level": 4
+  },
+  {
+    "id": "b2445595-9c46-4327-8c62-fc3fa1eca83c",
+    "word": "hostile",
+    "difficulty_level": 5
+  },
+  {
+    "id": "42fa2871-7f50-4a2f-b048-6ee6ea7a9182",
+    "word": "stoic",
+    "difficulty_level": 4
+  },
+  {
+    "id": "5a6e7cff-f5dd-41f2-afaf-d08b0255eadf",
+    "word": "credible",
+    "difficulty_level": 5
+  },
+  {
+    "id": "0c5a7241-4f36-437e-b7ce-d920653e76e7",
+    "word": "vapid",
+    "difficulty_level": 4
+  },
+  {
+    "id": "cd46b8a2-8983-4cd1-a76a-aecdc0dec1c0",
+    "word": "harmonious",
+    "difficulty_level": 5
+  },
+  {
+    "id": "0bd25c88-421e-4586-9b53-07b045fb5ab2",
+    "word": "venal",
+    "difficulty_level": 4
+  },
+  {
+    "id": "540c0523-3175-4cfb-bac1-3ab17d6bf0dc",
+    "word": "spontaneous",
+    "difficulty_level": 5
+  },
+  {
+    "id": "4babea56-bf0c-49b3-9b22-420d4b7634d5",
+    "word": "presumptuous",
+    "difficulty_level": 4
+  },
+  {
+    "id": "b74128fc-8cb2-42d7-ac10-398a52e1c3fb",
+    "word": "inequality",
+    "difficulty_level": 5
+  },
+  {
+    "id": "3a129204-fccf-4a3c-8bdc-4ac841be4677",
+    "word": "pedantic",
+    "difficulty_level": 3
+  },
+  {
+    "id": "9d6e3a40-3d95-4625-a450-4c0228eaa8b1",
+    "word": "realistically",
+    "difficulty_level": 5
+  }
+]

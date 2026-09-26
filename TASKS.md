@@ -143,4 +143,5 @@
 - [x] Plan approved: scale = project scale (1 top-2000 · 2 Academic Word List 1–3 / B1–B2 · 3 AWL 4–7 / B2 · 4 AWL 8–10 / C1 · 5 C2 / GRE); only the original words; high-confidence moves only; strict 1-to-1 swaps where both words end up closer to their true level
 - [x] Finding: level 5 holds dozens of B2–C1 words, but only 11 truly C2 words sit lower (10 at level 4, 1 at level 3), so at most 11 can leave level 5; level 4 holds many basic connectors (as a result, even though, in addition…), level 1 a few hard words (novel, precise, progressive, uniform)
 - [x] `scripts/swap-vocab-levels.ts` + `scripts/data/vocab-level-swaps.json`: 33 pairs, 66 words; dry run 0 errors, 350 per level before and after; guards proven on a broken file (5 errors caught, nothing written)
-- [ ] **Approval** of the pairs, then `--apply`
+- [x] Applied: 66/66 words at their new level, 350 per level verified. Backup `backups/vocab-levels-2026-09-26T07-40-12-552Z.json`
+- [ ] Open question: 3-word cycles (A→B→C→A) would place the remaining connectors and easy level-5 words exactly, but break the strict 1-to-1 rule

@@ -7,6 +7,7 @@
  */
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import type { Question } from '@/types/exam';
+import { pickDistinctOptions } from '@/lib/option-overlap';
 
 type SupabaseClient = Awaited<ReturnType<typeof createServerSupabaseClient>>;
 
@@ -75,43 +76,38 @@ export async function planUnseenQuestions({
     seenIds = (seenRows ?? []).map((r: { question_id: string }) => r.question_id);
   }
 
-  // Try to fetch unseen questions at target difficulty
-  let questions = await queryQuestions(supabase, type, difficultyLevel, needed, seenIds);
-
-  if (questions.length >= needed) {
-    return { questions: questions.slice(0, needed), resetQuestionIds: [] };
+  // Sample the candidates at random from ALL matching ids — a plain
+  // `limit` returns rows in storage order, i.e. the same generation batch
+  // every time — then keep the set free of shared answer choices.
+  const seen = new Set(seenIds);
+  const unseenIds = typeDiffIds.filter(id => !seen.has(id));
+  if (unseenIds.length >= needed) {
+    const pool = await fetchByIds(supabase, sample(unseenIds, needed * CANDIDATE_FACTOR));
+    return { questions: pickDistinctOptions(pool, needed), resetQuestionIds: [] };
   }
 
-  questions = await queryQuestions(supabase, type, difficultyLevel, needed, []);
-  return { questions: questions.slice(0, needed), resetQuestionIds: seenIds.length > 0 ? typeDiffIds : [] };
+  const pool = await fetchByIds(supabase, sample(typeDiffIds, needed * CANDIDATE_FACTOR));
+  return { questions: pickDistinctOptions(pool, needed), resetQuestionIds: seenIds.length > 0 ? typeDiffIds : [] };
 }
 
-async function queryQuestions(
-  supabase: SupabaseClient,
-  type: string,
-  difficultyLevel: number,
-  limit: number,
-  excludeIds: string[],
-): Promise<Question[]> {
-  let query = supabase
-    .from('questions')
-    .select('*')
-    .eq('type', type)
-    .eq('difficulty_level', difficultyLevel)
-    .eq('active', true)
-    .limit(limit + 10);
+/** Candidates drawn per question needed, so shared-choice questions can be skipped. */
+const CANDIDATE_FACTOR = 6;
 
-  if (excludeIds.length > 0) {
-    query = query.not('id', 'in', `(${excludeIds.join(',')})`);
-  }
-
-  const { data } = await query;
-  const arr = [...((data ?? []) as Question[])];
+function sample<T>(items: T[], n: number): T[] {
+  const arr = [...items];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return arr;
+  return arr.slice(0, n);
+}
+
+/** Rows for these ids, in the (already random) order of the ids. */
+async function fetchByIds(supabase: SupabaseClient, ids: string[]): Promise<Question[]> {
+  if (ids.length === 0) return [];
+  const { data } = await supabase.from('questions').select('*').in('id', ids);
+  const byId = new Map(((data ?? []) as Question[]).map(q => [q.id, q]));
+  return ids.map(id => byId.get(id)).filter((q): q is Question => !!q);
 }
 
 /**

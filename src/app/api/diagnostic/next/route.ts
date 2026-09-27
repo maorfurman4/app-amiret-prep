@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { getServerClients } from '@/lib/supabase-server';
 import { itemIrtParams } from '@/lib/adaptive';
 import { planInformativeQuestions } from '@/lib/item-selection';
+import { usedOptionWords } from '@/lib/option-overlap';
 import { recordSeenQuestions } from '@/lib/question-history';
 import { shuffleAllOptions } from '@/lib/option-shuffle';
 import {
@@ -32,6 +33,7 @@ type ItemRow = {
   c: number | null;
   b_calibrated: number | null;
   correct_answer: number;
+  options: { text: string }[] | null;
 };
 
 export async function POST(req: NextRequest) {
@@ -55,13 +57,15 @@ export async function POST(req: NextRequest) {
   }
 
   let items: ScoredItem[] = [];
+  let answeredRows: ItemRow[] = [];
   if (ids.length > 0) {
     const { data, error } = await supabase
       .from('questions')
-      .select('id, type, b, c, b_calibrated, correct_answer')
+      .select('id, type, b, c, b_calibrated, correct_answer, options')
       .in('id', ids);
     if (error) return NextResponse.json({ error: 'Lookup failed' }, { status: 500 });
     const byId = new Map(((data ?? []) as ItemRow[]).map(r => [r.id, r]));
+    answeredRows = (data ?? []) as ItemRow[];
     for (const a of answers) {
       const row = byId.get(a.id);
       if (!row || !(DIAGNOSTIC_TYPES as readonly string[]).includes(row.type)) {
@@ -82,6 +86,8 @@ export async function POST(req: NextRequest) {
 
   const [next] = await planInformativeQuestions({
     supabase, userKey, type: state.nextType, theta: state.theta, needed: 1, excludeIds: ids,
+    // No answer choice may repeat across the diagnostic's questions.
+    avoidWords: usedOptionWords(answeredRows),
   });
   if (!next) return NextResponse.json({ error: 'No questions available' }, { status: 503 });
   await recordSeenQuestions(supabase, userKey, [next.id]);

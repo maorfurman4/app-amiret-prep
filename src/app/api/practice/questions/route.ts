@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import type { Question, QuestionType, DifficultyLevel } from '@/types/exam';
+import { pickDistinctOptions } from '@/lib/option-overlap';
 import { fetchUnseenQuestions, recordSeenQuestions, fetchUnseenRCQuestions, recordSeenPassage } from '@/lib/question-history';
 import { shuffleAllOptions } from '@/lib/option-shuffle';
 
@@ -85,11 +86,11 @@ export async function GET(req: NextRequest) {
         LEVELS.map(lv => userKey
           ? fetchUnseenQuestions({ supabase, userKey, type: t, difficultyLevel: lv, needed: perLevel })
           : fetchRandomQuestionsNoHistory(supabase, t, lv, perLevel))
-      ).then(fetches => fisherYates(fetches.flat()).slice(0, needed));
+      ).then(fetches => pickDistinctOptions(fisherYates(fetches.flat()), needed));
     };
 
     const simpleFetches = await Promise.all(INTERLEAVE_TYPES.map(t => fetchMixedTypeQuestions(t, perType)));
-    const simpleShuffled = fisherYates(simpleFetches.flat()).slice(0, simpleBudget);
+    const simpleShuffled = pickDistinctOptions(fisherYates(simpleFetches.flat()), simpleBudget);
 
     let rcBlock: Question[] = [];
     if (includeRC) {
@@ -136,7 +137,7 @@ export async function GET(req: NextRequest) {
     if (!pool.length) {
       return NextResponse.json({ error: 'No questions found' }, { status: 404 });
     }
-    const questions = fisherYates(pool).slice(0, count);
+    const questions = pickDistinctOptions(fisherYates(pool), count);
     if (userKey && !deferSeen) await recordSeenQuestions(supabase, userKey, questions.map(q => q.id));
     return NextResponse.json({ questions: shuffleAllOptions(questions), difficulty: 'random' });
   }
@@ -161,12 +162,16 @@ async function fetchRandomQuestionsNoHistory(
   difficultyLevel: DifficultyLevel,
   needed: number,
 ): Promise<Question[]> {
-  const { data } = await supabase
+  // All matching ids, sampled at random (a plain limit returns one
+  // generation batch in storage order), then no shared answer choices.
+  const { data: ids } = await supabase
     .from('questions')
-    .select('*')
+    .select('id')
     .eq('type', type)
     .eq('difficulty_level', difficultyLevel)
-    .eq('active', true)
-    .limit(needed + 10);
-  return fisherYates((data ?? []) as Question[]).slice(0, needed);
+    .eq('active', true);
+  const picked = fisherYates(((ids ?? []) as { id: string }[]).map(r => r.id)).slice(0, needed * 6);
+  if (picked.length === 0) return [];
+  const { data } = await supabase.from('questions').select('*').in('id', picked);
+  return pickDistinctOptions(fisherYates((data ?? []) as Question[]), needed);
 }

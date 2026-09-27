@@ -4,6 +4,7 @@ import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, isExperimentalSection, type Question, type SectionResult } from '@/types/exam';
 import { updateThetaAfterSection, thetaToScore, correctCount, estimateThetaEAP, itemIrtParams } from '@/lib/adaptive';
 import { planInformativeQuestions, planInformativePassage } from '@/lib/item-selection';
+import { usedOptionWords } from '@/lib/option-overlap';
 import { chooseRouteTarget, exemptionProbability, standardError } from '@/lib/calibration';
 import { calibrateItems } from '@/lib/calibration-server';
 import { estimateOwnerAbility } from '@/lib/ability';
@@ -245,6 +246,8 @@ export async function POST(req: NextRequest) {
         theta: target.theta,
         needed: nextCfg.questionCount,
         excludeIds: usedQIds,
+        // No answer choice may repeat across the exam's sections.
+        avoidWords: usedOptionWords(Object.values(questionsBySection).flat()),
       });
     }
 

@@ -11,6 +11,7 @@ import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } fro
 import { thetaToScore } from '@/lib/adaptive';
 import { scoreInterval, sessionMeasurement } from '@/lib/exemption';
 import { routedLevel } from '@/lib/routed-level';
+import { ResultsScorePrompt } from '@/components/official-score/ResultsScorePrompt';
 import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
 import { heCount, agree } from '@/lib/hebrew-count';
 
@@ -146,6 +147,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             )}
           </div>
         </div>
+
+        {!session.is_practice && <ResultsScorePrompt />}
 
         <AuthCTA message="התחבר כדי לשמור את הציון הזה ולהמשיך מכל מכשיר. כל מה שעשית עד עכשיו יעבור אוטומטית לחשבון." />
 

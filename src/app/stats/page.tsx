@@ -13,6 +13,7 @@ import { BackNav } from '@/components/BackNav';
 import { VictoryPath } from '@/components/stats/VictoryPath';
 import { BarChart3, Target, Check, Trophy, AlertTriangle, PartyPopper, ChevronLeft } from 'lucide-react';
 import { heCount, agree } from '@/lib/hebrew-count';
+import { OfficialScoresSection } from '@/components/official-score/OfficialScoresSection';
 
 interface Stats {
   total_exams: number;
@@ -166,6 +167,10 @@ export default function StatsPage() {
           <Link href="/exam" className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-semibold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform">
             התחל מבחן
           </Link>
+        </div>
+        {/* Someone who already sat the real test can report it before any exam here. */}
+        <div className="max-w-2xl mx-auto px-4 pb-24">
+          <OfficialScoresSection />
         </div>
       </div>
     );
@@ -493,6 +498,8 @@ export default function StatsPage() {
             )}
           </div>
         )}
+
+        <OfficialScoresSection />
       </div>
     </div>
   );

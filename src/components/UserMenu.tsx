@@ -8,7 +8,7 @@ import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import { authFetch } from '@/lib/auth-fetch';
 import { clearGuestIdentity } from '@/lib/guest';
-import { BarChart3, ImageIcon, PenLine, Lock, Settings, LogOut, ChevronLeft, ArrowRight, X } from 'lucide-react';
+import { BarChart3, ImageIcon, PenLine, Lock, Settings, LogOut, ChevronLeft, ArrowRight, X, Award } from 'lucide-react';
 
 type Panel = 'menu' | 'settings' | 'name' | 'password' | 'avatar';
 
@@ -286,6 +286,10 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
           <Link data-autofocus role="menuitem" href="/stats" onClick={() => close()} className={ITEM}>
             <BarChart3 className={ITEM_ICON} aria-hidden />
             <span className="flex-1">סטטיסטיקה</span>
+          </Link>
+          <Link role="menuitem" href="/stats#official-scores" onClick={() => close()} className={ITEM}>
+            <Award className={ITEM_ICON} aria-hidden />
+            <span className="flex-1">הציון הרשמי שלי</span>
           </Link>
           <button role="menuitem" onClick={() => setPanel('settings')} className={ITEM}>
             <Settings className={ITEM_ICON} aria-hidden />

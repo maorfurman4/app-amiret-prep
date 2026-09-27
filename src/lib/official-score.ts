@@ -79,3 +79,27 @@ export async function predictionBefore(
     app_days_before: Math.max(0, localDaysBetween(lastExamDay, testDate)),
   };
 }
+
+// ── General entry points (results page, stats page, user menu) ──────────────
+
+export const SCORE_SOURCES = ['exam_date_prompt', 'results', 'stats', 'menu'] as const;
+export type ScoreSource = (typeof SCORE_SOURCES)[number];
+
+/** "Prefer not to" on a general entry point stops asking for this long. */
+export const GENERAL_DISMISS_DAYS = 60;
+/** The results-page line shows on the 1st completed exam and every Nth after. */
+export const RESULTS_PROMPT_EVERY = 5;
+
+/**
+ * Whether the results page shows its quiet "already took the real test?"
+ * line: only for students who have not reported any score, not after a
+ * recent "prefer not to", and only on the 1st, 6th, 11th… completed exam,
+ * so it never becomes a fixture of every result.
+ */
+export function shouldShowResultsPrompt({
+  completedExams, hasReports, dismissedAt, now,
+}: { completedExams: number; hasReports: boolean; dismissedAt: string | null; now: Date }): boolean {
+  if (hasReports || completedExams < 1) return false;
+  if (dismissedAt && now.getTime() - new Date(dismissedAt).getTime() < GENERAL_DISMISS_DAYS * 86_400_000) return false;
+  return (completedExams - 1) % RESULTS_PROMPT_EVERY === 0;
+}

@@ -19,7 +19,7 @@ export const RANDOMESQUE_FACTOR = 3;
  * each other or with earlier sections) can be skipped. Items from one
  * generation batch often share a difficulty, so the extra candidates cost
  * next to no information. */
-export const CANDIDATE_FACTOR = 6;
+export const CANDIDATE_FACTOR = 20;
 /** Passages are drawn from the top few by summed information. */
 export const PASSAGE_POOL = 5;
 

@@ -64,6 +64,13 @@ describe('aggregateAccuracyByType', () => {
     expect(result.restatement).toEqual({ correct: 1, total: 2 });
   });
 
+  it('leaves out the experimental section (7), which never counts toward the score', () => {
+    const result = aggregateAccuracyByType([
+      { section_results: [section(1, 0, 4), section(7, 4, 4)] },
+    ]);
+    expect(result.sentence_completion).toEqual({ correct: 0, total: 4 });
+  });
+
   it('returns an empty map for sessions with no section results', () => {
     expect(aggregateAccuracyByType([{ section_results: [] }])).toEqual({});
   });

@@ -1,4 +1,4 @@
-import { SECTION_CONFIGS, type SectionResult, type DifficultyLevel } from '@/types/exam';
+import { SECTION_CONFIGS, isExperimentalSection, type SectionResult, type DifficultyLevel } from '@/types/exam';
 import { routeNextDifficulty } from '@/lib/adaptive';
 
 // ── Types ────────────────────────────────────────────────────────────────
@@ -23,6 +23,11 @@ export interface WeaknessResult {
  * (keyed by position) with a fallback to the row's own `type` field for
  * any section shape that doesn't map cleanly onto the standard exam
  * layout (e.g. practice-only section records).
+ *
+ * The experimental section is left out: it never counts toward the score,
+ * so counting it here would make "accuracy" rest on different questions
+ * than the score it sits next to (it used to add 4 unscored sentence-
+ * completion items per exam).
  */
 export function aggregateAccuracyByType(
   sessions: { section_results: unknown }[],
@@ -30,6 +35,7 @@ export function aggregateAccuracyByType(
   const byType: AccuracyByType = {};
   for (const row of sessions) {
     for (const sr of ((row.section_results ?? []) as SectionResult[])) {
+      if (isExperimentalSection(sr.sectionIndex)) continue;
       const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
       const t = cfg?.type ?? sr.type;
       if (!t) continue;

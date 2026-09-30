@@ -3,6 +3,7 @@
 import { useId, useState, type ReactNode } from 'react';
 import { ChevronDown, Lightbulb, Check, X } from 'lucide-react';
 import { RichText } from '@/components/strategies/RichText';
+import { Reveal } from '@/components/strategies/Reveal';
 import type { LayeredRule, MinimalPair } from '@/data/strategies';
 
 type Depth = 1 | 2 | 3;
@@ -35,7 +36,7 @@ const ROW: Record<Tone, { label: string; box: string; mark: string; icon?: React
 };
 
 /** Wraps each authored phrase (first occurrence, non-overlapping) in a <mark>. */
-function withHighlights(text: string, phrases: string[], markClass: string): ReactNode[] {
+export function withHighlights(text: string, phrases: string[], markClass: string): ReactNode[] {
   const ranges = phrases
     .map(p => ({ start: text.indexOf(p), end: text.indexOf(p) + p.length }))
     .filter(r => r.start >= 0)
@@ -55,21 +56,6 @@ function withHighlights(text: string, phrases: string[], markClass: string): Rea
   }
   if (at < text.length) out.push(text.slice(at));
   return out;
-}
-
-/** A layer that slides open (grid-rows 0fr → 1fr) and is inert while closed. */
-function Reveal({ open, id, children }: { open: boolean; id: string; children: ReactNode }) {
-  return (
-    <div
-      id={id}
-      inert={!open}
-      className={`grid transition-[grid-template-rows,opacity] duration-500 ease-spring-soft motion-reduce:transition-none ${
-        open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-      }`}
-    >
-      <div className="overflow-hidden">{children}</div>
-    </div>
-  );
 }
 
 function PairView({ pair }: { pair: MinimalPair }) {

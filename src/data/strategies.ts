@@ -4,10 +4,15 @@
  * shows up everywhere.
  *
  * Inline emphasis: wrap text in **double asterisks** (rendered by <RichText>).
+ *
+ * `keyLine` fields are the "bottom line" the guide shows before the full text.
+ * They are never written separately: each one is a whole sentence (or a run of
+ * consecutive whole sentences) copied verbatim from the text it summarizes —
+ * strategies.test.ts enforces this.
  */
 import {
   Shuffle, DoorClosed, Timer, Dices, PenLine, RotateCcw, BookOpen,
-  Zap, Plus, KeyRound, Route, FlaskConical, Link2, Gem, CheckCircle2, Compass,
+  Zap, Plus, KeyRound, Route, FlaskConical, Link2, Gem, CheckCircle2, Compass, Scale,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -19,10 +24,11 @@ export const RULES_INTRO =
   'הרוב המכריע של הנקודות שנבחנים מפסידים באמירנ"ט לא נופל בגלל חוסר ידע באנגלית. הוא נופל בגלל שהם לא ידעו איך המנגנון עצמו עובד, והתנהגו לפי אינסטינקטים ממבחנים "רגילים" שלא מתאימים כאן. ' +
   'המבחן הזה בנוי על שלושה מנגנונים ייחודיים (אדפטיביות, נעילת פרקים, וטיימר קשיח) שכל אחד מהם דורש התנהגות שונה מהמצופה. הכר אותם קודם, כי הם ישפיעו על כל החלטה טקטית שתקבל בהמשך.';
 
-export const GAME_RULES: { icon: LucideIcon; title: string; body: string }[] = [
+export const GAME_RULES: { icon: LucideIcon; title: string; keyLine: string; body: string }[] = [
   {
     icon: Shuffle,
     title: 'המבחן אדפטיבי: קושי עולה הוא סימן טוב',
+    keyLine: 'המשמעות: אם הפרק הבא מרגיש לך קשה יותר, זה לא סימן שאתה "נכשל".',
     body:
       'המבחן לא שואל את כל הנבחנים את אותן שאלות. לאורך המבחן, מנוע אדפטיבי מעריך מחדש את הרמה שלך על סמך מה שענית, ובוחר את רמת הקושי של הפרק הבא בהתאם. ' +
       'האבחון והתרגול המעורב באתר מבוססים על אותם עקרונות פסיכומטריים אדפטיביים (IRT) שמניעים את המבחן הרשמי, לא על האלגוריתם הפנימי המדויק שלו, שאינו מפורסם. ' +
@@ -32,6 +38,7 @@ export const GAME_RULES: { icon: LucideIcon; title: string; body: string }[] = [
   {
     icon: DoorClosed,
     title: 'אין חזרה אחורה בין פרקים',
+    keyLine: 'המסקנה המעשית: לפני שאתה עוזב פרק, בלחיצה או כי הזמן עומד להיגמר, עשה סבב אחרון מהיר לוודא שלכל שאלה יש תשובה כלשהי מסומנת, גם אם היא ניחוש.',
     body:
       'ברגע שפרק נסגר, בלחיצה או כשהטיימר מגיע לאפס, אי אפשר לחזור אליו. לא באמצע ולא בסוף המבחן. זה שונה ממבחנים "רגילים" שבהם מותר לדפדף אחורה חופשי עד הסוף. ' +
       'בתוך פרק בודד, לעומת זאת, יש חופש מלא לנוע בין השאלות, ולכן האסטרטגיה הנכונה היא לנצל את החופש הזה בתוך הפרק (לדלג על שאלה קשה ולחזור אליה) ולא לסמוך עליו בין פרקים. ' +
@@ -40,6 +47,7 @@ export const GAME_RULES: { icon: LucideIcon; title: string; body: string }[] = [
   {
     icon: Timer,
     title: 'טיימר קשיח לכל פרק, והזמן לא עובר הלאה',
+    keyLine: 'הדרך הנכונה לנצל זמן שנותר היא לחזור באותו רגע לשאלות שסימנת כי לא היית בטוח בפרק הנוכחי, ולבדוק אותן שוב, כי ברגע שהפרק נסגר, הן אבודות.',
     body:
       'לכל פרק הקצאת זמן נפרדת ומוחלטת (4 / 6 / 15 דקות בהתאם לסוג), והיא לא מצטברת: אם סיימת פרק מוקדם, שארית הזמן נעלמת ולא עוברת לפרק הבא. ' +
       'זו הסיבה שאסור "לחסוך" זמן במודע כדי "להעביר" אותו קדימה. זו אשליה. הדרך הנכונה לנצל זמן שנותר היא לחזור באותו רגע לשאלות שסימנת כי לא היית בטוח בפרק הנוכחי, ולבדוק אותן שוב, כי ברגע שהפרק נסגר, הן אבודות.',
@@ -47,6 +55,7 @@ export const GAME_RULES: { icon: LucideIcon; title: string; body: string }[] = [
   {
     icon: Dices,
     title: 'אין קנס על טעות, אז מנחשים תמיד',
+    keyLine: 'המסקנה החד-משמעית: אין שום תרחיש שבו כדאי להשאיר שאלה ריקה.',
     body:
       'בניגוד למבחנים שיש בהם ניקוד שלילי על טעות (שם ניחוש עיוור מסוכן), באמירנ"ט שאלה ריקה ושאלה שגויה שוות בדיוק אותו דבר: אפס נקודות. אבל שאלה עם ניחוש עיוור נותן 25% סיכוי לצדוק. אם הצלחת לפסול מסיח אחד לפני שניחשת, הסיכוי קופץ ל-33%, ושניים פסולים מביאים אותך ל-50%. ' +
       'המסקנה החד-משמעית: אין שום תרחיש שבו כדאי להשאיר שאלה ריקה. גם ניחוש עיוור לגמרי, בלי לפסול כלום, עדיף תמיד על פני שאלה ריקה.',
@@ -67,6 +76,8 @@ export interface TimeBudgetRow {
   perQ: string;
   stuckCap: string;
   note: string;
+  /** Verbatim sentence from `note`. */
+  keyLine: string;
   /**
    * The same budget as numbers — the single source for the simulation's pace
    * gauge (src/lib/pace.ts) and the error-tag time suggestion. Keep them in
@@ -89,6 +100,7 @@ export const TIME_BUDGET: TimeBudgetRow[] = [
     perQ: 'כ-60 שניות',
     stuckCap: 'עד 90 שניות',
     plan: { readingSec: 0, perQuestionSec: 60, stuckCapSec: 90 },
+    keyLine: 'אחרי דקה וחצי: פוסלים מה שאפשר בזריזות, מנחשים, וממשיכים הלאה בלי חרטה.',
     note:
       'זה הפרק שבו כל דקה יקרה במיוחד: כל שאלה שווה רבע מהפרק, וכל אחת עומדת בפני עצמה, כך שזמן שנשרף על אחת נלקח ישירות מהאחרות. לכן תקציב התקיעה כאן קצר: שאלה שלא פתרת בדקה וחצי, כנראה לא תפתור גם בדקה נוספת. ' +
       'אחרי דקה וחצי: פוסלים מה שאפשר בזריזות, מנחשים, וממשיכים הלאה בלי חרטה.',
@@ -100,6 +112,7 @@ export const TIME_BUDGET: TimeBudgetRow[] = [
     perQ: 'כ-2 דקות',
     stuckCap: 'עד 2.5 דקות',
     plan: { readingSec: 0, perQuestionSec: 120, stuckCapSec: 150 },
+    keyLine: 'נצל אותו: זה הפרק שבו כדאי להשוות שיטתית כל מסיח מול משפט המקור, ולא רק לבחור לפי "הרגשה".',
     note:
       'כ-2 דקות לשאלה: פי שניים מהשלמת משפטים, ובערך אותו זמן לשאלה שנשאר בהבנת הנקרא אחרי הקריאה. הזמן הזה לא מקרי: משפטי המקור בניסוח מחדש דורשים פירוק מדוקדק (שמונת "השומרים" שמופיעים בנושא ניסוח מחדש), וזה תהליך שדורש קריאה חוזרת. ' +
       'נצל אותו: זה הפרק שבו כדאי להשוות שיטתית כל מסיח מול משפט המקור, ולא רק לבחור לפי "הרגשה".',
@@ -111,6 +124,7 @@ export const TIME_BUDGET: TimeBudgetRow[] = [
     perQ: 'כ-4 דק׳ קריאה ועוד כ-2 דק׳ לשאלה',
     stuckCap: 'עד 3 דקות, ורק בסבב השני',
     plan: { readingSec: 240, perQuestionSec: 120, stuckCapSec: 180 },
+    keyLine: 'זה התקציב היחיד לשאלה תקועה, ולכן דוחים אותה לסבב שני, אחרי שענית על כל השאר.',
     note:
       'החשבון צפוף: 4 דקות קריאה + 5 שאלות × 2 דקות = 14 דקות, כלומר נשארת רק כדקה של מרווח. לכן הקריאה הראשונית חייבת להיות מהירה, ואין מקום להיתקע על שאלה מוקדם. ' +
       'מה שכן גמיש כאן: על שאלות פרט עונים לרוב בפחות מ-2 דקות (הקטע כבר מוכר לך), והזמן שנחסך בהן מצטבר בתוך הפרק. זה התקציב היחיד לשאלה תקועה, ולכן דוחים אותה לסבב שני, אחרי שענית על כל השאר.',
@@ -351,6 +365,8 @@ export interface QuestionGuide {
   titleHe: string;
   titleEn: string;
   intro: string;
+  /** Verbatim sentence from `intro`. */
+  keyLine: string;
   approach: { step: string; detail: string }[];
   stuck: { step: string; detail: string }[];
   tipsHref: string;
@@ -373,6 +389,7 @@ export const QUESTION_GUIDES: QuestionGuide[] = [
     intro:
       'הפרק הזה בודק יותר מאוצר מילים: הוא בודק אם אתה יודע לצפות מה חסר, עוד לפני שקראת את האפשרויות. משפט טוב תמיד "מרמז" מה צריך להיכנס לפער, דרך מילת הקישור שבו (ראה נושא "מילות קישור") והטון הכללי שלו. ' +
       'מי שקורא את המשפט וקובע בראש כיוון ברור (חיובי או שלילי, ניגוד או המשך) עוד לפני שהסתכל על התשובות, לא ייפול במסיח שנשמע "יפה" באנגלית אבל לא מתאים להקשר. השיטה למטה בנויה בדיוק סביב העיקרון הזה.',
+    keyLine: 'מי שקורא את המשפט וקובע בראש כיוון ברור (חיובי או שלילי, ניגוד או המשך) עוד לפני שהסתכל על התשובות, לא ייפול במסיח שנשמע "יפה" באנגלית אבל לא מתאים להקשר.',
     approach: [
       { step: 'קרא את המשפט כולו', detail: 'לא רק את הסביבה של הפער. הבן מה המשפט מנסה להגיד.' },
       { step: 'אתר את מילת הקישור', detail: 'although / but / despite = ניגוד; because / therefore = סיבה-תוצאה; also / moreover = תוספת. היא קובעת את כיוון התשובה.' },
@@ -513,6 +530,7 @@ export const QUESTION_GUIDES: QuestionGuide[] = [
     intro:
       'בפרק הזה בודקים מה נשמר ומה השתנה. מתוך ארבעה ניסוחים, שלושה משנים בשקט פרט קטן אחד (כמות, זמן, כיוון, או מי עשה מה), ורק אחד אומר באמת את אותו הדבר במילים אחרות. ' +
       'הטעות הנפוצה ביותר היא לחפש את התשובה ה"יפה" ביותר באנגלית, אבל המבחן בודק דיוק לוגי, לא סגנון. לכן השיטה מתחילה בחילוץ "גרעין" ברור מהמקור, לפני שבכלל מסתכלים על האפשרויות, ומשם משווים כל תשובה נגד הגרעין הזה נקודה-נקודה.',
+    keyLine: 'הטעות הנפוצה ביותר היא לחפש את התשובה ה"יפה" ביותר באנגלית, אבל המבחן בודק דיוק לוגי, לא סגנון.',
     approach: [
       { step: 'קרא את משפט המקור פעמיים', detail: 'יש לך זמן (2 דקות לשאלה). קריאה שנייה חוסכת טעויות הבנה שעולות ביוקר.' },
       { step: 'חלץ את הגרעין, בעברית', detail: 'סכם לעצמך: מי עשה? מה קרה? ומה הקשר הלוגי (ניגוד / סיבה / תנאי / זמן)? זה "תעודת הזהות" של המשפט.' },
@@ -620,6 +638,7 @@ export const QUESTION_GUIDES: QuestionGuide[] = [
     intro:
       'זה הפרק שבו שתי המיומנויות הקודמות (זיהוי קשרים לוגיים דרך מילות קישור, והשוואה מדוקדקת של ניסוחים) מתאחדות ברמת פסקה שלמה, לא רק משפט בודד. ' +
       'ההבדל המכריע בין נבחן שמבזבז זמן לנבחן יעיל הוא סדר הפעולות: הצצה קצרה בשאלות לפני הקריאה נותנת "מפת חיפוש" בראש. כך, במקום לקרוא את כל הקטע מחדש לכל שאלה, קוראים פעם אחת ויודעים מראש לאן לחזור.',
+    keyLine: 'ההבדל המכריע בין נבחן שמבזבז זמן לנבחן יעיל הוא סדר הפעולות: הצצה קצרה בשאלות לפני הקריאה נותנת "מפת חיפוש" בראש.',
     approach: [
       { step: 'הצץ בשאלות (30 שניות)', detail: 'לא לקרוא לעומק: רק לזהות מילות מפתח ("לפי הקטע, מדוע...") כדי לדעת מה לחפש. אל תקרא עדיין את התשובות.' },
       { step: 'קרא את הקטע ברצף (כ-4 דקות)', detail: 'קריאה אחת מלאה ומהירה. אל תעצור על מילה לא מוכרת: סמן אותה בראש והמשך. המטרה: רעיון מרכזי + מה יש בכל פסקה.' },
@@ -738,6 +757,12 @@ export interface ConnectorWord {
   word: string;
   meaning: string;
   grammar: string;
+  /**
+   * The cheat-sheet chip. Only for words whose `grammar` already states the
+   * rule: `basis` is the verbatim phrase from `grammar` that backs `chip`
+   * (strategies.test.ts). No backing phrase, no chip.
+   */
+  pattern?: { chip: string; basis: string };
   example: string;
   exampleExplain: string;
 }
@@ -748,8 +773,14 @@ export interface ConnectorCategory {
   icon: LucideIcon;
   color: 'red' | 'blue' | 'green' | 'amber';
   intro: string;
+  /** Verbatim sentence(s) from `intro`. */
+  keyLine: string;
   words: ConnectorWord[];
 }
+
+/** Verbatim sentences from CONNECTORS_INTRO. */
+export const CONNECTORS_KEYLINE =
+  'מילת הקישור היא התמרור הזה. מי שלומד לקרוא אותה נכון, פותר חצי מהשאלה עוד לפני שהגיע לפער או לתשובות.';
 
 export const CONNECTORS_INTRO =
   'שאלת אמירנ"ט לא באמת בודקת אם אתה מכיר את המילה "despite". היא בודקת משהו הרבה יותר בסיסי: האם אתה מזהה את הקשר הלוגי בין שני חלקי המשפט. ' +
@@ -771,6 +802,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
       'קבוצת הניגוד היא הכי נפוצה במבחן, כי היא יוצרת בדיוק את סוג המתח שהופך משפט לשאלה מעניינת: משהו אחד נכון, אבל קורה למרות זאת משהו הפוך או בלתי-צפוי. ' +
       'ברגע שהעין שלך תופסת מילת ניגוד, המשימה הראשונה שלה היא לא להבין את שני חלקי המשפט לעומק, אלא רק לזהות שהם הולכים בכיוונים מנוגדים, ולצפות שהחלק שעדיין לא קראת "יסתור" את מה שכבר קראת. ' +
       'זה חוסך זמן: אתה כבר יודע לאן המשפט הולך לפני שהגעת לשם.',
+    keyLine: 'ברגע שהעין שלך תופסת מילת ניגוד, המשימה הראשונה שלה היא לא להבין את שני חלקי המשפט לעומק, אלא רק לזהות שהם הולכים בכיוונים מנוגדים, ולצפות שהחלק שעדיין לא קראת "יסתור" את מה שכבר קראת.',
     words: [
       {
         word: 'although / though',
@@ -778,6 +810,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
         grammar:
           'אלו מילות חיבור-כפיפה (subordinating conjunctions), ולכן חייב לבוא אחריהן משפט שלם, עם נושא ופועל משלו: "Although he was tired, he finished the race." ' +
           'זה שונה מהותית מ-despite, וכדאי להכיר את ההבדל כדי לזהות מהר את מבנה המשפט.',
+        pattern: { chip: 'אחריה: משפט שלם', basis: 'חייב לבוא אחריהן משפט שלם' },
         example: 'Although the exam was long, most students finished on time.',
         exampleExplain:
           'המשפט פותח ב"although", סימן שמה שיבוא אחריו (התלמידים סיימו בזמן) הולך לסתור את מה שהיינו מצפים ממנו (מבחן ארוך = כנראה לא מספיקים). זו בדיוק תבנית "ציפייה מול תוצאה" האופיינית לניגוד.',
@@ -788,6 +821,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
         grammar:
           'בניגוד ל-although, אלו מילות יחס (prepositions), ולכן אחריהן חייב לבוא שם עצם או gerund (V-ing), לא משפט שלם. "Despite the rain" נכון; "Despite it rained" שגוי. ' +
           'אם צריך לתאר משפט שלם אחרי despite, פותרים את זה עם "the fact that": "Despite the fact that it rained." שווה לזכור את ההבחנה הזו בנפרד מ-although, גם אם המשמעות דומה.',
+        pattern: { chip: 'אחריה: שם עצם / V-ing', basis: 'אחריהן חייב לבוא שם עצם או gerund (V-ing), לא משפט שלם' },
         example: 'Despite the heavy rain, the match continued as planned.',
         exampleExplain:
           '"the heavy rain" הוא שם עצם, לא משפט, בדיוק כמו שהכלל מחייב. שימו לב שהמשמעות זהה ל-"Although it rained heavily". רק המבנה הדקדוקי משתנה.',
@@ -798,6 +832,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
         grammar:
           'זו מילת קישור בין-משפטית (conjunctive adverb), לא מילת כפיפה, ולכן היא לא מחברת ישירות שני חלקי משפט באותו משפט. היא באה אחרי נקודה, או אחרי נקודה-פסיק (;), ולרוב עם פסיק אחריה: "The plan was solid; however, it failed." ' +
           'במבחן זה עוזר לקרוא נכון: כשרואים "; however," יודעים שמתחיל משפט עצמאי חדש שהולך נגד הרושם של הקודם, גם בתוך קטע קריאה ארוך.',
+        pattern: { chip: 'לפניה: נקודה או ;', basis: 'היא באה אחרי נקודה, או אחרי נקודה-פסיק (;)' },
         example: 'The results looked promising; however, further testing is required.',
         exampleExplain: 'שני משפטים עצמאיים לגמרי, מחוברים בנקודה-פסיק. "However" רק מסמן שהמשפט השני הולך נגד הרושם שהשאיר המשפט הראשון.',
       },
@@ -813,6 +848,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
         word: 'nevertheless / nonetheless',
         meaning: 'אף על פי כן',
         grammar: 'מתנהגות דקדוקית בדיוק כמו however (מילות קישור בין-משפטיות), אבל רשמיות יותר, ולכן נפוצות בעיקר בקטעי הבנת הנקרא ברמה גבוהה, פחות בדיבור.',
+        pattern: { chip: 'כמו however', basis: 'מתנהגות דקדוקית בדיוק כמו however' },
         example: 'The evidence was weak; nevertheless, the committee approved the proposal.',
         exampleExplain: 'אותו מבנה בדיוק כמו however, אבל הרישום הרשמי מתאים יותר לטקסט אקדמי, שם תמצאו אותה הכי הרבה.',
       },
@@ -827,6 +863,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
       'קבוצה זו מתפצלת לשני תפקידים שחשוב להבדיל ביניהם: מילים שמסמנות את הסיבה (מה שגרם), ומילים שמסמנות את התוצאה (מה שקרה בעקבות זאת). ' +
       'הטעות הנפוצה ביותר בשאלות מהסוג הזה היא להתבלבל בכיוון: לחשוב שמה שבא אחרי "therefore" הוא הגורם, כשלמעשה זו התוצאה. ' +
       'תרגיל מהיר שעובד תמיד: שאלו את עצמכם "מה קרה קודם?". התשובה היא תמיד הסיבה, לא משנה באיזה סדר המשפט כתוב אותה.',
+    keyLine: 'תרגיל מהיר שעובד תמיד: שאלו את עצמכם "מה קרה קודם?". התשובה היא תמיד הסיבה, לא משנה באיזה סדר המשפט כתוב אותה.',
     words: [
       {
         word: 'because / since / as',
@@ -834,6 +871,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
         grammar:
           '"Because" הכי חד וברור: הוא משמש רק לסיבה. "Since" ו-"as" עלולות לבלבל כי הן משמשות גם לציון זמן ("Since 2020…" / "As I was walking…"), וההקשר קובע אם מדובר בסיבה או בזמן. ' +
           'בכל שלוש המקרים, המשפט שאחריהן הוא תמיד הגורם למשפט האחר, לא התוצאה.',
+        pattern: { chip: 'אחריה: הסיבה', basis: 'המשפט שאחריהן הוא תמיד הגורם למשפט האחר' },
         example: 'Because the bridge was closed, traffic was redirected downtown.',
         exampleExplain: 'הגשר הסגור הוא הסיבה; ניתוב התנועה הוא התוצאה. "Because" תמיד "מצביע" על הסיבה בדיוק כך.',
       },
@@ -843,6 +881,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
         grammar:
           'ההפך המדויק מ-because מבחינת תפקיד: מה שבא אחריהן הוא ה-effect (התוצאה), לא ה-cause. הסיבה תמיד כבר נאמרה קודם במשפט הקודם. ' +
           'זו הסיבה שכדאי לזכור אותן כזוג הפוך ל-because/since: אותו יחס סיבה-תוצאה, רק שהכיוון הדקדוקי של המשפט הפוך.',
+        pattern: { chip: 'אחריה: התוצאה', basis: 'מה שבא אחריהן הוא ה-effect (התוצאה)' },
         example: 'The flight was delayed; consequently, passengers missed their connections.',
         exampleExplain: 'העיכוב הוא הסיבה (נאמרה ראשונה); הפספוס של הטיסות המקשרות הוא התוצאה, מסומנת ב-"consequently". בדיוק כיוון הפוך מ-because.',
       },
@@ -856,11 +895,13 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
     intro:
       'מילות תוספת הן הכי "בטוחות" מבחינה לוגית, כי הן פשוט ממשיכות באותו כיוון שכבר התחיל. כלל הזהב: אם המשפט הראשון היה שלילי, המשך עם "moreover" יהיה גם הוא שלילי (לא הפוך). ' +
       'זו בדיוק הסיבה שהן קלות לזיהוי במבחן: תשובה שמנסה "להפתיע" אחרי מילת תוספת היא כנראה שגויה.',
+    keyLine: 'כלל הזהב: אם המשפט הראשון היה שלילי, המשך עם "moreover" יהיה גם הוא שלילי (לא הפוך).',
     words: [
       {
         word: 'moreover / furthermore / in addition',
         meaning: 'יתרה מכך / בנוסף',
         grammar: 'שלושתן מתפקדות כמעט זהה: מוסיפות טיעון נוסף באותו כיוון הרגשי/עובדתי של המשפט הקודם. חילופיות לחלוטין בשימוש היומיומי של רמת האמירנ"ט.',
+        pattern: { chip: 'אחריה: אותו כיוון', basis: 'מוסיפות טיעון נוסף באותו כיוון' },
         example: 'The hotel was overpriced; moreover, the service was disappointing.',
         exampleExplain: 'שתי תלונות, לא תלונה מול שבח. "Moreover" מוודא שאתם לא מצפים לתפנית, אלא לעוד באותו כיוון.',
       },
@@ -874,6 +915,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
     intro:
       'מילות תנאי מציבות דרישה: משהו יקרה, אבל רק אם (או רק אם לא) תנאי מסוים מתקיים. ההבדל הקריטי בקבוצה הזו הוא בין תנאי חיובי לתנאי שלילי, ו-"unless" הוא המקום שבו הכי קל להתבלבל, ' +
       'כי הוא נשמע כמו מילה "רגילה" אבל למעשה מסתיר בתוכו שלילה שלמה.',
+    keyLine: 'ההבדל הקריטי בקבוצה הזו הוא בין תנאי חיובי לתנאי שלילי, ו-"unless" הוא המקום שבו הכי קל להתבלבל, כי הוא נשמע כמו מילה "רגילה" אבל למעשה מסתיר בתוכו שלילה שלמה.',
     words: [
       {
         word: 'unless',
@@ -881,6 +923,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
         grammar:
           'שווה-ערך מדויק ל-"if not": "You will fail unless you study" = "You will fail if you do not study." הקושי הוא שהמילה עצמה לא "נשמעת" שלילית (אין בה not או never), ' +
           'ולכן קל לפספס שהיא הופכת את כל התנאי לשלילי. הטריק: בכל פעם שרואים unless, ממירים אותה מיד בראש ל-"if...not" ואז קוראים שוב.',
+        pattern: { chip: '= if … not', basis: 'שווה-ערך מדויק ל-"if not"' },
         example: 'The project will be delayed unless more staff are assigned.',
         exampleExplain: 'זהה ל-"The project will be delayed if more staff are NOT assigned." הפרויקט יתעכב, והדרך היחידה למנוע זאת היא הקצאת עובדים נוספים.',
       },
@@ -888,6 +931,7 @@ export const CONNECTOR_CATEGORIES: ConnectorCategory[] = [
         word: 'provided that / as long as',
         meaning: 'בתנאי ש...',
         grammar: 'תנאי חיובי ופשוט יותר מ-unless, בלי שלילה מוסתרת. מציגות דרישה ברורה: קורה X, בתנאי ש-Y מתקיים.',
+        pattern: { chip: 'תנאי חיובי, בלי שלילה מוסתרת', basis: 'תנאי חיובי ופשוט יותר מ-unless, בלי שלילה מוסתרת' },
         example: 'You may reschedule the exam, provided that you notify the office 48 hours in advance.',
         exampleExplain: 'אפשר לדחות את המבחן, אבל רק אם מודיעים 48 שעות מראש. אין כאן שלילה נסתרת כמו ב-unless; הדרישה גלויה וברורה.',
       },
@@ -901,10 +945,11 @@ export const INVEST_INTRO =
   'תקציב הזמן (בנושא "תקציב זמן") קובע גבולות אחידים, אבל בפועל לא כל דקה ולא כל פרק שווים אותו דבר מבחינת תשומת הלב. ' +
   'יש שלושה מקומות ספציפיים במבנה המבחן שבהם כדאי לחלק את הריכוז והזמן אחרת ממה שהאינסטינקט אומר. להכיר את שלושתם משנה איך מחלקים תשומת לב לאורך כל המבחן, לא רק בתוך פרק בודד.';
 
-export const INVEST_POINTS: { icon: LucideIcon; title: string; body: string }[] = [
+export const INVEST_POINTS: { icon: LucideIcon; title: string; keyLine: string; body: string }[] = [
   {
     icon: Route,
     title: 'הפרק הראשון קובע את נקודת הפתיחה, לא את הגורל',
+    keyLine: 'המסקנה המעשית: גש לפרק הראשון בריכוז מלא ואל תזלזל בשאלות "קלות".',
     body:
       'הפרק הראשון נותן למנוע האדפטיבי את ההערכה הראשונית שלך, ולפיה נבחר הקושי של הפרק הבא. אבל המנוע ממשיך לעדכן את ההערכה אחרי כל תשובה ואחרי כל פרק, כך שפתיחה חלשה בהחלט ניתנת לתיקון בהמשך: פרקים טובים אחריה מעלים את הרמה בחזרה. ' +
       'עם זאת, פתיחה חזקה חוסכת לך את הטיפוס הזה: היא מכניסה אותך מוקדם לפרקים הקשים, שבהם נמדדים הציונים הגבוהים. ' +
@@ -913,6 +958,7 @@ export const INVEST_POINTS: { icon: LucideIcon; title: string; body: string }[] 
   {
     icon: BookOpen,
     title: 'הבנת הנקרא: המקום היחיד שבו אפשר לאגם זמן',
+    keyLine: 'אבל התנאי קריטי: זה תקף רק אחרי שכל שאר השאלות בפרק כבר קיבלו תשובה.',
     body:
       'לא בגלל שיש שם יותר זמן לשאלה: אחרי הקריאה נשארות כ-2 דקות לשאלה, בדיוק כמו בניסוח מחדש (ראה נושא "תקציב זמן"). היתרון הוא אחר: חמש השאלות נשענות על אותו קטע, ועל שאלות פרט עונים לרוב מהר יותר מהממוצע, כי הטקסט כבר מוכר לך. ' +
       'הזמן שנחסך בהן מצטבר בתוך הפרק, ורק כאן אפשר להשקיע אותו בשאלה אחת קשה, עד 3 דקות. בהשלמת משפטים, לעומת זאת, כל שאלה עומדת בפני עצמה, ואותן 3 דקות היו עולות לך שלוש שאלות אחרות. ' +
@@ -921,6 +967,7 @@ export const INVEST_POINTS: { icon: LucideIcon; title: string; body: string }[] 
   {
     icon: FlaskConical,
     title: 'את הפרקים הניסיוניים עושים כמו פרקים אמיתיים',
+    keyLine: 'עם זאת, מומלץ להתייחס ברצינות מלאה לכל פרק שמופיע בבחינה, כאילו הוא נספר.',
     body:
       'בבחינת אמירנ"ט עשויים להופיע בסוף פרקים ניסיוניים מסוגים חדשים, או מטלת כתיבה. הפרקים האלה לא יכולים לפגוע בציון שלך. ' +
       'עם זאת, מומלץ להתייחס ברצינות מלאה לכל פרק שמופיע בבחינה, כאילו הוא נספר. גם כי לא תמיד ברור מראש איזה פרק הוא ניסיוני, וגם כי ירידה בריכוז לקראת הסוף היא הרגל שכדאי לא לבנות. ' +
@@ -977,11 +1024,31 @@ export type TopicId =
 export const TOPICS: { id: TopicId; icon: LucideIcon; title: string; desc: string }[] = [
   { id: 'rules', icon: Shuffle, title: 'חוקי המשחק', desc: 'איך המבחן עובד: אדפטיביות, טיימר, ניקוד' },
   { id: 'time', icon: Timer, title: 'תקציב זמן', desc: 'כמה זמן לכל שאלה, ומתי לוותר ולנחש' },
+  { id: 'invest', icon: Gem, title: 'איפה שווה להשקיע', desc: 'לא כל הדקות שוות באותה מידה' },
   { id: 'sentence-completion', icon: PenLine, title: 'השלמת משפטים', desc: 'שיטת עבודה + דוגמה פתורה' },
   { id: 'restatement', icon: RotateCcw, title: 'ניסוח מחדש', desc: 'שיטת עבודה + דוגמה פתורה' },
   { id: 'reading-comprehension', icon: BookOpen, title: 'הבנת הנקרא', desc: 'שיטת עבודה + דוגמה פתורה' },
   { id: 'connectors', icon: Link2, title: 'מילות קישור', desc: 'המילים שקובעות כמעט כל שאלה' },
-  { id: 'invest', icon: Gem, title: 'איפה שווה להשקיע', desc: 'לא כל הדקות שוות באותה מידה' },
-  { id: 'methods', icon: BookOpen, title: 'שיטות קריאה', desc: 'איך ניגשים לקטע: יתרונות וחסרונות' },
+  { id: 'methods', icon: Scale, title: 'שיטות קריאה', desc: 'איך ניגשים לקטע: יתרונות וחסרונות' },
   { id: 'habits', icon: CheckCircle2, title: 'הרגלי הכנה', desc: 'מה בונה את המיומנות לאורך זמן' },
 ];
+
+/** The topic index, grouped. Order here is the suggested reading order (1–9). */
+export const TOPIC_GROUPS: { title: string; ids: TopicId[] }[] = [
+  { title: 'להבין את המבחן', ids: ['rules', 'time', 'invest'] },
+  { title: 'שיטה לפי סוג שאלה', ids: ['sentence-completion', 'restatement', 'reading-comprehension'] },
+  { title: 'כלים והרגלים', ids: ['connectors', 'methods', 'habits'] },
+];
+
+/**
+ * Each topic's "bottom line", shown above its intro. Verbatim sentence(s) from
+ * that topic's intro (the question-type topics use their guide's `keyLine`).
+ */
+export const TOPIC_KEYLINES: Record<Exclude<TopicId, QuestionTypeId>, string> = {
+  rules: 'המבחן הזה בנוי על שלושה מנגנונים ייחודיים (אדפטיביות, נעילת פרקים, וטיימר קשיח) שכל אחד מהם דורש התנהגות שונה מהמצופה.',
+  time: 'המספרים למטה בנויים כך שאם תעמוד בהם, יישאר לך תמיד זמן לסבב בדיקה אחרון לפני סגירת הפרק.',
+  connectors: CONNECTORS_KEYLINE,
+  invest: 'יש שלושה מקומות ספציפיים במבנה המבחן שבהם כדאי לחלק את הריכוז והזמן אחרת ממה שהאינסטינקט אומר.',
+  methods: 'כשמבינים את היתרונות והחסרונות של כל גישה, אפשר להתאים את הטקטיקה לקצב הקריאה שלך, במקום לאמץ שיטה בלי לבדוק אם היא מתאימה לך.',
+  habits: 'ארבעת ההרגלים הבאים לא מחליפים את הידע האסטרטגי, אלא הופכים אותו לאוטומטי, כך שביום המבחן אתה לא צריך "לחשוב" על השיטה. אתה פשוט מיישם אותה.',
+};

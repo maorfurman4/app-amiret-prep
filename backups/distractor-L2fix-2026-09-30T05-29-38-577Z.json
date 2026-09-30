@@ -1,0 +1,2256 @@
+[
+ {
+  "id": "00c70617-27f3-47d9-b40e-26bf58ff8999",
+  "options": [
+   {
+    "id": "a",
+    "text": "convert"
+   },
+   {
+    "id": "d",
+    "text": "translate"
+   },
+   {
+    "id": "c",
+    "text": "invite"
+   },
+   {
+    "id": "b",
+    "text": "pour"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חברת הבנייה מתכננת ל___ את המחסן הישן לדירות מודרניות. מה עושים עם מבנה ישן כדי לתת לו שימוש חדש?\",\"correct_reason\":\"convert (להסב/להפוך). חברת הבנייה מתכננת להסב את המחסן הישן לדירות מודרניות.\",\"options_analysis\":[\"נכון! convert (להסב): מתאים לשינוי ייעוד מבנה\",\"translate into (לתרגם ל-): מתרגמים טקסט, לא מחסן\",\"invite into (להזמין אל): מזמינים אנשים, לא מבנה\",\"pour into (לשפוך לתוך): שופכים נוזל, לא מחסן\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "00ef055e-780a-43f4-b7fd-3a3b15ef8412",
+  "options": [
+   {
+    "id": "a",
+    "text": "adopt"
+   },
+   {
+    "id": "c",
+    "text": "punish"
+   },
+   {
+    "id": "d",
+    "text": "forgive"
+   },
+   {
+    "id": "b",
+    "text": "bury"
+   }
+  ],
+  "explanation": "{\"strategy\":\"אימוץ מערכת תשלום חדשה לחנות מקוונת.\",\"correct_reason\":\"adopt (לאמץ). החברה החליטה לאמץ מערכת תשלום חדשה עבור החנות המקוונת שלה.\",\"options_analysis\":[\"נכון! adopt (לאמץ, מתאים למערכת תשלום)\",\"punish (להעניש): לא מענישים מערכת תשלום\",\"forgive (לסלוח): אין על מה לסלוח כאן\",\"bury (לקבור): סותר את ההחלטה להשתמש במערכת חדשה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "0594c160-b3fd-4dde-9e67-cd8b51d2aa8e",
+  "options": [
+   {
+    "id": "c",
+    "text": "decorate"
+   },
+   {
+    "id": "d",
+    "text": "applaud"
+   },
+   {
+    "id": "a",
+    "text": "inspect"
+   },
+   {
+    "id": "b",
+    "text": "entertain"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בדיקת מערכת אספקת מים לאחר דליפה.\",\"correct_reason\":\"inspect (לבדוק). העיר החליטה לבדוק את מערכת אספקת המים לאחר הדליפה.\",\"options_analysis\":[\"decorate (לקשט): לא מקשטים מערכת מים אחרי דליפה\",\"applaud (למחוא כפיים): דליפה היא לא סיבה לשבח\",\"נכון! inspect (לבדוק, מתאים לדליפה)\",\"entertain (לבדר): לא מבדרים מערכת מים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "07fed5db-0601-411a-b070-69849adea126",
+  "options": [
+   {
+    "id": "b",
+    "text": "attend"
+   },
+   {
+    "id": "c",
+    "text": "swallow"
+   },
+   {
+    "id": "d",
+    "text": "mend"
+   },
+   {
+    "id": "a",
+    "text": "feature"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המגזין ___ ראיון עם הסופר זוכה הפרס בחודש הבא. מה עושה מגזין עם תוכן מרכזי בגיליון?\",\"correct_reason\":\"feature (להציג/לכלול בבולטות). המגזין יציג ראיון עם הסופר זוכה הפרס בחודש הבא.\",\"options_analysis\":[\"attend (להשתתף ב-): מגזין לא משתתף בראיון\",\"swallow (לבלוע): לא הגיוני\",\"mend (לתקן): אין מה לתקן בראיון\",\"נכון! feature (להציג): מתאים לתוכן בולט בגיליון\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "08edf975-aa3b-4b02-a691-c7b52922b26b",
+  "options": [
+   {
+    "id": "a",
+    "text": "deliver"
+   },
+   {
+    "id": "c",
+    "text": "lend"
+   },
+   {
+    "id": "d",
+    "text": "explain"
+   },
+   {
+    "id": "b",
+    "text": "owe"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המתנדבים ___ ארוחות לדיירים קשישים שלא יכולים לצאת מבתיהם. מה עושים מתנדבים עם ארוחות לקשישים?\",\"correct_reason\":\"deliver (למסור/לספק). המתנדבים יספקו ארוחות לדיירים קשישים שלא יכולים לצאת מבתיהם.\",\"options_analysis\":[\"נכון! deliver (לספק, מתאים למשלוח ארוחות)\",\"lend (להשאיל): לא משאילים ארוחות\",\"explain (להסביר): הקשישים צריכים לקבל ארוחות, לא הסבר עליהן\",\"owe (לחוב): המתנדבים לא חייבים להם ארוחות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "0b6bd975-116d-422b-b96f-3197588a87f1",
+  "options": [
+   {
+    "id": "b",
+    "text": "compare"
+   },
+   {
+    "id": "a",
+    "text": "dedicate"
+   },
+   {
+    "id": "c",
+    "text": "explain"
+   },
+   {
+    "id": "d",
+    "text": "owe"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הקרן נוצרה כדי ל___ את משאביה במלואם לחינוך ילדים. מה עושה קרן עם המשאבים שלה למטרה מסוימת?\",\"correct_reason\":\"dedicate (להקדיש). הקרן נוצרה כדי להקדיש את משאביה במלואם לחינוך ילדים.\",\"options_analysis\":[\"compare to (להשוות ל-): הקרן לא הוקמה כדי להשוות משאבים\",\"נכון! dedicate (להקדיש): מתאים להקצאת משאבים למטרה\",\"explain (להסביר): לא מסבירים משאבים לחינוך\",\"owe (לחוב): הקרן לא חייבת את משאביה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "10b3adf7-6e96-4bb7-aed8-570e650d3d4a",
+  "options": [
+   {
+    "id": "b",
+    "text": "hire"
+   },
+   {
+    "id": "d",
+    "text": "educate"
+   },
+   {
+    "id": "c",
+    "text": "obey"
+   },
+   {
+    "id": "a",
+    "text": "offer"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הצעת מוצרים בהנחה לחגים.\",\"correct_reason\":\"offer (להציע). החברה החליטה להציע את המוצרים שלה בהנחה לחגים.\",\"options_analysis\":[\"hire (להעסיק): מעסיקים אנשים, לא מוצרים\",\"educate (לחנך): מחנכים אנשים, לא מוצרים\",\"obey (לציית): לא מצייתים למוצרים\",\"נכון! offer (להציע, מתאים להנחה)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "12bec9a4-8682-4e76-9023-b84b236b7167",
+  "options": [
+   {
+    "id": "a",
+    "text": "outline"
+   },
+   {
+    "id": "b",
+    "text": "forgive"
+   },
+   {
+    "id": "c",
+    "text": "cure"
+   },
+   {
+    "id": "d",
+    "text": "rent"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המנהל ___ את המשימות העיקריות עבור כל חבר צוות בפגישה. מה עושה מנהל כדי להציג משימות בקווים כלליים?\",\"correct_reason\":\"outline (לתאר בקווים כלליים). המנהל יתאר את המשימות העיקריות עבור כל חבר צוות בפגישה.\",\"options_analysis\":[\"נכון! outline (לתאר בקווים כלליים): מתאים להצגת משימות\",\"forgive (לסלוח): לא סולחים על משימות בישיבה\",\"cure (לרפא): לא מרפאים משימות\",\"rent (לשכור): לא שוכרים משימות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "160d5799-f639-4c46-af3a-bd54f0e065c2",
+  "options": [
+   {
+    "id": "a",
+    "text": "replace"
+   },
+   {
+    "id": "d",
+    "text": "confuse"
+   },
+   {
+    "id": "c",
+    "text": "decorate"
+   },
+   {
+    "id": "b",
+    "text": "punish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה ___ את המכונות הישנות במודלים חדשים ויעילים יותר. מה עושה חברה עם ציוד ישן?\",\"correct_reason\":\"replace (להחליף). החברה תחליף את המכונות הישנות במודלים חדשים ויעילים יותר.\",\"options_analysis\":[\"נכון! replace (להחליף, מתאים להחלפת ציוד)\",\"confuse with (לבלבל עם): חברה לא מתכננת לבלבל\",\"decorate with (לקשט ב-): לא מקשטים מכונות במכונות\",\"punish (להעניש): לא מענישים מכונות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1629bc06-60b9-44e1-80e0-9025d79931b6",
+  "options": [
+   {
+    "id": "a",
+    "text": "release"
+   },
+   {
+    "id": "b",
+    "text": "sweep"
+   },
+   {
+    "id": "c",
+    "text": "peel"
+   },
+   {
+    "id": "d",
+    "text": "drown"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפרופסור ___ את תוצאות המבחן במייל בתחילת השבוע הבא. מה עושה מרצה עם תוצאות מבחן?\",\"correct_reason\":\"release (לפרסם/לשחרר). הפרופסור ישחרר את תוצאות המבחן במייל בתחילת השבוע הבא.\",\"options_analysis\":[\"נכון! release (לשחרר, מתאים לפרסום תוצאות)\",\"sweep (לטאטא): לא מטאטאים תוצאות\",\"peel (לקלף): לא מקלפים תוצאות\",\"drown (להטביע): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1654c3c6-9d26-4cbc-8031-275ed34111b4",
+  "options": [
+   {
+    "id": "a",
+    "text": "postpone"
+   },
+   {
+    "id": "d",
+    "text": "admire"
+   },
+   {
+    "id": "c",
+    "text": "feed"
+   },
+   {
+    "id": "b",
+    "text": "wrap"
+   }
+  ],
+  "explanation": "{\"strategy\":\"דחיית פגישה ליום אחר.\",\"correct_reason\":\"postpone (לדחות). המנהלת ביקשה מהעוזרת שלה לדחות את הפגישה ליום שלישי הבא.\",\"options_analysis\":[\"נכון! postpone (לדחות, מתאים לדחיית פגישה)\",\"admire (להעריץ): לא מתאים ל-'to next Tuesday'\",\"feed (להאכיל): לא מאכילים פגישה\",\"wrap (לעטוף): לא עוטפים פגישה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1a755b9b-65e8-4cb2-a8ee-bf68c56a01e2",
+  "options": [
+   {
+    "id": "d",
+    "text": "ingredient"
+   },
+   {
+    "id": "b",
+    "text": "resource"
+   },
+   {
+    "id": "c",
+    "text": "recipe"
+   },
+   {
+    "id": "a",
+    "text": "phenomenon"
+   }
+  ],
+  "explanation": "{\"strategy\":\"האורות המוזרים בשמיים נותרים ___ טבעי בלתי מוסבר. מה מכנים אירוע טבעי לא רגיל?\",\"correct_reason\":\"phenomenon (תופעה). האורות המוזרים בשמיים נותרים תופעה טבעית בלתי מוסברת.\",\"options_analysis\":[\"ingredient (מרכיב): אורות בשמיים אינם מרכיב\",\"resource (משאב): אורות לא מוסברים אינם משאב\",\"recipe (מתכון): לא קשור\",\"נכון! phenomenon (תופעה): מתאים לאירוע טבעי מוזר\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1a7a27dd-5562-4920-aa9f-632e28935643",
+  "options": [
+   {
+    "id": "a",
+    "text": "iron"
+   },
+   {
+    "id": "d",
+    "text": "steal"
+   },
+   {
+    "id": "b",
+    "text": "donate"
+   },
+   {
+    "id": "c",
+    "text": "destroy"
+   }
+  ],
+  "explanation": "{\"strategy\":\"to a local charity (לארגון צדקה). מה עושים עם בגדים ישנים לצדקה?\",\"correct_reason\":\"donate (לתרום). תרומת בגדים לצדקה = donate. הפועל הסטנדרטי לנתינה לצדקה.\",\"options_analysis\":[\"iron (לגהץ): 'to a charity' דורש מסירה, לא גיהוץ\",\"steal (לגנוב): לא גונבים את הבגדים של עצמך\",\"נכון! donate (לתרום): to donate to a charity (לתרום לצדקה)\",\"destroy (להשמיד): לא משמידים בגדים לצדקה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1ac8a930-6c7c-41d6-892a-5d8bce33ad67",
+  "options": [
+   {
+    "id": "a",
+    "text": "install"
+   },
+   {
+    "id": "b",
+    "text": "interview"
+   },
+   {
+    "id": "c",
+    "text": "marry"
+   },
+   {
+    "id": "d",
+    "text": "bribe"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התקנת פנסי רחוב לאורך כביש מהיר.\",\"correct_reason\":\"install (להתקין). העיר החליטה להתקין פנסי רחוב חדשים לאורך הכביש המהיר.\",\"options_analysis\":[\"נכון! install (להתקין, מתאים לפנסי רחוב)\",\"interview (לראיין): מראיינים אנשים, לא פנסים\",\"marry (להתחתן): לא הגיוני\",\"bribe (לשחד): לא משחדים פנסי רחוב\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1c60d7ae-45e4-4302-9243-751574798f4c",
+  "options": [
+   {
+    "id": "b",
+    "text": "lend"
+   },
+   {
+    "id": "d",
+    "text": "explain"
+   },
+   {
+    "id": "c",
+    "text": "confess"
+   },
+   {
+    "id": "a",
+    "text": "extend"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הרחבת פעילות למדינות נוספות.\",\"correct_reason\":\"extend (להרחיב). החברה מתכננת להרחיב את פעילותה לשלוש מדינות חדשות.\",\"options_analysis\":[\"lend (להשאיל): לא משאילים פעילות למדינות\",\"explain (להסביר): לא מתאים ל-'to three new countries'\",\"confess (להתוודות): לא הגיוני\",\"נכון! extend (להרחיב, מתאים לפעילות עסקית)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1cd4a721-126c-4dfb-b46a-5b9666f02412",
+  "options": [
+   {
+    "id": "d",
+    "text": "decorate"
+   },
+   {
+    "id": "a",
+    "text": "implement"
+   },
+   {
+    "id": "b",
+    "text": "neglect"
+   },
+   {
+    "id": "c",
+    "text": "mourn"
+   }
+  ],
+  "explanation": "{\"strategy\":\"יישום אמצעי ביטחון נוספים.\",\"correct_reason\":\"implement (ליישם). רשות שדות התעופה החליטה ליישם אמצעי ביטחון נוספים.\",\"options_analysis\":[\"decorate (לקשט): לא מקשטים אמצעי ביטחון\",\"נכון! implement (ליישם, מתאים לאמצעי ביטחון)\",\"neglect (להזניח): לא 'מחליטים' להזניח אמצעים נוספים\",\"mourn (להתאבל): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1ff1f23f-b864-4ef3-a927-5fdc667e0a42",
+  "options": [
+   {
+    "id": "d",
+    "text": "polish"
+   },
+   {
+    "id": "b",
+    "text": "remove"
+   },
+   {
+    "id": "a",
+    "text": "replace"
+   },
+   {
+    "id": "c",
+    "text": "disconnect"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המלצת מכונאי להחליף בלמים.\",\"correct_reason\":\"replace (להחליף). המכונאי המליץ לה להחליף את הבלמים של המכונית מיד.\",\"options_analysis\":[\"polish (ללטש): בלמים לא צריכים ליטוש\",\"remove (להסיר): נסיעה בלי בלמים מסוכנת\",\"נכון! replace (להחליף, מתאים לבלמים)\",\"disconnect (לנתק): נסיעה עם בלמים מנותקים מסוכנת\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "263f9df7-1739-47f3-9410-cbee2c7c8992",
+  "options": [
+   {
+    "id": "a",
+    "text": "serve"
+   },
+   {
+    "id": "c",
+    "text": "arrest"
+   },
+   {
+    "id": "b",
+    "text": "bury"
+   },
+   {
+    "id": "d",
+    "text": "interview"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הגשת ארוחות לנוסעים בטיסות ארוכות.\",\"correct_reason\":\"serve (להגיש). חברת התעופה החליטה להגיש ארוחות לנוסעים בטיסות ארוכות.\",\"options_analysis\":[\"נכון! serve (להגיש, מתאים לארוחות)\",\"arrest (לעצור): לא עוצרים ארוחות\",\"bury (לקבור): לא קוברים ארוחות\",\"interview (לראיין): לא מראיינים ארוחות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "268f478e-7112-4cd7-a864-938636117e93",
+  "options": [
+   {
+    "id": "b",
+    "text": "forgive"
+   },
+   {
+    "id": "d",
+    "text": "cure"
+   },
+   {
+    "id": "a",
+    "text": "conduct"
+   },
+   {
+    "id": "c",
+    "text": "marry"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה ___ חקירה יסודית לגבי הגורם לפריצת המידע. מה עושה חברה אחרי אירוע אבטחה חמור?\",\"correct_reason\":\"conduct (לערוך). החברה תערוך חקירה יסודית לגבי הגורם לפריצת המידע.\",\"options_analysis\":[\"forgive (לסלוח): לא סולחים על חקירה\",\"cure (לרפא): לא מרפאים חקירה\",\"נכון! conduct (לערוך, מתאים לעריכת חקירה)\",\"marry (להתחתן): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2a19bafc-c676-4c63-a4a3-4fabe4fa72b8",
+  "options": [
+   {
+    "id": "c",
+    "text": "marry"
+   },
+   {
+    "id": "d",
+    "text": "bury"
+   },
+   {
+    "id": "b",
+    "text": "peel"
+   },
+   {
+    "id": "a",
+    "text": "review"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המנהל ___ את ביצועי כל עובד בסוף הרבעון. מה עושה מנהל עם ביצועי עובדים באופן תקופתי?\",\"correct_reason\":\"review (לסקור/לבחון). המנהל יסקור את ביצועי כל עובד בסוף הרבעון.\",\"options_analysis\":[\"marry (להתחתן): לא הגיוני\",\"bury (לקבור): לא קוברים ביצועים\",\"peel (לקלף): לא מקלפים ביצועים\",\"נכון! review (לסקור): מתאים לבדיקת ביצועים תקופתית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2a3c7919-4b61-43fe-b495-978f52afd7d0",
+  "options": [
+   {
+    "id": "d",
+    "text": "decorate"
+   },
+   {
+    "id": "a",
+    "text": "demolish"
+   },
+   {
+    "id": "b",
+    "text": "rent"
+   },
+   {
+    "id": "c",
+    "text": "advertise"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הריסת בניין נטוש לפני קריסה.\",\"correct_reason\":\"demolish (להרוס). העיר החליטה להרוס את הבניין הנטוש לפני שהוא יקרוס.\",\"options_analysis\":[\"decorate (לקשט): לא מקשטים בניין שעומד לקרוס\",\"נכון! demolish (להרוס, מתאים לבניין מסוכן)\",\"rent (לשכור): לא שוכרים בניין שעומד לקרוס\",\"advertise (לפרסם): לא הגיוני לפני קריסה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2b642985-0744-49af-8786-4c2a89ea265c",
+  "options": [
+   {
+    "id": "c",
+    "text": "threat"
+   },
+   {
+    "id": "b",
+    "text": "obstacle"
+   },
+   {
+    "id": "a",
+    "text": "concept"
+   },
+   {
+    "id": "d",
+    "text": "crime"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חופש הביטוי הוא ___ מרכזי ברוב החברות הדמוקרטיות. מה חופש הביטוי נחשב מבחינה רעיונית?\",\"correct_reason\":\"concept (מושג/רעיון). חופש הביטוי הוא מושג מרכזי ברוב החברות הדמוקרטיות.\",\"options_analysis\":[\"threat (איום): חופש הביטוי אינו איום בחברה דמוקרטית\",\"obstacle (מכשול): סותר 'democratic societies'\",\"נכון! concept (מושג, מתאים לרעיון פוליטי-חברתי)\",\"crime (פשע): סותר 'democratic societies'\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2bfec8f4-e4e5-4bf2-bc2f-9aae42ad1693",
+  "options": [
+   {
+    "id": "b",
+    "text": "translate"
+   },
+   {
+    "id": "d",
+    "text": "sweep"
+   },
+   {
+    "id": "c",
+    "text": "frame"
+   },
+   {
+    "id": "a",
+    "text": "chop"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המתכון דורש ל___ את הירקות לחתיכות קטנות ואחידות. מה עושים עם ירקות בהכנת ארוחה?\",\"correct_reason\":\"chop (לחתוך/לקצוץ). המתכון דורש לקצוץ את הירקות לחתיכות קטנות ואחידות.\",\"options_analysis\":[\"translate (לתרגם): מתרגמים טקסט, לא ירקות\",\"sweep (לטאטא): לא מטאטאים ירקות לחתיכות\",\"frame (למסגר): לא ממסגרים ירקות\",\"נכון! chop (לקצוץ, מתאים להכנת ירקות)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2d06c040-6c8f-4854-baac-77db1d4e48e6",
+  "options": [
+   {
+    "id": "a",
+    "text": "check"
+   },
+   {
+    "id": "c",
+    "text": "forgive"
+   },
+   {
+    "id": "b",
+    "text": "swallow"
+   },
+   {
+    "id": "d",
+    "text": "bribe"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המורה ___ את התקדמות התלמידים בחידון קצר בכל יום שישי. מה עושה מורה כדי לעקוב אחר למידה?\",\"correct_reason\":\"check (לבדוק). המורה תבדוק את התקדמות התלמידים בחידון קצר בכל יום שישי.\",\"options_analysis\":[\"נכון! check (לבדוק, מתאים לבדיקת התקדמות)\",\"forgive (לסלוח): לא סולחים על התקדמות\",\"swallow (לבלוע): לא הגיוני\",\"bribe (לשחד): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2ddec3bd-654b-45cb-a34c-7ad681fb08c0",
+  "options": [
+   {
+    "id": "b",
+    "text": "marry"
+   },
+   {
+    "id": "c",
+    "text": "peel"
+   },
+   {
+    "id": "d",
+    "text": "arrest"
+   },
+   {
+    "id": "a",
+    "text": "adjust"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התאמת אסטרטגיה לפני משחק גמר.\",\"correct_reason\":\"adjust (להתאים/לכוונן). הקבוצה צריכה להתאים את האסטרטגיה שלה לפני המשחק הגמר.\",\"options_analysis\":[\"marry (להתחתן): לא הגיוני\",\"peel (לקלף): לא מקלפים אסטרטגיה\",\"arrest (לעצור): לא עוצרים אסטרטגיה\",\"נכון! adjust (להתאים, מתאים לאסטרטגיה)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "302ae1af-2476-4031-8396-28d6465d2807",
+  "options": [
+   {
+    "id": "d",
+    "text": "confirm"
+   },
+   {
+    "id": "a",
+    "text": "falsify"
+   },
+   {
+    "id": "c",
+    "text": "invent"
+   },
+   {
+    "id": "b",
+    "text": "bury"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המדען חזר על הניסוי מספר פעמים כדי ל___ את התוצאות. מה עושים כשחוזרים על ניסוי?\",\"correct_reason\":\"confirm (לאשר). המדען חזר על הניסוי כדי לאשר את התוצאות.\",\"options_analysis\":[\"נכון! confirm (לאשר): מתאים לחזרה על ניסוי לבדיקת תוצאות\",\"falsify (לזייף): לא חוזרים על ניסוי כדי לזייף\",\"invent (להמציא): לא חוזרים על ניסוי כדי להמציא תוצאות\",\"bury (לקבור): לא חוזרים על ניסוי כדי להסתיר\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "32b7e434-fc25-4416-9b7a-92d2b7e36e48",
+  "options": [
+   {
+    "id": "c",
+    "text": "compare"
+   },
+   {
+    "id": "d",
+    "text": "translate"
+   },
+   {
+    "id": "b",
+    "text": "owe"
+   },
+   {
+    "id": "a",
+    "text": "assign"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הקצאת אחיות נוספות למשמרת לילה.\",\"correct_reason\":\"assign (להקצות). בית החולים החליט להקצות אחיות נוספות למשמרת הלילה.\",\"options_analysis\":[\"compare to (להשוות ל-): לא הגיוני לגבי משמרת\",\"translate (לתרגם): לא מתרגמים אחיות\",\"owe (לחוב): לא הגיוני\",\"נכון! assign (להקצות, מתאים לאחיות)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "33d0c586-ef72-453f-9081-c5692e964e99",
+  "options": [
+   {
+    "id": "a",
+    "text": "modify"
+   },
+   {
+    "id": "b",
+    "text": "applaud"
+   },
+   {
+    "id": "c",
+    "text": "forgive"
+   },
+   {
+    "id": "d",
+    "text": "frame"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שינוי תכנון גשר לאחר בדיקה.\",\"correct_reason\":\"modify (לשנות/לתקן). המהנדסים נאלצו לשנות את תכנון הגשר לאחר הבדיקה.\",\"options_analysis\":[\"נכון! modify (לשנות, מתאים לתכנון גשר)\",\"applaud (למחוא כפיים): 'had to' מציין צורך לתקן\",\"forgive (לסלוח): לא סולחים על תכנון\",\"frame (למסגר): לא ממסגרים תכנון גשר\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "34b204bb-a992-47f8-a0d9-4af76db92bbe",
+  "options": [
+   {
+    "id": "d",
+    "text": "bribe"
+   },
+   {
+    "id": "a",
+    "text": "recommend"
+   },
+   {
+    "id": "b",
+    "text": "forgive"
+   },
+   {
+    "id": "c",
+    "text": "vaccinate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"רופא ש___ מומחה אם התסמינים לא ישתפרו בקרוב. מה עושה רופא כשמצב לא משתפר?\",\"correct_reason\":\"recommend (להמליץ). הרופא ימליץ על מומחה אם התסמינים לא ישתפרו בקרוב.\",\"options_analysis\":[\"bribe (לשחד): לא הגיוני\",\"נכון! recommend (להמליץ, מתאים להפניה רפואית)\",\"forgive (לסלוח): לא הגיוני\",\"vaccinate (לחסן): לא מחסנים מומחה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "39957889-659c-4689-a465-23441bd986fc",
+  "options": [
+   {
+    "id": "d",
+    "text": "erase"
+   },
+   {
+    "id": "b",
+    "text": "swallow"
+   },
+   {
+    "id": "c",
+    "text": "punish"
+   },
+   {
+    "id": "a",
+    "text": "provide"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפרופסור ביקש מהתלמידים ל___ דוגמאות כדי לתמוך בטיעון שלהם. מה עושים כדי לחזק טיעון בכתיבה?\",\"correct_reason\":\"provide (לספק). הפרופסור ביקש מהתלמידים לספק דוגמאות כדי לתמוך בטיעון שלהם.\",\"options_analysis\":[\"erase (למחוק): לא מוחקים דוגמאות כדי לתמוך בטיעון\",\"swallow (לבלוע): לא הגיוני\",\"punish (להעניש): לא מענישים דוגמאות\",\"נכון! provide (לספק, מתאים לחיזוק טיעון)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "3af60e8b-c87e-4132-9d90-aac1319254b7",
+  "options": [
+   {
+    "id": "a",
+    "text": "offer"
+   },
+   {
+    "id": "b",
+    "text": "charge"
+   },
+   {
+    "id": "c",
+    "text": "deny"
+   },
+   {
+    "id": "d",
+    "text": "bury"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מבצע הנחה למצטרפים לתוכנית נאמנות.\",\"correct_reason\":\"offer (להציע). החנות תציע הנחה ללקוחות שיצטרפו לתוכנית הנאמנות.\",\"options_analysis\":[\"נכון! offer (להציע, מתאים להנחה)\",\"charge (לגבות): לא גובים הנחה\",\"deny (לשלול): סותר את התמריץ להצטרף למועדון\",\"bury (לקבור): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "3bbe63e1-3775-4e2c-bf13-6b1b32ad9818",
+  "options": [
+   {
+    "id": "c",
+    "text": "falsify"
+   },
+   {
+    "id": "a",
+    "text": "analyze"
+   },
+   {
+    "id": "d",
+    "text": "bury"
+   },
+   {
+    "id": "b",
+    "text": "shred"
+   }
+  ],
+  "explanation": "{\"strategy\":\"כלכלנים ש___ את הנתונים בקפידה לפני שהם חוזים את קצב הצמיחה של השנה הבאה. מה עושים כלכלנים עם נתונים?\",\"correct_reason\":\"analyze (לנתח). הכלכלנים מנתחים את הנתונים בקפידה לפני שהם חוזים את קצב הצמיחה של השנה הבאה.\",\"options_analysis\":[\"falsify (לזייף): כלכלנים לא מזייפים נתונים 'carefully' לפני חיזוי\",\"נכון! analyze (לנתח, מתאים לניתוח נתונים)\",\"bury (לקבור): לא הגיוני\",\"shred (לגרוס): לא גורסים נתונים לפני חיזוי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "3e30f7be-0bf4-4770-b9d6-5c5f70701fee",
+  "options": [
+   {
+    "id": "c",
+    "text": "paint"
+   },
+   {
+    "id": "b",
+    "text": "polish"
+   },
+   {
+    "id": "a",
+    "text": "land"
+   },
+   {
+    "id": "d",
+    "text": "decorate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הטייס נאלץ ל___ את המטוס במהירות עקב תקלה מכנית. מה עושה טייס כשיש תקלה בטיסה?\",\"correct_reason\":\"land (לנחות). הטייס נאלץ לנחות עם המטוס במהירות עקב תקלה מכנית.\",\"options_analysis\":[\"paint (לצבוע): לא בזמן תקלה מכנית\",\"polish (ללטש): לא בזמן תקלה מכנית\",\"נכון! land (לנחות): מתאים לתגובה חירום בטיסה\",\"decorate (לקשט): לא בזמן תקלה מכנית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "430e6139-e43d-4f4a-8231-1904e440cc7a",
+  "options": [
+   {
+    "id": "d",
+    "text": "crime"
+   },
+   {
+    "id": "b",
+    "text": "weakness"
+   },
+   {
+    "id": "c",
+    "text": "burden"
+   },
+   {
+    "id": "a",
+    "text": "principle"
+   }
+  ],
+  "explanation": "{\"strategy\":\"יושר הוא ___ בסיסי שמנחה כיצד החברה מתייחסת לעובדיה. מה מכנים כלל יסוד שמנחה התנהגות?\",\"correct_reason\":\"principle (עיקרון). יושר הוא עיקרון בסיסי שמנחה כיצד החברה מתייחסת לעובדיה.\",\"options_analysis\":[\"crime (פשע): כנות אינה פשע\",\"weakness (חולשה): 'fundamental ... that guides' הוא עיקרון\",\"burden (נטל): 'that guides' מתאר עיקרון מנחה\",\"נכון! principle (עיקרון, מתאים לערך מנחה)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "47ccdaf4-926a-45dd-a2f6-0ad6c9f4ed99",
+  "options": [
+   {
+    "id": "c",
+    "text": "peel"
+   },
+   {
+    "id": "a",
+    "text": "install"
+   },
+   {
+    "id": "d",
+    "text": "bribe"
+   },
+   {
+    "id": "b",
+    "text": "vaccinate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התקנת תוכנה חדשה לפני מועד אחרון.\",\"correct_reason\":\"install (להתקין). העובדים התבקשו להתקין את התוכנה החדשה לפני המועד האחרון.\",\"options_analysis\":[\"peel (לקלף): לא מקלפים תוכנה\",\"נכון! install (להתקין, מתאים לתוכנה)\",\"bribe (לשחד): לא משחדים תוכנה\",\"vaccinate (לחסן): לא מחסנים תוכנה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "49c1755e-aad5-4ed0-a88c-d5ae205d5dab",
+  "options": [
+   {
+    "id": "c",
+    "text": "temperature"
+   },
+   {
+    "id": "b",
+    "text": "flavor"
+   },
+   {
+    "id": "d",
+    "text": "mood"
+   },
+   {
+    "id": "a",
+    "text": "format"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המסמך חייב להישמר ב___ קובץ שונה לפני שניתן להעלות אותו. מה קובע איך קובץ נשמר?\",\"correct_reason\":\"format (פורמט). המסמך חייב להישמר בפורמט קובץ שונה לפני שניתן להעלות אותו.\",\"options_analysis\":[\"temperature (טמפרטורה): לקובץ אין טמפרטורה\",\"flavor (טעם): לקובץ אין טעם\",\"mood (מצב רוח): לקובץ אין מצב רוח\",\"נכון! format (פורמט, מתאים לסוג קובץ)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "4a4eb2d3-b293-47e9-b187-145b5b5a92a0",
+  "options": [
+   {
+    "id": "b",
+    "text": "applaud"
+   },
+   {
+    "id": "d",
+    "text": "frame"
+   },
+   {
+    "id": "a",
+    "text": "address"
+   },
+   {
+    "id": "c",
+    "text": "sweep"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה ___ את תלונת הלקוח תוך חמישה ימי עסקים. מה עושה חברה עם תלונת לקוח?\",\"correct_reason\":\"address (לטפל ב). החברה תטפל בתלונת הלקוח תוך חמישה ימי עסקים.\",\"options_analysis\":[\"applaud (למחוא כפיים): לא מוחאים כפיים לתלונה\",\"frame (למסגר): לא ממסגרים תלונה\",\"נכון! address (לטפל ב): מתאים לטיפול בתלונה\",\"sweep (לטאטא): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "4a964631-fc9b-4100-b628-015a6bf5b06c",
+  "options": [
+   {
+    "id": "c",
+    "text": "hear"
+   },
+   {
+    "id": "d",
+    "text": "obey"
+   },
+   {
+    "id": "b",
+    "text": "marry"
+   },
+   {
+    "id": "a",
+    "text": "generate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מנוע חדש שתוכנן כדי ל___ פחות רעש ממודלים קודמים. מה עושה מנוע עם רעש?\",\"correct_reason\":\"generate (ליצור). המנוע החדש תוכנן כדי ליצור פחות רעש ממודלים קודמים.\",\"options_analysis\":[\"hear (לשמוע): מנוע לא 'שומע' רעש\",\"obey (לציית): לא הגיוני\",\"marry (להתחתן): לא הגיוני\",\"נכון! generate (ליצור, מתאים ליצירת רעש)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "4b1a2fd0-4324-4247-9e2c-8b81ea907369",
+  "options": [
+   {
+    "id": "a",
+    "text": "increase"
+   },
+   {
+    "id": "d",
+    "text": "swallow"
+   },
+   {
+    "id": "b",
+    "text": "paint"
+   },
+   {
+    "id": "c",
+    "text": "whisper"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה החליטה ל___ את תקציב השיווק לקראת השקת המוצר. מה עושים לתקציב לקראת השקה גדולה?\",\"correct_reason\":\"increase (להגדיל). החברה החליטה להגדיל את תקציב השיווק.\",\"options_analysis\":[\"נכון! increase (להגדיל): מתאים להגדלת תקציב לקראת השקה\",\"swallow (לבלוע): לא בולעים תקציב\",\"paint (לצייר): לא רלוונטי\",\"whisper (ללחוש): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "4b73b45f-0361-4d13-9995-c384330c1dde",
+  "options": [
+   {
+    "id": "b",
+    "text": "waste"
+   },
+   {
+    "id": "d",
+    "text": "blame"
+   },
+   {
+    "id": "c",
+    "text": "frame"
+   },
+   {
+    "id": "a",
+    "text": "focus"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התמקדות במאמצים בעזרה לבתי ספר מקומיים.\",\"correct_reason\":\"focus (להתמקד). הארגון החליט להתמקד במאמציו בעזרה לבתי ספר מקומיים.\",\"options_analysis\":[\"waste (לבזבז): לא 'מחליטים' לבזבז מאמצים\",\"blame on (להאשים): לא מאשימים מאמצים\",\"frame (למסגר): לא ממסגרים מאמצים\",\"נכון! focus (להתמקד, מתאים למאמצים)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "4cbea638-214c-42d3-93ac-86f843618a66",
+  "options": [
+   {
+    "id": "b",
+    "text": "tickle"
+   },
+   {
+    "id": "a",
+    "text": "conduct"
+   },
+   {
+    "id": "c",
+    "text": "bake"
+   },
+   {
+    "id": "d",
+    "text": "sew"
+   }
+  ],
+  "explanation": "{\"strategy\":\"עריכת סקר כדי להבין צרכי לקוחות.\",\"correct_reason\":\"conduct (לערוך). החברה החליטה לערוך סקר כדי להבין את צרכי הלקוחות.\",\"options_analysis\":[\"tickle (לדגדג): לא מדגדגים סקר\",\"נכון! conduct (לערוך, מתאים לסקר)\",\"bake (לאפות): לא אופים סקר\",\"sew (לתפור): לא תופרים סקר\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "579762f6-2f81-4389-b3b7-54ca9cadf861",
+  "options": [
+   {
+    "id": "d",
+    "text": "confess"
+   },
+   {
+    "id": "c",
+    "text": "sentence"
+   },
+   {
+    "id": "a",
+    "text": "relocate"
+   },
+   {
+    "id": "b",
+    "text": "attribute"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה החליטה ל___ את פעילותה למתקן גדול יותר מחוץ לעיר. מה עושה חברה כשעוברת מקום?\",\"correct_reason\":\"relocate (להעביר מיקום). החברה החליטה להעביר את פעילותה למתקן גדול יותר מחוץ לעיר.\",\"options_analysis\":[\"confess (להתוודות): לא הגיוני\",\"sentence (לגזור דין): לא הגיוני\",\"נכון! relocate (להעביר מיקום): מתאים למעבר מתקן\",\"attribute (לייחס): לא מתאים ל-'to a larger facility'\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "5e424636-7f8d-4a13-930a-17a80eaff6af",
+  "options": [
+   {
+    "id": "c",
+    "text": "confuse"
+   },
+   {
+    "id": "b",
+    "text": "feed"
+   },
+   {
+    "id": "d",
+    "text": "decorate"
+   },
+   {
+    "id": "a",
+    "text": "replace"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החלפת מערכת ביוב ישנה בצינורות מודרניים.\",\"correct_reason\":\"replace (להחליף). העיר החליטה להחליף את מערכת הביוב הישנה בצינורות מודרניים.\",\"options_analysis\":[\"confuse with (לבלבל עם): לא הגיוני\",\"feed with (להאכיל ב-): לא הגיוני\",\"decorate with (לקשט ב-): לא מקשטים מערכת ביוב בצינורות\",\"נכון! replace (להחליף, מתאים למערכת ביוב)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "5fa97665-b430-4379-b129-ca1a49ed1d95",
+  "options": [
+   {
+    "id": "d",
+    "text": "furniture"
+   },
+   {
+    "id": "b",
+    "text": "silence"
+   },
+   {
+    "id": "c",
+    "text": "weather"
+   },
+   {
+    "id": "a",
+    "text": "individual"
+   }
+  ],
+  "explanation": "{\"strategy\":\"כל ___ בקבוצה חייב להגיש את הטופס לפני המועד האחרון. איך מכנים אדם בודד בתוך קבוצה?\",\"correct_reason\":\"individual (יחיד/פרט). כל יחיד בקבוצה חייב להגיש את הטופס לפני המועד האחרון.\",\"options_analysis\":[\"furniture (רהיט): רהיט לא מגיש טופס\",\"silence (שתיקה): לא הגיוני\",\"weather (מזג אוויר): לא הגיוני\",\"נכון! individual (יחיד): מתאים לאדם בודד בקבוצה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "60bf8f53-b8e5-4e6a-b5ef-507b3bd9ea48",
+  "options": [
+   {
+    "id": "c",
+    "text": "interview"
+   },
+   {
+    "id": "d",
+    "text": "sentence"
+   },
+   {
+    "id": "b",
+    "text": "baptize"
+   },
+   {
+    "id": "a",
+    "text": "place"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הצבת פחי מיחזור בכל שכונה.\",\"correct_reason\":\"place (להציב). העיר החליטה להציב פחי מיחזור בכל שכונה.\",\"options_analysis\":[\"interview (לראיין): לא מראיינים פחי מיחזור\",\"sentence (לגזור דין): לא הגיוני\",\"baptize (להטביל): לא הגיוני\",\"נכון! place (להציב, מתאים לפחי מיחזור)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "630fb0d5-6e1b-4daf-8dcc-3b7ef1be753e",
+  "options": [
+   {
+    "id": "d",
+    "text": "burn"
+   },
+   {
+    "id": "c",
+    "text": "smuggle"
+   },
+   {
+    "id": "a",
+    "text": "adjust"
+   },
+   {
+    "id": "b",
+    "text": "frame"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התאמת מתכון כדי שיהיה בריא יותר.\",\"correct_reason\":\"adjust (להתאים). המאפייה החליטה להתאים את המתכון כדי שהלחם יהיה בריא יותר.\",\"options_analysis\":[\"burn (לשרוף): סותר 'to make the bread healthier'\",\"smuggle (להבריח): לא הגיוני\",\"נכון! adjust (להתאים, מתאים למתכון)\",\"frame (למסגר): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "639a0d1e-0d3e-4fde-8f9e-f6d3deb50f01",
+  "options": [
+   {
+    "id": "b",
+    "text": "invent"
+   },
+   {
+    "id": "a",
+    "text": "discover"
+   },
+   {
+    "id": "c",
+    "text": "translate"
+   },
+   {
+    "id": "d",
+    "text": "bribe"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מדענים ממשיכים ל___ מינים חדשים של חרקים ביערות גשם מרוחקים. מה עושים מדענים כשמוצאים מין חדש?\",\"correct_reason\":\"discover (לגלות). מדענים ממשיכים לגלות מינים חדשים של חרקים ביערות גשם מרוחקים.\",\"options_analysis\":[\"invent (להמציא): לא ממציאים מינים של חרקים\",\"נכון! discover (לגלות, מתאים לגילוי מדעי)\",\"translate (לתרגם): לא הגיוני\",\"bribe (לשחד): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "6497042e-808e-4536-a446-528db915cfbd",
+  "options": [
+   {
+    "id": "c",
+    "text": "swallow"
+   },
+   {
+    "id": "a",
+    "text": "set"
+   },
+   {
+    "id": "d",
+    "text": "knit"
+   },
+   {
+    "id": "b",
+    "text": "rinse"
+   }
+  ],
+  "explanation": "{\"strategy\":\"קביעת עוצר לקטינים בחופשת קיץ.\",\"correct_reason\":\"set (לקבוע). העיר החליטה לקבוע עוצר עבור קטינים בזמן חופשת הקיץ.\",\"options_analysis\":[\"swallow (לבלוע): לא בולעים עוצר\",\"נכון! set (לקבוע, מתאים לעוצר)\",\"knit (לסרוג): לא סורגים עוצר\",\"rinse (לשטוף): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "69dff453-413c-471c-a78c-9cc0308e362a",
+  "options": [
+   {
+    "id": "d",
+    "text": "frame"
+   },
+   {
+    "id": "b",
+    "text": "confuse"
+   },
+   {
+    "id": "a",
+    "text": "discuss"
+   },
+   {
+    "id": "c",
+    "text": "feed"
+   }
+  ],
+  "explanation": "{\"strategy\":\"דיון בתוצאות מבחן עם הכיתה.\",\"correct_reason\":\"discuss (לדון ב). המורה החליטה לדון בתוצאות המבחן עם כל הכיתה.\",\"options_analysis\":[\"frame (למסגר): לא הגיוני\",\"confuse with (לבלבל עם): לא הגיוני\",\"נכון! discuss (לדון ב): מתאים לתוצאות מבחן\",\"feed (להאכיל): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "6a9a4b48-e975-4f42-8935-350627504c27",
+  "options": [
+   {
+    "id": "d",
+    "text": "lend"
+   },
+   {
+    "id": "c",
+    "text": "confess"
+   },
+   {
+    "id": "b",
+    "text": "sentence"
+   },
+   {
+    "id": "a",
+    "text": "connect"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חוקרים שמנסים ל___ בין עליית טמפרטורות האוקיינוס לפעילות אנושית. מה עושים חוקרים כדי לקשר בין תופעות?\",\"correct_reason\":\"connect (לקשר). חוקרים מנסים לקשר בין עליית טמפרטורות האוקיינוס לפעילות אנושית.\",\"options_analysis\":[\"lend (להשאיל): לא הגיוני\",\"confess (להתוודות): לא הגיוני\",\"sentence (לגזור דין): לא הגיוני\",\"נכון! connect (לקשר): מתאים לקישור בין תופעות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "6dbeedde-6002-4202-8d10-136cb7c239ca",
+  "options": [
+   {
+    "id": "a",
+    "text": "transform"
+   },
+   {
+    "id": "b",
+    "text": "knit"
+   },
+   {
+    "id": "c",
+    "text": "vaccinate"
+   },
+   {
+    "id": "d",
+    "text": "rinse"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הספר החדש של הפרופסור ___ את תחום הכלכלה ההתנהגותית. מה עושה ספר פורץ דרך לתחום שלם?\",\"correct_reason\":\"transform (לשנות מהיסוד). הספר החדש של הפרופסור ישנה מהיסוד את תחום הכלכלה ההתנהגותית.\",\"options_analysis\":[\"נכון! transform (לשנות מהיסוד): מתאים לשינוי תחום\",\"knit (לסרוג): לא הגיוני\",\"vaccinate (לחסן): לא הגיוני\",\"rinse (לשטוף): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "6ddb2dc5-1bda-4e7f-8064-e5de2e2c377f",
+  "options": [
+   {
+    "id": "a",
+    "text": "capacity"
+   },
+   {
+    "id": "b",
+    "text": "ancestry"
+   },
+   {
+    "id": "d",
+    "text": "fragrance"
+   },
+   {
+    "id": "c",
+    "text": "flavor"
+   }
+  ],
+  "explanation": "{\"strategy\":\"לאצטדיון החדש יש ___ להכיל יותר משישים אלף אוהדים. מה מכנים את הכמות המרבית שמבנה יכול להכיל?\",\"correct_reason\":\"capacity (קיבולת). לאצטדיון החדש יש קיבולת להכיל יותר משישים אלף אוהדים.\",\"options_analysis\":[\"נכון! capacity (קיבולת): מתאים למספר מקומות מרבי\",\"ancestry (שושלת): לאצטדיון אין שושלת\",\"fragrance (ניחוח): לא הגיוני\",\"flavor (טעם): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "77bb54dd-34be-4a71-a37e-8105ed52da7a",
+  "options": [
+   {
+    "id": "c",
+    "text": "shred"
+   },
+   {
+    "id": "d",
+    "text": "laminate"
+   },
+   {
+    "id": "b",
+    "text": "smuggle"
+   },
+   {
+    "id": "a",
+    "text": "review"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בדיקת הצעה לפני החלטה סופית.\",\"correct_reason\":\"review (לבחון/לסקור). הוועדה תבחן את ההצעה לפני קבלת החלטה סופית.\",\"options_analysis\":[\"shred (לגרוס): סותר 'before making a final decision'\",\"laminate (לנילן): לא הגיוני\",\"smuggle (להבריח): לא הגיוני\",\"נכון! review (לבחון): מתאים להצעה לפני החלטה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "77c73021-27f7-4d7b-9013-5f73ff599c26",
+  "options": [
+   {
+    "id": "c",
+    "text": "recipe"
+   },
+   {
+    "id": "b",
+    "text": "lullaby"
+   },
+   {
+    "id": "d",
+    "text": "souvenir"
+   },
+   {
+    "id": "a",
+    "text": "formula"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מדען שהציע משהו חדש כדי להסביר תוצאות בלתי צפויות של הניסוי. מה מציעים מדענים כדי להסביר תופעה?\",\"correct_reason\":\"formula (נוסחה/רעיון מוסבר). המדען הציע נוסחה חדשה כדי להסביר את התוצאות הבלתי צפויות של הניסוי.\",\"options_analysis\":[\"recipe (מתכון): לא מסביר תוצאות ניסוי\",\"lullaby (שיר ערש): לא הגיוני\",\"souvenir (מזכרת): לא הגיוני\",\"נכון! formula (נוסחה, מתאים להסבר מדעי)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "792253db-b8e4-4963-bd87-0c61832be087",
+  "options": [
+   {
+    "id": "a",
+    "text": "arrange"
+   },
+   {
+    "id": "d",
+    "text": "baptize"
+   },
+   {
+    "id": "b",
+    "text": "smuggle"
+   },
+   {
+    "id": "c",
+    "text": "laminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מורה שביקש מהתלמידים ל___ את השולחנות במעגל לצורך הדיון. מה עושים עם רהיטים כדי ליצור סידור מסוים?\",\"correct_reason\":\"arrange (לסדר). המורה ביקש מהתלמידים לסדר את השולחנות במעגל לצורך הדיון.\",\"options_analysis\":[\"נכון! arrange (לסדר, מתאים לסידור שולחנות)\",\"baptize (להטביל): לא הגיוני\",\"smuggle (להבריח): לא הגיוני\",\"laminate (לנילן): לא מתאים ל-'in a circle'\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "7bbd1765-616e-420d-ad0b-39720a2880d4",
+  "options": [
+   {
+    "id": "d",
+    "text": "smuggle"
+   },
+   {
+    "id": "b",
+    "text": "knit"
+   },
+   {
+    "id": "a",
+    "text": "repeat"
+   },
+   {
+    "id": "c",
+    "text": "laminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חזרה על ניסוי בתנאים שונים.\",\"correct_reason\":\"repeat (לחזור על). המדען החליט לחזור על הניסוי בתנאים שונים.\",\"options_analysis\":[\"smuggle (להבריח): לא הגיוני\",\"knit (לסרוג): לא הגיוני\",\"נכון! repeat (לחזור על, מתאים לניסוי)\",\"laminate (לנילן): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "7d8ded72-d131-4f78-b5b0-bdf48822f89b",
+  "options": [
+   {
+    "id": "b",
+    "text": "photograph"
+   },
+   {
+    "id": "c",
+    "text": "memorize"
+   },
+   {
+    "id": "a",
+    "text": "change"
+   },
+   {
+    "id": "d",
+    "text": "advertise"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שינוי מסלול עקב אזהרת סערה.\",\"correct_reason\":\"change (לשנות). המטיילים נאלצו לשנות את המסלול שלהם עקב אזהרת הסערה.\",\"options_analysis\":[\"photograph (לצלם): לא מתאים ל-'due to the storm warning'\",\"memorize (לשנן): לא מתאים ל-'due to the storm warning'\",\"נכון! change (לשנות, מתאים למסלול)\",\"advertise (לפרסם): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "7ea22ad9-f9e4-4a79-965a-a9548439a001",
+  "options": [
+   {
+    "id": "d",
+    "text": "bake"
+   },
+   {
+    "id": "b",
+    "text": "rinse"
+   },
+   {
+    "id": "a",
+    "text": "share"
+   },
+   {
+    "id": "c",
+    "text": "baptize"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שני האחים בסופו של דבר החליטו ל___ את העסק המשפחתי באופן שווה. מה עושים אחים עם עסק משפחתי משותף?\",\"correct_reason\":\"share (לחלוק). שני האחים בסופו של דבר החליטו לחלוק את העסק המשפחתי באופן שווה.\",\"options_analysis\":[\"bake (לאפות): לא הגיוני\",\"rinse (לשטוף): לא הגיוני\",\"נכון! share (לחלוק, מתאים לחלוקה שווה)\",\"baptize (להטביל): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "80d84dee-bd38-4910-8099-d22f776372e0",
+  "options": [
+   {
+    "id": "c",
+    "text": "compare"
+   },
+   {
+    "id": "d",
+    "text": "confess"
+   },
+   {
+    "id": "b",
+    "text": "attribute"
+   },
+   {
+    "id": "a",
+    "text": "transfer"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חברה שמתכננת ל___ את העובד לסניף החדש בחודש הבא. מה עושים עם עובד שעובר סניף?\",\"correct_reason\":\"transfer (להעביר). החברה מתכננת להעביר את העובד לסניף החדש בחודש הבא.\",\"options_analysis\":[\"compare to (להשוות): לא הגיוני\",\"confess (להתוודות): לא הגיוני\",\"attribute (לייחס): לא הגיוני לגבי עובד\",\"נכון! transfer (להעביר, מתאים למעבר עובד)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "8624c8d7-d008-459c-96df-c13637d2fe6f",
+  "options": [
+   {
+    "id": "b",
+    "text": "close"
+   },
+   {
+    "id": "a",
+    "text": "build"
+   },
+   {
+    "id": "c",
+    "text": "demolish"
+   },
+   {
+    "id": "d",
+    "text": "pave"
+   }
+  ],
+  "explanation": "{\"strategy\":\"העיר מתכננת ל___ עוד פארקים בשכונות שכיום חסר בהן שטח ירוק. מה עושה עיר כדי להוסיף מרחבים ירוקים?\",\"correct_reason\":\"build (לבנות). העיר מתכננת לבנות עוד פארקים בשכונות שכיום חסר בהן שטח ירוק.\",\"options_analysis\":[\"close (לסגור): סותר 'neighborhoods that currently lack green space'\",\"נכון! build (לבנות, מתאים לבניית פארקים)\",\"demolish (להרוס): סותר 'lack green space'\",\"pave (לסלול): לא סוללים פארקים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "883248f5-4bf9-4f42-bfaa-f12ee1dcdc96",
+  "options": [
+   {
+    "id": "d",
+    "text": "recipe"
+   },
+   {
+    "id": "b",
+    "text": "lullaby"
+   },
+   {
+    "id": "a",
+    "text": "signal"
+   },
+   {
+    "id": "c",
+    "text": "rumor"
+   }
+  ],
+  "explanation": "{\"strategy\":\"רמזור אדום הוא ___ שנהגים חייבים לעצור מיד. מה מודיע לנהג לעצור?\",\"correct_reason\":\"signal (אות/סימן). רמזור אדום הוא סימן שעל הנהגים לעצור מיד.\",\"options_analysis\":[\"recipe (מתכון): לא הגיוני\",\"lullaby (שיר ערש): לא הגיוני\",\"נכון! signal (סימן, מתאים לרמזור כאות)\",\"rumor (שמועה): רמזור אדום אינו שמועה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "8a7de9b7-bf2e-4c74-be98-d70690653ce4",
+  "options": [
+   {
+    "id": "c",
+    "text": "bake"
+   },
+   {
+    "id": "b",
+    "text": "marry"
+   },
+   {
+    "id": "a",
+    "text": "discuss"
+   },
+   {
+    "id": "d",
+    "text": "tickle"
+   }
+  ],
+  "explanation": "{\"strategy\":\"דיון בתקציב שנתי בשבוע הבא.\",\"correct_reason\":\"discuss (לדון ב). חברי הדירקטוריון הסכימו לדון בתקציב השנתי בשבוע הבא.\",\"options_analysis\":[\"bake (לאפות): לא הגיוני\",\"marry (להתחתן): לא הגיוני\",\"נכון! discuss (לדון ב): מתאים לתקציב שנתי\",\"tickle (לדגדג): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9132273e-6cf6-4e0a-bf53-a9ea7bfa15fd",
+  "options": [
+   {
+    "id": "c",
+    "text": "fragrance"
+   },
+   {
+    "id": "a",
+    "text": "analysis"
+   },
+   {
+    "id": "b",
+    "text": "ancestry"
+   },
+   {
+    "id": "d",
+    "text": "hobby"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הדוח כולל ___ מפורט של ביצועי המכירות של השנה שעברה. מה מכנים בדיקה מעמיקה של נתונים?\",\"correct_reason\":\"analysis (ניתוח). הדוח כולל ניתוח מפורט של ביצועי המכירות של השנה שעברה.\",\"options_analysis\":[\"fragrance (ניחוח): לא הגיוני\",\"נכון! analysis (ניתוח, מתאים לבדיקת ביצועים)\",\"ancestry (שושלת): לא הגיוני\",\"hobby (תחביב): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9317076a-3498-4f5a-a5ba-2ed70cfef74d",
+  "options": [
+   {
+    "id": "a",
+    "text": "reconsider"
+   },
+   {
+    "id": "b",
+    "text": "knit"
+   },
+   {
+    "id": "c",
+    "text": "peel"
+   },
+   {
+    "id": "d",
+    "text": "bathe"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בחינה מחדש של מדיניות בעקבות תלונות.\",\"correct_reason\":\"reconsider (לשקול מחדש). החברה החליטה לשקול מחדש את המדיניות שלה לאחר קבלת תלונות לקוחות.\",\"options_analysis\":[\"נכון! reconsider (לשקול מחדש, מתאים למדיניות)\",\"knit (לסרוג): לא הגיוני\",\"peel (לקלף): לא הגיוני\",\"bathe (לרחוץ): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "951b2c45-158a-4d3a-a434-e0d5e3f4938b",
+  "options": [
+   {
+    "id": "b",
+    "text": "feed"
+   },
+   {
+    "id": "d",
+    "text": "sew"
+   },
+   {
+    "id": "a",
+    "text": "associate"
+   },
+   {
+    "id": "c",
+    "text": "season"
+   }
+  ],
+  "explanation": "{\"strategy\":\"אנשים לעיתים קרובות ___ את הצבע האדום עם סכנה או התרגשות. מה עושים כשמקשרים צבע לרגש?\",\"correct_reason\":\"associate (לשייך/לקשר). אנשים לעיתים קרובות משייכים את הצבע האדום עם סכנה או התרגשות.\",\"options_analysis\":[\"feed with (להאכיל): לא הגיוני\",\"sew with (לתפור): לא הגיוני\",\"נכון! associate (לשייך): מתאים לקישור צבע לרגש\",\"season with (לתבל): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "95c21179-fc4c-4406-aecb-a56c77cd7eac",
+  "options": [
+   {
+    "id": "c",
+    "text": "dedicate"
+   },
+   {
+    "id": "d",
+    "text": "owe"
+   },
+   {
+    "id": "a",
+    "text": "relocate"
+   },
+   {
+    "id": "b",
+    "text": "translate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"העברת מחסן למיקום גדול יותר.\",\"correct_reason\":\"relocate (להעביר מיקום). החברה החליטה להעביר את המחסן שלה למיקום גדול יותר.\",\"options_analysis\":[\"dedicate to (להקדיש): לא הגיוני\",\"owe (לחוב): לא הגיוני\",\"נכון! relocate (להעביר מיקום, מתאים למחסן)\",\"translate (לתרגם): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "993421e2-3258-42e8-9140-56aef7f7f583",
+  "options": [
+   {
+    "id": "b",
+    "text": "hire"
+   },
+   {
+    "id": "d",
+    "text": "recruit"
+   },
+   {
+    "id": "a",
+    "text": "remove"
+   },
+   {
+    "id": "c",
+    "text": "rent"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הסרת מוצרים פגומים מהמדפים.\",\"correct_reason\":\"remove (להסיר). החנות החליטה להסיר את המוצרים הפגומים מהמדפים שלה.\",\"options_analysis\":[\"hire (להעסיק): לא מעסיקים מוצרים\",\"recruit (לגייס): לא מגייסים מוצרים\",\"נכון! remove (להסיר, מתאים למוצרים פגומים)\",\"rent (לשכור): לא מתאים ל-'defective ... from its shelves'\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "99ff9768-0904-4b1f-8b31-47446af3eda9",
+  "options": [
+   {
+    "id": "c",
+    "text": "tickle"
+   },
+   {
+    "id": "b",
+    "text": "iron"
+   },
+   {
+    "id": "a",
+    "text": "brief"
+   },
+   {
+    "id": "d",
+    "text": "polish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המנהל ___ את הצוות לגבי לוח הזמנים של הפרויקט החדש אחר הצהריים. מה עושה מנהל עם מידע חדש לצוות?\",\"correct_reason\":\"brief (לתדרך). המנהל יתדרך את הצוות לגבי לוח הזמנים של הפרויקט החדש אחר הצהריים.\",\"options_analysis\":[\"tickle (לדגדג): לא הגיוני\",\"iron (לגהץ): לא הגיוני\",\"נכון! brief (לתדרך): מתאים למסירת מידע לצוות\",\"polish (ללטש): לא מתאים ל-'on the new project timeline'\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9a116dd2-e210-46da-87df-72a47bd4215b",
+  "options": [
+   {
+    "id": "b",
+    "text": "flood"
+   },
+   {
+    "id": "a",
+    "text": "replace"
+   },
+   {
+    "id": "d",
+    "text": "stuff"
+   },
+   {
+    "id": "c",
+    "text": "garnish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החלפת גשר ישן בגשר מודרני.\",\"correct_reason\":\"replace (להחליף). מועצת העיר הצביעה להחליף את הגשר הישן בגשר מודרני.\",\"options_analysis\":[\"flood with (להציף): לא הגיוני\",\"נכון! replace (להחליף, מתאים לגשר)\",\"stuff with (לדחוס): לא הגיוני\",\"garnish with (לקשט מנה): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9c702302-8fe1-40a0-b1be-7eb1c865f5aa",
+  "options": [
+   {
+    "id": "a",
+    "text": "organism"
+   },
+   {
+    "id": "d",
+    "text": "furniture"
+   },
+   {
+    "id": "c",
+    "text": "weather"
+   },
+   {
+    "id": "b",
+    "text": "recipe"
+   }
+  ],
+  "explanation": "{\"strategy\":\"יצור חד-תאי ___ עדיין יכול לבצע את כל הפונקציות הבסיסיות של החיים. איך מכנים כל דבר חי?\",\"correct_reason\":\"organism (אורגניזם/יצור חי). יצור חד-תאי עדיין יכול לבצע את כל הפונקציות הבסיסיות של החיים.\",\"options_analysis\":[\"נכון! organism (אורגניזם, מתאים ליצור חי)\",\"furniture (רהיט): לרהיט אין תפקודי חיים\",\"weather (מזג אוויר): לא הגיוני\",\"recipe (מתכון): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9db9f803-8bfb-467a-8ff6-87b9aff15969",
+  "options": [
+   {
+    "id": "b",
+    "text": "baptize"
+   },
+   {
+    "id": "a",
+    "text": "conduct"
+   },
+   {
+    "id": "d",
+    "text": "laminate"
+   },
+   {
+    "id": "c",
+    "text": "smuggle"
+   }
+  ],
+  "explanation": "{\"strategy\":\"עריכת סקר ציבורי לפני בניית קניון.\",\"correct_reason\":\"conduct (לערוך). העיר החליטה לערוך סקר ציבורי לפני בניית הקניון.\",\"options_analysis\":[\"baptize (להטביל): לא הגיוני\",\"נכון! conduct (לערוך, מתאים לסקר)\",\"laminate (לנילן): לא הגיוני\",\"smuggle (להבריח): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a05c8e87-f59c-42b9-b462-821dce3f996d",
+  "options": [
+   {
+    "id": "b",
+    "text": "shred"
+   },
+   {
+    "id": "a",
+    "text": "revise"
+   },
+   {
+    "id": "c",
+    "text": "memorize"
+   },
+   {
+    "id": "d",
+    "text": "forge"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המועצה ___ את תוכנית התנועה החדשה לאחר קבלת משוב ציבורי. מה עושה מועצה עם תוכנית שקיבלה ביקורת?\",\"correct_reason\":\"revise (לתקן/לשנות). המועצה תתקן את תוכנית התנועה החדשה לאחר קבלת משוב ציבורי.\",\"options_analysis\":[\"shred (לגרוס): סותר 'after receiving public feedback'\",\"נכון! revise (לתקן): מתאים לעדכון תוכנית לפי משוב\",\"memorize (לשנן): לא הגיוני\",\"forge (לזייף): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a05e15d9-2f5c-4e1d-b874-3a746377a7b0",
+  "options": [
+   {
+    "id": "d",
+    "text": "format"
+   },
+   {
+    "id": "b",
+    "text": "balance"
+   },
+   {
+    "id": "a",
+    "text": "distribution"
+   },
+   {
+    "id": "c",
+    "text": "rumor"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה שינתה את אסטרטגיית ה___ שלה כדי להגיע לעוד עיירות קטנות ואזורים כפריים. מה מכנים תהליך העברת מוצרים לצרכנים?\",\"correct_reason\":\"distribution (הפצה). החברה שינתה את אסטרטגיית ההפצה שלה כדי להגיע לעוד עיירות קטנות ואזורים כפריים.\",\"options_analysis\":[\"format (פורמט): לא רלוונטי\",\"balance (איזון): לא רלוונטי\",\"נכון! distribution (הפצה, מתאים להעברת מוצרים)\",\"rumor (שמועה): לא אסטרטגיה להגיע לערים קטנות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a0f9aca7-a66f-49da-8c62-02f62466fc78",
+  "options": [
+   {
+    "id": "c",
+    "text": "shred"
+   },
+   {
+    "id": "b",
+    "text": "garnish"
+   },
+   {
+    "id": "a",
+    "text": "launch"
+   },
+   {
+    "id": "d",
+    "text": "stuff"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חברה שמתכננת ל___ את קו המוצרים החדש שלה בכנס עיתונאים בשבוע הבא. מה עושה חברה כשמציגה מוצר חדש לראשונה?\",\"correct_reason\":\"launch (להשיק). החברה מתכננת להשיק את קו המוצרים החדש שלה בכנס עיתונאים בשבוע הבא.\",\"options_analysis\":[\"shred (לגרוס): לא מתאים ל-'at a press conference'\",\"garnish (לקשט מנה): לא הגיוני\",\"נכון! launch (להשיק, מתאים להשקת מוצר)\",\"stuff (לדחוס): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a333f5ad-944e-4d0f-8643-31d1e3af9332",
+  "options": [
+   {
+    "id": "a",
+    "text": "combine"
+   },
+   {
+    "id": "b",
+    "text": "iron"
+   },
+   {
+    "id": "d",
+    "text": "polish"
+   },
+   {
+    "id": "c",
+    "text": "paint"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המתכון מבקש ל___ את הקמח והסוכר לפני הוספת הביצים. מה עושים עם שני מרכיבים במתכון?\",\"correct_reason\":\"combine (לשלב/לערבב). המתכון מבקש לשלב את הקמח והסוכר לפני הוספת הביצים.\",\"options_analysis\":[\"נכון! combine (לשלב, מתאים לערבוב מרכיבים)\",\"iron (לגהץ): לא הגיוני\",\"polish (ללטש): לא הגיוני\",\"paint (לצבוע): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a4135835-d8f2-4bbe-b1aa-580d1247c839",
+  "options": [
+   {
+    "id": "d",
+    "text": "pave"
+   },
+   {
+    "id": "c",
+    "text": "garnish"
+   },
+   {
+    "id": "b",
+    "text": "season"
+   },
+   {
+    "id": "a",
+    "text": "answer"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפרופסור ___ לשאלות תלמידיו אחרי סיום ההרצאה. מה עושה מרצה עם שאלות תלמידים?\",\"correct_reason\":\"answer (לענות). הפרופסור יענה לשאלות תלמידיו אחרי סיום ההרצאה.\",\"options_analysis\":[\"pave (לסלול): לא הגיוני\",\"garnish (לקשט מנה): לא הגיוני\",\"season (לתבל): לא הגיוני\",\"נכון! answer (לענות, מתאים למענה לשאלות)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a7ae363d-e90d-40ca-a707-2a4c293b5171",
+  "options": [
+   {
+    "id": "d",
+    "text": "vaccinate"
+   },
+   {
+    "id": "c",
+    "text": "marinate"
+   },
+   {
+    "id": "a",
+    "text": "maintain"
+   },
+   {
+    "id": "b",
+    "text": "dislike"
+   }
+  ],
+  "explanation": "{\"strategy\":\"קשה ל___ איזון בריא בין עבודה לחיים במשרה תובענית שכזו. מה עושים כדי לשמור על משהו לאורך זמן?\",\"correct_reason\":\"maintain (לשמור על). קשה לשמור על איזון בריא בין עבודה לחיים במשרה תובענית שכזו.\",\"options_analysis\":[\"vaccinate (לחסן): לא הגיוני\",\"marinate (להשרות): לא הגיוני\",\"נכון! maintain (לשמור על): מתאים לשמירה על איזון\",\"dislike (לא לאהוב): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a81f0195-031b-43ce-b196-de4d890f4b50",
+  "options": [
+   {
+    "id": "c",
+    "text": "souvenir"
+   },
+   {
+    "id": "a",
+    "text": "ecosystem"
+   },
+   {
+    "id": "b",
+    "text": "hobby"
+   },
+   {
+    "id": "d",
+    "text": "weather"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שוניות אלמוגים הן ___ שביר שתומך באלפי מיני חיים ימיים. מה מכנים מערכת חיה שכוללת סביבה ואורגניזמים יחד?\",\"correct_reason\":\"ecosystem (מערכת אקולוגית). שוניות אלמוגים הן מערכת אקולוגית שברירית שתומכת באלפי מיני חיים ימיים.\",\"options_analysis\":[\"souvenir (מזכרת): לא תומכת במינים\",\"נכון! ecosystem (מערכת אקולוגית): מתאים לסביבה חיה\",\"hobby (תחביב): לא הגיוני\",\"weather (מזג אוויר): לא 'fragile ... that supports'\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "aaaf3d3c-48c9-4eac-8d01-ec80dd43533d",
+  "options": [
+   {
+    "id": "b",
+    "text": "marinate"
+   },
+   {
+    "id": "a",
+    "text": "evacuate"
+   },
+   {
+    "id": "d",
+    "text": "garnish"
+   },
+   {
+    "id": "c",
+    "text": "season"
+   }
+  ],
+  "explanation": "{\"strategy\":\"פינוי בניין לאחר הפעלת אזעקה.\",\"correct_reason\":\"evacuate (לפנות). צוות הביטחון החליט לפנות את הבניין לאחר שהאזעקה הופעלה.\",\"options_analysis\":[\"marinate (להשרות): לא הגיוני\",\"נכון! evacuate (לפנות, מתאים לאזעקה)\",\"garnish (לקשט מנה): לא הגיוני\",\"season (לתבל): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "adc81789-8233-4407-ba56-1dee4eed933f",
+  "options": [
+   {
+    "id": "d",
+    "text": "pave"
+   },
+   {
+    "id": "a",
+    "text": "select"
+   },
+   {
+    "id": "c",
+    "text": "frost"
+   },
+   {
+    "id": "b",
+    "text": "glaze"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בחירת שחקן חדש לטורניר.\",\"correct_reason\":\"select (לבחור). קפטן הקבוצה החליט לבחור שחקן חדש לטורניר.\",\"options_analysis\":[\"pave (לסלול): לא הגיוני\",\"נכון! select (לבחור, מתאים לשחקן חדש)\",\"frost (לצפות בקצפת): לא הגיוני\",\"glaze (לזגג): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "b5f7bbcf-8711-4d74-b26b-49b3903091ac",
+  "options": [
+   {
+    "id": "c",
+    "text": "weather"
+   },
+   {
+    "id": "d",
+    "text": "format"
+   },
+   {
+    "id": "b",
+    "text": "balance"
+   },
+   {
+    "id": "a",
+    "text": "standard"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המלון לא עמד ב___ שרוב האורחים מצפים לו מאתר נופש חמישה כוכבים. מה מכנים רמת ציפייה מקובלת?\",\"correct_reason\":\"standard (רמה/סטנדרט). המלון לא עמד ברמה שרוב האורחים מצפים לה מאתר נופש חמישה כוכבים.\",\"options_analysis\":[\"weather (מזג אוויר): לא 'that most guests expect'\",\"format (פורמט): לא רלוונטי\",\"balance (איזון): לא רלוונטי\",\"נכון! standard (רמה, מתאים לציפייה מקובלת)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "b7c2a237-65f9-4660-a696-91225f49c9ba",
+  "options": [
+   {
+    "id": "a",
+    "text": "aspect"
+   },
+   {
+    "id": "c",
+    "text": "flavor"
+   },
+   {
+    "id": "d",
+    "text": "rumor"
+   },
+   {
+    "id": "b",
+    "text": "fragrance"
+   }
+  ],
+  "explanation": "{\"strategy\":\"היבט חשוב אחד ___ של העבודה הוא להתמודד עם לקוחות קשים ברוגע. מה מכנים צד או חלק מסוים של דבר מה?\",\"correct_reason\":\"aspect (היבט). היבט חשוב אחד של העבודה הוא להתמודד עם לקוחות קשים ברוגע.\",\"options_analysis\":[\"נכון! aspect (היבט, מתאים לחלק מהעבודה)\",\"flavor (טעם): לא הגיוני\",\"rumor (שמועה): לא הגיוני\",\"fragrance (ניחוח): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "bf54f77f-38e5-4296-9ab9-a2437a68fd2e",
+  "options": [
+   {
+    "id": "d",
+    "text": "patent"
+   },
+   {
+    "id": "a",
+    "text": "modify"
+   },
+   {
+    "id": "c",
+    "text": "laminate"
+   },
+   {
+    "id": "b",
+    "text": "trademark"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המהנדס נאלץ ל___ את העיצוב אחרי שהמבחן הראשון נכשל. מה עושים עם תוכנית שלא עבדה כמצופה?\",\"correct_reason\":\"modify (לשנות/לשפר). המהנדס נאלץ לשנות את העיצוב אחרי שהמבחן הראשון נכשל.\",\"options_analysis\":[\"patent (לרשום פטנט): סותר 'after the first test failed'\",\"נכון! modify (לשנות, מתאים לתיקון עיצוב)\",\"laminate (לנילן): לא הגיוני\",\"trademark (לרשום סימן מסחרי): סותר 'test failed'\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c10666f7-cd8d-4b4d-a1ba-7e180f84e648",
+  "options": [
+   {
+    "id": "b",
+    "text": "mend"
+   },
+   {
+    "id": "c",
+    "text": "polish"
+   },
+   {
+    "id": "a",
+    "text": "break"
+   },
+   {
+    "id": "d",
+    "text": "season"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שבירת שיא קודם באמצעות עבודה קשה.\",\"correct_reason\":\"break = לשבור (שיא). הספורטאי עבד קשה כדי לשבור את השיא הקודם שלו.\",\"options_analysis\":[\"mend (לתקן): לא מתקנים שיא\",\"polish (ללטש): לא הגיוני\",\"נכון! break a record (לשבור שיא, ביטוי נפוץ)\",\"season (לתבל): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c2bd4527-6236-4c6b-beb5-a051a837e83a",
+  "options": [
+   {
+    "id": "b",
+    "text": "dust"
+   },
+   {
+    "id": "c",
+    "text": "admire"
+   },
+   {
+    "id": "d",
+    "text": "photograph"
+   },
+   {
+    "id": "a",
+    "text": "repair"
+   }
+  ],
+  "explanation": "{\"strategy\":\"תיקון מדפים שבורים מיד.\",\"correct_reason\":\"repair (לתקן). מנהל החנות החליט לתקן את המדפים השבורים מיד.\",\"options_analysis\":[\"dust (לנקות אבק): סותר 'broken ... immediately'\",\"admire (להתפעל): סותר 'broken'\",\"photograph (לצלם): סותר 'broken ... immediately'\",\"נכון! repair (לתקן, מתאים למדפים שבורים)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c35bc25e-42b5-4393-a30f-0e03f9d71a5d",
+  "options": [
+   {
+    "id": "b",
+    "text": "borrow"
+   },
+   {
+    "id": "d",
+    "text": "rent"
+   },
+   {
+    "id": "a",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "recruit"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מפקחים מיומנים יכולים בקלות ל___ בין ציור אמיתי לזיוף מיומן. מה עושים מומחים כשמזהים הבדל?\",\"correct_reason\":\"distinguish (להבחין). מפקחים מיומנים יכולים בקלות להבחין בין ציור אמיתי לזיוף מיומן.\",\"options_analysis\":[\"borrow from (לשאול מ-): לא הגיוני\",\"rent from (לשכור מ-): לא הגיוני\",\"נכון! distinguish (להבחין, מתאים לזיהוי הבדל)\",\"recruit from (לגייס מ-): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c65289ed-0d34-4356-85f1-a0727053d669",
+  "options": [
+   {
+    "id": "c",
+    "text": "garnish"
+   },
+   {
+    "id": "a",
+    "text": "discuss"
+   },
+   {
+    "id": "b",
+    "text": "glaze"
+   },
+   {
+    "id": "d",
+    "text": "frost"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הוועדה ___ את ההצעה בפירוט רב יותר בפגישה בשבוע הבא. מה עושה ועדה עם הצעה שדורשת עוד בירור?\",\"correct_reason\":\"discuss (לדון ב). הוועדה תדון בהצעה בפירוט רב יותר בפגישה בשבוע הבא.\",\"options_analysis\":[\"garnish (לקשט מנה): לא הגיוני\",\"נכון! discuss (לדון, מתאים לדיון בוועדה)\",\"glaze (לזגג): לא הגיוני\",\"frost (לצפות): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c714c751-b755-43ba-a48c-2c8474916191",
+  "options": [
+   {
+    "id": "c",
+    "text": "pave"
+   },
+   {
+    "id": "a",
+    "text": "evaluate"
+   },
+   {
+    "id": "b",
+    "text": "glaze"
+   },
+   {
+    "id": "d",
+    "text": "vaccinate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המהנדסים היו צריכים ל___ מספר פתרונות אפשריים לפני בחירת הטוב ביותר. מה עושים מהנדסים עם אפשרויות רבות?\",\"correct_reason\":\"evaluate (להעריך). המהנדסים היו צריכים להעריך מספר פתרונות אפשריים לפני בחירת הטוב ביותר.\",\"options_analysis\":[\"pave (לסלול): לא הגיוני\",\"נכון! evaluate (להעריך, מתאים לבחינת אפשרויות)\",\"glaze (לזגג): לא הגיוני\",\"vaccinate (לחסן): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "d984ab68-8ddd-4697-918b-f268b1e03b0a",
+  "options": [
+   {
+    "id": "d",
+    "text": "marinate"
+   },
+   {
+    "id": "a",
+    "text": "evaluate"
+   },
+   {
+    "id": "c",
+    "text": "frost"
+   },
+   {
+    "id": "b",
+    "text": "dust"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפרופסור ___ את התלמידים על הפרויקטים הסופיים שלהם ביום שני הבא. מה עושה מרצה עם עבודות סופיות?\",\"correct_reason\":\"evaluate (להעריך/לבחון). הפרופסור יעריך את התלמידים על הפרויקטים הסופיים שלהם ביום שני הבא.\",\"options_analysis\":[\"marinate (להשרות): לא הגיוני\",\"נכון! evaluate (להעריך): מתאים לבדיקת עבודה אקדמית\",\"frost (לצפות): לא הגיוני\",\"dust (לנקות אבק): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "dd3a6edc-f658-49e3-aa59-31817bfbd815",
+  "options": [
+   {
+    "id": "b",
+    "text": "forge"
+   },
+   {
+    "id": "a",
+    "text": "negotiate"
+   },
+   {
+    "id": "d",
+    "text": "laminate"
+   },
+   {
+    "id": "c",
+    "text": "smudge"
+   }
+  ],
+  "explanation": "{\"strategy\":\"משא ומתן על תנאי חוזה לפני חתימה.\",\"correct_reason\":\"negotiate (לנהל משא ומתן). החברה החליטה לנהל משא ומתן על תנאי החוזה לפני החתימה.\",\"options_analysis\":[\"forge (לזייף): לא הגיוני\",\"נכון! negotiate (לנהל משא ומתן): מתאים לתנאי חוזה\",\"laminate (לנילן): לא הגיוני\",\"smudge (למרוח): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ddf76cbf-6808-4462-93ae-345adc97c5d0",
+  "options": [
+   {
+    "id": "d",
+    "text": "sweeten"
+   },
+   {
+    "id": "c",
+    "text": "knead"
+   },
+   {
+    "id": "b",
+    "text": "whisk"
+   },
+   {
+    "id": "a",
+    "text": "revise"
+   }
+  ],
+  "explanation": "{\"strategy\":\"עדכון מדיניות מטען לטיסות בינלאומיות.\",\"correct_reason\":\"revise (לעדכן/לתקן). חברת התעופה החליטה לעדכן את מדיניות המטען שלה לטיסות בינלאומיות.\",\"options_analysis\":[\"sweeten (להמתיק): לא הגיוני\",\"knead (ללוש): לא הגיוני\",\"whisk (להקציף): לא הגיוני\",\"נכון! revise (לעדכן, מתאים למדיניות)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "de1fa0c6-19ec-46cc-b488-46bd033c71aa",
+  "options": [
+   {
+    "id": "c",
+    "text": "handwriting"
+   },
+   {
+    "id": "a",
+    "text": "concentration"
+   },
+   {
+    "id": "d",
+    "text": "penmanship"
+   },
+   {
+    "id": "b",
+    "text": "pedigree"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ספורטאים זקוקים ל___ מצוינת כדי לתפקד היטב בדקות האחרונות של משחק. מה נדרש כדי להישאר ממוקד תחת לחץ?\",\"correct_reason\":\"concentration (ריכוז). ספורטאים זקוקים לריכוז מצוין כדי לתפקד היטב בדקות האחרונות של משחק.\",\"options_analysis\":[\"handwriting (כתב יד): לא קשור לביצועים בדקות האחרונות\",\"נכון! concentration (ריכוז): מתאים לביצועים תחת לחץ\",\"penmanship (כתיבה תמה): לא הגיוני\",\"pedigree (ייחוס): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e15e2e5e-1ec4-4ff6-a85e-9c19190dc6b6",
+  "options": [
+   {
+    "id": "c",
+    "text": "pickle"
+   },
+   {
+    "id": "a",
+    "text": "assign"
+   },
+   {
+    "id": "b",
+    "text": "knead"
+   },
+   {
+    "id": "d",
+    "text": "whisk"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הקצאת שיעורי בית נוספים לתלמידים נעדרים.\",\"correct_reason\":\"assign (להקצות/לתת). המורה החליטה לתת שיעורי בית נוספים לתלמידים שנעדרו.\",\"options_analysis\":[\"pickle (לכבוש): לא הגיוני\",\"נכון! assign (להקצות, מתאים לשיעורי בית)\",\"knead (ללוש): לא הגיוני\",\"whisk (להקציף): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e3877489-45d6-46cc-96b9-c1881a7051cb",
+  "options": [
+   {
+    "id": "b",
+    "text": "allergy"
+   },
+   {
+    "id": "c",
+    "text": "anthem"
+   },
+   {
+    "id": "a",
+    "text": "technique"
+   },
+   {
+    "id": "d",
+    "text": "rumor"
+   }
+  ],
+  "explanation": "{\"strategy\":\"לימוד ___ חדשה לפתרון בעיות מתמטיות יכול להפוך את שיעורי הבית למהירים הרבה יותר. מה מכנים שיטה ספציפית לביצוע משהו?\",\"correct_reason\":\"technique (שיטה/טכניקה). לימוד שיטה חדשה לפתרון בעיות מתמטיות יכול להפוך את שיעורי הבית למהירים הרבה יותר.\",\"options_analysis\":[\"allergy (אלרגיה): לא הגיוני\",\"anthem (המנון): לא הגיוני\",\"נכון! technique (שיטה, מתאים לדרך פתרון)\",\"rumor (שמועה): לא עוזרת לפתור בעיות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e9a53304-9f64-4c00-a547-55cb1b9b264d",
+  "options": [
+   {
+    "id": "d",
+    "text": "recipe"
+   },
+   {
+    "id": "a",
+    "text": "notion"
+   },
+   {
+    "id": "c",
+    "text": "lullaby"
+   },
+   {
+    "id": "b",
+    "text": "souvenir"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המאמר מערער על ה___ הרווחת שהצלחה דורשת עבודה בשעות ארוכות. מה מכנים אמונה או רעיון מקובל?\",\"correct_reason\":\"notion (מושג/רעיון). המאמר מערער על הרעיון הרווח שהצלחה דורשת עבודה בשעות ארוכות.\",\"options_analysis\":[\"recipe (מתכון): לא הגיוני\",\"נכון! notion (רעיון, מתאים לאמונה מקובלת)\",\"lullaby (שיר ערש): לא הגיוני\",\"souvenir (מזכרת): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ec78f14f-9921-4bfa-b557-dc654335ca03",
+  "options": [
+   {
+    "id": "d",
+    "text": "weather"
+   },
+   {
+    "id": "b",
+    "text": "allergy"
+   },
+   {
+    "id": "c",
+    "text": "fragrance"
+   },
+   {
+    "id": "a",
+    "text": "interaction"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המחקר בחן את ה___ בין תזונה לבריאות הלב לטווח ארוך. מה מכנים את הקשר וההשפעה ההדדית בין שני גורמים?\",\"correct_reason\":\"interaction (אינטראקציה/יחסי גומלין). המחקר בחן את יחסי הגומלין בין תזונה לבריאות הלב לטווח ארוך.\",\"options_analysis\":[\"weather (מזג אוויר): לא הגיוני\",\"allergy (אלרגיה): לא הגיוני\",\"fragrance (ניחוח): לא הגיוני\",\"נכון! interaction (יחסי גומלין): מתאים לקשר בין גורמים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f1fab57d-ec91-4f5b-9427-26e646ee46d8",
+  "options": [
+   {
+    "id": "d",
+    "text": "bulldoze"
+   },
+   {
+    "id": "a",
+    "text": "construct"
+   },
+   {
+    "id": "b",
+    "text": "pave"
+   },
+   {
+    "id": "c",
+    "text": "flood"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בניית פארק חדש במרכז העיר.\",\"correct_reason\":\"construct (לבנות). העיר מתכננת לבנות פארק חדש באזור מרכז העיר.\",\"options_analysis\":[\"bulldoze (לשטח): לא מתאים ל-'a new park'\",\"נכון! construct (לבנות, מתאים לפארק)\",\"pave (לסלול): לא סוללים פארק\",\"flood (להציף): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f58f986f-7fc1-48be-85ea-12a5967d931c",
+  "options": [
+   {
+    "id": "a",
+    "text": "organize"
+   },
+   {
+    "id": "d",
+    "text": "pickle"
+   },
+   {
+    "id": "c",
+    "text": "baste"
+   },
+   {
+    "id": "b",
+    "text": "saute"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ארגון תערוכה חדשה על תרבויות עתיקות.\",\"correct_reason\":\"organize (לארגן). המוזיאון החליט לארגן תערוכה חדשה על תרבויות עתיקות.\",\"options_analysis\":[\"נכון! organize (לארגן, מתאים לתערוכה)\",\"pickle (לכבוש): לא הגיוני\",\"baste (להזליף): לא הגיוני\",\"saute (להקפיץ במחבת): לא הגיוני\"]}",
+  "exam_eligible": true
+ }
+]

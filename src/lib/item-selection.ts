@@ -76,5 +76,5 @@ export async function planInformativePassage({
     .eq('id', passageId as string)
     .maybeSingle();
   if (!passage) return [];
-  return buildRCQuestions(supabase as never, passage as { id: string; text: string; difficulty_level: number; b: number });
+  return buildRCQuestions(supabase as never, passage as { id: string; text: string; difficulty_level: number; b: number }, { examOnly: true });
 }

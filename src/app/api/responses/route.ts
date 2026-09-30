@@ -82,12 +82,16 @@ export async function POST(req: Request) {
     .catch((e: unknown) => ({ created: 0, reviewed: 0, error: String(e) }));
   if (srs.error) console.error('[responses] SRS update failed:', srs.error);
 
-  const calibration = await calibrateItems(
-    supabase,
-    ability,
-    graded.filter(g => Number.isFinite(g.responseId)).map(g => ({ responseId: g.responseId, type: g.type, latencyMs: g.latencyMs })),
-  ).catch((e: unknown) => ({ updated: 0, skipped: null, error: String(e) }));
-  if (calibration.error) console.error('[responses] item calibration failed:', calibration.error);
+  // Only accounts move item difficulty: a guest identity is free to mint, so
+  // a script could otherwise push any item's b to the bound, one guest at a time.
+  if (owner.type === 'user') {
+    const calibration = await calibrateItems(
+      supabase,
+      ability,
+      graded.filter(g => Number.isFinite(g.responseId)).map(g => ({ responseId: g.responseId, type: g.type, latencyMs: g.latencyMs })),
+    ).catch((e: unknown) => ({ updated: 0, skipped: null, error: String(e) }));
+    if (calibration.error) console.error('[responses] item calibration failed:', calibration.error);
+  }
 
   return NextResponse.json({ ok: true, recorded, srs: { created: srs.created, reviewed: srs.reviewed } });
 }

@@ -215,13 +215,17 @@ async function queryPassage(
 export async function buildRCQuestions(
   supabase: SupabaseClient,
   passage: { id: string; text: string; difficulty_level: number; b: number },
+  // The exam also leaves out exam-excluded questions; practice keeps them.
+  { examOnly = false }: { examOnly?: boolean } = {},
 ): Promise<Question[]> {
-  const { data: qs } = await supabase
+  let q = supabase
     .from('questions')
     .select('*')
     .eq('type', 'reading_comprehension')
     .eq('passage_id', passage.id)
-    .limit(5);
+    .eq('active', true);
+  if (examOnly) q = q.eq('exam_eligible', true);
+  const { data: qs } = await q.order('id').limit(5);
 
   return (qs ?? []).map(q => ({
     ...q,

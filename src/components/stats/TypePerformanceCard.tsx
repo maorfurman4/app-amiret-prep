@@ -135,7 +135,7 @@ export function TypePerformanceCard({ recent, allTime, weakestType }: {
                   <div key={b} dir="rtl" data-difficulty={b} className={`p-3 rounded-xl border text-center ${tone(pct).box} ${tone(pct).text}`}>
                     <div className="text-xl font-bold tabular-nums" dir="ltr">{pct}%</div>
                     <div className="text-xs font-semibold mt-0.5"><DifficultyLabel b={b} /></div>
-                    <div className="text-xs opacity-80 mt-0.5 tabular-nums">{d.correct}/{d.total}</div>
+                    <div className="text-xs mt-0.5 tabular-nums">{d.correct}/{d.total}</div>
                   </div>
                 );
               })}

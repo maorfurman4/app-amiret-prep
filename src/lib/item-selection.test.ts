@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import { CANDIDATE_FACTOR, planInformativeQuestions } from './item-selection';
+import { CANDIDATE_FACTOR, planInformativePassage, planInformativeQuestions } from './item-selection';
+import { buildRCQuestions } from '@/lib/question-history';
 
-vi.mock('@/lib/question-history', () => ({ buildRCQuestions: vi.fn() }));
+vi.mock('@/lib/question-history', () => ({ buildRCQuestions: vi.fn().mockResolvedValue([]) }));
 
 const opts = (...t: string[]) => t.map(text => ({ text }));
 // Ranked candidates as the RPC returns them: three from one templated batch first.
@@ -34,5 +35,17 @@ describe('planInformativeQuestions', () => {
       supabase: d.supabase, userKey: 'u', type: 'sentence_completion', theta: 0, needed: 2, avoidWords: ['frugal', 'expand'],
     });
     expect(section.map(q => q.id)).toEqual(['c2', 'c3']);
+  });
+});
+
+describe('planInformativePassage', () => {
+  it('builds the exam passage from exam-eligible questions only', async () => {
+    const passage = { id: 'p1', text: 't', difficulty_level: 3, b: 0 };
+    const supabase = {
+      rpc: vi.fn().mockResolvedValue({ data: 'p1', error: null }),
+      from: () => ({ select: () => ({ eq: () => ({ maybeSingle: () => Promise.resolve({ data: passage }) }) }) }),
+    } as never;
+    await planInformativePassage({ supabase, userKey: 'u', theta: 0 });
+    expect(vi.mocked(buildRCQuestions)).toHaveBeenCalledWith(supabase, passage, { examOnly: true });
   });
 });

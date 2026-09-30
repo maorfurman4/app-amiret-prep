@@ -168,9 +168,19 @@ describe('POST /api/responses', () => {
     expect(db.insert.mock.calls[0][0][0].theta_before).toBe(0.8);
   });
 
+  it('never lets a guest move item difficulty (identities are free), but still logs the answer', async () => {
+    const db = createSupabase();
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'guest-1' });
+    mocks.estimateOwnerAbility.mockResolvedValue({ theta: 0.8, n: 55 });
+    const res = await POST(request({ responses: [entry({ latencyMs: 60_000 })] }));
+    expect(res.status).toBe(200);
+    expect(db.insert).toHaveBeenCalled();
+    expect(mocks.calibrateItems).not.toHaveBeenCalled();
+  });
+
   it('a calibration failure never fails the logging request', async () => {
     const db = createSupabase();
-    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'g' });
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: 'u' }, guestId: null });
     mocks.calibrateItems.mockRejectedValue(new Error('db down'));
     expect((await POST(request({ responses: [entry()] }))).status).toBe(200);
   });

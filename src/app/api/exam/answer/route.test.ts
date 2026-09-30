@@ -395,4 +395,25 @@ describe('POST /api/exam/answer', () => {
       { responseId: 102, type: 'sentence_completion', latencyMs: 800 },
     ]);
   });
+
+  it.each([
+    ['a practice exam (answers were shown)', { id: 'account-id' }, true],
+    ['a guest (identities are free)', null, false],
+  ])('never calibrates items from %s', async (_label, user, isPractice) => {
+    const logged = [{ id: 101, item_id: 'question-1', correct: true, chosen_option: 0, latency_ms: 21000, created_at: '2026-09-23T10:00:00.000Z' }];
+    const scored = [1, 2, 3, 4, 5, 6].map(sectionIndex => ({ sectionIndex, questions, answers: [0, 1, 0, 0] }));
+    const db = createSupabase(
+      session({ current_section_index: 7, questions_by_section: { 7: questions }, section_results: scored, current_section_expires_at: '2999-01-01T00:00:00.000Z', is_practice: isPractice }),
+      { data: true, error: null },
+      logged,
+    );
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user, guestId: 'owner-id' });
+    mocks.applyResponsesToSrs.mockResolvedValue({ created: 0, reviewed: 0, cleared: 0, error: null });
+
+    const res = await POST(request(validBody({ sectionIndex: 7 })));
+
+    expect(res.status).toBe(200);
+    expect(mocks.applyResponsesToSrs).toHaveBeenCalled();
+    expect(mocks.calibrateItems).not.toHaveBeenCalled();
+  });
 });

@@ -340,8 +340,10 @@ export async function POST(req: NextRequest) {
     // Item calibration from the exam's answers — timed, no feedback: the
     // cleanest difficulty evidence the app gets. Ability comes from the
     // student's history *excluding this exam*, so the items aren't judged
-    // against an estimate built from the same answers.
-    if (!logErr) {
+    // against an estimate built from the same answers. Accounts only (a
+    // guest identity is free to mint), and never a practice exam, whose
+    // answers were shown on screen.
+    if (!logErr && owner.type === 'user' && !session.is_practice) {
       const typeById = new Map(allQuestions.map(q => [q.id, q.type]));
       const loggedRows = (logged ?? []) as { id: number; item_id: string; latency_ms: number | null }[];
       const calibration = await estimateOwnerAbility(supabase, owner, { excludeSessionId: session.id as string })

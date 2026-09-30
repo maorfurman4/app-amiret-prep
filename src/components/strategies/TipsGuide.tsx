@@ -3,6 +3,9 @@ import { AlertTriangle, X, ChevronLeft, ArrowRight } from 'lucide-react';
 import { BackNav } from '@/components/BackNav';
 import { RichText } from '@/components/strategies/RichText';
 import { ProgressiveRuleCard } from '@/components/strategies/ProgressiveRuleCard';
+import { Stepper } from '@/components/strategies/QuestionGuideView';
+import { TimeBar } from '@/components/strategies/TimeBar';
+import { Prose } from '@/components/strategies/GuideBlocks';
 import { GUIDE_BY_ID, TIME_BY_TYPE, type CtaTone, type QuestionTypeId } from '@/data/strategies';
 
 const CTA_CLASS: Record<CtaTone, { box: string; icon: string }> = {
@@ -55,30 +58,25 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
               {deep.method.intro && (
                 <p className="text-exam-ink-soft text-sm leading-relaxed mb-4"><RichText text={deep.method.intro} /></p>
               )}
-              <ol className="space-y-3">
-                {deep.method.steps.map((s, i) => (
-                  <li key={s.title} className="bg-exam-paper-alt border border-exam-border p-4 rounded-sm">
-                    <div className="flex items-center gap-2 mb-1">
-                      {deep.method!.numbered && (
-                        <span className="w-6 h-6 rounded-full bg-exam-accent text-exam-accent-ink text-xs font-bold flex items-center justify-center flex-shrink-0">
-                          {i + 1}
-                        </span>
-                      )}
-                      <span className="font-bold text-exam-ink text-sm">{s.title}</span>
-                    </div>
-                    <p className={`text-exam-ink-soft text-sm leading-relaxed ${deep.method!.numbered ? 'pr-8' : ''}`}>
-                      <RichText text={s.body} />
-                    </p>
-                  </li>
-                ))}
-              </ol>
+              {deep.method.numbered ? (
+                <Stepper steps={deep.method.steps} tone={guide.color} />
+              ) : (
+                <ul className="space-y-3">
+                  {deep.method.steps.map(s => (
+                    <li key={s.title} className="bg-exam-paper-alt border border-exam-border p-4 rounded-sm">
+                      <div className="font-bold text-exam-ink text-sm mb-1"><RichText text={s.title} /></div>
+                      <p className="text-exam-ink-soft text-sm leading-relaxed"><RichText text={s.body} /></p>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </Card>
           )}
 
           {deep.layered?.map(section => (
             <section key={section.title} aria-label={section.title}>
               <h2 className="text-lg font-bold text-exam-ink mb-1">{section.title}</h2>
-              {section.intro && <p className="text-exam-ink-soft text-sm leading-relaxed mb-4">{section.intro}</p>}
+              {section.intro && <p className="text-exam-ink-soft text-sm leading-relaxed mb-4"><RichText text={section.intro} /></p>}
               <div className={`space-y-3 ${section.intro ? '' : 'mt-3'}`}>
                 {section.rules.map((rule, i) => (
                   <ProgressiveRuleCard key={rule.id} rule={rule} index={i + 1} />
@@ -89,13 +87,13 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
 
           {deep.questionKinds && (
             <Card title={deep.questionKinds.title}>
-              <p className="text-exam-ink-soft text-sm leading-relaxed mb-4">{deep.questionKinds.intro}</p>
+              <p className="text-exam-ink-soft text-sm leading-relaxed mb-4"><RichText text={deep.questionKinds.intro} /></p>
               <div className="space-y-4">
                 {deep.questionKinds.items.map(k => (
                   <div key={k.type} className={`border p-4 rounded-sm ${KIND_CLASS[k.tone]}`}>
-                    <div className="font-bold text-exam-ink text-sm mb-2">{k.type}</div>
-                    <p className="text-exam-ink-soft text-sm leading-relaxed mb-2">{k.how}</p>
-                    <p className="text-exam-ink-soft text-xs italic">{k.signal}</p>
+                    <div className="font-bold text-exam-ink text-sm mb-2"><RichText text={k.type} /></div>
+                    <p className="text-exam-ink-soft text-sm leading-relaxed mb-2"><RichText text={k.how} /></p>
+                    <p className="text-exam-ink-soft text-xs italic"><RichText text={k.signal} /></p>
                   </div>
                 ))}
               </div>
@@ -122,14 +120,14 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
 
           {deep.elimination && (
             <Card title={deep.elimination.title}>
-              <p className="text-exam-ink-soft text-sm leading-relaxed mb-4">{deep.elimination.intro}</p>
+              <p className="text-exam-ink-soft text-sm leading-relaxed mb-4"><RichText text={deep.elimination.intro} /></p>
               <div className="space-y-2">
                 {deep.elimination.items.map(e => (
                   <div key={e.flag} className="flex items-start gap-3 p-3 bg-exam-paper-alt rounded-sm border border-exam-border">
                     <X className="w-3.5 h-3.5 text-exam-wrong flex-shrink-0 mt-0.5" strokeWidth={3} aria-hidden />
                     <div>
-                      <span className="font-semibold text-exam-ink text-sm">{e.flag}: </span>
-                      <span className="text-exam-ink-soft text-sm">{e.desc}</span>
+                      <span className="font-semibold text-exam-ink text-sm"><RichText text={e.flag} />: </span>
+                      <span className="text-exam-ink-soft text-sm"><RichText text={e.desc} /></span>
                     </div>
                   </div>
                 ))}
@@ -144,8 +142,8 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
                   <div key={t.trap} className="flex items-start gap-3 p-3 bg-exam-alt-bg rounded-sm border border-exam-alt/40">
                     <AlertTriangle className="w-4 h-4 text-exam-alt flex-shrink-0 mt-0.5" aria-hidden />
                     <div>
-                      <div className="font-semibold text-exam-ink text-sm mb-1">{t.trap}</div>
-                      <div className="text-exam-ink-soft text-xs leading-relaxed">{t.detail}</div>
+                      <div className="font-semibold text-exam-ink text-sm mb-1"><RichText text={t.trap} /></div>
+                      <div className="text-exam-ink-soft text-xs leading-relaxed"><RichText text={t.detail} /></div>
                     </div>
                   </div>
                 ))}
@@ -155,17 +153,11 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
 
           {deep.showTimeBudget && (
             <Card title="ניהול זמן">
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                <div className="bg-exam-paper-alt rounded-sm px-3 py-2">
-                  <div className="text-[11px] text-exam-ink-soft">{time.total}</div>
-                  <div className="text-sm font-bold text-exam-ink">{time.perQ}</div>
-                </div>
-                <div className="bg-exam-alt-bg rounded-sm px-3 py-2">
-                  <div className="text-[11px] text-exam-alt">מקסימום תקיעה</div>
-                  <div className="text-sm font-bold text-exam-alt">{time.stuckCap}</div>
-                </div>
+              <div className="text-xs text-exam-ink-soft mb-3">{time.total}</div>
+              <TimeBar row={time} />
+              <div className="mt-4">
+                <Prose text={time.note} />
               </div>
-              <p className="text-exam-ink-soft text-sm leading-relaxed">{time.note}</p>
             </Card>
           )}
 

@@ -1,9 +1,10 @@
 import { Fragment, type ReactNode } from 'react';
 
 // A run of English inside Hebrew copy: starts at a Latin letter (optionally
-// preceded by an opening quote/paren that belongs to it) and extends over any
+// preceded by an opening quote/paren that belongs to it — including a quoted
+// fragment that opens on punctuation, as in "; however,") and extends over any
 // non-Hebrew characters up to the last Latin letter, digit or closing mark.
-const LATIN_RUN = /(?:["“(](?=[A-Za-z]))?[A-Za-z](?:[^֐-׿]*[A-Za-z0-9.…"”)])?/g;
+export const LATIN_RUN = /(?:["“(](?:[;:,] ?)?(?=[A-Za-z]))?[A-Za-z](?:[^֐-׿]*[A-Za-z0-9.…"”)])?/g;
 
 /**
  * Wraps English runs in LTR isolates so mixed Hebrew/English strategy copy

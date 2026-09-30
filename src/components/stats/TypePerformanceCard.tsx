@@ -5,7 +5,15 @@ import { AlertTriangle, ChevronDown } from 'lucide-react';
 import { DIFFICULTY_BUCKETS, typeLabel, windowLabel, type AccuracyWindow, type DifficultyBucket } from '@/lib/stats-metrics';
 import { Reveal } from '@/components/strategies/Reveal';
 
-const DIFFICULTY_LABELS: Record<DifficultyBucket, string> = { easy: 'קל (1–2)', medium: 'בינוני (3)', hard: 'קשה (4–5)' };
+const DIFFICULTY_LABELS: Record<DifficultyBucket, { name: string; levels: string }> = {
+  easy: { name: 'קל', levels: '1–2' },
+  medium: { name: 'בינוני', levels: '3' },
+  hard: { name: 'קשה', levels: '4–5' },
+};
+/** "קל (1–2)" with the level range isolated LTR, so RTL can't print it "2–1". */
+const DifficultyLabel = ({ b }: { b: DifficultyBucket }) => (
+  <>{DIFFICULTY_LABELS[b].name} (<bdi dir="ltr">{DIFFICULTY_LABELS[b].levels}</bdi>)</>
+);
 
 /** One colour scale for every accuracy on the page. */
 const tone = (pct: number) =>
@@ -117,7 +125,7 @@ export function TypePerformanceCard({ recent, allTime, weakestType }: {
                   return (
                     <div key={b} dir="rtl" className="p-3 rounded-xl border border-dashed border-exam-border text-center text-exam-ink-soft">
                       <div className="text-xl font-bold" aria-hidden>—</div>
-                      <div className="text-xs font-semibold mt-0.5">{DIFFICULTY_LABELS[b]}</div>
+                      <div className="text-xs font-semibold mt-0.5"><DifficultyLabel b={b} /></div>
                       <div className="text-xs mt-0.5">עוד לא הופיעו שאלות ברמה הזו</div>
                     </div>
                   );
@@ -126,7 +134,7 @@ export function TypePerformanceCard({ recent, allTime, weakestType }: {
                 return (
                   <div key={b} dir="rtl" data-difficulty={b} className={`p-3 rounded-xl border text-center ${tone(pct).box} ${tone(pct).text}`}>
                     <div className="text-xl font-bold tabular-nums" dir="ltr">{pct}%</div>
-                    <div className="text-xs font-semibold mt-0.5">{DIFFICULTY_LABELS[b]}</div>
+                    <div className="text-xs font-semibold mt-0.5"><DifficultyLabel b={b} /></div>
                     <div className="text-xs opacity-80 mt-0.5 tabular-nums">{d.correct}/{d.total}</div>
                   </div>
                 );

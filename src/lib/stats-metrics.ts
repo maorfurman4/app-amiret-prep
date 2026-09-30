@@ -90,6 +90,14 @@ const TYPE_LABELS: Record<string, string> = {
 };
 export const typeLabel = (t: string) => TYPE_LABELS[t] ?? t;
 
+/**
+ * Isolates a number run ("50–56", "4–5") as left-to-right inside Hebrew
+ * text. Without it the en dash is a neutral that the RTL paragraph
+ * reorders, printing "56–50" (the page's copy is plain strings, not JSX,
+ * so <bdi> isn't available here).
+ */
+export const ltr = (s: string | number) => `\u2066${s}\u2069`;
+
 const bucketOf = (level: number): DifficultyBucket => (level <= 2 ? 'easy' : level === 3 ? 'medium' : 'hard');
 
 const scoredSections = (rows: { section_results: unknown }[]) =>
@@ -174,7 +182,7 @@ function readiness(rows: StatsRow[], current: CurrentLevel | null, recent: Accur
 
   const levelScore = current ? thetaToScore(current.measurement.theta) : null;
   if (current && levelScore !== null) {
-    const range = `${current.lo}–${current.hi}`;
+    const range = ltr(`${current.lo}–${current.hi}`);
     reasons.push(levelScore >= EXEMPTION_SCORE
       ? { ok: true, text: `רמה נוכחית משוערת ${range}: באזור ${EXEMPTION_SCORE} ומעלה` }
       : { ok: false, text: current.pointsToTarget > 0
@@ -204,7 +212,7 @@ function readiness(rows: StatsRow[], current: CurrentLevel | null, recent: Accur
   const hard = recent.byDifficulty.hard;
   if (hard.total > 0) {
     const r = hard.correct / hard.total;
-    reasons.push({ ok: r >= 0.55, text: `שאלות ברמות 4–5 (${win}): ${Math.round(r * 100)}% ${r >= 0.55 ? '(יציב גם ברמות הגבוהות)' : '(כדאי לחזק את הרמות הגבוהות)'}` });
+    reasons.push({ ok: r >= 0.55, text: `שאלות ברמות ${ltr('4–5')} (${win}): ${Math.round(r * 100)}% ${r >= 0.55 ? '(יציב גם ברמות הגבוהות)' : '(כדאי לחזק את הרמות הגבוהות)'}` });
   }
 
   let timed = 0, over = 0;

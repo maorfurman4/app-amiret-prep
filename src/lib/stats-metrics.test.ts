@@ -126,4 +126,9 @@ describe('current level', () => {
     expect(m.readiness.reasons.some(r => r.text.includes('50–56') && r.text.includes('לפחות 78'))).toBe(true);
     expect(m.readiness.verdict).toBe('not_yet');
   });
+
+  it('isolates the range LTR so Hebrew text can\'t print it "56–50"', () => {
+    const m = computeStatsMetrics(real)!;
+    expect(m.readiness.reasons.some(r => r.text.includes('⁦50–56⁩'))).toBe(true);
+  });
 });

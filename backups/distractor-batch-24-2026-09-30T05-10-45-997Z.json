@@ -1,0 +1,1129 @@
+[
+ {
+  "id": "d98d0425-59a3-4309-abce-577f8ddd4915",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "suggest"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפרופסור ___ קריאה נוספת לתלמידים שרוצים ללמוד עוד. מה עושה מרצה כדי להעניק חומר נוסף?\",\"correct_reason\":\"suggest (להציע). הפרופסור יציע קריאה נוספת לתלמידים שרוצים ללמוד עוד.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"נכון! suggest (להציע): מתאים להצעת חומר לימוד\",\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "d9b5b1f6-9298-4830-b74f-b1bb3662eab8",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "present"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הצגת ממצאים בכנס שנתי.\",\"correct_reason\":\"present (להציג). החוקרים מתכננים להציג את הממצאים שלהם בכנס השנתי.\",\"options_analysis\":[\"decline (לרדת): לא קשור\",\"eliminate (לבטל): לא מתאים\",\"נכון! present (להציג, מתאים לממצאים)\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "dbd8172e-bab6-41e1-8071-673c1c1ddaf6",
+  "options": [
+   {
+    "id": "a",
+    "text": "specify"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ההוראות ___ שיש לכבות את המכונה לפני הניקוי. מה עושות הוראות עם דרישה מדויקת?\",\"correct_reason\":\"specify (לציין במדויק). ההוראות מציינות שיש לכבות את המכונה לפני הניקוי.\",\"options_analysis\":[\"נכון! specify (לציין במדויק): מתאים להוראת בטיחות\",\"eliminate (לחסל): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "dd3a6edc-f658-49e3-aa59-31817bfbd815",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "negotiate"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"משא ומתן על תנאי חוזה לפני חתימה.\",\"correct_reason\":\"negotiate (לנהל משא ומתן). החברה החליטה לנהל משא ומתן על תנאי החוזה לפני החתימה.\",\"options_analysis\":[\"eliminate (לבטל): לא קשור\",\"נכון! negotiate (לנהל משא ומתן): מתאים לתנאי חוזה\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ddf76cbf-6808-4462-93ae-345adc97c5d0",
+  "options": [
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "revise"
+   }
+  ],
+  "explanation": "{\"strategy\":\"עדכון מדיניות מטען לטיסות בינלאומיות.\",\"correct_reason\":\"revise (לעדכן/לתקן). חברת התעופה החליטה לעדכן את מדיניות המטען שלה לטיסות בינלאומיות.\",\"options_analysis\":[\"distinguish (להבחין): לא רלוונטי\",\"decline (לרדת): לא קשור\",\"eliminate (לבטל): לא מדויק כאן\",\"נכון! revise (לעדכן, מתאים למדיניות)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "de1fa0c6-19ec-46cc-b488-46bd033c71aa",
+  "options": [
+   {
+    "id": "c",
+    "text": "gratitude"
+   },
+   {
+    "id": "a",
+    "text": "concentration"
+   },
+   {
+    "id": "d",
+    "text": "format"
+   },
+   {
+    "id": "b",
+    "text": "balance"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ספורטאים זקוקים ל___ מצוינת כדי לתפקד היטב בדקות האחרונות של משחק. מה נדרש כדי להישאר ממוקד תחת לחץ?\",\"correct_reason\":\"concentration (ריכוז). ספורטאים זקוקים לריכוז מצוין כדי לתפקד היטב בדקות האחרונות של משחק.\",\"options_analysis\":[\"gratitude (הכרת תודה): לא רלוונטי\",\"נכון! concentration (ריכוז): מתאים לביצועים תחת לחץ\",\"format (פורמט): לא רלוונטי\",\"balance (איזון): פחות מדויק להקשר זה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "de9c4701-0e6d-42ef-b870-e2be5cad407b",
+  "options": [
+   {
+    "id": "c",
+    "text": "mutual"
+   },
+   {
+    "id": "a",
+    "text": "ambiguous"
+   },
+   {
+    "id": "d",
+    "text": "independent"
+   },
+   {
+    "id": "b",
+    "text": "obvious"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הסוף ___ של הסרט השאיר צופים רבים מבולבלים לגבי מה שבאמת קרה. איזה תואר מתאר סוף שאפשר לפרש בכמה דרכים?\",\"correct_reason\":\"ambiguous (דו-משמעי). הסוף הדו-משמעי של הסרט השאיר צופים רבים מבולבלים לגבי מה שבאמת קרה.\",\"options_analysis\":[\"mutual (הדדי): לא רלוונטי\",\"נכון! ambiguous (דו-משמעי): מתאים לסוף לא ברור\",\"independent (עצמאי): לא רלוונטי\",\"obvious (ברור): הפוך מהמשמעות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "df6cfee5-fa64-46d1-9c94-b47448e4b22c",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "introduce"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המדיניות החדשה ___ שינויים משמעותיים באופן שבו עובדים מבקשים ימי חופשה. מה עושה מדיניות חדשה עם שינויים?\",\"correct_reason\":\"introduce (להנהיג/להציג). המדיניות החדשה תנהיג שינויים משמעותיים באופן שבו עובדים מבקשים ימי חופשה.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"נכון! introduce (להנהיג, מתאים להנהגת שינוי)\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e0be9583-7663-46a8-a638-b6146d05979e",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "summarize"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מורה שביקש מהתלמידים ל___ את הנקודות העיקריות של המאמר בפסקה אחת. מה עושים עם מאמר ארוך כדי לקצר אותו?\",\"correct_reason\":\"summarize (לסכם). המורה ביקש מהתלמידים לסכם את הנקודות העיקריות של המאמר בפסקה אחת.\",\"options_analysis\":[\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\",\"נכון! summarize (לסכם, מתאים לקיצור טקסט)\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e15e2e5e-1ec4-4ff6-a85e-9c19190dc6b6",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "assign"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הקצאת שיעורי בית נוספים לתלמידים נעדרים.\",\"correct_reason\":\"assign (להקצות/לתת). המורה החליטה לתת שיעורי בית נוספים לתלמידים שנעדרו.\",\"options_analysis\":[\"decline (לרדת): לא קשור\",\"נכון! assign (להקצות, מתאים לשיעורי בית)\",\"eliminate (לבטל): הפוך מהכוונה\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e2897bbd-9952-475d-912d-d8a9900bfe5e",
+  "options": [
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "extend"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הארכת שעות פתיחה כדי למשוך חברים.\",\"correct_reason\":\"extend (להאריך). חדר הכושר החליט להאריך את שעות הפתיחה שלו כדי למשוך יותר חברים.\",\"options_analysis\":[\"distinguish (להבחין): לא קשור\",\"eliminate (לבטל): הפוך מהכוונה\",\"נכון! extend (להאריך, מתאים לשעות פתיחה)\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e3877489-45d6-46cc-96b9-c1881a7051cb",
+  "options": [
+   {
+    "id": "b",
+    "text": "balance"
+   },
+   {
+    "id": "c",
+    "text": "gratitude"
+   },
+   {
+    "id": "a",
+    "text": "technique"
+   },
+   {
+    "id": "d",
+    "text": "format"
+   }
+  ],
+  "explanation": "{\"strategy\":\"לימוד ___ חדשה לפתרון בעיות מתמטיות יכול להפוך את שיעורי הבית למהירים הרבה יותר. מה מכנים שיטה ספציפית לביצוע משהו?\",\"correct_reason\":\"technique (שיטה/טכניקה). לימוד שיטה חדשה לפתרון בעיות מתמטיות יכול להפוך את שיעורי הבית למהירים הרבה יותר.\",\"options_analysis\":[\"balance (איזון): לא רלוונטי\",\"gratitude (הכרת תודה): לא רלוונטי\",\"נכון! technique (שיטה, מתאים לדרך פתרון)\",\"format (פורמט): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e47abbb7-53d0-4f51-bd9b-78f8471040e1",
+  "options": [
+   {
+    "id": "a",
+    "text": "competitive"
+   },
+   {
+    "id": "c",
+    "text": "mutual"
+   },
+   {
+    "id": "d",
+    "text": "independent"
+   },
+   {
+    "id": "b",
+    "text": "vague"
+   }
+  ],
+  "explanation": "{\"strategy\":\"השוק למכוניות חשמליות הפך ___ ביותר בשנים האחרונות. איזה תואר מתאר שוק עם הרבה מתחרים?\",\"correct_reason\":\"competitive (תחרותי). השוק למכוניות חשמליות הפך תחרותי ביותר בשנים האחרונות.\",\"options_analysis\":[\"נכון! competitive (תחרותי): מתאים לשוק עם מתחרים רבים\",\"mutual (הדדי): לא רלוונטי\",\"independent (עצמאי): לא רלוונטי\",\"vague (מעורפל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e47b7584-2a2c-41f4-9df7-9eb4b6a551e9",
+  "options": [
+   {
+    "id": "a",
+    "text": "impose"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החוק החדש ___ קנסות מחמירים יותר על חברות שמזהמות נהרות. מה עושה חוק כדי לאכוף עונש?\",\"correct_reason\":\"impose (להטיל). החוק החדש יטיל קנסות מחמירים יותר על חברות שמזהמות נהרות.\",\"options_analysis\":[\"נכון! impose (להטיל): מתאים להטלת עונש חוקי\",\"eliminate (לחסל): לא רלוונטי\",\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "e9a53304-9f64-4c00-a547-55cb1b9b264d",
+  "options": [
+   {
+    "id": "d",
+    "text": "format"
+   },
+   {
+    "id": "a",
+    "text": "notion"
+   },
+   {
+    "id": "c",
+    "text": "gratitude"
+   },
+   {
+    "id": "b",
+    "text": "balance"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המאמר מערער על ה___ הרווחת שהצלחה דורשת עבודה בשעות ארוכות. מה מכנים אמונה או רעיון מקובל?\",\"correct_reason\":\"notion (מושג/רעיון). המאמר מערער על הרעיון הרווח שהצלחה דורשת עבודה בשעות ארוכות.\",\"options_analysis\":[\"format (פורמט): לא רלוונטי\",\"נכון! notion (רעיון, מתאים לאמונה מקובלת)\",\"gratitude (הכרת תודה): לא רלוונטי\",\"balance (איזון): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ea1fb140-4f35-42da-898d-24f1ca635573",
+  "options": [
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "a",
+    "text": "highlight"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפרסומת ___ את המחיר הנמוך של המוצר ואת האחריות הארוכה. מה עושה פרסומת כדי להדגיש יתרונות?\",\"correct_reason\":\"highlight (להדגיש/לבלוט). הפרסומת תדגיש את המחיר הנמוך של המוצר ואת האחריות הארוכה.\",\"options_analysis\":[\"distinguish (להבחין): לא רלוונטי\",\"נכון! highlight (להדגיש, מתאים להדגשת יתרון)\",\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "eaba9543-0c8d-478d-8eb9-7b8b55fb04cf",
+  "options": [
+   {
+    "id": "a",
+    "text": "ensure"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מנהל ש___ שכל העובדים החדשים יקבלו הכשרה מתאימה. מה עושה מנהל כדי לוודא תהליך תקין?\",\"correct_reason\":\"ensure (להבטיח/לוודא). המנהל יוודא שכל העובדים החדשים יקבלו הכשרה מתאימה.\",\"options_analysis\":[\"נכון! ensure (לוודא, מתאים להבטחת תהליך)\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לחסל): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "eaffef16-5fc3-4045-a604-c8d5569b94eb",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "a",
+    "text": "fascinate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התערוכה החדשה של המוזיאון ___ מבקרים מכל הגילאים. מה עושה תערוכה מרתקת למבקרים?\",\"correct_reason\":\"fascinate (לרתק). התערוכה החדשה של המוזיאון תרתק מבקרים מכל הגילאים.\",\"options_analysis\":[\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\",\"distinguish (להבחין): לא רלוונטי\",\"נכון! fascinate (לרתק, מתאים לתערוכה מעניינת)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "eb6c229e-4e28-4a57-aec7-6c7a906e255a",
+  "options": [
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "reward"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה ___ את עובדיה על עבודתם הקשה עם בונוס מיוחד. מה עושה חברה כדי להוקיר עובדים?\",\"correct_reason\":\"reward (לתגמל). החברה תתגמל את עובדיה על עבודתם הקשה עם בונוס מיוחד.\",\"options_analysis\":[\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לחסל): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"נכון! reward (לתגמל, מתאים למתן בונוס)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ec78f14f-9921-4bfa-b557-dc654335ca03",
+  "options": [
+   {
+    "id": "d",
+    "text": "format"
+   },
+   {
+    "id": "b",
+    "text": "balance"
+   },
+   {
+    "id": "c",
+    "text": "gratitude"
+   },
+   {
+    "id": "a",
+    "text": "interaction"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המחקר בחן את ה___ בין תזונה לבריאות הלב לטווח ארוך. מה מכנים את הקשר וההשפעה ההדדית בין שני גורמים?\",\"correct_reason\":\"interaction (אינטראקציה/יחסי גומלין). המחקר בחן את יחסי הגומלין בין תזונה לבריאות הלב לטווח ארוך.\",\"options_analysis\":[\"format (פורמט): לא רלוונטי\",\"balance (איזון): לא מדויק להקשר\",\"gratitude (הכרת תודה): לא רלוונטי\",\"נכון! interaction (יחסי גומלין): מתאים לקשר בין גורמים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ed1e5d67-f04c-4978-a0e3-96cb772a19a5",
+  "options": [
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "a",
+    "text": "streamline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ייעול תהליך משלוח כדי להפחית עיכובים.\",\"correct_reason\":\"streamline (לייעל). החברה החליטה לייעל את תהליך המשלוח שלה כדי להפחית עיכובים.\",\"options_analysis\":[\"distinguish (להבחין): לא רלוונטי\",\"נכון! streamline (לייעל, מתאים לתהליך משלוח)\",\"eliminate (לבטל): לא מדויק כאן\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ef25332b-cc4e-42e1-97d3-28715b668ec4",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "erect"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הקמת אנדרטה לחיילים שנפלו.\",\"correct_reason\":\"erect (להקים). העיירה החליטה להקים אנדרטה לזכר החיילים שנפלו.\",\"options_analysis\":[\"decline (לרדת): לא קשור\",\"נכון! erect (להקים, מתאים לאנדרטה)\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לבטל): הפוך מהכוונה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f1143eba-8d9d-4095-809f-8554763b8bdb",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "establish"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"יצירת שותפות עם אוניברסיטה מקומית.\",\"correct_reason\":\"establish (ליצור/לכונן). החברה החליטה לכונן שותפות עם אוניברסיטה מקומית.\",\"options_analysis\":[\"decline (לרדת): לא קשור\",\"נכון! establish (לכונן, מתאים לשותפות)\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לבטל): הפוך מהכוונה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f1eaeec9-c0b1-4854-a0db-325ac1f2ca34",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "expand"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה ___ את מדיניות האחריות שלה כדי לכסות גם נזק תאונתי. מה עושה חברה עם כיסוי אחריות שהיא רוצה להגדיל?\",\"correct_reason\":\"expand (להרחיב). החברה תרחיב את מדיניות האחריות שלה כדי לכסות גם נזק תאונתי.\",\"options_analysis\":[\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\",\"נכון! expand (להרחיב, מתאים להרחבת כיסוי)\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f1fab57d-ec91-4f5b-9427-26e646ee46d8",
+  "options": [
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "a",
+    "text": "construct"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בניית פארק חדש במרכז העיר.\",\"correct_reason\":\"construct (לבנות). העיר מתכננת לבנות פארק חדש באזור מרכז העיר.\",\"options_analysis\":[\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"נכון! construct (לבנות, מתאים לפארק)\",\"eliminate (לבטל): לא מתאים ליצירת דבר חדש\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f2677028-6d0b-4203-89e3-19bde235a8d9",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "streamline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה ___ את שרשרת האספקה שלה כדי לקצר זמני משלוח באופן משמעותי. מה עושה חברה כדי לייעל תהליך?\",\"correct_reason\":\"streamline (לייעל). החברה תייעל את שרשרת האספקה שלה כדי לקצר זמני משלוח באופן משמעותי.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"נכון! streamline (לייעל, מתאים לייעול תהליך)\",\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f32caa05-bf08-420a-a460-e36cc6bea5a7",
+  "options": [
+   {
+    "id": "a",
+    "text": "contradict"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שתי התיאוריות נראות ___ זו את זו, מה שמבלבל תלמידים רבים. מה עושות תיאוריות שאינן עולות בקנה אחד?\",\"correct_reason\":\"contradict (לסתור). שתי התיאוריות נראות סותרות זו את זו, מה שמבלבל תלמידים רבים.\",\"options_analysis\":[\"נכון! contradict (לסתור, מתאים לתיאוריות מנוגדות)\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לחסל): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f37f33cd-6424-4e80-896d-3508959969db",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "train"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הכשרת עובדים על כללי בטיחות חדשים.\",\"correct_reason\":\"train (להכשיר). החברה החליטה להכשיר את העובדים שלה בכללי הבטיחות החדשים.\",\"options_analysis\":[\"decline (לרדת): לא קשור\",\"eliminate (לבטל): לא קשור\",\"נכון! train (להכשיר, מתאים לכללי בטיחות)\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f4d6c074-00d5-4a14-929a-b0dd5bf3ac28",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "distinguish"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "a",
+    "text": "reduce"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפחתת שכר לימוד לסטודנטים מעוטי הכנסה.\",\"correct_reason\":\"reduce (להפחית). האוניברסיטה החליטה להפחית את שכר הלימוד עבור סטודנטים מעוטי הכנסה.\",\"options_analysis\":[\"eliminate (לבטל): לא מדויק כאן, לא ביטלו לגמרי\",\"distinguish (להבחין): לא קשור\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"נכון! reduce (להפחית, מתאים לשכר לימוד)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f58492f2-d7eb-42e5-80c9-26f7c2e8b9a0",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "deliver"
+   },
+   {
+    "id": "c",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שירות הדואר ש___ את החבילה ללקוח תוך יומיים. מה עושה שירות דואר עם חבילות?\",\"correct_reason\":\"deliver (למסור). שירות הדואר ימסור את החבילה ללקוח תוך יומיים.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"נכון! deliver (למסור, מתאים למשלוח חבילה)\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f58f986f-7fc1-48be-85ea-12a5967d931c",
+  "options": [
+   {
+    "id": "a",
+    "text": "organize"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ארגון תערוכה חדשה על תרבויות עתיקות.\",\"correct_reason\":\"organize (לארגן). המוזיאון החליט לארגן תערוכה חדשה על תרבויות עתיקות.\",\"options_analysis\":[\"נכון! organize (לארגן, מתאים לתערוכה)\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"decline (לרדת): לא קשור\",\"eliminate (לבטל): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f640f270-1618-4770-bc17-fe3a953aa0f0",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "reject"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הדירקטוריון החליט ל___ את הצעת המנכ\\\"ל למיזוג חברות. מה עושה דירקטוריון עם הצעה שהוא לא רוצה לאשר?\",\"correct_reason\":\"reject (לדחות). הדירקטוריון החליט לדחות את הצעת המנכ\\\"ל למיזוג חברות.\",\"options_analysis\":[\"decline = לדחות (בהקשר של הזמנה, פחות מתאים כאן). פחות מדויק\",\"נכון! reject (לדחות, מתאים לדחיית הצעה)\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f6578e0c-dcad-41c2-9952-2790e682374a",
+  "options": [
+   {
+    "id": "a",
+    "text": "reach"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הגעה לפשרה לאחר דיונים ארוכים.\",\"correct_reason\":\"reach (להגיע ל). המשא ומתנים הסכימו להגיע לפשרה לאחר דיונים ארוכים.\",\"options_analysis\":[\"נכון! reach a compromise (להגיע לפשרה, ביטוי נפוץ)\",\"decline (לרדת): לא קשור\",\"eliminate (לבטל): לא מתאים לפשרה\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f6f4c20f-6e64-4562-ab37-a4a105929f2d",
+  "options": [
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "a",
+    "text": "schedule"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חברת התעופה ___ טיסות נוספות במהלך עונת הנסיעות העמוסה של החגים. מה עושה חברת תעופה כשהביקוש גבוה?\",\"correct_reason\":\"schedule (לתזמן). חברת התעופה תתזמן טיסות נוספות במהלך עונת הנסיעות העמוסה של החגים.\",\"options_analysis\":[\"distinguish (להבחין): לא רלוונטי\",\"נכון! schedule (לתזמן, מתאים להוספת טיסות)\",\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f7324f38-90f5-451c-a65e-dc7680468254",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "introduce"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הצגת תוכנית ספורט חדשה בשנה הבאה.\",\"correct_reason\":\"introduce (להציג/להנהיג). בית הספר החליט להנהיג תוכנית ספורט חדשה בשנה הבאה.\",\"options_analysis\":[\"decline (לרדת): לא קשור\",\"נכון! introduce (להנהיג, מתאים לתוכנית חדשה)\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"eliminate (לבטל): הפוך מהכוונה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f79ee400-e878-4048-b7ab-972c9a94b3bd",
+  "options": [
+   {
+    "id": "a",
+    "text": "launch"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"השקת קמפיין שיווקי חדש.\",\"correct_reason\":\"launch (להשיק). החברה החליטה להשיק קמפיין שיווקי חדש ברבעון הבא.\",\"options_analysis\":[\"נכון! launch (להשיק, מתאים לקמפיין)\",\"eliminate (לבטל): הפוך מהכוונה\",\"decline (לרדת): לא קשור\",\"distinguish (להבחין): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f7cc4bda-c97e-44ce-8853-37b7e6acc81f",
+  "options": [
+   {
+    "id": "a",
+    "text": "heavily"
+   },
+   {
+    "id": "b",
+    "text": "vague"
+   },
+   {
+    "id": "c",
+    "text": "mutual"
+   },
+   {
+    "id": "d",
+    "text": "independent"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הצדקה מסתמכת ___ על תרומות מהקהילה המקומית כדי לשרוד. איזה תואר פועל מתאר תלות רבה?\",\"correct_reason\":\"heavily (רבות). הצדקה מסתמכת רבות על תרומות מהקהילה המקומית כדי לשרוד.\",\"options_analysis\":[\"נכון! heavily (רבות): תואר פועל שמתאים לתלות גדולה\",\"vague (מעורפל): תואר, לא תואר פועל\",\"mutual (הדדי): תואר, לא תואר פועל\",\"independent (עצמאי): תואר, לא תואר פועל\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f8121dfa-2ec8-4b93-8cb6-3437ca302e61",
+  "options": [
+   {
+    "id": "a",
+    "text": "extend"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הארכת מועד הגשה לעבודה סופית.\",\"correct_reason\":\"extend (להאריך). הפרופסור החליט להאריך את מועד ההגשה לעבודה הסופית.\",\"options_analysis\":[\"נכון! extend (להאריך, מתאים למועד הגשה)\",\"eliminate (לבטל): הפוך מהכוונה\",\"decline (לרדת): לא קשור\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f87af9a9-ae07-4e96-9c6b-0c909692e749",
+  "options": [
+   {
+    "id": "a",
+    "text": "establish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הקמת תחנת כיבוי אש בפרבר גדל.\",\"correct_reason\":\"establish (להקים). העיר החליטה להקים תחנת כיבוי אש חדשה בפרבר הגדל.\",\"options_analysis\":[\"נכון! establish (להקים): מתאים לתחנת כיבוי אש\",\"eliminate (לבטל): הפוך מהכוונה\",\"decline (לרדת): לא קשור\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f8f4a6cc-4db8-49d6-9876-cd95c9be8fb1",
+  "options": [
+   {
+    "id": "a",
+    "text": "express"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הבעת דעות בסקר.\",\"correct_reason\":\"express (להביע). חברי הצוות התבקשו להביע את דעותיהם בסקר.\",\"options_analysis\":[\"נכון! express (להביע, מתאים לדעות)\",\"eliminate (לבטל): לא קשור\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f9846abf-c2c8-4442-96da-53fc9aae5f00",
+  "options": [
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "assist"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"סיוע לקשישים בקניות.\",\"correct_reason\":\"assist (לסייע). המתנדבים הסכימו לסייע לתושבים הקשישים בקניות מצרכים.\",\"options_analysis\":[\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"decline (לרדת): לא קשור\",\"נכון! assist (לסייע, מתאים לתושבים קשישים)\",\"eliminate (לבטל): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "faae29a0-8a6b-4192-a39e-06759476006c",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "a",
+    "text": "affect"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חוסר שינה יכול באופן רציני ל___ את יכולתו של אדם להתרכז בעבודה. מה עושה חוסר שינה ליכולת ריכוז?\",\"correct_reason\":\"affect (להשפיע על). חוסר שינה יכול באופן רציני להשפיע על יכולתו של אדם להתרכז בעבודה.\",\"options_analysis\":[\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\",\"distinguish (להבחין): לא רלוונטי\",\"נכון! affect (להשפיע על): מתאים להשפעה שלילית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "fb7437bb-6f56-4a6f-9089-81778b825f67",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "display"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הגלריה ___ את ציוריו החדשים ביותר של האמן במשך כל הקיץ. מה עושה גלריה עם יצירות אמנות?\",\"correct_reason\":\"display (להציג). הגלריה תציג את ציוריו החדשים ביותר של האמן במשך כל הקיץ.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"נכון! display (להציג, מתאים להצגת אמנות)\",\"decline (לדחות/לרדת): לא מתאים\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "fc4c98fe-a92f-4d17-b93a-e84727419fe6",
+  "options": [
+   {
+    "id": "a",
+    "text": "demonstrate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "vague"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"פרופסור ש___ כיצד התיאוריה החדשה שונה ממודלים קודמים. מה עושה מרצה כדי להראות הבדל?\",\"correct_reason\":\"demonstrate (להדגים). הפרופסור יראה בהדגמה כיצד התיאוריה החדשה שונה ממודלים קודמים.\",\"options_analysis\":[\"נכון! demonstrate (להדגים, מתאים להסבר אקדמי)\",\"decline (לדחות/לרדת): לא מתאים\",\"vague (מעורפל): תואר, לא פועל\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "fca8cc6f-86cf-42d5-a844-1aca9706c79e",
+  "options": [
+   {
+    "id": "b",
+    "text": "oppose"
+   },
+   {
+    "id": "d",
+    "text": "predict"
+   },
+   {
+    "id": "a",
+    "text": "revise"
+   },
+   {
+    "id": "c",
+    "text": "separate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"'אחרי שהופיעו ראיות חדשות'. מה עושים חוקרים עם מחקר קיים במקרה כזה?\",\"correct_reason\":\"revise (לתקן/לעדכן). החוקרים נאלצו לעדכן את המחקר שלהם לאחר שהופיעו ראיות חדשות.\",\"options_analysis\":[\"oppose (להתנגד): לא מתאר עדכון מחקר\",\"predict (לחזות): לא מתאר תיקון מחקר קיים\",\"נכון! revise (לעדכן): הגיוני לאחר ראיות חדשות\",\"separate (להפריד): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "fd77bc4e-7301-4553-a25a-457f6e25e017",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "a",
+    "text": "verify"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בדיקת מקורות בזהירות.\",\"correct_reason\":\"verify (לאמת). הפרופסור ביקש מהתלמידים לאמת את המקורות שלהם בזהירות.\",\"options_analysis\":[\"eliminate (לבטל): לא מתאים\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"נכון! verify (לאמת, מתאים למקורות)\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "fd92b9b8-e69f-4baa-be18-eecb7eecee24",
+  "options": [
+   {
+    "id": "a",
+    "text": "determine"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שופט ש___ את גזר הדין לאחר שיבחן את כל הראיות. מה עושה שופט אחרי בחינת ראיות?\",\"correct_reason\":\"determine (לקבוע). השופט יקבע את גזר הדין לאחר שיבחן את כל הראיות.\",\"options_analysis\":[\"נכון! determine (לקבוע, מתאים לפסיקה משפטית)\",\"eliminate (לחסל): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "fe2c0fdf-118c-4137-a80c-ca5c7f3a9342",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "conduct"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חוקרים שהיו צריכים ל___ ניסוי מיוחד כדי לבחון את השערתם. מה עושים חוקרים כדי לבדוק תיאוריה?\",\"correct_reason\":\"conduct (לערוך). החוקרים נאלצו לערוך ניסוי מיוחד כדי לבחון את השערתם.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"נכון! conduct (לערוך, מתאים לעריכת ניסוי)\",\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ff32c6c0-ec41-4d70-8497-19e7dd011e0d",
+  "options": [
+   {
+    "id": "d",
+    "text": "format"
+   },
+   {
+    "id": "b",
+    "text": "balance"
+   },
+   {
+    "id": "c",
+    "text": "gratitude"
+   },
+   {
+    "id": "a",
+    "text": "remedy"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שתיית יותר מים היא ___ פשוט לכאבי ראש קלים שנגרמים מהתייבשות. מה מכנים פתרון פשוט לבעיה בריאותית קלה?\",\"correct_reason\":\"remedy (תרופה/פתרון). שתיית יותר מים היא תרופה פשוטה לכאבי ראש קלים שנגרמים מהתייבשות.\",\"options_analysis\":[\"format (פורמט): לא רלוונטי\",\"balance (איזון): לא רלוונטי\",\"gratitude (הכרת תודה): לא רלוונטי\",\"נכון! remedy (תרופה): מתאים לפתרון לבעיה קלה\"]}",
+  "exam_eligible": true
+ }
+]

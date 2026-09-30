@@ -1,0 +1,1152 @@
+[
+ {
+  "id": "196e2289-966c-4095-b593-9a29cbfa10f0",
+  "options": [
+   {
+    "id": "b",
+    "text": "lax"
+   },
+   {
+    "id": "c",
+    "text": "partisan"
+   },
+   {
+    "id": "d",
+    "text": "lyrical"
+   },
+   {
+    "id": "a",
+    "text": "meticulous"
+   }
+  ],
+  "explanation": "{\"strategy\":\"תשומת לב קפדנית להצגה.\",\"correct_reason\":\"נכון! meticulous (קפדני/מדוקדק). תשומת הלב הקפדנית שדרגה את המנה.\",\"options_analysis\":[\"lax (רופף): הפוך מהמשמעות הנדרשת\",\"partisan (מפלגתי): לא רלוונטי\",\"lyrical (לירי): לא קשור\",\"נכון! meticulous מתאר תשומת לב קפדנית ומדוקדקת במדויק.\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1a0ab0b5-f1cd-4cd7-b24a-079fdc692174",
+  "options": [
+   {
+    "id": "a",
+    "text": "unpopular"
+   },
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החלטת המועצה להעלות מיסים התבררה כ___ מאוד בקרב בעלי עסקים מקומיים. איזה תואר מתאר החלטה שרוב האנשים לא אוהבים?\",\"correct_reason\":\"unpopular (לא פופולרית). החלטת המועצה להעלות מיסים התבררה כלא פופולרית מאוד בקרב בעלי עסקים מקומיים.\",\"options_analysis\":[\"נכון! unpopular (לא פופולרי): מתאים להחלטה שנוי במחלוקת\",\"timid (ביישן): לא רלוונטי\",\"venal (מושחת): לא רלוונטי\",\"banal (שגרתי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1a7a27dd-5562-4920-aa9f-632e28935643",
+  "options": [
+   {
+    "id": "a",
+    "text": "sell"
+   },
+   {
+    "id": "d",
+    "text": "hide"
+   },
+   {
+    "id": "b",
+    "text": "donate"
+   },
+   {
+    "id": "c",
+    "text": "destroy"
+   }
+  ],
+  "explanation": "{\"strategy\":\"to a local charity (לארגון צדקה). מה עושים עם בגדים ישנים לצדקה?\",\"correct_reason\":\"donate (לתרום). תרומת בגדים לצדקה = donate. הפועל הסטנדרטי לנתינה לצדקה.\",\"options_analysis\":[\"sell (למכור): מכירה היא לרווח כספי, לא לצדקה\",\"hide (להסתיר): לא מסתירים בגדים בצדקה\",\"נכון! donate (לתרום): to donate to a charity (לתרום לצדקה)\",\"destroy (להשמיד): לא משמידים בגדים לצדקה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1aadb728-85db-4a5d-96ad-7cb6e3ec4956",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "compensate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"פיצוי נוסעים על עיכוב.\",\"correct_reason\":\"compensate (לפצות). חברת התעופה התנצלה והציעה לפצות את הנוסעים על העיכוב.\",\"options_analysis\":[\"decline (לרדת): לא קשור\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לבטל): לא מתאים לפיצוי\",\"נכון! compensate (לפצות, מתאים לעיכוב טיסה)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1ac8a930-6c7c-41d6-892a-5d8bce33ad67",
+  "options": [
+   {
+    "id": "a",
+    "text": "install"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התקנת פנסי רחוב לאורך כביש מהיר.\",\"correct_reason\":\"install (להתקין). העיר החליטה להתקין פנסי רחוב חדשים לאורך הכביש המהיר.\",\"options_analysis\":[\"נכון! install (להתקין, מתאים לפנסי רחוב)\",\"eliminate (לבטל): הפוך מהכוונה\",\"decline (לרדת): לא קשור\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1b641c40-5b73-47ee-9fff-1f157b298f66",
+  "options": [
+   {
+    "id": "c",
+    "text": "careless"
+   },
+   {
+    "id": "a",
+    "text": "adept"
+   },
+   {
+    "id": "d",
+    "text": "inept"
+   },
+   {
+    "id": "b",
+    "text": "clumsy"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בסופו של דבר השיגה תנאים נוחים (ultimately secured favorable terms). איזה טיפול במשא ומתן משיג תנאים טובים?\",\"correct_reason\":\"adept (מיומן). טיפול מיומן במשא ומתן משיג תנאים נוחים.\",\"options_analysis\":[\"careless (חסר זהירות): הפוך מהשגת תנאים נוחים\",\"נכון! adept (מיומן): מתאים להשגת תנאים נוחים בהצלחה\",\"inept (חסר יכולת): הפוך מהשגת תנאים נוחים\",\"clumsy (מסורבל): הפוך מהשגת תנאים נוחים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1b6bcad1-00bd-421d-83d7-1b1fed614da1",
+  "options": [
+   {
+    "id": "a",
+    "text": "cancel"
+   },
+   {
+    "id": "c",
+    "text": "gratitude"
+   },
+   {
+    "id": "d",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ביטול טיסה עקב מזג אוויר גרוע.\",\"correct_reason\":\"cancel (לבטל). חברת התעופה החליטה לבטל את הטיסה עקב מזג אוויר גרוע.\",\"options_analysis\":[\"נכון! cancel (לבטל): מתאים לטיסה ומזג אוויר\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"decline (לרדת/לדחות): לא מתאים לטיסה\",\"distinguish (להבחין): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1b781b7c-9111-4912-8e08-924a4f8f1f71",
+  "options": [
+   {
+    "id": "b",
+    "text": "exaggerated"
+   },
+   {
+    "id": "c",
+    "text": "partisan"
+   },
+   {
+    "id": "d",
+    "text": "impartial"
+   },
+   {
+    "id": "a",
+    "text": "distorted"
+   }
+  ],
+  "explanation": "{\"strategy\":\"נמנע מהטיה שהייתה בגרסאות קודמות (avoiding the bias present in earlier versions). איזה תיאור נמנע מהטיה?\",\"correct_reason\":\"impartial (חסר פניות). תיאור שנמנע מהטיה הוא חסר פניות.\",\"options_analysis\":[\"exaggerated (מוגזם): לא מתאר הימנעות מהטיה\",\"partisan (מוטה/חד-צדדי): הפוך מ'avoiding the bias'\",\"נכון! impartial (חסר פניות): מתאים ל'avoiding the bias'\",\"distorted (מעוות): הפוך מהימנעות מהטיה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1be9c5d8-5367-4449-b571-f05b16dcd5f8",
+  "options": [
+   {
+    "id": "b",
+    "text": "banal"
+   },
+   {
+    "id": "a",
+    "text": "persistent"
+   },
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "d",
+    "text": "venal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הטקטיקות ___ של המנהל משא ומתן שחקו בסופו של דבר את התנגדות הצד השני. איזה תואר מתאר טקטיקה שממשיכה ללא הרף?\",\"correct_reason\":\"persistent (מתמיד). הטקטיקות המתמידות של מנהל המשא ומתן שחקו בסופו של דבר את התנגדות הצד השני.\",\"options_analysis\":[\"banal (שגרתי): לא רלוונטי\",\"נכון! persistent (מתמיד): מתאים לטקטיקה שלא נעצרת\",\"timid (ביישן): לא רלוונטי\",\"venal (מושחת): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1bfb5c02-f2cb-4c63-a0aa-d3c0b2deb3ef",
+  "options": [
+   {
+    "id": "c",
+    "text": "emission"
+   },
+   {
+    "id": "d",
+    "text": "presumption"
+   },
+   {
+    "id": "b",
+    "text": "inclusion"
+   },
+   {
+    "id": "a",
+    "text": "metabolism"
+   }
+  ],
+  "explanation": "{\"strategy\":\"פעילות גופנית סדירה מגבירה את ___ של הגוף, ומאפשרת לו לשרוף קלוריות ביעילות רבה יותר. מה מכנים תהליכי הפיכת מזון לאנרגיה בגוף?\",\"correct_reason\":\"metabolism (חילוף חומרים). פעילות גופנית סדירה מגבירה את חילוף החומרים של הגוף, ומאפשרת לו לשרוף קלוריות ביעילות רבה יותר.\",\"options_analysis\":[\"emission (פליטה): לא רלוונטי\",\"presumption (הנחה): לא רלוונטי\",\"inclusion (הכללה): לא רלוונטי\",\"נכון! metabolism (חילוף חומרים): מתאים לתהליך גופני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1c1b07b7-2611-495a-8877-53f8cec8fd18",
+  "options": [
+   {
+    "id": "b",
+    "text": "inclusion"
+   },
+   {
+    "id": "c",
+    "text": "emission"
+   },
+   {
+    "id": "d",
+    "text": "presumption"
+   },
+   {
+    "id": "a",
+    "text": "equilibrium"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המערכת האקולוגית מגיעה ל___ טבעי כאשר אוכלוסיות טורף וטרף מאזנות זו את זו. מה מכנים מצב יציב שבו כוחות מנוגדים מאוזנים?\",\"correct_reason\":\"equilibrium (שיווי משקל). המערכת האקולוגית מגיעה לשיווי משקל טבעי כאשר אוכלוסיות טורף וטרף מאזנות זו את זו.\",\"options_analysis\":[\"inclusion (הכללה): לא רלוונטי\",\"emission (פליטה): לא רלוונטי\",\"presumption (הנחה): לא רלוונטי\",\"נכון! equilibrium (שיווי משקל): מתאים לאיזון טבעי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1c60d7ae-45e4-4302-9243-751574798f4c",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "extend"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הרחבת פעילות למדינות נוספות.\",\"correct_reason\":\"extend (להרחיב). החברה מתכננת להרחיב את פעילותה לשלוש מדינות חדשות.\",\"options_analysis\":[\"eliminate (לבטל): הפוך מהכוונה\",\"distinguish (להבחין): לא קשור\",\"decline (לרדת): הפוך מהכוונה\",\"נכון! extend (להרחיב, מתאים לפעילות עסקית)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1c635225-97cd-422c-89bc-e83aa5573289",
+  "options": [
+   {
+    "id": "a",
+    "text": "protect"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החוק החדש ___ דיירים מפני פינוי ללא הודעה מתאימה. מה עושה חוק כדי לשמור על זכויות שוכרים?\",\"correct_reason\":\"protect (להגן). החוק החדש יגן על דיירים מפני פינוי ללא הודעה מתאימה.\",\"options_analysis\":[\"נכון! protect (להגן, מתאים להגנה משפטית)\",\"decline (לדחות/לרדת): לא מתאים\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1cd4a721-126c-4dfb-b46a-5b9666f02412",
+  "options": [
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "a",
+    "text": "implement"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"יישום אמצעי ביטחון נוספים.\",\"correct_reason\":\"implement (ליישם). רשות שדות התעופה החליטה ליישם אמצעי ביטחון נוספים.\",\"options_analysis\":[\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"נכון! implement (ליישם, מתאים לאמצעי ביטחון)\",\"eliminate (לבטל): הפוך מהכוונה\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1d827401-5e83-4759-84e4-4e8ed7957e63",
+  "options": [
+   {
+    "id": "a",
+    "text": "verify"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חשוב ל___ את המקורות שלך לפני שכוללים אותם בעבודה אקדמית. מה עושים כדי לוודא שמקור אמין?\",\"correct_reason\":\"verify (לוודא/לאמת). חשוב לוודא את מקורותיך לפני שכוללים אותם בעבודה אקדמית.\",\"options_analysis\":[\"נכון! verify (לאמת): מתאים לבדיקת אמינות מקור\",\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1f023261-7870-4e4f-bb61-424a882530ba",
+  "options": [
+   {
+    "id": "b",
+    "text": "lax"
+   },
+   {
+    "id": "a",
+    "text": "definitive"
+   },
+   {
+    "id": "d",
+    "text": "partisan"
+   },
+   {
+    "id": "c",
+    "text": "superficial"
+   }
+  ],
+  "explanation": "{\"strategy\":\"דוח מכריע שסיים מחלוקת ממושכת.\",\"correct_reason\":\"נכון! definitive (מכריע/סופי). הדוח המכריע סיים את המחלוקת הממושכת.\",\"options_analysis\":[\"lax (רופף): לא מתאים כאן\",\"נכון! definitive מתאר דוח מכריע וסופי במדויק.\",\"partisan (מפלגתי): לא רלוונטי\",\"superficial (שטחי): הפוך מהמשמעות הנדרשת\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1f4ce3a5-14e7-495c-b535-8928f6706730",
+  "options": [
+   {
+    "id": "d",
+    "text": "lyricism"
+   },
+   {
+    "id": "a",
+    "text": "cowardice"
+   },
+   {
+    "id": "b",
+    "text": "agility"
+   },
+   {
+    "id": "c",
+    "text": "scrutiny"
+   }
+  ],
+  "explanation": "{\"strategy\":\"פחדנות בהימנעות משאלות קשות.\",\"correct_reason\":\"נכון! cowardice (פחדנות). ההחלטה נתפסה כפחדנית בהימנעות מהתמודדות.\",\"options_analysis\":[\"lyricism (ליריות): לא רלוונטי\",\"נכון! cowardice מתאר הימנעות פחדנית במדויק.\",\"agility (זריזות): הפוך מהמשמעות\",\"scrutiny (בחינה קפדנית): לא מתאים כאן\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1ff1f23f-b864-4ef3-a927-5fdc667e0a42",
+  "options": [
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "replace"
+   },
+   {
+    "id": "c",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המלצת מכונאי להחליף בלמים.\",\"correct_reason\":\"replace (להחליף). המכונאי המליץ לה להחליף את הבלמים של המכונית מיד.\",\"options_analysis\":[\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"eliminate (לבטל): לא מתאים לבלמים\",\"נכון! replace (להחליף, מתאים לבלמים)\",\"distinguish (להבחין): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "1ff2ef1d-c999-43b4-913d-f9b24941178d",
+  "options": [
+   {
+    "id": "c",
+    "text": "careless"
+   },
+   {
+    "id": "a",
+    "text": "random"
+   },
+   {
+    "id": "d",
+    "text": "bold"
+   },
+   {
+    "id": "b",
+    "text": "reckless"
+   }
+  ],
+  "explanation": "{\"strategy\":\"turned out to be remarkably accurate (התבררה כמדויקת להפליא). איזו תחזית מתגלה כמדויקת?\",\"correct_reason\":\"bold (נועזת). תחזית נועזת (יוצאת דופן) שהתבררה נכונה מרשימה יותר.\",\"options_analysis\":[\"careless (חסרת זהירות): סותר תחזית מדויקת מבוססת\",\"random (אקראית): סותר תחזית מקצועית מבוססת\",\"נכון! bold (נועזת): תחזית נועזת שהתבררה מדויקת מרשימה\",\"reckless (פזיזה): פחות מתאים לתחזית שהתבררה כמדויקת\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "20373994-ae4f-4f60-9887-f593a0936822",
+  "options": [
+   {
+    "id": "d",
+    "text": "mutual"
+   },
+   {
+    "id": "a",
+    "text": "stable"
+   },
+   {
+    "id": "b",
+    "text": "vague"
+   },
+   {
+    "id": "c",
+    "text": "obvious"
+   }
+  ],
+  "explanation": "{\"strategy\":\"כספי החברה נשארו ___ למרות התנאים הכלכליים הקשים. איזה תואר מתאר מצב פיננסי איתן?\",\"correct_reason\":\"stable (יציב). כספי החברה נשארו יציבים למרות התנאים הכלכליים הקשים.\",\"options_analysis\":[\"mutual (הדדי): לא רלוונטי\",\"נכון! stable (יציב): מתאים למצב פיננסי איתן\",\"vague (מעורפל): לא רלוונטי\",\"obvious (ברור): לא מתאים להקשר\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "24fae7e4-c9d2-429a-8313-b1047819dccd",
+  "options": [
+   {
+    "id": "b",
+    "text": "yield"
+   },
+   {
+    "id": "d",
+    "text": "concede"
+   },
+   {
+    "id": "c",
+    "text": "confine"
+   },
+   {
+    "id": "a",
+    "text": "cancel"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חברת התעופה נאלצה ל___ מאות טיסות עקב סופת השלגים הבלתי צפויה. מה עושה חברת תעופה כשמזג האוויר מסוכן מדי לטיסה?\",\"correct_reason\":\"cancel (לבטל). חברת התעופה נאלצה לבטל מאות טיסות עקב סופת השלגים הבלתי צפויה.\",\"options_analysis\":[\"yield (להיכנע/לוותר): לא רלוונטי\",\"concede (להודות/לוותר): לא רלוונטי\",\"confine (לכלוא/להגביל): לא רלוונטי\",\"נכון! cancel (לבטל): מתאים לביטול טיסות המוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "26b07d18-87f0-443a-be50-3c2cae12fc28",
+  "options": [
+   {
+    "id": "d",
+    "text": "concede"
+   },
+   {
+    "id": "b",
+    "text": "yield"
+   },
+   {
+    "id": "a",
+    "text": "descend"
+   },
+   {
+    "id": "c",
+    "text": "confine"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המטיילים החלו ל___ אל תוך העמק כשהשביל נעשה תלול יותר. מה עושים מטיילים כשהם יורדים במורד ההר?\",\"correct_reason\":\"descend (לרדת). המטיילים החלו לרדת אל תוך העמק כשהשביל נעשה תלול יותר.\",\"options_analysis\":[\"concede (להודות/לוותר): לא רלוונטי\",\"yield (להיכנע/לוותר): לא רלוונטי\",\"נכון! descend (לרדת, מתאים לירידה בהר)\",\"confine (לכלוא/להגביל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "26c525c5-5c0e-4f59-8b4e-39db814f577c",
+  "options": [
+   {
+    "id": "a",
+    "text": "renew"
+   },
+   {
+    "id": "b",
+    "text": "yield"
+   },
+   {
+    "id": "c",
+    "text": "confine"
+   },
+   {
+    "id": "d",
+    "text": "concede"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הדירקטוריון ___ את חוזה המנכ\\\"ל לעוד שלוש שנים. מה עושה דירקטוריון עם חוזה שהוא רוצה להאריך?\",\"correct_reason\":\"renew (לחדש). הדירקטוריון יחדש את חוזה המנכ\\\"ל לעוד שלוש שנים.\",\"options_analysis\":[\"נכון! renew (לחדש, מתאים לחידוש חוזה)\",\"yield (להיכנע/לוותר): לא רלוונטי\",\"confine (לכלוא/להגביל): לא רלוונטי\",\"concede (להודות/לוותר): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "26f9acb7-6ca9-4209-b6c8-fc3ff3d4f61a",
+  "options": [
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "affluent"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"השכונה ___ הייתה ידועה במכוניות היקרות שלה ובגינות המטופחות. איזה תואר מתאר שכונה של אנשים עשירים?\",\"correct_reason\":\"affluent (אמיד/עשיר). השכונה האמידה הייתה ידועה במכוניות היקרות שלה ובגינות המטופחות.\",\"options_analysis\":[\"reticent (מסויג): לא רלוונטי\",\"נכון! affluent (אמיד, מתאים לשכונה עשירה)\",\"negligible (זניח): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "271ae30e-0ae9-481c-bc33-456a9f091d71",
+  "options": [
+   {
+    "id": "d",
+    "text": "increase"
+   },
+   {
+    "id": "b",
+    "text": "lower"
+   },
+   {
+    "id": "c",
+    "text": "cause"
+   },
+   {
+    "id": "a",
+    "text": "ignore"
+   }
+  ],
+  "explanation": "{\"strategy\":\"doctors recommend (רופאים ממליצים). מה מטרת ההמלצה על פעילות גופנית?\",\"correct_reason\":\"lower (להפחית). פעילות גופנית מפחיתה סיכון למחלות לב.\",\"options_analysis\":[\"increase (להגדיל): הפוך ממטרת המלצה רפואית\",\"נכון! lower (להפחית): מתאים למטרת המלצה בריאותית\",\"cause (לגרום): הפוך ממטרת ההמלצה\",\"ignore (להתעלם): סותר את קיום ההמלצה עצמה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "271be068-696f-4a56-8b0a-b20a6d31e2c3",
+  "options": [
+   {
+    "id": "c",
+    "text": "eloquent"
+   },
+   {
+    "id": "a",
+    "text": "unjustified"
+   },
+   {
+    "id": "b",
+    "text": "frugal"
+   },
+   {
+    "id": "d",
+    "text": "trivial"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החלטה ללא ראיות תומכות נחשבת בלתי מוצדקת.\",\"correct_reason\":\"unjustified (בלתי מוצדק). ההחלטה נחשבה בלתי מוצדקת נוכח היעדר ראיות תומכות.\",\"options_analysis\":[\"eloquent (רהוט): לא רלוונטי\",\"נכון! unjustified (בלתי מוצדק): מתאים להיעדר ראיות\",\"frugal (חסכן): לא קשור\",\"trivial (טריוויאלי): לא מתאים להקשר של החלטה חשובה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "277d86c8-e8a1-4c3b-a9db-7a7aaec4bdd2",
+  "options": [
+   {
+    "id": "d",
+    "text": "dimension"
+   },
+   {
+    "id": "c",
+    "text": "eloquence"
+   },
+   {
+    "id": "a",
+    "text": "bureaucracy"
+   },
+   {
+    "id": "b",
+    "text": "resistance"
+   }
+  ],
+  "explanation": "{\"strategy\":\"עובדים התלוננו ש___ מוגזמת האטה אפילו את הבקשות הפשוטות ביותר. מה מכנים מערכת מנהלית מסורבלת עם הרבה נהלים?\",\"correct_reason\":\"bureaucracy (בירוקרטיה). עובדים התלוננו שבירוקרטיה מוגזמת האטה אפילו את הבקשות הפשוטות ביותר.\",\"options_analysis\":[\"dimension (ממד): לא רלוונטי\",\"eloquence (רהיטות): לא רלוונטי\",\"נכון! bureaucracy (בירוקרטיה, מתאים לנהלים מסורבלים)\",\"resistance (התנגדות): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "27f5f98d-affe-48f2-8eba-0eb5c8266272",
+  "options": [
+   {
+    "id": "d",
+    "text": "genuine"
+   },
+   {
+    "id": "c",
+    "text": "trivial"
+   },
+   {
+    "id": "b",
+    "text": "frugal"
+   },
+   {
+    "id": "a",
+    "text": "further"
+   }
+  ],
+  "explanation": "{\"strategy\":\"סיבוך נוסף שהתווסף למשא ומתן.\",\"correct_reason\":\"further (נוסף/עוד יותר). המשא ומתן הסתבך עוד יותר עקב פרישה פתאומית של אחד הצדדים.\",\"options_analysis\":[\"genuine (אמיתי): לא מתאים דקדוקית\",\"trivial (טריוויאלי): לא מתאים דקדוקית\",\"frugal (חסכן): לא מתאים דקדוקית כתואר פועל\",\"נכון! further (עוד יותר): מתאים לתיאור סיבוך גובר\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "28a7df52-623f-4f15-9158-8faa92bab299",
+  "options": [
+   {
+    "id": "c",
+    "text": "measured"
+   },
+   {
+    "id": "b",
+    "text": "judicious"
+   },
+   {
+    "id": "d",
+    "text": "deferential"
+   },
+   {
+    "id": "a",
+    "text": "peremptory"
+   }
+  ],
+  "explanation": "{\"strategy\":\"דחייה תקיפה וללא דיון בהערת שוליים בודדת.\",\"correct_reason\":\"נכון! peremptory (תקיף/חד-צדדי ללא דיון). הדחייה התקיפה בהערת שוליים בודדת עוררה זעם.\",\"options_analysis\":[\"measured (מאוזן): הפוך מהמשמעות הנדרשת\",\"judicious (שקול): הפוך מהמשמעות הנדרשת\",\"deferential (נכנע): הפוך מהמשמעות הנדרשת\",\"נכון! peremptory מתאר דחייה חד-צדדית וללא נימוק במדויק.\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "298e803f-97f6-42ed-a7f7-fc4e4e0768ee",
+  "options": [
+   {
+    "id": "b",
+    "text": "yield"
+   },
+   {
+    "id": "a",
+    "text": "provide"
+   },
+   {
+    "id": "d",
+    "text": "concede"
+   },
+   {
+    "id": "c",
+    "text": "confine"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בית המשפט הורה לחברה ל___ פיצוי מלא לעובדים הפצועים. מה עושה חברה כשמורים לה לפצות עובדים?\",\"correct_reason\":\"provide (לספק). בית המשפט הורה לחברה לספק פיצוי מלא לעובדים הפצועים.\",\"options_analysis\":[\"yield (להיכנע/לוותר): לא רלוונטי\",\"נכון! provide (לספק): מתאים למתן פיצוי בהוראת בית משפט\",\"concede (להודות/לוותר): לא רלוונטי\",\"confine (לכלוא/להגביל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "29fab0e0-4f9a-462f-a6a8-a90f05044d88",
+  "options": [
+   {
+    "id": "b",
+    "text": "nuanced"
+   },
+   {
+    "id": "d",
+    "text": "biased"
+   },
+   {
+    "id": "c",
+    "text": "superficial"
+   },
+   {
+    "id": "a",
+    "text": "partisan"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מכיר הן בהצלחות והן בכישלונות (acknowledging both achievements AND failures). מה זה?\",\"correct_reason\":\"nuanced (מדוקדק/עם דקויות). חשבון שמכיר בשני הצדדים = nuanced. לא שחור-לבן.\",\"options_analysis\":[\"נכון! nuanced (עם דקויות): acknowledging both = nuanced treatment\",\"biased (מוטה): מוטה = חד-צדדי\",\"superficial (שטחי): שטחי = לא מעמיק, לא מכיר בשני הצדדים\",\"partisan (מגמתי/חד-צדדי): הפוך! מגמתי = רק צד אחד\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2a0c37d0-441a-4488-b137-4a6c721fb2c9",
+  "options": [
+   {
+    "id": "c",
+    "text": "anomaly"
+   },
+   {
+    "id": "b",
+    "text": "connotation"
+   },
+   {
+    "id": "d",
+    "text": "aversion"
+   },
+   {
+    "id": "a",
+    "text": "demography"
+   }
+  ],
+  "explanation": "{\"strategy\":\"היא רכשה את הדוקטורט שלה ב..., ולמדה שיעורי ילודה ודפוסי הגירה ברחבי אפריקה. איזה תחום עוסק במחקר אוכלוסיות אנושיות?\",\"correct_reason\":\"demography (דמוגרפיה). היא רכשה את הדוקטורט שלה בדמוגרפיה, ולמדה שיעורי ילודה ודפוסי הגירה ברחבי אפריקה.\",\"options_analysis\":[\"anomaly (חריגה): לא רלוונטי\",\"connotation (קונוטציה): לא רלוונטי\",\"aversion (סלידה): לא רלוונטי\",\"נכון! demography (דמוגרפיה, מתאים למחקר אוכלוסין)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2aa63271-62d6-4834-bcd9-d0e563cb4979",
+  "options": [
+   {
+    "id": "b",
+    "text": "reductive"
+   },
+   {
+    "id": "d",
+    "text": "cavalier"
+   },
+   {
+    "id": "c",
+    "text": "facile"
+   },
+   {
+    "id": "a",
+    "text": "granular"
+   }
+  ],
+  "explanation": "{\"strategy\":\"תיאור מדוקדק ועשיר פרטים של חיי היומיום.\",\"correct_reason\":\"נכון! granular (מדוקדק/עשיר פרטים). הכישרון היה בתיאור מדוקדק של חיי היומיום מבלי להיות משעמם.\",\"options_analysis\":[\"reductive (מצמצם): הפוך מהמשמעות הנדרשת\",\"cavalier (קל דעת): לא מתאים כאן\",\"facile (שטחי): הפוך מהמשמעות הנדרשת\",\"נכון! granular מתאר תיאור עשיר בפרטים קטנים במדויק.\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2ad25b99-14b6-42a7-a3f9-aee0a5963bdb",
+  "options": [
+   {
+    "id": "d",
+    "text": "genuine"
+   },
+   {
+    "id": "a",
+    "text": "detrimental"
+   },
+   {
+    "id": "c",
+    "text": "trivial"
+   },
+   {
+    "id": "b",
+    "text": "frugal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"אזהרה מפני השלכות מזיקות לטווח ארוך.\",\"correct_reason\":\"detrimental (מזיק). הפאנל הזהיר כי התעלמות מהנושא עלולה לגרום להשלכות מזיקות לטווח ארוך.\",\"options_analysis\":[\"genuine (אמיתי): לא מתאים להשלכות\",\"נכון! detrimental (מזיק, מתאים לאזהרה)\",\"trivial (טריוויאלי): סותר את האזהרה\",\"frugal (חסכן): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2b0c310b-9036-46f2-902d-b929b391f327",
+  "options": [
+   {
+    "id": "b",
+    "text": "confused"
+   },
+   {
+    "id": "d",
+    "text": "transformed"
+   },
+   {
+    "id": "a",
+    "text": "hid"
+   },
+   {
+    "id": "c",
+    "text": "ignored"
+   }
+  ],
+  "explanation": "{\"strategy\":\"discovery...understand the disease = תגלית ___ הבנת המחלה. מה עושה תגלית משמעותית להבנה?\",\"correct_reason\":\"transformed (שינתה מהותית). תגלית חשובה משנה הבנה.\",\"options_analysis\":[\"confused (בלבלה): הפוך מתרומה מדעית\",\"נכון! transformed (שינתה מהותית): מתאים לתגלית פורצת דרך\",\"hid (הסתירה): הפוך ממטרת מחקר\",\"ignored (התעלמה מ-): לא רלוונטי לתגלית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2c1b82c2-c513-4c04-889a-5041aae9cc7a",
+  "options": [
+   {
+    "id": "a",
+    "text": "noncommittal"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפרופסור הינהן בראשו..., והכיר בנקודה של התלמיד מבלי להסכים איתה לגמרי. איזה תואר מתאר תגובה שלא מחייבת עמדה ברורה?\",\"correct_reason\":\"noncommittal (לא מחייב/מתחמק מהתחייבות). הפרופסור הינהן בראשו באופן לא מחייב, והכיר בנקודה של התלמיד מבלי להסכים איתה לגמרי.\",\"options_analysis\":[\"נכון! noncommittal (לא מחייב): מתאים לתגובה עמומה בכוונה\",\"mundane (יומיומי): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2cb08f9c-ca6f-4b8c-b1f4-80caa8b0b4a9",
+  "options": [
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "fastidious"
+   }
+  ],
+  "explanation": "{\"strategy\":\"השף היה ידוע כ___ לגבי מרכיבים, וסירב לכל דבר פחות מתוצרת בשלה בצורה מושלמת. איזה תואר מתאר אדם שקפדני עד לפרטים הקטנים ביותר?\",\"correct_reason\":\"fastidious (דקדקן/קפדן). השף היה ידוע כדקדקן לגבי מרכיבים, וסירב לכל דבר פחות מתוצרת בשלה בצורה מושלמת.\",\"options_analysis\":[\"mundane (יומיומי): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"נכון! fastidious (דקדקן, מתאים לקפדנות קיצונית)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2cbe7283-c49d-4dd0-8e87-ec2018403f18",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "intricate"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"עלילת הרומן היא ___ באופן יוצא דופן, עם עשרות דמויות ותת-עלילות שזורות יחד. איזה תואר מתאר עלילה מורכבת ומסועפת מאוד?\",\"correct_reason\":\"intricate (מורכב/מסועף). עלילת הרומן היא מורכבת באופן יוצא דופן, עם עשרות דמויות ותת-עלילות שזורות יחד.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"נכון! intricate (מורכב, מתאים לעלילה מפותלת)\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2d3ce376-a122-4661-ad5c-4575b4056d09",
+  "options": [
+   {
+    "id": "c",
+    "text": "circumvent"
+   },
+   {
+    "id": "a",
+    "text": "comprehend"
+   },
+   {
+    "id": "d",
+    "text": "admonish"
+   },
+   {
+    "id": "b",
+    "text": "deplete"
+   }
+  ],
+  "explanation": "{\"strategy\":\"לקח לו שנות לימוד לפני שהצליח באמת ל___ את עומק הטיעון של הפילוסוף. מה עושים כדי להבין לעומק רעיון מורכב?\",\"correct_reason\":\"comprehend (להבין לעומק). לקח לו שנות לימוד לפני שהצליח באמת להבין לעומק את הטיעון של הפילוסוף.\",\"options_analysis\":[\"circumvent (לעקוף): לא רלוונטי\",\"נכון! comprehend (להבין לעומק): מתאים להבנה מלאה של רעיון\",\"admonish (להוכיח): לא רלוונטי\",\"deplete (לרוקן): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "2e03b13d-471c-4e0c-b017-3f38a9ef9f43",
+  "options": [
+   {
+    "id": "c",
+    "text": "invite"
+   },
+   {
+    "id": "b",
+    "text": "warn"
+   },
+   {
+    "id": "a",
+    "text": "take"
+   },
+   {
+    "id": "d",
+    "text": "dial"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מה עושים עם מבחן? ניגשים אליו.\",\"correct_reason\":\"take = לגשת ל(מבחן). התלמידים ייגשו למבחן ביום שישי בבוקר.\",\"options_analysis\":[\"invite (להזמין): לא קשור למבחן\",\"warn (להזהיר): לא הגיוני כתשובה ישירה\",\"נכון! take a test (לגשת למבחן, ביטוי נפוץ)\",\"dial (לחייג): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "30200a02-ad13-482e-b9e6-13755c98672a",
+  "options": [
+   {
+    "id": "b",
+    "text": "deplete"
+   },
+   {
+    "id": "c",
+    "text": "circumvent"
+   },
+   {
+    "id": "a",
+    "text": "empower"
+   },
+   {
+    "id": "d",
+    "text": "admonish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החוק החדש שואף ל___ בעלי עסקים קטנים להתחרות בתאגידים גדולים. מה עושה חוק כדי לתת כוח וכלים לקבוצה חלשה יותר?\",\"correct_reason\":\"empower (להעצים). החוק החדש שואף להעצים בעלי עסקים קטנים להתחרות בתאגידים גדולים.\",\"options_analysis\":[\"deplete (לרוקן): לא רלוונטי\",\"circumvent (לעקוף): לא רלוונטי\",\"נכון! empower (להעצים): מתאים לחיזוק קבוצה חלשה\",\"admonish (להוכיח): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "30c00f2f-5342-40f9-b126-ebc17f8a283c",
+  "options": [
+   {
+    "id": "a",
+    "text": "watch"
+   },
+   {
+    "id": "d",
+    "text": "paint"
+   },
+   {
+    "id": "c",
+    "text": "sweep"
+   },
+   {
+    "id": "b",
+    "text": "wander"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מה עושים עם סרט? צופים בו.\",\"correct_reason\":\"watch (לצפות). הילדים רוצים לצפות בסרט ביחד ביום שישי בערב.\",\"options_analysis\":[\"נכון! watch (לצפות, מתאים לסרט)\",\"paint (לצייר): לא קשור לסרט\",\"sweep (לטאטא): לא רלוונטי\",\"wander (לשוטט): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "4186e58a-29b6-47b6-a247-cba27f724545",
+  "options": [
+   {
+    "id": "d",
+    "text": "sell"
+   },
+   {
+    "id": "a",
+    "text": "play"
+   },
+   {
+    "id": "b",
+    "text": "wash"
+   },
+   {
+    "id": "c",
+    "text": "count"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מה עושים עם משחקים בימי גשם? משחקים בהם.\",\"correct_reason\":\"play (לשחק). המשפחה אוהבת לשחק משחקים ביחד בימים גשומים.\",\"options_analysis\":[\"sell (למכור): לא רלוונטי\",\"נכון! play (לשחק, מתאים למשחקים)\",\"wash (לשטוף): לא קשור למשחקי קופסה\",\"count (לספור): לא מתאר פעילות משחק\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "41a133f5-6c71-4324-9f5b-a0636b2c158a",
+  "options": [
+   {
+    "id": "c",
+    "text": "paint"
+   },
+   {
+    "id": "a",
+    "text": "push"
+   },
+   {
+    "id": "d",
+    "text": "measure"
+   },
+   {
+    "id": "b",
+    "text": "lock"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מה עושים עם דלת כבדה כדי לפתוח אותה? דוחפים.\",\"correct_reason\":\"push (לדחוף). האיש ניסה לדחוף את הדלת הכבדה לפתוח אותה.\",\"options_analysis\":[\"paint (לצבוע): לא קשור לפתיחת דלת\",\"נכון! push (לדחוף, מתאים לדלת כבדה)\",\"measure (למדוד): לא רלוונטי\",\"lock (לנעול): הפוך מהמטרה לפתוח\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "433f01ed-475b-42e6-9005-0f1111d08507",
+  "options": [
+   {
+    "id": "c",
+    "text": "lift"
+   },
+   {
+    "id": "b",
+    "text": "tie"
+   },
+   {
+    "id": "d",
+    "text": "paint"
+   },
+   {
+    "id": "a",
+    "text": "push"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מה עושים עם נדנדה כדי שתעלה גבוה? דוחפים אותה.\",\"correct_reason\":\"push (לדחוף). הילדה ביקשה מאביה לדחוף את הנדנדה גבוה יותר.\",\"options_analysis\":[\"lift (להרים): לא מתאר תנועת נדנדה\",\"tie (לקשור): לא קשור לנדנדה\",\"paint (לצבוע): לא רלוונטי\",\"נכון! push (לדחוף, מתאים לנדנדה)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "465d4457-9569-4f40-8526-7d5f977acedb",
+  "options": [
+   {
+    "id": "a",
+    "text": "pick up"
+   },
+   {
+    "id": "b",
+    "text": "count"
+   },
+   {
+    "id": "c",
+    "text": "sell"
+   },
+   {
+    "id": "d",
+    "text": "measure"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מה עושים עם צעצועים אחרי משחק? אוספים אותם.\",\"correct_reason\":\"pick up (לאסוף). האם אמרה לילדיה לאסוף את הצעצועים אחרי המשחק.\",\"options_analysis\":[\"נכון! pick up (לאסוף, ביטוי נפוץ)\",\"count (לספור): לא מתאר ניקיון\",\"sell (למכור): לא הגיוני\",\"measure (למדוד): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "47439cb0-545d-434f-88ee-cfe06e4b47b0",
+  "options": [
+   {
+    "id": "a",
+    "text": "wear"
+   },
+   {
+    "id": "b",
+    "text": "wash"
+   },
+   {
+    "id": "d",
+    "text": "fold"
+   },
+   {
+    "id": "c",
+    "text": "sell"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מה עושים עם מעיל כשקר? לובשים אותו.\",\"correct_reason\":\"wear (ללבוש). האם אמרה לבנה ללבוש את המעיל כי קר.\",\"options_analysis\":[\"נכון! wear (ללבוש, מתאים למעיל)\",\"wash (לשטוף): לא רלוונטי לקור\",\"fold (לקפל): לא פותר בעיית קור\",\"sell (למכור): לא הגיוני\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "474efc12-fd46-4f69-8235-809c30194d12",
+  "options": [
+   {
+    "id": "c",
+    "text": "wash"
+   },
+   {
+    "id": "b",
+    "text": "fold"
+   },
+   {
+    "id": "d",
+    "text": "sell"
+   },
+   {
+    "id": "a",
+    "text": "build"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מה עושים עם שמיכות ומבצר? בונים אותו.\",\"correct_reason\":\"build (לבנות). הילדים רוצים לבנות מבצר משמיכות.\",\"options_analysis\":[\"wash (לשטוף): לא רלוונטי\",\"fold (לקפל): לא מתאר בניית מבצר\",\"sell (למכור): לא הגיוני\",\"נכון! build (לבנות, מתאים למבצר)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "48149b05-71a2-4520-8a05-0c9bbd04875f",
+  "options": [
+   {
+    "id": "c",
+    "text": "sing"
+   },
+   {
+    "id": "d",
+    "text": "dance"
+   },
+   {
+    "id": "a",
+    "text": "write"
+   },
+   {
+    "id": "b",
+    "text": "knock"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מה עושים עם תשובה על הלוח? כותבים אותה.\",\"correct_reason\":\"write (לכתוב). המורה ביקשה מהילד לכתוב את התשובה על הלוח.\",\"options_analysis\":[\"sing (לשיר): לא קשור ללוח\",\"dance (לרקוד): לא רלוונטי\",\"נכון! write (לכתוב, מתאים ללוח)\",\"knock (לדפוק): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "48dfbf9f-4287-4960-b234-d3bef4337558",
+  "options": [
+   {
+    "id": "c",
+    "text": "sing"
+   },
+   {
+    "id": "d",
+    "text": "dance"
+   },
+   {
+    "id": "b",
+    "text": "knock"
+   },
+   {
+    "id": "a",
+    "text": "cancel"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חברת תעופה שנאלצה לעשות משהו לכל הטיסות אחרי אזהרת סופה. מה סביר?\",\"correct_reason\":\"cancel (לבטל). חברת התעופה נאלצה לבטל את כל הטיסות לאחר שהוצאה אזהרת סופה.\",\"options_analysis\":[\"sing (לשיר): לא קשור לטיסות\",\"dance (לרקוד): לא רלוונטי\",\"knock (לדפוק): לא קשור\",\"נכון! cancel (לבטל): הגיוני עבור אזהרת סופה\"]}",
+  "exam_eligible": true
+ }
+]

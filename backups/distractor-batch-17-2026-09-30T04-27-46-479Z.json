@@ -1,0 +1,1198 @@
+[
+ {
+  "id": "825b9ca0-2553-4dc3-b9e1-63ab9a385c8d",
+  "options": [
+   {
+    "id": "a",
+    "text": "assume"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"אסור לנו פשוט ל___ שכולם חולקים את אותה דעה בנושא זה. מה עושים כשמניחים משהו בלי הוכחה?\",\"correct_reason\":\"assume (להניח). אסור לנו פשוט להניח שכולם חולקים את אותה דעה בנושא זה.\",\"options_analysis\":[\"נכון! assume (להניח): מתאים להנחה ללא הוכחה\",\"decline (לדחות/לרדת): לא מתאים\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "84224e3a-9581-48a1-ab96-ebf6daddbdd8",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "compete"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שני הספורטאים ___ על מדליית הזהב במרוץ הגמר של מחר. מה עושים שני ספורטאים כשמתחרים על פרס?\",\"correct_reason\":\"compete (להתחרות). שני הספורטאים יתחרו על מדליית הזהב במרוץ הגמר של מחר.\",\"options_analysis\":[\"decline (לדחות/לרדת): לא מתאים\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לחסל): לא רלוונטי\",\"נכון! compete (להתחרות, מתאים לתחרות ספורטיבית)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "85827b6a-8f87-4876-a9fb-36608171eff8",
+  "options": [
+   {
+    "id": "a",
+    "text": "form"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הקמת ועדה לבחינת הצעה.\",\"correct_reason\":\"form (להקים). המועצה החליטה להקים ועדה שתבחן את ההצעה.\",\"options_analysis\":[\"נכון! form (להקים, מתאים לוועדה)\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"eliminate (לבטל): לא קשור\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "85c63b01-1ded-43f9-8aa9-d7a13f69e125",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "a",
+    "text": "postpone"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפרופסור ___ את המבחן אם יותר מדי תלמידים ייעדרו בשל מחלה. מה עושה מרצה כדי לדחות מבחן?\",\"correct_reason\":\"postpone (לדחות בזמן). הפרופסור ידחה בזמן את המבחן אם יותר מדי תלמידים ייעדרו בשל מחלה.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"distinguish (להבחין): לא רלוונטי\",\"נכון! postpone (לדחות בזמן): מתאים לדחיית מבחן\",\"decline = לדחות (בקשה). פחות מדויק כאן\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "8624c8d7-d008-459c-96df-c13637d2fe6f",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "build"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"העיר מתכננת ל___ עוד פארקים בשכונות שכיום חסר בהן שטח ירוק. מה עושה עיר כדי להוסיף מרחבים ירוקים?\",\"correct_reason\":\"build (לבנות). העיר מתכננת לבנות עוד פארקים בשכונות שכיום חסר בהן שטח ירוק.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"נכון! build (לבנות, מתאים לבניית פארקים)\",\"decline (לדחות/לרדת): לא מתאים\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "867a9dbc-d827-4dc1-a746-87d8aab51759",
+  "options": [
+   {
+    "id": "a",
+    "text": "establish"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שתי החברות ___ מיזם משותף כדי לבנות את המפעל החדש. מה עושות שתי חברות כשמתחילות שותפות עסקית?\",\"correct_reason\":\"establish (להקים). שתי החברות יקימו מיזם משותף כדי לבנות את המפעל החדש.\",\"options_analysis\":[\"נכון! establish (להקים, מתאים להקמת מיזם)\",\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "8743a6ee-bfb0-4f2a-97b4-f6ddc56c77d2",
+  "options": [
+   {
+    "id": "a",
+    "text": "provide"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מתן סובסידיות לפרויקטי אנרגיה מתחדשת.\",\"correct_reason\":\"provide (לספק). הממשלה החליטה לספק סובסידיות לפרויקטי אנרגיה מתחדשת.\",\"options_analysis\":[\"נכון! provide (לספק, מתאים לסובסידיות)\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לבטל): הפוך מהכוונה\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "8777ab33-5a91-4419-999b-6c70059b29f4",
+  "options": [
+   {
+    "id": "a",
+    "text": "require"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"תקנות חדשות ש___ מכל מפעל להתקין ציוד בטיחות מתאים. מה עושה תקנה כלפי מפעלים?\",\"correct_reason\":\"require (לדרוש). התקנות החדשות דורשות מכל מפעל להתקין ציוד בטיחות מתאים.\",\"options_analysis\":[\"נכון! require (לדרוש, מתאים לחובה חוקית)\",\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים דקדוקית\",\"eliminate (לחסל): לא מתאים להקשר\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "87cd1a94-c4d7-4b41-a6ba-27edcb6b3ef1",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "build"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בניית שביל אופניים ברחוב ראשי.\",\"correct_reason\":\"build (לבנות). מועצת העיר החליטה לבנות שביל אופניים חדש ברחוב הראשי.\",\"options_analysis\":[\"eliminate (לבטל): הפוך מהכוונה\",\"נכון! build (לבנות, מתאים לשביל אופניים)\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "883248f5-4bf9-4f42-bfaa-f12ee1dcdc96",
+  "options": [
+   {
+    "id": "d",
+    "text": "format"
+   },
+   {
+    "id": "b",
+    "text": "balance"
+   },
+   {
+    "id": "a",
+    "text": "signal"
+   },
+   {
+    "id": "c",
+    "text": "concept"
+   }
+  ],
+  "explanation": "{\"strategy\":\"רמזור אדום הוא ___ שנהגים חייבים לעצור מיד. מה מודיע לנהג לעצור?\",\"correct_reason\":\"signal (אות/סימן). רמזור אדום הוא סימן שעל הנהגים לעצור מיד.\",\"options_analysis\":[\"format (פורמט): לא רלוונטי\",\"balance (איזון): לא רלוונטי\",\"נכון! signal (סימן, מתאים לרמזור כאות)\",\"concept (מושג): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "89affaf7-b592-4881-97cc-976e13a5df00",
+  "options": [
+   {
+    "id": "c",
+    "text": "distinguish"
+   },
+   {
+    "id": "d",
+    "text": "acquire"
+   },
+   {
+    "id": "a",
+    "text": "relate"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"לקוחות רבים ש___ שהאריזה החדשה נראית דומה למוצר של מתחרה. מה עושים לקוחות כשמזהים דמיון?\",\"correct_reason\":\"relate (לקשר/להשוות). לקוחות רבים מקשרים בין האריזה החדשה למוצר של מתחרה בשל הדמיון.\",\"options_analysis\":[\"distinguish (להבחין): הפוך מהמשמעות הנדרשת\",\"acquire (לרכוש): לא רלוונטי\",\"נכון! relate (לקשר): מתאים להשוואה בין מוצרים\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "89be562b-4d5b-48ea-b6c9-f9f0c9ffae6c",
+  "options": [
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "charge"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה ___ עמלה קטנה עבור תשלומים באיחור בחשבון. מה עושה חברה כשלקוח משלם באיחור?\",\"correct_reason\":\"charge (לגבות). החברה תגבה עמלה קטנה עבור תשלומים באיחור בחשבון.\",\"options_analysis\":[\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לחסל): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"נכון! charge (לגבות, מתאים לגביית עמלה)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "8a7de9b7-bf2e-4c74-be98-d70690653ce4",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "discuss"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   }
+  ],
+  "explanation": "{\"strategy\":\"דיון בתקציב שנתי בשבוע הבא.\",\"correct_reason\":\"discuss (לדון ב). חברי הדירקטוריון הסכימו לדון בתקציב השנתי בשבוע הבא.\",\"options_analysis\":[\"decline (לרדת): לא קשור\",\"eliminate (לבטל): לא קשור\",\"נכון! discuss (לדון ב): מתאים לתקציב שנתי\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9abbcf4e-ca86-40c1-9f14-5e217a66f98a",
+  "options": [
+   {
+    "id": "b",
+    "text": "resistance"
+   },
+   {
+    "id": "c",
+    "text": "eloquence"
+   },
+   {
+    "id": "d",
+    "text": "compassionate"
+   },
+   {
+    "id": "a",
+    "text": "dimension"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הרומן חוקר ___ חדש לגמרי של יחסים אנושיים בעידן הדיגיטלי. מה מכנים היבט או צד נוסף של נושא מורכב?\",\"correct_reason\":\"dimension (ממד). הרומן חוקר ממד חדש לגמרי של יחסים אנושיים בעידן הדיגיטלי.\",\"options_analysis\":[\"resistance (התנגדות): לא רלוונטי\",\"eloquence (רהיטות): לא רלוונטי\",\"compassionate (חומל): לא שם עצם\",\"נכון! dimension (ממד): מתאים להיבט נוסף בנושא\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9b3274fa-35e4-497d-8953-d2506bcaf938",
+  "options": [
+   {
+    "id": "b",
+    "text": "random"
+   },
+   {
+    "id": "c",
+    "text": "redundant"
+   },
+   {
+    "id": "d",
+    "text": "compatible"
+   },
+   {
+    "id": "a",
+    "text": "trivial"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המחלוקת לגבי איזו מסעדה לבחור נראתה ___ בהשוואה לבעיות הגדולות יותר שלהם. איזה תואר מתאר עניין קטן וחסר חשיבות?\",\"correct_reason\":\"trivial (שולי/חסר חשיבות). המחלוקת לגבי איזו מסעדה לבחור נראתה שולית בהשוואה לבעיות הגדולות יותר שלהם.\",\"options_analysis\":[\"random (אקראי): לא רלוונטי\",\"redundant (מיותר): לא רלוונטי\",\"compatible (תואם): לא רלוונטי\",\"נכון! trivial (שולי): מתאים לעניין לא חשוב\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9c10d4bc-77c7-4989-a1d3-55d6770a65cc",
+  "options": [
+   {
+    "id": "c",
+    "text": "trivial"
+   },
+   {
+    "id": "d",
+    "text": "vague"
+   },
+   {
+    "id": "b",
+    "text": "frugal"
+   },
+   {
+    "id": "a",
+    "text": "composed"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התנהגות רגועה שהרשימה גם מבקרים.\",\"correct_reason\":\"composed (מיושב/רגוע). התנהגותה הרגועה של המועמדת בעימות הרשימה אפילו את מבקריה.\",\"options_analysis\":[\"trivial (טריוויאלי): סותר את הרושם החיובי\",\"vague (מעורפל): לא מתאים להתנהגות ברורה\",\"frugal (חסכן): לא קשור\",\"נכון! composed (רגוע, מתאים להרשמה חיובית)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9c39b111-7884-49dd-bea7-5a93972b3be5",
+  "options": [
+   {
+    "id": "a",
+    "text": "legislation"
+   },
+   {
+    "id": "b",
+    "text": "resistance"
+   },
+   {
+    "id": "d",
+    "text": "eloquence"
+   },
+   {
+    "id": "c",
+    "text": "dimension"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הקונגרס העביר ___ חדשה שמחייבת חברות לחשוף את השפעתן הסביבתית. מה מכנים חוק שנחקק על ידי הרשות המחוקקת?\",\"correct_reason\":\"legislation (חקיקה). הקונגרס העביר חקיקה חדשה שמחייבת חברות לחשוף את השפעתן הסביבתית.\",\"options_analysis\":[\"נכון! legislation (חקיקה, מתאים לחוק חדש)\",\"resistance (התנגדות): לא רלוונטי\",\"eloquence (רהיטות): לא רלוונטי\",\"dimension (ממד): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9e693f3c-16f2-4f33-a0b6-6862afdfa890",
+  "options": [
+   {
+    "id": "d",
+    "text": "compatible"
+   },
+   {
+    "id": "c",
+    "text": "redundant"
+   },
+   {
+    "id": "b",
+    "text": "random"
+   },
+   {
+    "id": "a",
+    "text": "literal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הוא נתן תרגום ___ לשיר, ופספס חלק ניכר ממשמעותו הפיוטית. איזה תואר מתאר תרגום מילה במילה ללא פרשנות?\",\"correct_reason\":\"literal (מילולי). הוא נתן תרגום מילולי לשיר, ופספס חלק ניכר ממשמעותו הפיוטית.\",\"options_analysis\":[\"compatible (תואם): לא רלוונטי\",\"redundant (מיותר): לא רלוונטי\",\"random (אקראי): לא רלוונטי\",\"נכון! literal (מילולי): מתאים לתרגום מילה במילה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9f1a2ea0-e2a0-414e-870a-c8004ee5fdfe",
+  "options": [
+   {
+    "id": "d",
+    "text": "ignore"
+   },
+   {
+    "id": "c",
+    "text": "remove"
+   },
+   {
+    "id": "b",
+    "text": "reduce"
+   },
+   {
+    "id": "a",
+    "text": "generate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"speech intended to ___ support for campaign = נאום נועד ל___. מה רוצה הנואמת?\",\"correct_reason\":\"generate (לייצר). to generate support (לייצר/לעורר תמיכה). מטרה טבעית של נאום קמפיין.\",\"options_analysis\":[\"ignore (להתעלם): התעלמות = לא מטרת נאום\",\"remove (להסיר): הסרת תמיכה = הפוך\",\"reduce (להפחית): הפחתת תמיכה = הפוך מהמטרה\",\"נכון! generate support (לייצר תמיכה): מטרת נאום קמפיין\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "9f382ce7-cd68-4f18-8c59-aa2c2875ca2f",
+  "options": [
+   {
+    "id": "d",
+    "text": "dimension"
+   },
+   {
+    "id": "a",
+    "text": "emergence"
+   },
+   {
+    "id": "b",
+    "text": "resistance"
+   },
+   {
+    "id": "c",
+    "text": "eloquence"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ה___ הפתאומית של מתחרה חדש אילצה את החברה להוריד את מחיריה. מה מכנים הופעה חדשה ובלתי צפויה של גורם בשוק?\",\"correct_reason\":\"emergence (הופעה). ההופעה הפתאומית של מתחרה חדש אילצה את החברה להוריד את מחיריה.\",\"options_analysis\":[\"dimension (ממד): לא רלוונטי\",\"נכון! emergence (הופעה): מתאים להופעת מתחרה חדש\",\"resistance (התנגדות): לא רלוונטי\",\"eloquence (רהיטות): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a09274a0-cf2d-4855-b5c4-76a7eb9c60a7",
+  "options": [
+   {
+    "id": "b",
+    "text": "yield"
+   },
+   {
+    "id": "a",
+    "text": "illustrate"
+   },
+   {
+    "id": "d",
+    "text": "concede"
+   },
+   {
+    "id": "c",
+    "text": "confine"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הגרף נועד ל___ כיצד השתנתה הכנסת החברה במהלך העשור. מה עושה גרף כדי להראות מגמה בצורה חזותית?\",\"correct_reason\":\"illustrate (להמחיש). הגרף נועד להמחיש כיצד השתנתה הכנסת החברה במהלך העשור.\",\"options_analysis\":[\"yield (להיכנע/לוותר): לא רלוונטי\",\"נכון! illustrate (להמחיש): מתאים לגרף המציג מגמה\",\"concede (להודות/לוותר): לא רלוונטי\",\"confine (לכלוא/להגביל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a121046b-4101-4088-87de-a21ee049b11d",
+  "options": [
+   {
+    "id": "c",
+    "text": "genuine"
+   },
+   {
+    "id": "b",
+    "text": "frugal"
+   },
+   {
+    "id": "d",
+    "text": "eloquent"
+   },
+   {
+    "id": "a",
+    "text": "inappropriate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התעלמות מדאגות תלמידים שנתפסה כלא הולמת.\",\"correct_reason\":\"inappropriate (לא הולם). הדחייה של הפרופסור את דאגות התלמידים נתפסה כלא הולמת על ידי סנאט הפקולטה.\",\"options_analysis\":[\"genuine (אמיתי): לא מתאים לביקורת\",\"frugal (חסכן): לא קשור\",\"eloquent (רהוט): לא קשור לביקורת\",\"נכון! inappropriate (לא הולם): מתאים לביקורת מהסנאט\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a1419ade-52ca-4777-a903-1f4bde6c26a3",
+  "options": [
+   {
+    "id": "d",
+    "text": "dimension"
+   },
+   {
+    "id": "c",
+    "text": "eloquence"
+   },
+   {
+    "id": "b",
+    "text": "resistance"
+   },
+   {
+    "id": "a",
+    "text": "coherence"
+   }
+  ],
+  "explanation": "{\"strategy\":\"לחיבור חסר...; הרעיונות קופצים מנושא לנושא ללא קשר ברור. מה מכנים חוסר בהיגיון פנימי ובזרימה ברורה בטקסט?\",\"correct_reason\":\"coherence (קוהרנטיות/לכידות). לחיבור חסרה קוהרנטיות; הרעיונות קופצים מנושא לנושא ללא קשר ברור.\",\"options_analysis\":[\"dimension (ממד): לא רלוונטי\",\"eloquence (רהיטות): לא רלוונטי\",\"resistance (התנגדות): לא רלוונטי\",\"נכון! coherence (לכידות): מתאים לחוסר קשר בין רעיונות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a298934b-7590-485f-b1ef-ba081e69f32a",
+  "options": [
+   {
+    "id": "a",
+    "text": "severe"
+   },
+   {
+    "id": "b",
+    "text": "frugal"
+   },
+   {
+    "id": "c",
+    "text": "trivial"
+   },
+   {
+    "id": "d",
+    "text": "genuine"
+   }
+  ],
+  "explanation": "{\"strategy\":\"אזהרה מפני השלכות קשות של מדיניות.\",\"correct_reason\":\"severe (חמור/קשה). הכלכלן הזהיר שלמדיניות עלולות להיות השלכות חמורות עבור עסקים קטנים.\",\"options_analysis\":[\"נכון! severe (חמור, מתאים לאזהרה)\",\"frugal (חסכן): לא קשור\",\"trivial (טריוויאלי): סותר את האזהרה\",\"genuine (אמיתי): לא מתאים דקדוקית להשלכות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a2a0017f-458c-43b1-9e64-2943be971e67",
+  "options": [
+   {
+    "id": "a",
+    "text": "ambitious"
+   },
+   {
+    "id": "b",
+    "text": "frugal"
+   },
+   {
+    "id": "d",
+    "text": "vague"
+   },
+   {
+    "id": "c",
+    "text": "trivial"
+   }
+  ],
+  "explanation": "{\"strategy\":\"יצירה נחשבת השאפתנית ביותר עד כה.\",\"correct_reason\":\"ambitious (שאפתני). הסרט האחרון של הבמאית נחשב באופן נרחב ליצירתה השאפתנית ביותר עד כה.\",\"options_analysis\":[\"נכון! ambitious (שאפתני): מתאים ליצירה יוצאת דופן\",\"frugal (חסכן): לא קשור\",\"vague (מעורפל): לא מתאים ליצירה בולטת\",\"trivial (טריוויאלי): סותר את ההערכה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a2db896c-6277-47b5-b3a7-a5324ab21412",
+  "options": [
+   {
+    "id": "d",
+    "text": "worsen"
+   },
+   {
+    "id": "c",
+    "text": "create"
+   },
+   {
+    "id": "a",
+    "text": "ignore"
+   },
+   {
+    "id": "b",
+    "text": "alleviate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"shown to...in most patients = הוכח כ___ ברוב המטופלים. מה עושה תרופה טובה לתסמינים?\",\"correct_reason\":\"alleviate (להקל). תרופה יעילה מקלה על תסמינים.\",\"options_analysis\":[\"worsen (להחמיר): הפוך ממטרת תרופה\",\"create (ליצור): הפוך ממטרת תרופה שמפחיתה תסמינים\",\"ignore (להתעלם): לא רלוונטי לתרופה\",\"נכון! alleviate (להקל): מתאים למטרת תרופה יעילה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a3192d0f-62cf-442c-85b1-3c54aec21c45",
+  "options": [
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "a",
+    "text": "composed"
+   },
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"יכולתו של הפרופסור להישאר ___ במהלך ויכוחים סוערים זיכתה אותו בכבוד רב. איזה תואר מתאר אדם שנשאר רגוע ושליו תחת לחץ?\",\"correct_reason\":\"composed (מיושב בדעתו/רגוע). יכולתו של הפרופסור להישאר מיושב בדעתו במהלך ויכוחים סוערים זיכתה אותו בכבוד רב.\",\"options_analysis\":[\"venal (מושחת): לא רלוונטי\",\"נכון! composed (מיושב בדעתו): מתאים לרוגע תחת לחץ\",\"timid (ביישן): לא רלוונטי\",\"banal (שגרתי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a3aebdc8-f41c-4299-946a-d2af6744880f",
+  "options": [
+   {
+    "id": "b",
+    "text": "banal"
+   },
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "a",
+    "text": "conflicting"
+   }
+  ],
+  "explanation": "{\"strategy\":\"לשתי המחלקות יש מטרות..., מה שיוצר לעיתים קרובות חיכוך בין המנהלים שלהן. איזה תואר מתאר מטרות שסותרות זו את זו?\",\"correct_reason\":\"conflicting (סותרות). לשתי המחלקות יש מטרות סותרות, מה שיוצר לעיתים קרובות חיכוך בין המנהלים שלהן.\",\"options_analysis\":[\"banal (שגרתי): לא רלוונטי\",\"timid (ביישן): לא רלוונטי\",\"venal (מושחת): לא רלוונטי\",\"נכון! conflicting (סותר, מתאים למטרות מנוגדות)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a3e89769-a557-42c9-9d9c-16af7f69bb42",
+  "options": [
+   {
+    "id": "b",
+    "text": "lax"
+   },
+   {
+    "id": "d",
+    "text": "cowardly"
+   },
+   {
+    "id": "a",
+    "text": "nuanced"
+   },
+   {
+    "id": "c",
+    "text": "partisan"
+   }
+  ],
+  "explanation": "{\"strategy\":\"תיאור מורכב ורב-גוני של היסטוריה.\",\"correct_reason\":\"נכון! nuanced (מורכב/מדוקדק). התיאור המורכב זכה לשבחים.\",\"options_analysis\":[\"lax (רופף): לא מתאים לשבח\",\"cowardly (פחדני): לא רלוונטי\",\"נכון! nuanced מתאר תיאור עשיר ומורכב במדויק.\",\"partisan (מפלגתי): הפוך מהכוונה של אובייקטיביות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a45f9792-426d-44eb-9739-bb167c1999be",
+  "options": [
+   {
+    "id": "a",
+    "text": "vague"
+   },
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המלצות הפאנל היו בעיקר..., ולא הציעו צעדים קונקרטיים ליישום. איזה תואר מתאר המלצות לא ברורות וחסרות פירוט?\",\"correct_reason\":\"vague (מעורפלות). המלצות הפאנל היו בעיקר מעורפלות, ולא הציעו צעדים קונקרטיים ליישום.\",\"options_analysis\":[\"נכון! vague (מעורפל): מתאים להמלצה לא ברורה\",\"timid (ביישן): לא רלוונטי\",\"venal (מושחת): לא רלוונטי\",\"banal (שגרתי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a501fa6a-c865-47cd-b690-3ea4629329b7",
+  "options": [
+   {
+    "id": "b",
+    "text": "partisan"
+   },
+   {
+    "id": "d",
+    "text": "lax"
+   },
+   {
+    "id": "a",
+    "text": "impartial"
+   },
+   {
+    "id": "c",
+    "text": "superficial"
+   }
+  ],
+  "explanation": "{\"strategy\":\"סיקור אובייקטיבי ומאוזן.\",\"correct_reason\":\"נכון! impartial (בלתי משוחד/אובייקטיבי). הסיקור האובייקטיבי זכה לשבחים.\",\"options_analysis\":[\"partisan (מפלגתי): הפוך מהמשמעות הנדרשת\",\"lax (רופף): לא רלוונטי\",\"נכון! impartial מתאר סיקור מאוזן ואובייקטיבי במדויק.\",\"superficial (שטחי): לא מתאים לשבח\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a6ab0570-d0f8-4d08-9ffe-caae175cd86a",
+  "options": [
+   {
+    "id": "a",
+    "text": "cowardice"
+   },
+   {
+    "id": "d",
+    "text": "emissions"
+   },
+   {
+    "id": "b",
+    "text": "scrutiny"
+   },
+   {
+    "id": "c",
+    "text": "inclusion"
+   }
+  ],
+  "explanation": "{\"strategy\":\"פחדנות בהתמודדות עם בעיה חמורה.\",\"correct_reason\":\"נכון! cowardice (פחדנות). חוסר האומץ של הדירקטוריון סיכן עובדים.\",\"options_analysis\":[\"נכון! cowardice מתאר חוסר אומץ בקבלת החלטה.\",\"emissions (פליטות): לא קשור\",\"scrutiny (בחינה קפדנית): לא מתאים להקשר\",\"inclusion (הכללה): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a6d9c713-4796-43df-a806-6f16c2dce48b",
+  "options": [
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   },
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "a",
+    "text": "lingering"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ההסבר של הפרופסור השאיר רושם ___ שהתיאוריה עדיין לא שלמה. איזה תואר מתאר תחושה שממשיכה להתקיים זמן רב אחרי האירוע?\",\"correct_reason\":\"lingering (מתמשך). ההסבר של הפרופסור השאיר רושם מתמשך שהתיאוריה עדיין לא שלמה.\",\"options_analysis\":[\"timid (ביישן): לא רלוונטי\",\"banal (שגרתי): לא רלוונטי\",\"venal (מושחת): לא רלוונטי\",\"נכון! lingering (מתמשך, מתאים לתחושה שנשארת)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a70233f7-7532-44de-8ef5-11f44a1a1cea",
+  "options": [
+   {
+    "id": "c",
+    "text": "superficial"
+   },
+   {
+    "id": "d",
+    "text": "partisan"
+   },
+   {
+    "id": "b",
+    "text": "lax"
+   },
+   {
+    "id": "a",
+    "text": "tireless"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מסירות בלתי נלאית לרפורמה.\",\"correct_reason\":\"נכון! tireless (בלתי נלאה). המסירות הבלתי נלאית לרפורמה זכתה להוקרה.\",\"options_analysis\":[\"superficial (שטחי): הפוך מהמשמעות הנדרשת\",\"partisan (מפלגתי): לא רלוונטי\",\"lax (רופף): הפוך מהמשמעות הנדרשת\",\"נכון! tireless מתאר מסירות מתמדת ובלתי פוסקת במדויק.\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a7990228-17f7-4961-9c95-0d26d6cb74fb",
+  "options": [
+   {
+    "id": "c",
+    "text": "partisan"
+   },
+   {
+    "id": "d",
+    "text": "superficial"
+   },
+   {
+    "id": "a",
+    "text": "judicious"
+   },
+   {
+    "id": "b",
+    "text": "lax"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שימוש נבון ואחראי בכספי תרומות.\",\"correct_reason\":\"נכון! judicious (נבון/שקול). השימוש הנבון בכספים אושר בביקורת עצמאית.\",\"options_analysis\":[\"partisan (מפלגתי): לא רלוונטי\",\"superficial (שטחי): הפוך מהמשמעות הנדרשת\",\"נכון! judicious מתאר שימוש שקול ואחראי במדויק.\",\"lax (רופף): הפוך מהמשמעות הנדרשת\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a7a8d48c-be80-408a-8888-0178c5c1e859",
+  "options": [
+   {
+    "id": "a",
+    "text": "ambitious"
+   },
+   {
+    "id": "d",
+    "text": "partisan"
+   },
+   {
+    "id": "c",
+    "text": "superficial"
+   },
+   {
+    "id": "b",
+    "text": "lax"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חזון שאפתני לעיר.\",\"correct_reason\":\"נכון! ambitious (שאפתני). החזון השאפתני כלל תוכניות נועזות לאנרגיה מתחדשת.\",\"options_analysis\":[\"נכון! ambitious מתאר חזון נועז ושאפתני במדויק.\",\"partisan (מפלגתי): לא רלוונטי\",\"superficial (שטחי): הפוך מהמשמעות הנדרשת\",\"lax (רופף): לא מתאים כאן\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a88dcde0-5ad8-4369-b152-569e8f44126e",
+  "options": [
+   {
+    "id": "d",
+    "text": "superficial"
+   },
+   {
+    "id": "b",
+    "text": "careless"
+   },
+   {
+    "id": "c",
+    "text": "meticulous"
+   },
+   {
+    "id": "a",
+    "text": "hasty"
+   }
+  ],
+  "explanation": "{\"strategy\":\"לא השאיר אבן שלא נהפכה (left no stone unturned). איזו גישה כזו?\",\"correct_reason\":\"meticulous (קפדנית/דקדקנית). חקירה יסודית לא משאירה שום דבר בלי בדיקה.\",\"options_analysis\":[\"superficial (שטחית): הפוך מיסודיות\",\"careless (חסרת זהירות): הפוך מיסודיות\",\"נכון! meticulous (קפדנית): מתאים ל'no stone unturned'\",\"hasty (נחפזת): הפוך מיסודיות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a8ac892f-08ab-422a-a877-9e0eb443c32d",
+  "options": [
+   {
+    "id": "b",
+    "text": "banal"
+   },
+   {
+    "id": "a",
+    "text": "objectively"
+   },
+   {
+    "id": "d",
+    "text": "distinct"
+   },
+   {
+    "id": "c",
+    "text": "adept"
+   }
+  ],
+  "explanation": "{\"strategy\":\"השופט ניסה להעריך את הראיות..., תוך הנחת רגשות אישיים בצד. איזה תואר פועל מתאר בחינה ללא הטיה אישית?\",\"correct_reason\":\"objectively (באופן אובייקטיבי). השופט ניסה להעריך את הראיות באופן אובייקטיבי, תוך הנחת רגשות אישיים בצד.\",\"options_analysis\":[\"banal (שגרתי): תואר, לא תואר פועל\",\"נכון! objectively (באופן אובייקטיבי): מתאים להערכה ללא הטיה\",\"distinct (ברור): תואר, לא תואר פועל\",\"adept (מיומן): תואר, לא תואר פועל\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a9e96b9a-d475-4361-b6ad-7406cfc3a783",
+  "options": [
+   {
+    "id": "a",
+    "text": "stalemate"
+   },
+   {
+    "id": "b",
+    "text": "lax"
+   },
+   {
+    "id": "c",
+    "text": "lyrical"
+   },
+   {
+    "id": "d",
+    "text": "agile"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מבוי סתום במשא ומתן.\",\"correct_reason\":\"נכון! stalemate (מבוי סתום/קיפאון). המשא ומתן הגיע למבוי סתום.\",\"options_analysis\":[\"נכון! stalemate מתאר קיפאון במשא ומתן במדויק.\",\"lax (רופף): לא מתאים כאן\",\"lyrical (לירי): לא רלוונטי\",\"agile (זריז): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "b80d5f87-139f-4678-bff2-1c0baea86ede",
+  "options": [
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "truculent"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המשא ומתן הפך..., כששני הצדדים החלו להחליף עלבונות אישיים. איזה תואר מתאר אווירה תוקפנית ומלאת עוינות?\",\"correct_reason\":\"truculent (תוקפני/עוין). המשא ומתן הפך תוקפני, כששני הצדדים החלו להחליף עלבונות אישיים.\",\"options_analysis\":[\"reticent (מסויג): לא רלוונטי\",\"נכון! truculent (תוקפני): מתאים לוויכוח שהופך לעוין\",\"negligible (זניח): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "b87a24d5-9f4a-40b3-81a4-2f3855a0c1ee",
+  "options": [
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "sardonic"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הערותיו ___ לגבי הפרויקט הכושל גרמו לכל הצוות להרגיש נבוך. איזה תואר מתאר הערות עוקצניות ומלגלגות?\",\"correct_reason\":\"sardonic (עוקצני/מלגלג). הערותיו העוקצניות לגבי הפרויקט הכושל גרמו לכל הצוות להרגיש נבוך.\",\"options_analysis\":[\"reticent (מסויג): לא רלוונטי\",\"נכון! sardonic (עוקצני, מתאים ללגלוג חד)\",\"mundane (יומיומי): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ba6e706c-b91a-4f6c-99e2-f468ee5c7a71",
+  "options": [
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "divergent"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שני המותגים המתחרים נקטו בגישות ___ באופן יוצא דופן להגיע לצרכנים צעירים. איזה תואר מתאר גישות שמתפצלות ומתרחקות זו מזו?\",\"correct_reason\":\"divergent (שונות/מתפצלות). שני המותגים המתחרים נקטו בגישות שונות באופן יוצא דופן להגיע לצרכנים צעירים.\",\"options_analysis\":[\"reticent (מסויג): לא רלוונטי\",\"נכון! divergent (שונה): מתאים לגישות שמתרחקות זו מזו\",\"negligible (זניח): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "bb7f58ea-b845-44e8-a10f-59fbe2bfbe13",
+  "options": [
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "a",
+    "text": "gregarious"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הוא מטבעו..., נהנה ממסיבות גדולות ומחפש כל הזמן אנשים חדשים להכיר. איזה תואר מתאר אדם חברותי במיוחד שאוהב חברת אנשים?\",\"correct_reason\":\"gregarious (חברותי). הוא מטבעו חברותי, נהנה ממסיבות גדולות ומחפש כל הזמן אנשים חדשים להכיר.\",\"options_analysis\":[\"mundane (יומיומי): לא רלוונטי\",\"reticent (מסויג): הפוך מהמשמעות\",\"negligible (זניח): לא רלוונטי\",\"נכון! gregarious (חברותי): מתאים לאדם אוהב חברה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "bb8ffa22-d9f6-442b-a747-84b7e54a314b",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "precipitous"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המניה חוותה ירידה ___ של כמעט ארבעים אחוז תוך יומיים בלבד של מסחר. איזה תואר מתאר ירידה חדה ומהירה במיוחד?\",\"correct_reason\":\"precipitous (תלול/פתאומי וחד). המניה חוותה ירידה תלולה של כמעט ארבעים אחוז תוך יומיים בלבד של מסחר.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"נכון! precipitous (תלול): מתאים לירידה חדה ופתאומית\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "be862c5b-4410-4cbc-bad0-7e524797120c",
+  "options": [
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "a",
+    "text": "calibrated"
+   }
+  ],
+  "explanation": "{\"strategy\":\"נאום הסנטור נוסח בזהירות ___ כדי להימנע מהרחקת אף אחד מאגפי המפלגה. איזה תואר מתאר דבר שכוונן בקפידה כדי להשיג איזון מדויק?\",\"correct_reason\":\"calibrated (מכוונן/מדויק). נאום הסנטור נוסח בזהירות מכוונן כדי להימנע מהרחקת אף אחד מאגפי המפלגה.\",\"options_analysis\":[\"mundane (יומיומי): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\",\"נכון! calibrated (מכוונן): מתאים לניסוח מדויק ומחושב\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c128a965-b0a2-4b98-ac27-d208d18cb6ce",
+  "options": [
+   {
+    "id": "d",
+    "text": "encompass"
+   },
+   {
+    "id": "b",
+    "text": "deplete"
+   },
+   {
+    "id": "c",
+    "text": "circumvent"
+   },
+   {
+    "id": "a",
+    "text": "admonish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המורה נאלץ ל___ את התלמידים אחרי מספר תלונות על התנהגותם המפריעה. מה עושה מורה כדי לגעור בתלמידים על התנהגות רעה?\",\"correct_reason\":\"admonish (לגעור/להוכיח). המורה נאלץ לגעור בתלמידים אחרי מספר תלונות על התנהגותם המפריעה.\",\"options_analysis\":[\"encompass (להקיף): לא רלוונטי\",\"deplete (לרוקן): לא רלוונטי\",\"circumvent (לעקוף): לא רלוונטי\",\"נכון! admonish (לגעור): מתאים לתוכחה על התנהגות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c16b924a-895f-4780-b7bd-e284a11c0826",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "arduous"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"טיפוס ההר ללא בלוני חמצן התברר כאתגר ___ אפילו עבור מטפסים מנוסים. איזה תואר מתאר מאמץ קשה ומתיש במיוחד?\",\"correct_reason\":\"arduous (מפרך/מתיש). טיפוס ההר ללא בלוני חמצן התברר כאתגר מפרך אפילו עבור מטפסים מנוסים.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"נכון! arduous (מפרך): מתאים למאמץ קשה במיוחד\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c21ee509-05be-495f-9e29-f9f9cb803aa1",
+  "options": [
+   {
+    "id": "a",
+    "text": "mercurial"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המזג ___ שלו הקשה לחזות האם הוא יהיה שמח או זועם. איזה תואר מתאר אדם עם מצבי רוח משתנים במהירות ובאופן בלתי צפוי?\",\"correct_reason\":\"mercurial (הפכפך). המזג ההפכפך שלו הקשה לחזות האם הוא יהיה שמח או זועם.\",\"options_analysis\":[\"נכון! mercurial (הפכפך): מתאים למצבי רוח משתנים\",\"negligible (זניח): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c36cbdd5-8a06-44af-a83f-10650177ab84",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "resilient"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הקהילה התבררה כ___ באופן יוצא דופן, ובנתה מחדש תוך חודשים לאחר השיטפון ההרסני. איזה תואר מתאר יכולת להתאושש מהר ממשבר?\",\"correct_reason\":\"resilient (חסין/מתאושש). הקהילה התבררה כחסינה באופן יוצא דופן, ובנתה מחדש תוך חודשים לאחר השיטפון ההרסני.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"נכון! resilient (חסין, מתאים להתאוששות מהירה)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c6ba23f9-9e31-4218-9b8b-c73050d81b93",
+  "options": [
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "aesthetic"
+   }
+  ],
+  "explanation": "{\"strategy\":\"לאדריכל הייתה רגישות ___ חזקה, והוא תמיד העדיף יופי על פני פונקציונליות טהורה. איזה תואר מתאר תחושה הקשורה לטעם ויופי?\",\"correct_reason\":\"aesthetic (אסתטית). לאדריכל הייתה רגישות אסתטית חזקה, והוא תמיד העדיף יופי על פני פונקציונליות טהורה.\",\"options_analysis\":[\"mundane (יומיומי): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"נכון! aesthetic (אסתטי): מתאים לרגישות לטעם ויופי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c7e501ae-405b-4418-8d0a-08e9745e6844",
+  "options": [
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "merciless"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   }
+  ],
+  "explanation": "{\"strategy\":\"האופן ___ שבו הפרופסור ביקר עבודות תלמידים לעיתים קרובות השאיר אותם בדמעות. איזה תואר מתאר ביקורת חסרת רחמים וחומרה קיצונית?\",\"correct_reason\":\"merciless (חסר רחמים). האופן חסר הרחמים שבו הפרופסור ביקר עבודות תלמידים לעיתים קרובות השאיר אותם בדמעות.\",\"options_analysis\":[\"reticent (מסויג): לא רלוונטי\",\"נכון! merciless (חסר רחמים): מתאים לביקורת קשה מאוד\",\"mundane (יומיומי): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c8ca3748-faf2-4c93-830f-c2d9ce4b865e",
+  "options": [
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "d",
+    "text": "connotation"
+   },
+   {
+    "id": "a",
+    "text": "meager"
+   }
+  ],
+  "explanation": "{\"strategy\":\"למרות הבצורת, חקלאים הצליחו לייצר יבול ___ בזכות ניהול זהיר של המים. איזה תואר מתאר תוצאה דלה ומצומצמת?\",\"correct_reason\":\"meager (דל). למרות הבצורת, חקלאים הצליחו לייצר יבול דל בזכות ניהול זהיר של המים.\",\"options_analysis\":[\"mundane (יומיומי): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"connotation (קונוטציה): לא רלוונטי\",\"נכון! meager (דל, מתאים ליבול מצומצם)\"]}",
+  "exam_eligible": true
+ }
+]

@@ -1,0 +1,1198 @@
+[
+ {
+  "id": "a05e15d9-2f5c-4e1d-b874-3a746377a7b0",
+  "options": [
+   {
+    "id": "d",
+    "text": "format"
+   },
+   {
+    "id": "b",
+    "text": "balance"
+   },
+   {
+    "id": "a",
+    "text": "distribution"
+   },
+   {
+    "id": "c",
+    "text": "gratitude"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה שינתה את אסטרטגיית ה___ שלה כדי להגיע לעוד עיירות קטנות ואזורים כפריים. מה מכנים תהליך העברת מוצרים לצרכנים?\",\"correct_reason\":\"distribution (הפצה). החברה שינתה את אסטרטגיית ההפצה שלה כדי להגיע לעוד עיירות קטנות ואזורים כפריים.\",\"options_analysis\":[\"format (פורמט): לא רלוונטי\",\"balance (איזון): לא רלוונטי\",\"נכון! distribution (הפצה, מתאים להעברת מוצרים)\",\"gratitude (הכרת תודה): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a0f9aca7-a66f-49da-8c62-02f62466fc78",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "launch"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"חברה שמתכננת ל___ את קו המוצרים החדש שלה בכנס עיתונאים בשבוע הבא. מה עושה חברה כשמציגה מוצר חדש לראשונה?\",\"correct_reason\":\"launch (להשיק). החברה מתכננת להשיק את קו המוצרים החדש שלה בכנס עיתונאים בשבוע הבא.\",\"options_analysis\":[\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\",\"נכון! launch (להשיק, מתאים להשקת מוצר)\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a246c1ae-c494-40a8-9405-5a793526a7c8",
+  "options": [
+   {
+    "id": "a",
+    "text": "introduce"
+   },
+   {
+    "id": "d",
+    "text": "gratitude"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הנהגת עמלות חדשות לחשבונות עם יתרה נמוכה.\",\"correct_reason\":\"introduce (להנהיג). הבנק החליט להנהיג עמלות חדשות עבור חשבונות עם יתרה נמוכה.\",\"options_analysis\":[\"נכון! introduce (להנהיג, מתאים לעמלות חדשות)\",\"gratitude (הכרת תודה): לא מתאים דקדוקית\",\"eliminate (לבטל): הפוך מהכוונה\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a2750d12-17e1-4677-a092-acd2f6af6813",
+  "options": [
+   {
+    "id": "d",
+    "text": "independent"
+   },
+   {
+    "id": "b",
+    "text": "obvious"
+   },
+   {
+    "id": "a",
+    "text": "vague"
+   },
+   {
+    "id": "c",
+    "text": "mutual"
+   }
+  ],
+  "explanation": "{\"strategy\":\"עד שנתן תיאור ___ של החשוד שלא עזר למשטרה הרבה. איזה תואר מתאר תיאור לא ברור?\",\"correct_reason\":\"vague (מעורפל). העד נתן תיאור מעורפל של החשוד שלא עזר למשטרה הרבה.\",\"options_analysis\":[\"independent (עצמאי): לא רלוונטי\",\"obvious (ברור): הפוך מהמשמעות הנדרשת\",\"נכון! vague (מעורפל): מתאים לתיאור לא מועיל\",\"mutual (הדדי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a28d653b-5489-464f-8f78-26169882c47a",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "a",
+    "text": "estimate"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מכיוון שנתונים מדויקים לא היו זמינים, האנליסט נאלץ ל___ את הכנסות החברה הכוללות. מה עושים כשאין נתונים מדויקים?\",\"correct_reason\":\"estimate (להעריך). מכיוון שנתונים מדויקים לא היו זמינים, האנליסט נאלץ להעריך את הכנסות החברה הכוללות.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"distinguish (להבחין): לא רלוונטי\",\"נכון! estimate (להעריך): מתאים להערכה ללא נתונים מלאים\",\"decline (לדחות/לרדת): לא מתאים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a333f5ad-944e-4d0f-8643-31d1e3af9332",
+  "options": [
+   {
+    "id": "a",
+    "text": "combine"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המתכון מבקש ל___ את הקמח והסוכר לפני הוספת הביצים. מה עושים עם שני מרכיבים במתכון?\",\"correct_reason\":\"combine (לשלב/לערבב). המתכון מבקש לשלב את הקמח והסוכר לפני הוספת הביצים.\",\"options_analysis\":[\"נכון! combine (לשלב, מתאים לערבוב מרכיבים)\",\"eliminate (לחסל): לא רלוונטי\",\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a3739ba5-40ef-4996-ab5a-b4eb470a670b",
+  "options": [
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "spark"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המורה ניסה ל___ את עניין התלמידים באמצעות דוגמאות מהחיים האמיתיים. מה עושה מורה כדי לעורר עניין?\",\"correct_reason\":\"spark (לעורר/להצית). המורה ניסה לעורר את עניין התלמידים באמצעות דוגמאות מהחיים האמיתיים.\",\"options_analysis\":[\"decline (לדחות/לרדת): לא מתאים\",\"נכון! spark (לעורר, מתאים לעורר עניין)\",\"distinguish (להבחין): לא רלוונטי\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a4135835-d8f2-4bbe-b1aa-580d1247c839",
+  "options": [
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "answer"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפרופסור ___ לשאלות תלמידיו אחרי סיום ההרצאה. מה עושה מרצה עם שאלות תלמידים?\",\"correct_reason\":\"answer (לענות). הפרופסור יענה לשאלות תלמידיו אחרי סיום ההרצאה.\",\"options_analysis\":[\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"eliminate (לחסל): לא רלוונטי\",\"נכון! answer (לענות, מתאים למענה לשאלות)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a5fde4c4-9ead-4051-891f-e749c3a6c9ed",
+  "options": [
+   {
+    "id": "a",
+    "text": "approve"
+   },
+   {
+    "id": "c",
+    "text": "distinguish"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"אישור מימון לספרייה חדשה.\",\"correct_reason\":\"approve (לאשר). מועצת העיר הצביעה לאשר מימון לספרייה החדשה.\",\"options_analysis\":[\"נכון! approve (לאשר, מתאים למימון)\",\"distinguish (להבחין): לא קשור\",\"eliminate (לבטל): הפוך מהכוונה\",\"decline (לדחות): הפוך מאישור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a71c618f-c27d-4f28-825a-667dea627242",
+  "options": [
+   {
+    "id": "a",
+    "text": "honor"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   }
+  ],
+  "explanation": "{\"strategy\":\"כיבוד תלמידים שהצטיינו בלימודים.\",\"correct_reason\":\"honor (לכבד/להוקיר). בית הספר החליט להוקיר תלמידים שהצטיינו בלימודים.\",\"options_analysis\":[\"נכון! honor (להוקיר, מתאים להצטיינות)\",\"eliminate (לבטל): לא קשור\",\"distinguish (להבחין): לא מדויק כאן\",\"decline (לרדת): לא קשור\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a7ae363d-e90d-40ca-a707-2a4c293b5171",
+  "options": [
+   {
+    "id": "d",
+    "text": "distinguish"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "a",
+    "text": "maintain"
+   },
+   {
+    "id": "b",
+    "text": "eliminate"
+   }
+  ],
+  "explanation": "{\"strategy\":\"קשה ל___ איזון בריא בין עבודה לחיים במשרה תובענית שכזו. מה עושים כדי לשמור על משהו לאורך זמן?\",\"correct_reason\":\"maintain (לשמור על). קשה לשמור על איזון בריא בין עבודה לחיים במשרה תובענית שכזו.\",\"options_analysis\":[\"distinguish (להבחין): לא רלוונטי\",\"decline (לדחות/לרדת): לא מתאים\",\"נכון! maintain (לשמור על): מתאים לשמירה על איזון\",\"eliminate (לחסל): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a81f0195-031b-43ce-b196-de4d890f4b50",
+  "options": [
+   {
+    "id": "c",
+    "text": "gratitude"
+   },
+   {
+    "id": "a",
+    "text": "ecosystem"
+   },
+   {
+    "id": "b",
+    "text": "balance"
+   },
+   {
+    "id": "d",
+    "text": "format"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שוניות אלמוגים הן ___ שביר שתומך באלפי מיני חיים ימיים. מה מכנים מערכת חיה שכוללת סביבה ואורגניזמים יחד?\",\"correct_reason\":\"ecosystem (מערכת אקולוגית). שוניות אלמוגים הן מערכת אקולוגית שברירית שתומכת באלפי מיני חיים ימיים.\",\"options_analysis\":[\"gratitude (הכרת תודה): לא רלוונטי\",\"נכון! ecosystem (מערכת אקולוגית): מתאים לסביבה חיה\",\"balance (איזון): לא רלוונטי\",\"format (פורמט): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "a92f67d6-cce3-44d8-93e3-5680b0f121f7",
+  "options": [
+   {
+    "id": "b",
+    "text": "eliminate"
+   },
+   {
+    "id": "a",
+    "text": "gather"
+   },
+   {
+    "id": "c",
+    "text": "decline"
+   },
+   {
+    "id": "d",
+    "text": "distinguish"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המנהל ___ משוב מכל חבר צוות לפני גיבוש התוכנית הסופית. מה עושה מנהל עם דעות הצוות?\",\"correct_reason\":\"gather (לאסוף). המנהל יאסוף משוב מכל חבר צוות לפני גיבוש התוכנית הסופית.\",\"options_analysis\":[\"eliminate (לחסל): לא רלוונטי\",\"נכון! gather (לאסוף, מתאים לאיסוף משוב)\",\"decline (לדחות/לרדת): לא מתאים\",\"distinguish (להבחין): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "b102e73c-7a28-4172-8c93-9158910cc8fd",
+  "options": [
+   {
+    "id": "d",
+    "text": "literal"
+   },
+   {
+    "id": "c",
+    "text": "redundant"
+   },
+   {
+    "id": "a",
+    "text": "transparent"
+   },
+   {
+    "id": "b",
+    "text": "random"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החברה הבטיחה להיות ___ יותר לגבי האופן שבו היא משתמשת בנתוני לקוחות. איזה תואר מתאר גילוי פתוח וכן?\",\"correct_reason\":\"transparent (שקוף). החברה הבטיחה להיות שקופה יותר לגבי האופן שבו היא משתמשת בנתוני לקוחות.\",\"options_analysis\":[\"literal (מילולי): לא רלוונטי\",\"redundant (מיותר): לא רלוונטי\",\"נכון! transparent (שקוף, מתאים לגילוי פתוח)\",\"random (אקראי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "b1b66cf2-d3c7-4622-ae42-c1de31d89d46",
+  "options": [
+   {
+    "id": "c",
+    "text": "trivial"
+   },
+   {
+    "id": "a",
+    "text": "expand"
+   },
+   {
+    "id": "d",
+    "text": "genuine"
+   },
+   {
+    "id": "b",
+    "text": "frugal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"משימה להרחיב גישה למים נקיים.\",\"correct_reason\":\"expand (להרחיב). משימת הארגון היא להרחיב את הגישה למים נקיים באזורים מתפתחים.\",\"options_analysis\":[\"trivial = טריוויאלי (שם תואר). לא מתאים דקדוקית\",\"נכון! expand (להרחיב, מתאים לגישה למים)\",\"genuine = אמיתי (שם תואר). לא מתאים דקדוקית\",\"frugal = חסכן (שם תואר). לא מתאים דקדוקית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "b88acf37-09ac-4644-8e89-1f2d8d879b0f",
+  "options": [
+   {
+    "id": "d",
+    "text": "compatible"
+   },
+   {
+    "id": "c",
+    "text": "redundant"
+   },
+   {
+    "id": "a",
+    "text": "reluctant"
+   },
+   {
+    "id": "b",
+    "text": "random"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הוא היה ___ להודות בטעותו, אפילו אחרי שהראיות הפכו ברורות. איזה תואר מתאר אדם שמסרב לעשות משהו?\",\"correct_reason\":\"reluctant (מסויג/לא מוכן). הוא היה מסויג להודות בטעותו, אפילו אחרי שהראיות הפכו ברורות.\",\"options_analysis\":[\"compatible (תואם): לא רלוונטי\",\"redundant (מיותר): לא רלוונטי\",\"נכון! reluctant (מסויג): מתאים לחוסר רצון להודות\",\"random (אקראי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "b8c8d0ba-4a93-4785-91ff-7710bf652bef",
+  "options": [
+   {
+    "id": "d",
+    "text": "eloquence"
+   },
+   {
+    "id": "b",
+    "text": "resistance"
+   },
+   {
+    "id": "c",
+    "text": "dimension"
+   },
+   {
+    "id": "a",
+    "text": "psychology"
+   }
+  ],
+  "explanation": "{\"strategy\":\"היא לומדת ___ כדי להבין טוב יותר מדוע אנשים מקבלים החלטות לא רציונליות. איזה תחום עוסק בהתנהגות ומחשבה אנושית?\",\"correct_reason\":\"psychology (פסיכולוגיה). היא לומדת פסיכולוגיה כדי להבין טוב יותר מדוע אנשים מקבלים החלטות לא רציונליות.\",\"options_analysis\":[\"eloquence (רהיטות): לא רלוונטי\",\"resistance (התנגדות): לא רלוונטי\",\"dimension (ממד): לא רלוונטי\",\"נכון! psychology (פסיכולוגיה): מתאים ללימוד התנהגות אנושית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "bd162f0a-4230-4387-9ae3-6d60a6d4f40b",
+  "options": [
+   {
+    "id": "d",
+    "text": "compatible"
+   },
+   {
+    "id": "b",
+    "text": "random"
+   },
+   {
+    "id": "a",
+    "text": "ambiguous"
+   },
+   {
+    "id": "c",
+    "text": "redundant"
+   }
+  ],
+  "explanation": "{\"strategy\":\"התוצאות היו ___ מספיק שהמדענים לא הסכימו כיצד לפרש אותן. איזה תואר מתאר תוצאות שאפשר לפרש בכמה דרכים?\",\"correct_reason\":\"ambiguous (דו-משמעי). התוצאות היו דו-משמעיות מספיק שהמדענים לא הסכימו כיצד לפרש אותן.\",\"options_analysis\":[\"compatible (תואם): לא רלוונטי\",\"random (אקראי): לא רלוונטי\",\"נכון! ambiguous (דו-משמעי): מתאים לתוצאות פתוחות לפרשנות\",\"redundant (מיותר): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "bd305919-ef9c-47f3-9aaf-6974fda4241a",
+  "options": [
+   {
+    "id": "a",
+    "text": "increase"
+   },
+   {
+    "id": "c",
+    "text": "celebrate"
+   },
+   {
+    "id": "b",
+    "text": "ignore"
+   },
+   {
+    "id": "d",
+    "text": "prevent"
+   }
+  ],
+  "explanation": "{\"strategy\":\"new safety measures (אמצעי בטיחות חדשים). מה מטרתם?\",\"correct_reason\":\"prevent (למנוע). אמצעי בטיחות נועדו למנוע תאונות.\",\"options_analysis\":[\"increase (להגדיל): הפוך ממטרת בטיחות\",\"celebrate (לחגוג): לא רלוונטי\",\"ignore (להתעלם מ-): לא רלוונטי\",\"נכון! prevent (למנוע): המטרה הטבעית של אמצעי בטיחות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "bd468329-da78-40b9-ac50-d7be177c4b56",
+  "options": [
+   {
+    "id": "b",
+    "text": "yield"
+   },
+   {
+    "id": "d",
+    "text": "concede"
+   },
+   {
+    "id": "c",
+    "text": "confine"
+   },
+   {
+    "id": "a",
+    "text": "enforce"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הרשות הממשלתית ___ תקני בטיחות חדשים על כל חברות התעופה המסחריות. מה עושה רשות ממשלתית עם תקן חדש שיש לציית לו?\",\"correct_reason\":\"enforce (לאכוף). הרשות הממשלתית תאכוף תקני בטיחות חדשים על כל חברות התעופה המסחריות.\",\"options_analysis\":[\"yield (להיכנע/לוותר): לא רלוונטי\",\"concede (להודות/לוותר): לא רלוונטי\",\"confine (לכלוא/להגביל): לא רלוונטי\",\"נכון! enforce (לאכוף): מתאים לאכיפת תקן חדש\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "bd552e40-013e-4cec-96f9-b6bda4c7042b",
+  "options": [
+   {
+    "id": "c",
+    "text": "confine"
+   },
+   {
+    "id": "d",
+    "text": "concede"
+   },
+   {
+    "id": "a",
+    "text": "equip"
+   },
+   {
+    "id": "b",
+    "text": "yield"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הסדנה נועדה ל___ את המשתתפים בכישורים מעשיים שהם יכולים להשתמש בהם מיד. מה עושה סדנה כדי להעניק כלים שימושיים?\",\"correct_reason\":\"equip (לצייד). הסדנה נועדה לצייד את המשתתפים בכישורים מעשיים שהם יכולים להשתמש בהם מיד.\",\"options_analysis\":[\"confine (לכלוא/להגביל): לא רלוונטי\",\"concede (להודות/לוותר): לא רלוונטי\",\"נכון! equip (לצייד): מתאים להענקת כלים מעשיים\",\"yield (להיכנע/לוותר): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c2677701-5a75-464d-923c-936856337167",
+  "options": [
+   {
+    "id": "d",
+    "text": "approximate"
+   },
+   {
+    "id": "a",
+    "text": "primary"
+   },
+   {
+    "id": "b",
+    "text": "random"
+   },
+   {
+    "id": "c",
+    "text": "redundant"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הדאגה ה___ של החקירה הייתה לקבוע מי היה בעל גישה לקבצים. איזה תואר מתאר את החשוב ביותר מבין כמה?\",\"correct_reason\":\"primary (עיקרי/ראשי). הדאגה העיקרית של החקירה הייתה לקבוע מי היה בעל גישה לקבצים.\",\"options_analysis\":[\"approximate (מקורב): לא רלוונטי\",\"נכון! primary (עיקרי, מתאים לדאגה מרכזית)\",\"random (אקראי): לא רלוונטי\",\"redundant (מיותר): הפוך מהמשמעות\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c2b8d5e9-2614-4919-82ae-8b178d30bbf3",
+  "options": [
+   {
+    "id": "c",
+    "text": "compatible"
+   },
+   {
+    "id": "a",
+    "text": "conflicting"
+   },
+   {
+    "id": "d",
+    "text": "literal"
+   },
+   {
+    "id": "b",
+    "text": "random"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שני החשודים נתנו למשטרה תיאורים ___ לגבי היכן היו באותו הלילה. איזה תואר מתאר תיאורים שסותרים זה את זה?\",\"correct_reason\":\"conflicting (סותרים). שני החשודים נתנו למשטרה תיאורים סותרים לגבי היכן היו באותו הלילה.\",\"options_analysis\":[\"compatible (תואם): הפוך מהמשמעות\",\"נכון! conflicting (סותר, מתאים לגרסאות מנוגדות)\",\"literal (מילולי): לא רלוונטי\",\"random (אקראי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c3494d16-bd00-4991-a7bd-ddd048be0f5a",
+  "options": [
+   {
+    "id": "c",
+    "text": "exclude"
+   },
+   {
+    "id": "b",
+    "text": "ignore"
+   },
+   {
+    "id": "d",
+    "text": "bore"
+   },
+   {
+    "id": "a",
+    "text": "engage"
+   }
+  ],
+  "explanation": "{\"strategy\":\"אפילו התלמידים הכי לא מעורבים (even the most disengaged students). מה עושות שיטות חדשניות לתלמידים לא מעורבים?\",\"correct_reason\":\"engage (לערב/למשוך). שיטות חדשניות מצליחות לערב גם תלמידים לא מעורבים.\",\"options_analysis\":[\"exclude (להדיר): הפוך ממטרת שיטות שמערבות\",\"ignore (להתעלם): סותר את פעולת השיטות\",\"bore (לשעמם): הפוך ממטרת שיטות חדשניות\",\"נכון! engage (לערב): מתאים להצלחה במשיכת תלמידים לא מעורבים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c3e26624-a6f4-456f-8813-f7ac1ef672b8",
+  "options": [
+   {
+    "id": "d",
+    "text": "genuine"
+   },
+   {
+    "id": "b",
+    "text": "frugal"
+   },
+   {
+    "id": "a",
+    "text": "approve"
+   },
+   {
+    "id": "c",
+    "text": "trivial"
+   }
+  ],
+  "explanation": "{\"strategy\":\"החלטה לאשר מיזוג שהפתיעה אנליסטים.\",\"correct_reason\":\"approve (לאשר). החלטת הדירקטוריון לאשר את המיזוג הפתיעה אנליסטים רבים בענף.\",\"options_analysis\":[\"genuine = אמיתי (שם תואר). לא מתאים דקדוקית\",\"frugal = חסכן (שם תואר). לא מתאים דקדוקית\",\"נכון! approve (לאשר, מתאים למיזוג)\",\"trivial = טריוויאלי (שם תואר). לא מתאים דקדוקית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c3f6cf9a-8942-4317-8d74-ec75261cec3d",
+  "options": [
+   {
+    "id": "c",
+    "text": "emission"
+   },
+   {
+    "id": "d",
+    "text": "presumption"
+   },
+   {
+    "id": "b",
+    "text": "inclusion"
+   },
+   {
+    "id": "a",
+    "text": "axiom"
+   }
+  ],
+  "explanation": "{\"strategy\":\"המתמטיקאי בנה את כל ההוכחה שלו על ___ אחד פשוט ובלתי ניתן לערעור. מה מכנים אמת בסיסית שמקובלת ללא הוכחה?\",\"correct_reason\":\"axiom (אקסיומה). המתמטיקאי בנה את כל ההוכחה שלו על אקסיומה אחת פשוטה ובלתי ניתנת לערעור.\",\"options_analysis\":[\"emission (פליטה): לא רלוונטי\",\"presumption (הנחה): פחות מדויק מ-axiom\",\"inclusion (הכללה): לא רלוונטי\",\"נכון! axiom (אקסיומה): מתאים לאמת מוסכמת בסיסית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c422edb2-c69f-4352-8105-b9ecf5f792d8",
+  "options": [
+   {
+    "id": "b",
+    "text": "lax"
+   },
+   {
+    "id": "a",
+    "text": "boundless"
+   },
+   {
+    "id": "c",
+    "text": "partisan"
+   },
+   {
+    "id": "d",
+    "text": "superficial"
+   }
+  ],
+  "explanation": "{\"strategy\":\"סבלנות בלתי מוגבלת עם תלמידים מתקשים.\",\"correct_reason\":\"נכון! boundless (בלתי מוגבל). הסבלנות הבלתי מוגבלת הבדילה אותה מעמיתיה.\",\"options_analysis\":[\"lax (רופף): לא מתאים כאן\",\"נכון! boundless מתאר סבלנות ללא גבול במדויק.\",\"partisan (מפלגתי): לא רלוונטי\",\"superficial (שטחי): לא מתאים לשבח\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c54e79db-40c0-4666-81be-c6e5aab8c61c",
+  "options": [
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "a",
+    "text": "controversial"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   },
+   {
+    "id": "c",
+    "text": "timid"
+   }
+  ],
+  "explanation": "{\"strategy\":\"רעיונו של הפרופסור, אף שהיה ___ בהתחלה, זכה בהדרגה לקבלה בקרב עמיתיו. איזה תואר מתאר רעיון שעורר מחלוקת ראשונית?\",\"correct_reason\":\"controversial (שנוי במחלוקת). רעיונו של הפרופסור, אף שהיה שנוי במחלוקת בהתחלה, זכה בהדרגה לקבלה בקרב עמיתיו.\",\"options_analysis\":[\"venal (מושחת): לא רלוונטי\",\"נכון! controversial (שנוי במחלוקת): מתאים לרעיון שעורר ויכוח\",\"banal (שגרתי): לא רלוונטי\",\"timid (ביישן): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c57d7b68-3fc0-476c-a0ad-f99b7d1e4329",
+  "options": [
+   {
+    "id": "d",
+    "text": "concede"
+   },
+   {
+    "id": "c",
+    "text": "confine"
+   },
+   {
+    "id": "b",
+    "text": "yield"
+   },
+   {
+    "id": "a",
+    "text": "examine"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הוועדה ___ את ההצעה בפירוט לפני קבלת המלצה סופית. מה עושה ועדה עם הצעה לפני שהיא מחליטה?\",\"correct_reason\":\"examine (לבחון). הוועדה תבחן את ההצעה בפירוט לפני קבלת המלצה סופית.\",\"options_analysis\":[\"concede (להודות/לוותר): לא רלוונטי\",\"confine (לכלוא/להגביל): לא רלוונטי\",\"yield (להיכנע/לוותר): לא רלוונטי\",\"נכון! examine (לבחון, מתאים לבדיקה מעמיקה)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c58e9e1f-87e6-4a7d-a013-8af6cfb2f0f0",
+  "options": [
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "a",
+    "text": "sharply"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מנהיגות החברה הייתה מפולגת ___ לגבי האם לקבל את הצעת המיזוג. איזה תואר פועל מדגיש פילוג עמוק ובולט?\",\"correct_reason\":\"sharply (בחדות). מנהיגות החברה הייתה מפולגת בחדות לגבי האם לקבל את הצעת המיזוג.\",\"options_analysis\":[\"venal (מושחת): תואר, לא תואר פועל\",\"timid (ביישן): תואר, לא תואר פועל\",\"נכון! sharply (בחדות, מתאים לפילוג עמוק)\",\"banal (שגרתי): תואר, לא תואר פועל\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c67b63a4-408f-4a10-9fb6-fdc331114460",
+  "options": [
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   },
+   {
+    "id": "a",
+    "text": "widespread"
+   }
+  ],
+  "explanation": "{\"strategy\":\"תיאוריית הפרופסור זכתה לקבלה ___ בקהילה האקדמית במהלך העשור האחרון. איזה תואר מתאר קבלה נרחבת בקרב רבים?\",\"correct_reason\":\"widespread (נרחבת). תיאוריית הפרופסור זכתה לקבלה נרחבת בקהילה האקדמית במהלך העשור האחרון.\",\"options_analysis\":[\"timid (ביישן): לא רלוונטי\",\"venal (מושחת): לא רלוונטי\",\"banal (שגרתי): לא רלוונטי\",\"נכון! widespread (נרחב, מתאים לקבלה רחבה)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c87892fd-20d8-40e6-ae29-d11f7a4ec493",
+  "options": [
+   {
+    "id": "d",
+    "text": "presumption"
+   },
+   {
+    "id": "c",
+    "text": "constraint"
+   },
+   {
+    "id": "a",
+    "text": "deviate"
+   },
+   {
+    "id": "b",
+    "text": "emission"
+   }
+  ],
+  "explanation": "{\"strategy\":\"נטייה לסטות מהתוכנית תסכלה תלמידים שהעדיפו מבנה.\",\"correct_reason\":\"deviate (לסטות). הנטייה של הפרופסור לסטות מהסילבוס תסכלה חלק מהתלמידים שהעדיפו מבנה קבוע.\",\"options_analysis\":[\"presumption = הנחה (שם עצם). לא מתאים דקדוקית\",\"constraint = מגבלה (שם עצם). לא מתאים דקדוקית\",\"נכון! deviate (לסטות, מתאים לחריגה מתוכנית)\",\"emission = פליטה (שם עצם). לא מתאים דקדוקית\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "c97d705b-ae10-4bdd-b346-0d876b3569d9",
+  "options": [
+   {
+    "id": "a",
+    "text": "transparent"
+   },
+   {
+    "id": "c",
+    "text": "partisan"
+   },
+   {
+    "id": "b",
+    "text": "lax"
+   },
+   {
+    "id": "d",
+    "text": "superficial"
+   }
+  ],
+  "explanation": "{\"strategy\":\"טיפול שקוף שחיזק אמון ציבורי.\",\"correct_reason\":\"נכון! transparent (שקוף). הטיפול השקוף החזיר מידה של אמון ציבורי.\",\"options_analysis\":[\"נכון! transparent מתאר טיפול פתוח ושקוף במדויק.\",\"partisan (מפלגתי): הפוך מהכוונה\",\"lax (רופף): לא מתאים כאן\",\"superficial (שטחי): הפוך מהמשמעות הנדרשת\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ca200b37-4709-4d89-b2c9-596437acc5b3",
+  "options": [
+   {
+    "id": "a",
+    "text": "popular"
+   },
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"שבילי האופניים החדשים של העיר התבררו כפופולריים באופן יוצא דופן בקרב נוסעים צעירים. איזה תואר מתאר משהו שאהוד על רבים?\",\"correct_reason\":\"popular (פופולרי). שבילי האופניים החדשים של העיר התבררו כפופולריים באופן יוצא דופן בקרב נוסעים צעירים.\",\"options_analysis\":[\"נכון! popular (פופולרי, מתאים לתחבורה מבוקשת)\",\"venal (מושחת): לא רלוונטי\",\"timid (ביישן): לא רלוונטי\",\"banal (שגרתי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "cb03f97b-a722-4687-bc34-ee4da4c5369d",
+  "options": [
+   {
+    "id": "c",
+    "text": "constraint"
+   },
+   {
+    "id": "b",
+    "text": "emission"
+   },
+   {
+    "id": "a",
+    "text": "lyrical"
+   },
+   {
+    "id": "d",
+    "text": "presumption"
+   }
+  ],
+  "explanation": "{\"strategy\":\"סגנון פרוזה שזוכה להשוואה לגדולי הסופרים הוא סגנון לירי.\",\"correct_reason\":\"lyrical (לירי/פיוטי). סגנון הפרוזה הלירי של הסופר זיכה אותו בהשוואות לחלק מהסופרים הקלאסיים הגדולים.\",\"options_analysis\":[\"constraint (מגבלה): לא מתאים\",\"emission (פליטה): לא קשור\",\"נכון! lyrical (לירי): מתאים לסגנון כתיבה מיוחד\",\"presumption (הנחה): לא מתאים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "cb7710f9-02f6-4d66-85cf-c77804b946f1",
+  "options": [
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   },
+   {
+    "id": "a",
+    "text": "symbolic"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ההצבעה של המועצה הייתה בעיקר..., מכיוון שהתוצאה כבר נקבעה באופן לא רשמי. איזה תואר מתאר פעולה טקסית ולא מכריעה בפועל?\",\"correct_reason\":\"symbolic (סמלית). ההצבעה של המועצה הייתה בעיקר סמלית, מכיוון שהתוצאה כבר נקבעה באופן לא רשמי.\",\"options_analysis\":[\"venal (מושחת): לא רלוונטי\",\"timid (ביישן): לא רלוונטי\",\"banal (שגרתי): לא רלוונטי\",\"נכון! symbolic (סמלי, מתאים לפעולה טקסית)\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "cca490f8-931c-4c4e-abba-08a121a06053",
+  "options": [
+   {
+    "id": "b",
+    "text": "lax"
+   },
+   {
+    "id": "d",
+    "text": "agile"
+   },
+   {
+    "id": "a",
+    "text": "alarming"
+   },
+   {
+    "id": "c",
+    "text": "lucid"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ממצאים מדאיגים שהובילו לחקירה.\",\"correct_reason\":\"נכון! alarming (מדאיג/מטריד). הממצאים המדאיגים הובילו לחקירה רשמית.\",\"options_analysis\":[\"lax (רופף): לא מתאים כאן\",\"agile (זריז): לא קשור\",\"נכון! alarming מתאר ממצאים מדאיגים במיוחד במדויק.\",\"lucid (בהיר): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "cd088f4d-4174-49f3-843c-75514c7e8fd5",
+  "options": [
+   {
+    "id": "d",
+    "text": "presumption"
+   },
+   {
+    "id": "c",
+    "text": "emission"
+   },
+   {
+    "id": "b",
+    "text": "inclusion"
+   },
+   {
+    "id": "a",
+    "text": "criterion"
+   }
+  ],
+  "explanation": "{\"strategy\":\"גודל אוכלוסייה הוא ___ חשוב אחד שמשמש לקביעת אילו מינים זקוקים להגנה. מה מכנים סטנדרט בודד שמשמש לבחינת משהו?\",\"correct_reason\":\"criterion = קריטריון (יחיד). גודל אוכלוסייה הוא קריטריון חשוב אחד שמשמש לקביעת אילו מינים זקוקים להגנה.\",\"options_analysis\":[\"presumption (הנחה): לא רלוונטי\",\"emission (פליטה): לא רלוונטי\",\"inclusion (הכללה): לא רלוונטי\",\"נכון! criterion = קריטריון (יחיד), מתאים לסטנדרט בודד\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "cd9fbf9e-398b-4017-88fd-1946a5946e27",
+  "options": [
+   {
+    "id": "c",
+    "text": "timid"
+   },
+   {
+    "id": "a",
+    "text": "finite"
+   },
+   {
+    "id": "d",
+    "text": "venal"
+   },
+   {
+    "id": "b",
+    "text": "banal"
+   }
+  ],
+  "explanation": "{\"strategy\":\"בניגוד ליריבתו, שמשאביה נראים בלתי נגמרים, הסטארט-אפ פועל עם מימון ___ איזה תואר מתאר משאב מוגבל ולא אינסופי?\",\"correct_reason\":\"finite (סופי/מוגבל). בניגוד ליריבתו, שמשאביה נראים בלתי נגמרים, הסטארט-אפ פועל עם מימון סופי.\",\"options_analysis\":[\"timid (ביישן): לא רלוונטי\",\"נכון! finite (סופי, מתאים למשאב מוגבל)\",\"venal (מושחת): לא רלוונטי\",\"banal (שגרתי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "eb0514a6-b552-4593-b908-72a877f3a826",
+  "options": [
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "a",
+    "text": "meticulous"
+   }
+  ],
+  "explanation": "{\"strategy\":\"רואה החשבון היה ידוע בהיותו ___ ביותר, ובדק כל מספר בנפרד ביד. איזה תואר מתאר אדם קפדני שמשים לב לכל פרט קטן?\",\"correct_reason\":\"meticulous (קפדני/דקדקן). רואה החשבון היה ידוע בהיותו קפדני ביותר, ובדק כל מספר בנפרד ביד.\",\"options_analysis\":[\"mundane (יומיומי): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\",\"נכון! meticulous (קפדני): מתאים לתשומת לב לפרטים\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ec1667be-c9da-4c03-927a-e76580ad880a",
+  "options": [
+   {
+    "id": "a",
+    "text": "audacious"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"זה היה מהלך ___ מצד עורך דין צעיר לאתגר את השותף הבכיר בבית משפט פתוח. איזה תואר מתאר מעשה נועז ובלתי צפוי עד כדי חוצפה?\",\"correct_reason\":\"audacious (נועז/חצוף). זה היה מהלך נועז מצד עורך דין צעיר לאתגר את השותף הבכיר בבית משפט פתוח.\",\"options_analysis\":[\"נכון! audacious (נועז): מתאים למעשה נועז וחריג\",\"reticent (מסויג): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ee62f133-e69a-48ea-9ae2-65d6e5f4f5be",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "a",
+    "text": "austere"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ההתנהגות ___ של הפרופסור בכיתה עמדה בניגוד חד לחום שלו מחוצה לה. איזה תואר מתאר יחס קפדני, מרוחק וחסר רגש בפומבי?\",\"correct_reason\":\"austere (מחמיר/מרוחק). ההתנהגות המחמירה של הפרופסור בכיתה עמדה בניגוד חד לחום שלו מחוצה לה.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"נכון! austere (מחמיר): מתאים ליחס קר בכיתה\",\"reticent (מסויג): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f1af5709-1ed4-456d-900e-113aac3accf2",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "a",
+    "text": "placid"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ההתנהגות ___ של המנהל משא ומתן עזרה להרגיע את שני הצדדים ברגעים המתוחים ביותר. איזה תואר מתאר רוגע עמוק ושליו?\",\"correct_reason\":\"placid (שלו/רגוע). ההתנהגות השלווה של מנהל המשא ומתן עזרה להרגיע את שני הצדדים ברגעים המתוחים ביותר.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"נכון! placid (שלו): מתאים לרוגע ברגע מתוח\",\"reticent (מסויג): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f2d772e1-e6f3-4026-9e44-eb9a70e89a09",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "a",
+    "text": "sanctimonious"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הגישה ___ שלה, שתמיד טענה לעליונות מוסרית, הפכה אותה לקשה לעבודה משותפת. איזה תואר מתאר אדם שמתנהג בצדקנות מזויפת?\",\"correct_reason\":\"sanctimonious (צדקן/מתחסד). הגישה הצדקנית שלה, שתמיד טענה לעליונות מוסרית, הפכה אותה לקשה לעבודה משותפת.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"נכון! sanctimonious (צדקן, מתאים להתנהגות מתחסדת)\",\"reticent (מסויג): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f5e0a073-3c8f-4b10-9dce-f3a5a58e0ff7",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "a",
+    "text": "isolated"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הכפר המרוחק נשאר ___ מנוחות מודרניות עד תוך המאה העשרים. איזה תואר מתאר מקום מנותק ורחוק מכל השפעה חיצונית?\",\"correct_reason\":\"isolated (מבודד). הכפר המרוחק נשאר מבודד מנוחות מודרניות עד תוך המאה העשרים.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\",\"נכון! isolated (מבודד, מתאים לניתוק ממודרניות)\",\"reticent (מסויג): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f6e1d570-d4c8-4c9d-a6dd-4313045aa0eb",
+  "options": [
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "pervasive"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   }
+  ],
+  "explanation": "{\"strategy\":\"השחיתות באזור הפכה כה..., שאפילו היתרים שגרתיים דרשו שוחד. איזה תואר מתאר תופעה שחדרה לכל תחומי החיים?\",\"correct_reason\":\"pervasive (חודרני/נפוץ בכל מקום). השחיתות באזור הפכה כה חודרנית, שאפילו היתרים שגרתיים דרשו שוחד.\",\"options_analysis\":[\"mundane (יומיומי): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"נכון! pervasive (חודרני): מתאים לתופעה שהתפשטה לכל תחום\",\"negligible (זניח): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f8d13e32-abfe-4ec6-8962-dd8319b8e90a",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "a",
+    "text": "capricious"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   }
+  ],
+  "explanation": "{\"strategy\":\"ההחלטות ___ של הבמאי הקשו על שחקנים לדעת למה לצפות מיום ליום. איזה תואר מתאר החלטות הפכפכות ובלתי צפויות?\",\"correct_reason\":\"capricious (הפכפך). ההחלטות ההפכפכות של הבמאי הקשו על שחקנים לדעת למה לצפות מיום ליום.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"נכון! capricious (הפכפך): מתאים להחלטות לא יציבות\",\"mundane (יומיומי): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f910ad0b-ddff-40af-98d9-08adc4189128",
+  "options": [
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "vehement"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   }
+  ],
+  "explanation": "{\"strategy\":\"הפעילה נשאה נאום..., שגינה את כישלון הממשלה לפעול בנוגע לשינויי אקלים. איזה תואר מתאר נאום נלהב ותוקפני מעוצמת רגש?\",\"correct_reason\":\"vehement (נלהב/עז). הפעילה נשאה נאום נלהב, שגינה את כישלון הממשלה לפעול בנוגע לשינויי אקלים.\",\"options_analysis\":[\"reticent (מסויג): לא רלוונטי\",\"נכון! vehement (נלהב): מתאים לנאום עז ורגשי\",\"mundane (יומיומי): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "f9686b4a-7eee-44aa-8126-38705bbbee7c",
+  "options": [
+   {
+    "id": "a",
+    "text": "perfidious"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   }
+  ],
+  "explanation": "{\"strategy\":\"היועץ התברר כ..., ודלף בחשאי מידע חסוי לחברה מתחרה. איזה תואר מתאר בוגד שלא ראוי לאמון שניתן לו?\",\"correct_reason\":\"perfidious (בוגדני). היועץ התברר כבוגדני, ודלף בחשאי מידע חסוי לחברה מתחרה.\",\"options_analysis\":[\"נכון! perfidious (בוגדני, מתאים לבגידה באמון)\",\"reticent (מסויג): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "fa3497ea-776b-49f0-8ae4-058c122b8f76",
+  "options": [
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "a",
+    "text": "intransigent"
+   }
+  ],
+  "explanation": "{\"strategy\":\"האיגוד נשאר..., וסירב לכל פשרה שהחברה הציעה במהלך המשא ומתן. איזה תואר מתאר עמדה נוקשה שלא מתפשרת בשום אופן?\",\"correct_reason\":\"intransigent (בלתי מתפשר). האיגוד נשאר בלתי מתפשר, וסירב לכל פשרה שהחברה הציעה במהלך המשא ומתן.\",\"options_analysis\":[\"negligible (זניח): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\",\"נכון! intransigent (בלתי מתפשר): מתאים לעמדה נוקשה\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "fd53ce82-a576-49ea-abc8-7f8242db39b6",
+  "options": [
+   {
+    "id": "a",
+    "text": "inconclusive"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מסקנות הדוח היו בסופו של דבר..., ומבוססות על מדגם קטן מדי כדי להיות משמעותי. איזה תואר מתאר מסקנה שלא ניתן לקבוע ממנה דבר ברור?\",\"correct_reason\":\"inconclusive (לא חד-משמעי). מסקנות הדוח היו בסופו של דבר לא חד-משמעיות, ומבוססות על מדגם קטן מדי כדי להיות משמעותי.\",\"options_analysis\":[\"נכון! inconclusive (לא חד-משמעי): מתאים למסקנה לא מבוססת\",\"mundane (יומיומי): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\",\"reticent (מסויג): לא רלוונטי\"]}",
+  "exam_eligible": true
+ },
+ {
+  "id": "ff7d3d2b-d831-4608-81b3-c9672450ef5a",
+  "options": [
+   {
+    "id": "a",
+    "text": "ephemeral"
+   },
+   {
+    "id": "b",
+    "text": "reticent"
+   },
+   {
+    "id": "c",
+    "text": "mundane"
+   },
+   {
+    "id": "d",
+    "text": "negligible"
+   }
+  ],
+  "explanation": "{\"strategy\":\"מגמות אופנה ידועות לשמצה כ..., פופולריות עונה אחת ונשכחות בעונה הבאה. איזה תואר מתאר משהו שקיים לזמן קצר בלבד?\",\"correct_reason\":\"ephemeral (בן חלוף). מגמות אופנה ידועות לשמצה כבנות חלוף, פופולריות עונה אחת ונשכחות בעונה הבאה.\",\"options_analysis\":[\"נכון! ephemeral (בן חלוף): מתאים לתופעה קצרת מועד\",\"reticent (מסויג): לא רלוונטי\",\"mundane (יומיומי): לא רלוונטי\",\"negligible (זניח): לא רלוונטי\"]}",
+  "exam_eligible": true
+ }
+]

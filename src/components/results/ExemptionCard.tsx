@@ -3,6 +3,7 @@
 import { useEffect, useId, useState, type ReactNode } from 'react';
 import { EXEMPTION_SCORE } from '@/lib/calibration';
 import { exemptionTone, formatProbability, scoreInterval, type ExemptionTone, type Measurement } from '@/lib/exemption';
+import { ScoreTrack } from '@/components/stats/ScoreTrack';
 
 /**
  * "Probability of 134+" — the honest replacement for the old fixed ±10
@@ -41,7 +42,7 @@ const TONE: Record<ExemptionTone, { arc: string; band: string; text: string; glo
 };
 
 /** Who, among ten test-takers with this result, is actually at the exemption line. Verb agrees with the count. */
-function frequencySentence(p: number): string {
+export function frequencySentence(p: number): string {
   const inTen = Math.round(p * 10);
   const at = `בפועל ברמה של ${EXEMPTION_SCORE} ומעלה`;
   if (inTen <= 0) return `פחות מאחד מתוך 10 נבחנים עם תוצאה כמו שלך נמצא ${at}.`;
@@ -49,9 +50,6 @@ function frequencySentence(p: number): string {
   if (inTen >= 10) return `כמעט כל הנבחנים עם תוצאה כמו שלך נמצאים ${at}.`;
   return `בערך ${inTen} מתוך 10 נבחנים עם תוצאה כמו שלך נמצאים ${at}.`;
 }
-
-/** Position on the 50–150 track, as a % from the left: scales read low → high, left → right. */
-const trackPct = (score: number) => Math.min(100, Math.max(0, score - 50));
 
 // Semicircle geometry: an arc of radius R across a W×H box.
 const W = 220;
@@ -141,25 +139,13 @@ export function ExemptionCard({ measurement, heading, basis, score }: ExemptionC
         </p>
 
         {/* Where the measurement sits against the line: 80% range + cut + score */}
-        <div className="mt-6" aria-hidden>
-          <div className="relative h-3 rounded-full bg-exam-paper-alt border border-exam-border">
-            <div
-              className={`absolute inset-y-0 rounded-full opacity-35 ${tone.band}`}
-              style={{ left: `${trackPct(lo)}%`, width: `${Math.max(trackPct(hi) - trackPct(lo), 1.5)}%` }}
-            />
-            <div className="absolute -top-1.5 -bottom-1.5 w-0.5 rounded-full bg-exam-sage-strong" style={{ left: `calc(${trackPct(EXEMPTION_SCORE)}% - 1px)` }} />
-            {score !== undefined && (
-              <div
-                className="absolute top-1/2 size-3.5 -translate-y-1/2 -translate-x-1/2 rounded-full border-2 border-exam-surface bg-exam-ink shadow-surface"
-                style={{ left: `${trackPct(score)}%` }}
-              />
-            )}
-          </div>
-          <div className="relative mt-1.5 h-4 text-[11px] text-exam-ink-soft tabular-nums">
-            <span className="absolute left-0">50</span>
-            <span className="absolute font-semibold text-exam-sage-strong -translate-x-1/2" style={{ left: `${trackPct(EXEMPTION_SCORE)}%` }}>{EXEMPTION_SCORE}</span>
-            <span className="absolute right-0">150</span>
-          </div>
+        <div className="mt-6">
+          <ScoreTrack
+            lo={lo}
+            hi={hi}
+            bandClass={tone.band}
+            markers={score !== undefined ? [{ score, className: 'bg-exam-ink' }] : []}
+          />
         </div>
         <p className="mt-2 text-xs text-exam-ink-soft">
           טווח סביר לרמה שלך: <bdi dir="ltr" className="font-semibold text-exam-ink tabular-nums">{lo}–{hi}</bdi>

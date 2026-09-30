@@ -100,13 +100,14 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
         <TrendingUp className="w-4 h-4" aria-hidden />
         מסלול הניצחון
       </h2>
+      <p className="text-xs text-exam-ink-soft mb-2">כל {sessions.length} המבחנים · הקצב נמדד לפי ימים, לא לפי מספר המבחנים</p>
       <p className="text-sm text-exam-ink-soft mb-4">
         {forecast.daysToTarget === 0 ? (
           <>הגעת ליעד: <bdi dir="ltr" className="font-bold text-exam-sage-strong">{targetScore}+</bdi> כבר בכיס. עכשיו שומרים על הכושר.</>
         ) : forecast.daysToTarget === null ? (
           <>
-            הציון שלך יציב כרגע, סביב <span className="font-bold text-exam-ink tabular-nums">{Math.round(forecast.currentScore)}</span>.
-            {' '}תרגול ממוקד בנקודות החולשה הוא מה שיזיז אותו למעלה, ואז נראה כאן תחזית.
+            המגמה עדיין לא עולה, ולכן אין תחזית. הציון במבחן האחרון: <span className="font-bold text-exam-ink tabular-nums">{Math.round(forecast.currentScore)}</span>.
+            {' '}תרגול ממוקד בנקודות החולשה הוא מה שיזיז אותו למעלה.
           </>
         ) : (
           <>
@@ -118,7 +119,7 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
       </p>
       <div className="h-56" dir="ltr">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+          <LineChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-exam-border" vertical={false} />
             <XAxis
               dataKey="date"
@@ -133,7 +134,7 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
               className="text-exam-ink-soft"
               axisLine={false}
               tickLine={false}
-              width={32}
+              width={36}
             />
             <Tooltip
               labelFormatter={label => formatDateShort(String(label))}

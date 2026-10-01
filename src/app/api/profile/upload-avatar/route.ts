@@ -12,8 +12,8 @@ const ALLOWED_TYPES: Record<string, string> = {
 /**
  * POST /api/profile/upload-avatar  (multipart/form-data, field "file")
  * Uploads to the public "avatars" bucket at {user.id}/avatar.{ext} (upsert),
- * then syncs the resulting URL onto auth user_metadata, user_stats, and
- * leaderboard so it shows up everywhere a display_name change already does.
+ * then syncs the resulting URL onto auth user_metadata and user_stats so it
+ * shows up everywhere a display_name change already does.
  */
 export async function POST(req: NextRequest) {
   const { supabase, user } = await getServerClients();
@@ -55,7 +55,6 @@ export async function POST(req: NextRequest) {
   if (authErr) return NextResponse.json({ error: authErr.message }, { status: 500 });
 
   await supabase.from('user_stats').upsert({ user_id: user.id, avatar_url: avatarUrl }, { onConflict: 'user_id' });
-  await supabase.from('leaderboard').update({ avatar_url: avatarUrl }).eq('user_id', user.id);
 
   return NextResponse.json({ ok: true, avatarUrl });
 }
@@ -74,7 +73,6 @@ export async function DELETE() {
   if (authErr) return NextResponse.json({ error: authErr.message }, { status: 500 });
 
   await supabase.from('user_stats').update({ avatar_url: null }).eq('user_id', user.id);
-  await supabase.from('leaderboard').update({ avatar_url: null }).eq('user_id', user.id);
 
   return NextResponse.json({ ok: true });
 }

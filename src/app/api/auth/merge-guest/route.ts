@@ -18,7 +18,7 @@ function sanitizeIds(raw: unknown): string[] {
  * POST /api/auth/merge-guest  { vocabKnown?: string[], vocabFavorites?: string[] }
  * Called once after login: moves everything the user accumulated as a guest
  * (exam sessions, spaced-repetition cards, seen-question/passage history, activity/streak
- * log, response log) onto their account, then recomputes user_stats + leaderboard from the
+ * log, response log) onto their account, then recomputes user_stats from the
  * merged history. Also unions in the guest's locally-known/favorited vocab
  * word ids passed in the body — those tables have a hard FK to auth.users,
  * so a guest (who has no auth.users row) can never write them directly; the
@@ -136,7 +136,7 @@ export async function POST(req: Request) {
     }
   }
 
-  // 6. Recompute user_stats + leaderboard from the merged exam history
+  // 6. Recompute user_stats from the merged exam history
   //    (the completion trigger never saw the guest exams)
   const { data: sessions } = await supabase
     .from('exam_sessions')
@@ -171,15 +171,6 @@ export async function POST(req: Request) {
       avatar_url: existingStats?.avatar_url ?? meta?.avatar_url ?? null,
     };
     await supabase.from('user_stats').upsert(stats, { onConflict: 'user_id' });
-    await supabase.from('leaderboard').upsert({
-      user_id: stats.user_id,
-      display_name: stats.display_name,
-      avatar_url: stats.avatar_url,
-      best_score: stats.best_score,
-      total_exams: stats.total_exams,
-      avg_score: stats.avg_score,
-      last_exam_at: stats.last_exam_at,
-    }, { onConflict: 'user_id' });
   }
 
   // This specific guest identity has now been consumed into `user.id` —

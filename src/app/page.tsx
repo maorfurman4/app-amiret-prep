@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import { BrandLogo } from '@/components/BrandLogo';
 import { Target, PenLine, BookOpen, Brain, Lightbulb, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
 import { UserMenu } from '@/components/UserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -45,7 +45,7 @@ export default function HomePage() {
           {/* Hero — the big score mark anchors the page again */}
           <div className="text-center animate-fade-up [animation-delay:60ms]">
             <h1 className="mb-3">
-              <Image src="/logo.svg" alt="134+" width={112} height={112} preload className="w-28 h-28 mx-auto rounded-[1.6rem] shadow-raised" />
+              <BrandLogo className="w-40 h-auto mx-auto" />
             </h1>
             <HeroTagline />
           </div>

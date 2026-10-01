@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
-import { authFetch } from '@/lib/auth-fetch';
+import { fetchStatsRows } from '@/lib/stats-client';
 import { computeStatsMetrics, type StatsRow } from '@/lib/stats-metrics';
 import { BackNav } from '@/components/BackNav';
 import { StatsView } from '@/components/stats/StatsView';
@@ -33,11 +33,10 @@ export default function StatsPage() {
         return;
       }
 
-      authFetch(`/api/stats?guestId=${encodeURIComponent(localStorage.getItem('amiret_guest_id') ?? '')}`)
-        .then(r => { if (!r.ok) throw new Error(`stats fetch failed: ${r.status}`); return r.json(); })
-        .then((d: { sessions: StatsRow[] }) => {
+      fetchStatsRows()
+        .then(sessions => {
           if (cancelled) return;
-          setRows(d.sessions ?? []);
+          setRows(sessions);
           setLoading(false);
         })
         .catch(() => {

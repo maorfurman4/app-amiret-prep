@@ -32,14 +32,47 @@ export async function fetchUnseenQuestions({
   needed: number;
 }): Promise<Question[]> {
   const plan = await planUnseenQuestions({ supabase, userKey, type, difficultyLevel, needed });
-  if (plan.resetQuestionIds.length > 0) {
-    await supabase
-      .from('user_question_history')
-      .delete()
-      .eq('user_key', userKey)
-      .in('question_id', plan.resetQuestionIds);
-  }
+  // A whole type+level pool (~370–610 ids) is too long for one request URL,
+  // so the reset is deleted in chunks.
+  await Promise.all(chunks(plan.resetQuestionIds, ID_CHUNK).map(part => supabase
+    .from('user_question_history')
+    .delete()
+    .eq('user_key', userKey)
+    .in('question_id', part)));
   return plan.questions;
+}
+
+/** PostgREST's default max rows per response. */
+const PAGE = 1000;
+/** Ids per `.in()` request, to keep request URLs short. */
+export const ID_CHUNK = 100;
+
+export function chunks<T>(items: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  return out;
+}
+
+/**
+ * Every question id this user has seen, read by user_key alone and paged past
+ * the 1000-row cap. Filtering a type+level pool against it happens in memory:
+ * passing the pool's ~500 ids to `.in('question_id', …)` makes a request too
+ * long to succeed — it fails after ~10s and dedup is silently skipped.
+ */
+export async function fetchSeenQuestionIds(supabase: SupabaseClient, userKey: string): Promise<Set<string>> {
+  const seen = new Set<string>();
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from('user_question_history')
+      .select('question_id')
+      .eq('user_key', userKey)
+      .order('question_id')
+      .range(from, from + PAGE - 1);
+    if (error || !data) break;
+    for (const r of data as { question_id: string }[]) seen.add(r.question_id);
+    if (data.length < PAGE) break;
+  }
+  return seen;
 }
 
 /** Read-only selection plan for an atomic exam transition. */
@@ -58,23 +91,17 @@ export async function planUnseenQuestions({
 }): Promise<{ questions: Question[]; resetQuestionIds: string[] }> {
   // Get IDs already seen by this user for this type+difficulty combination only
   // (scoped to difficulty so reset doesn't wipe other difficulty levels)
-  const { data: allQsOfTypeDiff } = await supabase
-    .from('questions')
-    .select('id')
-    .eq('type', type)
-    .eq('difficulty_level', difficultyLevel)
-    .eq('active', true);
+  const [{ data: allQsOfTypeDiff }, seenByUser] = await Promise.all([
+    supabase
+      .from('questions')
+      .select('id')
+      .eq('type', type)
+      .eq('difficulty_level', difficultyLevel)
+      .eq('active', true),
+    fetchSeenQuestionIds(supabase, userKey),
+  ]);
   const typeDiffIds = (allQsOfTypeDiff ?? []).map((r: { id: string }) => r.id);
-
-  let seenIds: string[] = [];
-  if (typeDiffIds.length > 0) {
-    const { data: seenRows } = await supabase
-      .from('user_question_history')
-      .select('question_id')
-      .eq('user_key', userKey)
-      .in('question_id', typeDiffIds);
-    seenIds = (seenRows ?? []).map((r: { question_id: string }) => r.question_id);
-  }
+  const seenIds = typeDiffIds.filter(id => seenByUser.has(id));
 
   // Sample the candidates at random from ALL matching ids — a plain
   // `limit` returns rows in storage order, i.e. the same generation batch

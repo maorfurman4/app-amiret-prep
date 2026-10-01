@@ -1,8 +1,14 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" fill="#1d4ed8"/>
-  <polygon points="256,88 444,170 256,252 68,170" fill="#ffffff"/>
-  <path d="M168 216 v72 c0 32 176 32 176 0 v-72 l-88 38 z" fill="#dbeafe"/>
-  <rect x="432" y="170" width="15" height="88" rx="7" fill="#fbbf24"/>
-  <circle cx="439.5" cy="272" r="17" fill="#fbbf24"/>
-  <text x="256" y="448" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="118" font-weight="800" fill="#ffffff">134+</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="title">
+  <title id="title">134+</title>
+  <!-- Tile: exam-sage. Goal ring and numerals: exam-paper. "+" marker: amber (dark-mode exam-alt). -->
+  <rect width="512" height="512" rx="112" fill="#176648"/>
+  <circle cx="256" cy="256" r="178" fill="none" stroke="#FAF8F2" stroke-width="22"/>
+  <!-- Knock the ring out under the "+" so the marker sits on the ring, not over it. -->
+  <circle cx="382" cy="130" r="58" fill="#176648"/>
+  <path d="M382 92 V168 M344 130 H420" fill="none" stroke="#F1C779" stroke-width="36" stroke-linecap="round"/>
+  <g transform="translate(98 85) scale(.62)" fill="none" stroke="#FAF8F2" stroke-width="44" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M90 214 L128 176 V376"/>
+    <path d="M180 208 A48 48 0 1 1 225 272 A52 52 0 1 1 176 342 M206 272 H225"/>
+    <path d="M392 376 V176 L300 316 H418"/>
+  </g>
 </svg>

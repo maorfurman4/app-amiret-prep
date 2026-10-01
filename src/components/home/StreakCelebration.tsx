@@ -3,17 +3,56 @@
 import { useEffect, useEffectEvent, useRef, useState, type CSSProperties } from 'react';
 import Image from 'next/image';
 import { X } from 'lucide-react';
+import { authFetch } from '@/lib/auth-fetch';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 import { todayLocalStr } from '@/lib/date-local';
+import type { StreakInfo } from '@/lib/streak-server';
 import { RollingNumber } from './AchievementMotion';
 
 const SEEN_KEY = 'amiret_streak_celebration_seen_date';
 
-/** An earned, once-a-day moment. Yesterday's active streak is not a new win. */
+/**
+ * Answers are logged fire-and-forget, so a completion screen can ask before
+ * the server has marked today. Re-ask briefly instead of missing the moment.
+ */
+const RETRY_DELAYS_MS = [1000, 2500];
+
+/**
+ * Mounted on a session's completion screen: the same celebration as home,
+ * shown there when that session is what made today count. Shares home's
+ * seen flag, so the day celebrates once, on whichever screen gets there first.
+ */
+export function SessionStreakCelebration() {
+  const [info, setInfo] = useState<StreakInfo | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    try { if (localStorage.getItem(SEEN_KEY) === todayLocalStr()) return; } catch { /* Session-only fallback. */ }
+    (async () => {
+      for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+        if (attempt > 0) await new Promise(resolve => setTimeout(resolve, RETRY_DELAYS_MS[attempt - 1]));
+        if (cancelled) return;
+        const next = await authFetch('/api/streak')
+          .then(r => (r.ok ? r.json() as Promise<StreakInfo> : null))
+          .catch(() => null);
+        if (cancelled) return;
+        if (next?.hasActivityToday) { setInfo(next); return; }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  return <CelebrateOncePerDay streak={info?.streak ?? 0} earnedToday={info?.hasActivityToday ?? false} />;
+}
+
+/** Home: the dashboard summary already carries today's streak. */
 export function StreakCelebration() {
   const { data } = useDashboardSummary();
-  const streak = data?.streak ?? 0;
-  const earnedToday = data?.hasActivityToday ?? false;
+  return <CelebrateOncePerDay streak={data?.streak ?? 0} earnedToday={data?.hasActivityToday ?? false} />;
+}
+
+/** An earned, once-a-day moment. Yesterday's active streak is not a new win. */
+function CelebrateOncePerDay({ streak, earnedToday }: { streak: number; earnedToday: boolean }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

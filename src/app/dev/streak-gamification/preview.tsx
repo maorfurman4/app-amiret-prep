@@ -17,7 +17,7 @@ export function GamificationPreview() {
   return (
     <main className="mx-auto max-w-xl space-y-8 px-6 py-24" dir="rtl">
       <header><h1 className="text-2xl font-bold text-exam-ink">רגע קטן של התקדמות</h1><p className="mt-2 text-exam-ink-soft">תצוגת תנועה מקומית · לא משנה נתוני למידה</p></header>
-      <div className="flex justify-start"><StreakDisplay streak={streak} /></div>
+      <div className="flex flex-wrap justify-start gap-3"><StreakDisplay streak={streak} /><StreakDisplay streak={streak} atRisk /></div>
       <section className="rounded-2xl border border-exam-border bg-exam-surface py-8 shadow-surface"><DailyRings rings={rings} persistCelebration={false} /></section>
       <div className="flex flex-wrap gap-3">
         <button className={button} onClick={() => setStreak(n => n + 1)}>הוספת יום</button>

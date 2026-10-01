@@ -24,6 +24,7 @@ import {
   interleaveMixed, planIsValid, planMinutes, planQuestionCount, samePlan,
   type MixedPlan, type MixedTypeKey,
 } from '@/lib/mixed-practice';
+import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'starting' | 'practicing' | 'done';
 type Difficulty = 1 | 2 | 3 | 4 | 5 | 'random';
@@ -801,6 +802,7 @@ function PracticeContent() {
 
     return (
       <div className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
+        <SessionStreakCelebration />
         <div className="max-w-2xl mx-auto">
           {/* Score summary */}
           <div className="text-center space-y-4 mb-10">

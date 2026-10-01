@@ -6,8 +6,13 @@
  */
 export const APP_TZ = 'Asia/Jerusalem';
 
+/** The app-timezone calendar day (YYYY-MM-DD) that `at` falls on. */
+export function localDateStr(at: Date): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: APP_TZ }).format(at);
+}
+
 export function todayLocalStr(): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: APP_TZ }).format(new Date());
+  return localDateStr(new Date());
 }
 
 export function addLocalDays(dateStr: string, delta: number): string {

@@ -21,4 +21,4 @@ jobs:
           curl -sS -f \
             -H "apikey: $SUPABASE_ANON_KEY" \
             -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-            "$SUPABASE_URL/rest/v1/leaderboard?select=display_name&limit=1"
+            "$SUPABASE_URL/rest/v1/vocabulary?select=id&limit=1"

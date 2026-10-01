@@ -7,7 +7,7 @@ import { Home, Target, PenLine, BookOpen, BarChart3 } from 'lucide-react';
 import { useActivityGuard } from '@/lib/activity-guard';
 
 // 5 tabs max — thumb-friendly on narrow screens.
-// חזרה חכמה, אסטרטגיות, טיפים ולוח מובילים נגישים מדף הבית.
+// חזרה חכמה, אסטרטגיות וטיפים נגישים מדף הבית.
 const TABS = [
   { href: '/',            icon: Home,      label: 'בית'       },
   { href: '/exam',        icon: Target,    label: 'מבחן'      },

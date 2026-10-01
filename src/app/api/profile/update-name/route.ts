@@ -5,8 +5,7 @@ import { getServerClients } from '@/lib/supabase-server';
  * POST /api/profile/update-name
  * Body: { displayName: string }
  * Updates user_stats.display_name (creating the row if the user has no
- * exam history yet — most columns there have defaults) and, if a
- * leaderboard row already exists for this user, keeps it in sync too.
+ * exam history yet — most columns there have defaults).
  */
 export async function POST(req: NextRequest) {
   const { supabase, user } = await getServerClients();
@@ -27,8 +26,6 @@ export async function POST(req: NextRequest) {
     .upsert({ user_id: user.id, display_name: displayName }, { onConflict: 'user_id' });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  await supabase.from('leaderboard').update({ display_name: displayName }).eq('user_id', user.id);
 
   return NextResponse.json({ ok: true, displayName });
 }

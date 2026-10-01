@@ -11,6 +11,7 @@ import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
 import { toCanonicalOption } from '@/lib/option-shuffle';
 import { ensureGuestIdentity } from '@/lib/guest';
+import { useActivityGuard } from '@/lib/activity-guard';
 import { DIAGNOSTIC, type DiagnosticState, type DiagnosticType, type StartPlan } from '@/lib/diagnostic-plan';
 import { heCount } from '@/lib/hebrew-count';
 
@@ -47,6 +48,14 @@ export default function DiagnosticPage() {
   const [answers, setAnswers] = useState<{ id: string; chosen: number }[]>([]);
   const [state, setState] = useState<DiagnosticState | null>(null);
   const [plan, setPlan] = useState<StartPlan | null>(null);
+  const { setInProgress } = useActivityGuard();
+
+  // Flag mid-diagnostic activity so the bottom nav asks for a confirming
+  // second tap before navigating away (same as practice).
+  useEffect(() => {
+    setInProgress(phase === 'answering');
+    return () => setInProgress(false);
+  }, [phase, setInProgress]);
 
   // No server session to resume from — warn before a refresh loses the run.
   useEffect(() => {

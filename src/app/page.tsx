@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { GraduationCap, Target, PenLine, BookOpen, Brain, Lightbulb, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
+import { Target, PenLine, BookOpen, Brain, Lightbulb, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
 import { UserMenu } from '@/components/UserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { DashboardSummaryProvider } from '@/lib/dashboard-context';
@@ -43,9 +44,8 @@ export default function HomePage() {
 
           {/* Hero — the big score mark anchors the page again */}
           <div className="text-center animate-fade-up [animation-delay:60ms]">
-            <GraduationCap className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
-            <h1 className="text-display mb-2" dir="ltr">
-              134<span className="text-exam-accent">+</span>
+            <h1 className="mb-3">
+              <BrandLogo className="w-40 h-auto mx-auto" />
             </h1>
             <HeroTagline />
           </div>

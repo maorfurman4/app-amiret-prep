@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  manifest: '/manifest.json',
   appleWebApp: {
     title: '134+',
     capable: true,

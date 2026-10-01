@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Clock, CheckCircle2, KeyRound } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
 import { createClient } from '@/lib/supabase';
 import {
   classifyPasswordUpdateError,
@@ -187,11 +188,13 @@ export default function ResetPasswordPage() {
     <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <KeyRound className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
-          <h1 className="text-4xl font-bold text-exam-ink tracking-tight" dir="ltr">
-            134<span className="text-exam-accent">+</span>
+          <h1>
+            <BrandLogo className="w-36 h-auto mx-auto" />
           </h1>
-          <p className="text-exam-ink-soft text-sm mt-2">איפוס סיסמה</p>
+          <p className="text-exam-ink-soft text-sm mt-2 flex items-center justify-center gap-1.5">
+            <KeyRound className="w-4 h-4" aria-hidden />
+            איפוס סיסמה
+          </p>
         </div>
         <div className="bg-exam-surface border border-exam-border rounded-md p-7">{card}</div>
       </div>

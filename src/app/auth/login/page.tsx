@@ -7,7 +7,8 @@ import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
-import { UserCircle, Mail, AlertCircle, GraduationCap, RotateCcw, ArrowRight } from 'lucide-react';
+import { UserCircle, Mail, AlertCircle, RotateCcw, ArrowRight } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { mergeGuestProgress } from '@/lib/merge-guest-client';
 import { clearGuestIdentity } from '@/lib/guest';
@@ -355,9 +356,8 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         {/* Header */}
         <div className="text-center mb-8">
-          <GraduationCap className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
-          <h1 className="text-4xl font-bold text-exam-ink tracking-tight" dir="ltr">
-            134<span className="text-exam-accent">+</span>
+          <h1>
+            <BrandLogo className="w-36 h-auto mx-auto" />
           </h1>
           <p className="text-exam-ink-soft text-sm mt-2">הכנה ממוקדת לאמירנ&quot;ט</p>
         </div>

@@ -17,8 +17,13 @@ import { ContextualStrategyCard } from '@/components/strategies/ContextualStrate
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { PaceGauge } from '@/components/exam/PaceGauge';
 import type { ResponseLogEntry } from '@/lib/response-log-client';
-import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, ChevronRight, ArrowRight, Plus, Minus, Info } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
+import {
+  MIXED_DEFAULT, MIXED_LIMITS, MIXED_PRESETS, RC_PER_PASSAGE,
+  interleaveMixed, planIsValid, planMinutes, planQuestionCount, samePlan,
+  type MixedPlan, type MixedTypeKey,
+} from '@/lib/mixed-practice';
 import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
 
 type Step = 'pick-type' | 'pick-difficulty' | 'pick-count' | 'starting' | 'practicing' | 'done';
@@ -55,6 +60,8 @@ const SECTION_FORMAT: Record<PracticeType, { count: number; seconds: number }> =
   mixed: { count: 8, seconds: 480 },
 };
 
+// Speed-mode seconds per question. A mixed session times each question by
+// its own type (see questionSeconds) — the `mixed` entry is only a fallback.
 const EXAM_TIMER_SECONDS: Record<PracticeType, number> = {
   sentence_completion: 45,
   restatement: 50,
@@ -62,6 +69,10 @@ const EXAM_TIMER_SECONDS: Record<PracticeType, number> = {
   esra: 45,
   mixed: 55,
 };
+
+function questionSeconds(practiceType: PracticeType, question: Question | undefined): number {
+  return EXAM_TIMER_SECONDS[practiceType === 'mixed' && question ? question.type : practiceType];
+}
 
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -92,6 +103,10 @@ function PracticeContent() {
   const [selectedType, setType]       = useState<PracticeType | null>(initialType);
   const [selectedDiff, setDiff]       = useState<Difficulty | null>(initialDiff);
   const [selectedCount, setCount]     = useState<5 | 10>(5);
+  // Mixed only: how many of each type (rc in passages) — replaces the 5/10 count.
+  const [mixPlan, setMixPlan]         = useState<MixedPlan>(MIXED_DEFAULT);
+  // Mixed only: set when a pool couldn't fill the requested mix.
+  const [mixNotice, setMixNotice]     = useState<string | null>(null);
   const [examMode, setExamMode]       = useState(false);
   const [sectionMode, setSectionMode] = useState(false);
   // Wall-clock deadline (epoch ms) for section mode — fed through the same
@@ -165,8 +180,14 @@ function PracticeContent() {
   const [questionExpiresAt, setQuestionExpiresAt] = useState<number | null>(null);
 
   const fetchQuestions = async (overrideDiff?: Difficulty) => {
+    const isMixed = selectedType === 'mixed';
+    if (isMixed && !planIsValid(mixPlan)) {
+      setError(planQuestionCount(mixPlan) === 0 ? 'בחר לפחות שאלה אחת' : `עד ${MIXED_LIMITS.total} שאלות בתרגול אחד`);
+      return;
+    }
     setLoading(true);
     setError(null);
+    setMixNotice(null);
     const diff = overrideDiff ?? selectedDiff;
     try {
       const guestId = localStorage.getItem('amiret_guest_id') ?? '';
@@ -183,6 +204,7 @@ function PracticeContent() {
         type: selectedType!,
         difficulty: String(diff),
         count: String(selectedCount),
+        ...(isMixed ? { sc: String(mixPlan.sc), rs: String(mixPlan.rs), rc: String(mixPlan.rc) } : {}),
         ...(guestId ? { guestId } : {}),
         ...(deferSeen ? { deferSeen: '1' } : {}),
       });
@@ -192,7 +214,7 @@ function PracticeContent() {
         setLoading(false);
         return;
       }
-      const data = await res.json() as { questions: Question[] };
+      const data = await res.json() as { questions: Question[]; mix?: { requested: MixedPlan; served: MixedPlan } };
       const qs = sectionMode && selectedType
         ? data.questions.slice(0, SECTION_FORMAT[selectedType].count)
         : data.questions;
@@ -211,6 +233,7 @@ function PracticeContent() {
           body: JSON.stringify({ ids: qs.map(q => q.id) }),
         }).catch(() => {});
       }
+      if (data.mix) setMixNotice(mixShortfallNotice(data.mix.requested, data.mix.served));
       dwellRef.current.reset();
       setQuestions(qs);
       setAnswers(Array(qs.length).fill(null));
@@ -218,7 +241,7 @@ function PracticeContent() {
       setShowResult(false);
       if (selectedType) {
         setSectionExpiresAt(Date.now() + SECTION_FORMAT[selectedType].seconds * 1000);
-        setQuestionExpiresAt(Date.now() + EXAM_TIMER_SECONDS[selectedType] * 1000);
+        setQuestionExpiresAt(Date.now() + questionSeconds(selectedType, qs[0]) * 1000);
       }
       setStep('practicing');
     } catch {
@@ -302,6 +325,8 @@ function PracticeContent() {
     setType(null);
     setDiff(null);
     setCount(5);
+    setMixPlan(MIXED_DEFAULT);
+    setMixNotice(null);
     setQuestions([]);
     setAnswers([]);
     setError(null);
@@ -326,7 +351,7 @@ function PracticeContent() {
       // letting a re-picked answer overwrite the original and double-post to
       // the review queue.
       const nextIndex = currentIndex + 1;
-      if (examMode && selectedType) setQuestionExpiresAt(Date.now() + EXAM_TIMER_SECONDS[selectedType] * 1000);
+      if (examMode && selectedType) setQuestionExpiresAt(Date.now() + questionSeconds(selectedType, questions[nextIndex]) * 1000);
       setCurrentIndex(nextIndex);
       setShowResult(answers[nextIndex] !== null);
     } else {
@@ -344,7 +369,7 @@ function PracticeContent() {
     expiresAt: step === 'practicing' && examMode && !sectionMode && selectedType ? questionExpiresAt : null,
     onExpire: handleNext,
   });
-  const timeLeft = questionRemainingMs === null ? (selectedType ? EXAM_TIMER_SECONDS[selectedType] : 0) : Math.ceil(questionRemainingMs / 1000);
+  const timeLeft = questionRemainingMs === null ? (selectedType ? questionSeconds(selectedType, questions[currentIndex]) : 0) : Math.ceil(questionRemainingMs / 1000);
 
   useEffect(() => {
     if (step !== 'practicing') return;
@@ -499,11 +524,16 @@ function PracticeContent() {
           <button onClick={() => setStep('pick-difficulty')} className="text-exam-ink-soft text-sm mb-6 hover:text-exam-ink">
             <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה</span>
           </button>
-          <h1 className="text-2xl font-bold text-exam-ink mb-1">כמות שאלות</h1>
-          <p className="text-exam-ink-soft mb-8 text-sm">כמה שאלות תרצה לתרגל?</p>
+          <h1 className="text-2xl font-bold text-exam-ink mb-1">{selectedType === 'mixed' ? 'הרכב התרגול' : 'כמות שאלות'}</h1>
+          <p className="text-exam-ink-soft mb-8 text-sm">
+            {selectedType === 'mixed' ? 'כמה מכל סוג? ברירת המחדל שומרת על היחס שבמבחן' : 'כמה שאלות תרצה לתרגל?'}
+          </p>
           {error && (
-            <div className="mb-4 p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm">{error}</div>
+            <div role="alert" className="mb-4 p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm">{error}</div>
           )}
+          {selectedType === 'mixed' ? (
+            <MixedPlanPicker plan={mixPlan} onChange={p => { setMixPlan(p); setError(null); }} />
+          ) : (
           <div className={`grid grid-cols-2 gap-4 ${sectionMode ? 'hidden' : ''}`}>
             {([5, 10] as const).map((n, i) => (
               <button
@@ -521,6 +551,7 @@ function PracticeContent() {
               </button>
             ))}
           </div>
+          )}
 
           {/* Practice mode selector */}
           <div className="mt-6 space-y-2">
@@ -651,6 +682,19 @@ function PracticeContent() {
         </header>
 
         <main className="max-w-2xl mx-auto px-4 py-8">
+          {mixNotice && (
+            <div role="status" className="mb-6 flex items-start gap-2 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-exam-alt text-sm">
+              <Info className="w-4 h-4 mt-0.5 flex-shrink-0" aria-hidden />
+              <p className="flex-1 leading-relaxed">{mixNotice}</p>
+              <button
+                onClick={() => setMixNotice(null)}
+                aria-label="סגור הודעה"
+                className="hit-44 -m-1 p-1 rounded-sm hover:bg-exam-alt/10 flex-shrink-0"
+              >
+                <X className="w-4 h-4" aria-hidden />
+              </button>
+            </div>
+          )}
           <QuestionCard
             question={question}
             questionNumber={currentIndex + 1}
@@ -916,6 +960,138 @@ function PracticeContent() {
             <button onClick={handleRestart} className="text-exam-accent underline text-sm">נסה שוב</button>
           </div>
       }
+    </div>
+  );
+}
+
+const PASSAGE_NOUN = { one: 'קטע', many: 'קטעים', gender: 'm' } as const;
+
+// `max` and `unit` render as "<bdi>0–max</bdi> unit" — the range is isolated
+// so the RTL line doesn't flip it into "12–0".
+const MIX_ROWS: { key: MixedTypeKey; label: string; unit: string }[] = [
+  { key: 'sc', label: 'השלמת משפטים', unit: 'שאלות' },
+  { key: 'rs', label: 'ניסוח מחדש', unit: 'שאלות' },
+  { key: 'rc', label: 'הבנת הנקרא', unit: `קטעים · ${RC_PER_PASSAGE} שאלות לקטע` },
+];
+
+// Swatches for the sample-order strip, one per type.
+const MIX_SWATCH: Record<MixedTypeKey, { cls: string; letter: string }> = {
+  sc: { cls: 'bg-exam-accent/10 text-exam-accent', letter: 'ה' },
+  rs: { cls: 'bg-exam-sage-bg text-exam-sage-strong', letter: 'נ' },
+  rc: { cls: 'bg-exam-alt-bg text-exam-alt', letter: 'ק' },
+};
+
+/** "Served fewer than asked" copy for a mixed session, or null when it's full. */
+function mixShortfallNotice(requested: MixedPlan, served: MixedPlan): string | null {
+  const short = MIX_ROWS
+    .filter(r => served[r.key] < requested[r.key])
+    .map(r => `${r.label} ${served[r.key]} מתוך ${requested[r.key]}`);
+  if (short.length === 0) return null;
+  return `לא נמצאו מספיק שאלות לכל ההרכב שבחרת, ולכן התרגול קצר יותר: ${short.join(', ')}.`;
+}
+
+/**
+ * Mixed practice's count step: a stepper per type (reading comprehension in
+ * whole passages), presets scaled from the exam's own mix, and a live total.
+ */
+function MixedPlanPicker({ plan, onChange }: { plan: MixedPlan; onChange: (plan: MixedPlan) => void }) {
+  const total = planQuestionCount(plan);
+  const overCap = (next: MixedPlan) => planQuestionCount(next) > MIXED_LIMITS.total;
+  const step = (key: MixedTypeKey, delta: number) => {
+    const next = { ...plan, [key]: Math.max(0, Math.min(MIXED_LIMITS[key], plan[key] + delta)) };
+    if (!overCap(next)) onChange(next);
+  };
+  // Some type still has room under its own limit but the total cap blocks it.
+  const capReached = MIX_ROWS.some(r => plan[r.key] < MIXED_LIMITS[r.key] && overCap({ ...plan, [r.key]: plan[r.key] + 1 }));
+  const order = interleaveMixed(
+    Array<MixedTypeKey>(plan.sc).fill('sc'),
+    Array<MixedTypeKey>(plan.rs).fill('rs'),
+    Array.from({ length: plan.rc }, () => Array<MixedTypeKey>(RC_PER_PASSAGE).fill('rc')),
+    () => 0,
+  );
+
+  return (
+    <div className="animate-fade-up">
+      <div className="flex flex-wrap gap-2 mb-4">
+        {MIXED_PRESETS.map(p => {
+          const active = samePlan(plan, p.plan);
+          return (
+            <button
+              key={p.id}
+              onClick={() => onChange(p.plan)}
+              aria-pressed={active}
+              className={`hit-44 px-3 py-1.5 rounded-xl border text-sm transition-[background-color,border-color] duration-300 ease-spring ${
+                active ? 'border-exam-accent bg-exam-accent/10 text-exam-accent font-semibold' : 'border-exam-border bg-exam-surface text-exam-ink-soft hover:border-exam-border-strong'
+              }`}
+            >
+              {p.label} <bdi dir="ltr" className="tabular-nums">{p.plan.sc}·{p.plan.rs}·{p.plan.rc}</bdi>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="space-y-2">
+        {MIX_ROWS.map(row => {
+          const value = plan[row.key];
+          const canAdd = value < MIXED_LIMITS[row.key] && !overCap({ ...plan, [row.key]: value + 1 });
+          return (
+            <div key={row.key} className="flex items-center justify-between gap-3 p-4 bg-exam-surface rounded-2xl border border-exam-border shadow-surface">
+              <div className="min-w-0">
+                <div className="font-bold text-exam-ink">{row.label}</div>
+                <div className="text-xs text-exam-ink-soft"><bdi dir="ltr">0–{MIXED_LIMITS[row.key]}</bdi> {row.unit}</div>
+              </div>
+              {/* A count reads low → high, left → right, like the difficulty scale. */}
+              <div dir="ltr" className="flex items-center gap-1 flex-shrink-0" role="group" aria-label={row.label}>
+                <button
+                  onClick={() => step(row.key, -1)}
+                  disabled={value === 0}
+                  aria-label={`פחות ${row.label}`}
+                  className="w-11 h-11 rounded-full border border-exam-border text-exam-ink flex items-center justify-center hover:bg-exam-paper-alt active:scale-[0.94] transition-[background-color,transform] duration-300 ease-spring disabled:opacity-40 disabled:hover:bg-transparent"
+                >
+                  <Minus className="w-4 h-4" aria-hidden />
+                </button>
+                <span aria-live="polite" className="w-8 text-center text-xl font-bold text-exam-ink tabular-nums">{value}</span>
+                <button
+                  onClick={() => step(row.key, 1)}
+                  disabled={!canAdd}
+                  aria-label={`יותר ${row.label}`}
+                  className="w-11 h-11 rounded-full border border-exam-border text-exam-ink flex items-center justify-center hover:bg-exam-paper-alt active:scale-[0.94] transition-[background-color,transform] duration-300 ease-spring disabled:opacity-40 disabled:hover:bg-transparent"
+                >
+                  <Plus className="w-4 h-4" aria-hidden />
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-4 flex items-baseline justify-between gap-3 text-sm">
+        <span className="text-exam-ink">סה״כ <span className="font-bold">{heCount(total, 'question')}</span></span>
+        {total > 0 && <span className="text-exam-ink-soft">כ-{heCount(planMinutes(plan), 'minute')} בקצב המבחן</span>}
+      </div>
+      <p className="mt-1 text-xs text-exam-ink-soft">
+        {capReached ? `עד ${MIXED_LIMITS.total} שאלות בתרגול אחד. ` : ''}
+        {plan.rc > 0 ? `${heCount(plan.rc, PASSAGE_NOUN)} קריאה, כל אחד ברצף של ${RC_PER_PASSAGE} שאלות.` : 'בלי קטעי קריאה.'}
+      </p>
+
+      {order.length > 0 && (
+        <div className="mt-4">
+          <div className="text-xs text-exam-ink-soft mb-1.5">סדר לדוגמה</div>
+          <div className="flex flex-wrap gap-1" aria-hidden>
+            {order.map((k, i) => (
+              <span key={i} className={`w-5 h-5 rounded-sm text-[11px] font-bold flex items-center justify-center ${MIX_SWATCH[k].cls}`}>{MIX_SWATCH[k].letter}</span>
+            ))}
+          </div>
+          <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-xs text-exam-ink-soft" aria-hidden>
+            {MIX_ROWS.map(r => (
+              <span key={r.key} className="inline-flex items-center gap-1">
+                <span className={`w-4 h-4 rounded-sm text-[10px] font-bold inline-flex items-center justify-center ${MIX_SWATCH[r.key].cls}`}>{MIX_SWATCH[r.key].letter}</span>
+                {r.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

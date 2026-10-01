@@ -7,7 +7,8 @@ import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { useActivityGuard } from '@/lib/activity-guard';
-import { nextInterval, addDays, isDue } from '@/lib/spaced-repetition';
+import { nextInterval, addDays } from '@/lib/spaced-repetition';
+import { activeDeck, emptyDeckState } from '@/lib/vocab-deck';
 import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
   RotateCcw, Trophy, ThumbsUp, Settings, Check, X, Target, Clock,
@@ -292,6 +293,13 @@ function VocabularyContent() {
   // Has the current flashcard deck been worked through at all (a card
   // marked known/unknown)? Reset whenever the deck is rebuilt.
   const [deckTouched, setDeckTouched] = useState(false);
+  // False until the deck-rebuild effect has built a deck from the loaded word
+  // list at least once — until then an empty `deck` means "not built yet",
+  // not "finished" (see emptyDeckState).
+  const [deckBuilt, setDeckBuilt] = useState(false);
+  // Bumped by "התחל מחדש" to force a rebuild after the known set is cleared —
+  // `known` itself isn't a rebuild dependency (see the deck-rebuild effect).
+  const [deckResetVersion, setDeckResetVersion] = useState(0);
   const [showKnownList, setShowKnownList] = useState(false);
   const [showFavoritesList, setShowFavoritesList] = useState(false);
   const dragStartX = useRef<number | null>(null);
@@ -489,22 +497,27 @@ function VocabularyContent() {
   // deck once its spaced-repetition interval says it's due again — otherwise
   // it stays hidden, same as before.
   const favoritesSignature = filterAxes.source === 'favorites' ? Array.from(favorites).sort().join(',') : '';
+  //
+  // The deck is applied in a microtask, not a requestAnimationFrame: browsers
+  // pause rAF while the page is hidden, so a reload that came up in the
+  // background (or a cached word list landing before first paint) left the
+  // deck empty — which rendered as "סיימת את כל הכרטיסיות" with every word
+  // still remaining.
   useEffect(() => {
     if (!allWords.length) return;
     // Always shuffle from scratch so deck order is never derived from allWords order
-    const active = shuffle(filteredWords).filter(w => {
-      if (!known.has(w.id)) return true;
-      const sched = knownSchedule[w.id];
-      return !sched || isDue(sched.next_review_at);
-    });
-    const frame = requestAnimationFrame(() => {
+    const active = activeDeck(shuffle(filteredWords), known, knownSchedule);
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (cancelled) return;
       setDeck(active);
+      setDeckBuilt(true);
       setDeckTouched(false);
       setFlipped(false);
       setShowHint(false);
     });
-    return () => cancelAnimationFrame(frame);
-  }, [allWords, filtersKey, favoritesSignature, knownSyncVersion]); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => { cancelled = true; };
+  }, [allWords, filtersKey, favoritesSignature, knownSyncVersion, deckResetVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Build quiz options for current question ───────────────────────────────
   const buildQuizOptions = useCallback((word: VocabWord, pool: VocabWord[]): string[] => {
@@ -718,6 +731,7 @@ function VocabularyContent() {
 
   // ─── Flashcard handlers ────────────────────────────────────────────────────
   const current = deck[0] ?? null;
+  const emptyState = emptyDeckState({ deckBuilt, scopeCount: filteredWords.length, knownCount: known.size });
 
   const handleKnew = useCallback(() => {
     if (!current || animating) return;
@@ -806,6 +820,7 @@ function VocabularyContent() {
     setKnownSchedule({});
     saveSchedule({});
     setShowKnownList(false);
+    setDeckResetVersion(v => v + 1);
     if (userId) {
       writeWithRetry(() => supabase.from('user_vocab_known').delete().eq('user_id', userId))
         .then(ok => { if (!ok) setSyncFailed(true); });
@@ -1236,7 +1251,9 @@ function VocabularyContent() {
               </div>
             ) : (
               <div className="text-center py-16">
-                {filteredWords.length > 0 && known.size > 0 ? (
+                {emptyState === 'building' ? (
+                  <div className="text-exam-ink-soft">טוען מילים...</div>
+                ) : emptyState === 'finished' ? (
                   <>
                     <PartyPopper className="w-12 h-12 mx-auto mb-4 text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
                     <div className="text-xl font-bold text-exam-ink mb-2">

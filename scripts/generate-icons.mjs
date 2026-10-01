@@ -47,7 +47,7 @@ function ico(images) {
 }
 
 // Maskable safe zone is a circle of radius 40% of the icon; the furthest art
-// (the "+" marker) sits at ~46% in logo.svg, so 0.8 brings it to ~37%.
+// (cap tip and "+" tassel) sits at ~47% in logo.svg, so 0.8 brings it to ~37%.
 const MASKABLE_SCALE = 0.8;
 // iOS rounds its own corners; a little inset keeps the "+" clear of them.
 const APPLE_SCALE = 0.9;

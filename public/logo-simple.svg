@@ -1,7 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="title">
   <title id="title">134+</title>
-  <!-- Simplified mark for favicons (16–48px): the goal ring with the "+" at its centre. -->
-  <rect width="512" height="512" rx="112" fill="#176648"/>
-  <circle cx="256" cy="256" r="168" fill="none" stroke="#FAF8F2" stroke-width="44"/>
-  <path d="M256 174 V338 M174 256 H338" fill="none" stroke="#F1C779" stroke-width="72" stroke-linecap="round"/>
+  <!-- Simplified mark for favicons (16–48px): the cap and its "+" tassel, without the numerals. -->
+  <rect width="512" height="512" rx="112" fill="#283F5A"/>
+  <g transform="rotate(-12 250 190)">
+    <path d="M140.8 219.4 V295 Q250 345.4 359.2 295 V219.4" fill="#C9CEC8"/>
+    <path d="M250 106 L460 190 L250 274 L40 190 Z" fill="#FAF8F2"/>
+  </g>
+  <path d="M250 190 L404 156 V296" fill="none" stroke="#F1C779" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M404 304 V416 M348 360 H460" fill="none" stroke="#F1C779" stroke-width="60" stroke-linecap="round"/>
 </svg>

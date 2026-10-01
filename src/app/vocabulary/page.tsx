@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 import { ensureGuestIdentity } from '@/lib/guest';
+import { useActivityGuard } from '@/lib/activity-guard';
 import { nextInterval, addDays, isDue } from '@/lib/spaced-repetition';
 import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
@@ -288,6 +289,9 @@ function VocabularyContent() {
   const [deck, setDeck] = useState<VocabWord[]>([]);
   const [flipped, setFlipped] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  // Has the current flashcard deck been worked through at all (a card
+  // marked known/unknown)? Reset whenever the deck is rebuilt.
+  const [deckTouched, setDeckTouched] = useState(false);
   const [showKnownList, setShowKnownList] = useState(false);
   const [showFavoritesList, setShowFavoritesList] = useState(false);
   const dragStartX = useRef<number | null>(null);
@@ -495,6 +499,7 @@ function VocabularyContent() {
     });
     const frame = requestAnimationFrame(() => {
       setDeck(active);
+      setDeckTouched(false);
       setFlipped(false);
       setShowHint(false);
     });
@@ -552,6 +557,20 @@ function VocabularyContent() {
   // Sync timedIndex/timeLeft to refs (fix stale closure in timer)
   useEffect(() => { timedIndexRef.current = timedIndex; }, [timedIndex]);
   useEffect(() => { timeLeftRef.current = timeLeft; }, [timeLeft]);
+
+  // Flag mid-deck activity so the bottom nav asks for a confirming second
+  // tap before navigating away (same as practice): a flashcard deck once a
+  // card has been marked, a quiz once a question has been answered, a timed
+  // run while it's running.
+  const { setInProgress } = useActivityGuard();
+  const midDeck =
+    mode === 'flashcard' ? deckTouched && deck.length > 0
+    : mode === 'quiz' ? quizScore.total > 0 && !quizDone
+    : timedDeck.length > 0 && !timedDone && !showTimedConfig;
+  useEffect(() => {
+    setInProgress(midDeck);
+    return () => setInProgress(false);
+  }, [midDeck, setInProgress]);
 
   // Switching modes preserves an unfinished run; filters apply to the next run.
   const changeMode = (nextMode: Mode) => {
@@ -719,6 +738,7 @@ function VocabularyContent() {
       setKnownSchedule(nextSchedule);
       saveSchedule(nextSchedule);
       setDeck(prev => prev.slice(1));
+      setDeckTouched(true);
       setFlipped(false);
       setShowHint(false);
       setDragX(0);
@@ -744,6 +764,7 @@ function VocabularyContent() {
     setAnimating('left');
     setTimeout(() => {
       setDeck(prev => [...prev.slice(1), prev[0]]);
+      setDeckTouched(true);
       setFlipped(false);
       setShowHint(false);
       setDragX(0);

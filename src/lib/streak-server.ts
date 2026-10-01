@@ -18,9 +18,8 @@ export interface StreakInfo {
 }
 
 /**
- * Same query as computeStreak, but also reports whether today already has
- * an activity_log row — /api/dashboard-summary uses this to show the
- * streak-at-risk flame variant without a second round trip.
+ * Also reports whether today already has an activity_log row: the
+ * streak-at-risk flame and the once-a-day celebration both key off it.
  */
 export async function computeStreakInfo(supabase: SupabaseClient, owner: string): Promise<StreakInfo> {
   const { data: rows } = await supabase
@@ -41,8 +40,4 @@ export async function computeStreakInfo(supabase: SupabaseClient, owner: string)
   }
 
   return { streak, hasActivityToday };
-}
-
-export async function computeStreak(supabase: SupabaseClient, owner: string): Promise<number> {
-  return (await computeStreakInfo(supabase, owner)).streak;
 }

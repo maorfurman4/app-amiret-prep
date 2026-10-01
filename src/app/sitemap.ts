@@ -13,7 +13,6 @@ const routes = [
   '/tips/sentence-completion',
   '/tips/restatement',
   '/tips/reading-comprehension',
-  '/leaderboard',
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

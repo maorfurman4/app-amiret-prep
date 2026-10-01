@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { GraduationCap, Target, PenLine, BookOpen, Brain, Trophy, Lightbulb, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
+import { GraduationCap, Target, PenLine, BookOpen, Brain, Lightbulb, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
 import { UserMenu } from '@/components/UserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { DashboardSummaryProvider } from '@/lib/dashboard-context';
@@ -101,17 +101,10 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Progress & comparison */}
+          {/* Progress */}
           <section className="animate-fade-up [animation-delay:360ms]">
             <h2 className="text-label text-exam-ink-soft mb-2 pr-1">מעקב והתקדמות</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <StatsCard />
-              <Link href="/leaderboard" className={CARD_CLASSES}>
-                <Trophy className="w-7 h-7 text-exam-ink-soft" strokeWidth={1.75} aria-hidden />
-                <span className="font-semibold text-sm">לוח מובילים</span>
-                <span className="text-exam-ink-soft text-xs">איפה אתה ביחס לכולם</span>
-              </Link>
-            </div>
+            <StatsCard />
             <div className="mt-3"><VictoryPathSummary /></div>
           </section>
 

@@ -366,7 +366,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
               value={nameInput}
               onChange={e => setNameInput(e.target.value)}
               maxLength={40}
-              placeholder="השם שיופיע בלוח המובילים"
+              placeholder="השם שלך"
               className={INPUT}
             />
             {nameError && <p className="text-xs text-menu-danger">{nameError}</p>}

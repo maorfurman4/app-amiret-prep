@@ -337,6 +337,16 @@
   html {
     @apply font-sans;
   }
+  /* Tapping a control twice quickly (picking an answer, then confirming) must
+     not trigger the browser's double-tap-to-zoom. `manipulation` drops only
+     that gesture: taps, scrolling and pinch-zoom all still work, and the
+     viewport stays zoomable (layout.tsx sets no maximum-scale on purpose).
+     In the base layer so an element's own touch-* utility still wins. */
+  a, button, input, select, textarea, label, summary,
+  [role="button"], [role="link"], [role="radio"], [role="checkbox"], [role="switch"],
+  [role="tab"], [role="option"], [role="menuitem"], [role="slider"] {
+    touch-action: manipulation;
+  }
 }
 
 /* ── Site-wide academic-minimal retheme ──────────────────────────────────────

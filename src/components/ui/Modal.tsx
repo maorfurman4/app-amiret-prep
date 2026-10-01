@@ -57,7 +57,7 @@ export function Modal({
 
   return createPortal(
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" dir="rtl">
-      <div className="absolute inset-0 bg-black/55 backdrop-blur-[2px] animate-backdrop-in" onClick={onClose} aria-hidden />
+      <div className="absolute inset-0 bg-black/55 backdrop-blur-[2px] animate-backdrop-in touch-manipulation" onClick={onClose} aria-hidden />
       <div
         role="dialog"
         aria-modal="true"

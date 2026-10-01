@@ -14,6 +14,8 @@ import { routedLevel } from '@/lib/routed-level';
 import { ResultsScorePrompt } from '@/components/official-score/ResultsScorePrompt';
 import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
 import { heCount, agree } from '@/lib/hebrew-count';
+import { localDateStr, todayLocalStr } from '@/lib/date-local';
+import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
 
 interface SessionData {
   score: number;
@@ -25,6 +27,7 @@ interface SessionData {
   answers_by_section: Record<number, (number | null)[]>;
   questions_by_section: Record<number, Question[]>;
   is_practice: boolean;
+  completed_at?: string | null;
 }
 
 export default function ResultsPage({ params }: { params: Promise<{ sessionId: string }> }) {
@@ -147,6 +150,10 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             )}
           </div>
         </div>
+
+        {/* Only the exam just finished can have earned today's streak — not a
+            results page reopened from history. */}
+        {session.completed_at && localDateStr(new Date(session.completed_at)) === todayLocalStr() && <SessionStreakCelebration />}
 
         {!session.is_practice && <ResultsScorePrompt />}
 

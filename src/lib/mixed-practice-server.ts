@@ -4,27 +4,21 @@
  * Same cross-session guarantees as question-history.ts — unseen first, and a
  * type+level's history is reset once its pool is exhausted — but with the
  * lookups consolidated for a many-type session:
- * - the user's seen history is read ONCE, by user_key alone (the per-type
- *   helper's `.in('question_id', <~500 ids>)` request is too long to succeed
- *   and costs ~10s before failing);
+ * - the user's seen history is read ONCE, by user_key alone
+ *   (fetchSeenQuestionIds, shared with the per-type helper);
  * - all chosen questions are fetched in one id batch instead of one per
  *   type × level;
  * - passage history is read once for every passage in the session.
- * Kept separate from question-history.ts so the exam's paths don't change.
  */
 import type { createServerSupabaseClient } from '@/lib/supabase-server';
 import type { DifficultyLevel, Question, QuestionType } from '@/types/exam';
 import { pickDistinctOptions } from '@/lib/option-overlap';
-import { buildRCQuestions } from '@/lib/question-history';
+import { buildRCQuestions, chunks, fetchSeenQuestionIds, ID_CHUNK } from '@/lib/question-history';
 
 type SupabaseClient = Awaited<ReturnType<typeof createServerSupabaseClient>>;
 
 /** Candidates drawn per question needed, so shared-choice questions can be skipped. */
 const CANDIDATE_FACTOR = 6;
-/** PostgREST's default max rows per response. */
-const PAGE = 1000;
-/** Ids per `.in()` request, to keep request URLs short. */
-const ID_CHUNK = 100;
 
 function shuffle<T>(items: T[]): T[] {
   const a = [...items];
@@ -33,29 +27,6 @@ function shuffle<T>(items: T[]): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
-}
-
-function chunks<T>(items: T[], size: number): T[][] {
-  const out: T[][] = [];
-  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
-  return out;
-}
-
-/** Every question id this user has seen, paged past the 1000-row cap. */
-async function fetchSeenQuestionIds(supabase: SupabaseClient, userKey: string): Promise<Set<string>> {
-  const seen = new Set<string>();
-  for (let from = 0; ; from += PAGE) {
-    const { data, error } = await supabase
-      .from('user_question_history')
-      .select('question_id')
-      .eq('user_key', userKey)
-      .order('question_id')
-      .range(from, from + PAGE - 1);
-    if (error || !data) break;
-    for (const r of data as { question_id: string }[]) seen.add(r.question_id);
-    if (data.length < PAGE) break;
-  }
-  return seen;
 }
 
 async function fetchByIds(supabase: SupabaseClient, ids: string[]): Promise<Map<string, Question>> {

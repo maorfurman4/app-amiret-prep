@@ -4,6 +4,8 @@ import type { Question, QuestionType, DifficultyLevel } from '@/types/exam';
 import { pickDistinctOptions } from '@/lib/option-overlap';
 import { fetchUnseenQuestions, recordSeenQuestions, fetchUnseenRCQuestions, recordSeenPassage } from '@/lib/question-history';
 import { shuffleAllOptions } from '@/lib/option-shuffle';
+import { interleaveMixed, parseMixedPlan, MIXED_TYPE, type MixedPlan } from '@/lib/mixed-practice';
+import { fetchMixedSingles, fetchMixedPassages } from '@/lib/mixed-practice-server';
 
 function fisherYates<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -26,13 +28,16 @@ function fisherYates<T>(arr: T[]): T[] {
  *
  * Query params:
  *   type     — sentence_completion | restatement | reading_comprehension | mixed
- *     "mixed" interleaves sentence_completion + restatement (split evenly),
- *     folding in one full reading_comprehension passage as well once the
- *     session is long enough (count >= 8) to hold it without dominating the
- *     mix — real interleaved practice across question types, not just
- *     difficulty levels within one type.
+ *     "mixed" serves sc sentence-completion + rs restatement questions + rc
+ *     whole reading passages, interleaved (see interleaveMixed in
+ *     src/lib/mixed-practice.ts: each passage stays one contiguous block).
+ *     Its response also carries `mix: { requested, served }` so the client
+ *     can tell the student when a pool ran short.
+ *   sc, rs, rc — mixed only: counts per type (rc in passages), clamped to
+ *     MIXED_LIMITS; all absent → MIXED_DEFAULT; empty or over the cap → 400.
  *   difficulty — 1-5 | "random"
- *   count    — 5 | 10 (ignored for reading_comprehension, always returns 5)
+ *   count    — 5 | 10 (ignored for reading_comprehension, always returns 5;
+ *     ignored for mixed, which uses sc/rs/rc)
  *   guestId  — localStorage guest UUID, used when there is no authenticated user
  *   deferSeen — "1" to skip marking the returned questions as seen here.
  *     For callers (like the diagnostic) that intentionally over-fetch more
@@ -65,51 +70,51 @@ export async function GET(req: NextRequest) {
     : (Math.max(1, Math.min(5, parseInt(diffParam, 10))) as DifficultyLevel);
 
   if (type === 'mixed') {
-    const INTERLEAVE_TYPES: QuestionType[] = ['sentence_completion', 'restatement'];
-    const includeRC = count >= 8;
-    const simpleBudget = includeRC ? Math.max(1, count - 5) : count;
-    const perType = Math.ceil(simpleBudget / INTERLEAVE_TYPES.length);
-
-    // "random" difficulty must spread across all 5 levels per type, same as
-    // the solo-type random branch below — pinning the single `difficulty`
-    // value computed above (one random draw, reused everywhere) made a
-    // "random" mixed session sit at one fixed level for its entire length.
-    const fetchMixedTypeQuestions = (t: QuestionType, needed: number): Promise<Question[]> => {
-      if (diffParam !== 'random') {
-        return userKey
-          ? fetchUnseenQuestions({ supabase, userKey, type: t, difficultyLevel: difficulty, needed })
-          : fetchRandomQuestionsNoHistory(supabase, t, difficulty, needed);
-      }
-      const LEVELS: DifficultyLevel[] = [1, 2, 3, 4, 5];
-      const perLevel = Math.ceil((needed * 2) / 5);
-      return Promise.all(
-        LEVELS.map(lv => userKey
-          ? fetchUnseenQuestions({ supabase, userKey, type: t, difficultyLevel: lv, needed: perLevel })
-          : fetchRandomQuestionsNoHistory(supabase, t, lv, perLevel))
-      ).then(fetches => pickDistinctOptions(fisherYates(fetches.flat()), needed));
-    };
-
-    const simpleFetches = await Promise.all(INTERLEAVE_TYPES.map(t => fetchMixedTypeQuestions(t, perType)));
-    const simpleShuffled = pickDistinctOptions(fisherYates(simpleFetches.flat()), simpleBudget);
-
-    let rcBlock: Question[] = [];
-    if (includeRC) {
-      // A passage is a single indivisible block at one level, so "spreading
-      // across levels" means picking a fresh random level for it too,
-      // rather than reusing the one difficulty resolved above.
-      const rcDifficulty = diffParam === 'random' ? (Math.ceil(Math.random() * 5) as DifficultyLevel) : difficulty;
-      rcBlock = await fetchUnseenRCQuestions({ supabase, userKey, difficultyLevel: rcDifficulty, usedPIds: [] });
+    const plan = parseMixedPlan(searchParams);
+    if (!plan) {
+      return NextResponse.json({ error: 'Invalid mix' }, { status: 400 });
     }
 
-    const questions = fisherYates([...simpleShuffled, ...rcBlock]);
+    // "random" spreads the singles across all 5 levels and gives each
+    // passage (an indivisible block at one level) its own random level,
+    // rather than pinning the whole session to the one draw above.
+    const random = diffParam === 'random';
+    const randomLevel = () => Math.ceil(Math.random() * 5) as DifficultyLevel;
+    const [singles, passages] = await Promise.all([
+      fetchMixedSingles({
+        supabase,
+        userKey,
+        requests: [
+          { type: MIXED_TYPE.sc, needed: plan.sc },
+          { type: MIXED_TYPE.rs, needed: plan.rs },
+        ],
+        levels: random ? [1, 2, 3, 4, 5] : [difficulty],
+      }),
+      fetchMixedPassages({
+        supabase,
+        userKey,
+        levels: Array.from({ length: plan.rc }, () => (random ? randomLevel() : difficulty)),
+      }),
+    ]);
+    const sc = singles.get(MIXED_TYPE.sc) ?? [];
+    const rs = singles.get(MIXED_TYPE.rs) ?? [];
+
+    const questions = interleaveMixed(sc, rs, passages);
     if (!questions.length) {
       return NextResponse.json({ error: 'No questions found' }, { status: 404 });
     }
     if (userKey && !deferSeen) {
-      if (simpleShuffled.length > 0) await recordSeenQuestions(supabase, userKey, simpleShuffled.map(q => q.id));
-      if (rcBlock.length > 0) await recordSeenPassage(supabase, userKey, rcBlock[0].passage_id!);
+      if (sc.length + rs.length > 0) await recordSeenQuestions(supabase, userKey, [...sc, ...rs].map(q => q.id));
+      for (const block of passages) await recordSeenPassage(supabase, userKey, block[0].passage_id!);
     }
-    return NextResponse.json({ questions: shuffleAllOptions(questions), difficulty: diffParam === 'random' ? 'random' : difficulty });
+    // What was asked for vs. what the pools could fill, so the client can
+    // say so when a session comes back short instead of silently shrinking.
+    const served: MixedPlan = { sc: sc.length, rs: rs.length, rc: passages.length };
+    return NextResponse.json({
+      questions: shuffleAllOptions(questions),
+      difficulty: random ? 'random' : difficulty,
+      mix: { requested: plan, served },
+    });
   }
 
   if (type === 'reading_comprehension') {

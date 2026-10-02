@@ -16,8 +16,9 @@ import { pickContextualTip } from '@/lib/strategy-tip';
 import { ContextualStrategyCard } from '@/components/strategies/ContextualStrategyCard';
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { PaceGauge } from '@/components/exam/PaceGauge';
+import { ExamReview } from '@/components/exam/ExamReview';
 import type { ResponseLogEntry } from '@/lib/response-log-client';
-import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, ChevronRight, ArrowRight, Plus, Minus, Info } from 'lucide-react';
+import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, Clock, FileText, ChevronRight, ArrowRight, Plus, Minus, Info } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import {
@@ -123,6 +124,8 @@ function PracticeContent() {
   const [answers, setAnswers]         = useState<(number | null)[]>([]);
   const [showResult, setShowResult]   = useState(false);
   const [reviewCount, setReviewCount] = useState<number | null>(null);
+  // Speed mode's results: the exam's question review, opened from the summary.
+  const [reviewOpen, setReviewOpen]   = useState(false);
   // Logged entries by question id — the client ref lets a later error-cause
   // tag find its row (see ErrorCauseTagger).
   const [logged, setLogged] = useState<Record<string, Pick<ResponseLogEntry, 'clientRef' | 'latencyMs'>>>({});
@@ -333,6 +336,7 @@ function PracticeContent() {
     setError(null);
     setExamMode(false);
     setSectionMode(false);
+    setReviewOpen(false);
   };
 
   const correctCount = answers.filter((a, i) => questions[i] && isCorrectAnswer(questions[i], a)).length;
@@ -786,6 +790,50 @@ function PracticeContent() {
     );
   }
 
+  if (step === 'done' && reviewOpen) {
+    const toSummary = () => { setReviewOpen(false); window.scrollTo(0, 0); };
+    return (
+      <ExamReview
+        questions={questions}
+        selectedAnswers={answers}
+        backLabel="חזרה לתוצאות"
+        onBack={toSummary}
+        noCorrectText="בתרגול הזה אין תשובות נכונות. הלימוד האמיתי נמצא בסקירת הטעויות."
+        renderMeta={(q, i) => {
+          const typeOption = TYPE_OPTIONS.find(t => t.type === q.type);
+          const TypeIcon = typeOption?.icon ?? FileText;
+          const latencyMs = logged[q.id]?.latencyMs;
+          return (
+            <>
+              <TypeIcon className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
+              {typeOption && <><span>{typeOption.label}</span><span>·</span></>}
+              <span>שאלה {i + 1} מתוך {questions.length}</span>
+              {answers[i] === null ? (
+                <><span>·</span><span>לא ענית, הזמן נגמר</span></>
+              ) : latencyMs != null && selectedType ? (
+                <>
+                  <span>·</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden />
+                    {Math.max(1, Math.min(Math.round(latencyMs / 1000), questionSeconds(selectedType, q)))} מתוך {questionSeconds(selectedType, q)} שנ׳
+                  </span>
+                </>
+              ) : null}
+            </>
+          );
+        }}
+        renderWrongExtra={q => logged[q.id] && (
+          <ErrorCauseTagger
+            key={q.id}
+            target={{ clientRef: logged[q.id].clientRef }}
+            questionType={q.type}
+            latencyMs={logged[q.id].latencyMs}
+          />
+        )}
+      />
+    );
+  }
+
   if (step === 'done') {
     const pct = Math.round((correctCount / questions.length) * 100);
     const color = pct >= 80 ? 'text-exam-sage-strong' : pct >= 60 ? 'text-exam-alt' : 'text-exam-wrong';
@@ -865,6 +913,21 @@ function PracticeContent() {
 
             {strategyTip && <ContextualStrategyCard tip={strategyTip} />}
 
+            {/* Speed mode: the exam's review — same entry card as the exam results */}
+            {examMode && !sectionMode && (
+              <button
+                onClick={() => { setReviewOpen(true); window.scrollTo(0, 0); }}
+                className="w-full text-right bg-exam-surface border border-exam-border rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] p-5 flex items-center gap-4 hover:bg-exam-paper-alt hover:border-exam-border-strong transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform"
+              >
+                <BookOpen className="w-8 h-8 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
+                <div>
+                  <div className="font-bold text-exam-ink">עבור על כל השאלות ולמד מהטעויות</div>
+                  <div className="text-exam-ink-soft text-sm">הסבר מפורט לכל שאלה, כולל פסילת המסיחים</div>
+                </div>
+                <ChevronLeft className="mr-auto w-5 h-5 text-exam-ink-soft flex-shrink-0" aria-hidden />
+              </button>
+            )}
+
             <div className="space-y-3">
               <button
                 onClick={handleRestart}
@@ -881,8 +944,8 @@ function PracticeContent() {
             </div>
           </div>
 
-          {/* Exam mode: full question review with explanations */}
-          {(examMode || sectionMode) && (
+          {/* Section mode: full question review with explanations */}
+          {sectionMode && (
             <div className="space-y-6">
               <h2 className="text-xl font-bold text-exam-ink border-b border-exam-border pb-3">
                 סקירת שאלות והסברים

@@ -3,11 +3,12 @@ import { createHash } from 'node:crypto';
 import { Ratelimit } from '@upstash/ratelimit';
 // Fetch-only Redis client; works in the Node.js proxy runtime too.
 import { Redis } from '@upstash/redis/cloudflare';
+import { GUEST_COOKIE, guestSigningKey, verifyGuestToken } from '@/lib/guest-token';
 
 /**
  * Rate limiting for API routes.
  *
- * Two layers, both keyed off the caller's IP:
+ * Two layers on every /api/* request, both keyed off the caller's IP:
  *  - Per-actor (IP + signed-in user / guest cookie): the real limit that
  *    matters day to day. Keying in the actor means a shared-IP network
  *    (school computer lab, office) doesn't have every student sharing one
@@ -20,11 +21,18 @@ import { Redis } from '@upstash/redis/cloudflare';
  * each other. Downstream routes independently verify the guest cookie's
  * signature / auth token before trusting either one for anything real.
  *
+ * On top of those, ROUTE_RULES puts much tighter per-actor + per-IP limits
+ * on the endpoints that are expensive to abuse: each call creates durable
+ * rows (exam/start, a new guest identity) or spends money (question
+ * generation). They target abuse, not use — /api/exam/start is only the
+ * full exam (~50 min each); section mode and practice draw from
+ * /api/practice/questions and are untouched.
+ *
  * Uses Upstash Redis (shared, real limiting across all serverless instances)
  * when the Vercel-managed Upstash integration's env vars are present. Falls
- * back to an in-memory per-instance window otherwise (best-effort only —
- * Vercel spreads requests across instances, so this fallback undercounts
- * under real load).
+ * back to an in-memory per-instance window when it isn't configured, AND
+ * whenever Upstash errors or times out — a limiter outage degrades every
+ * limit to per-instance rather than switching limiting off.
  *
  * Var names: Vercel's "Connect to Project" flow for the Upstash Redis
  * integration names these KV_REST_API_URL / KV_REST_API_TOKEN (a legacy
@@ -33,11 +41,48 @@ import { Redis } from '@upstash/redis/cloudflare';
  * the actual Environment Variables list in the Vercel dashboard if this
  * integration is ever reconnected/renamed.
  */
-const WINDOW_MS = 60_000;
+const MINUTE = 60_000;
+const HOUR = 60 * MINUTE;
 const ACTOR_MAX_REQUESTS = 120; // generous: a full exam flow uses ~3 calls/section
 const IP_MAX_REQUESTS = 600; // backstop for one IP minting many fake actors
 
-const GUEST_COOKIE = 'amiret_guest_v1';
+/** Upstash's own default (5 s) resolves a slow call as *allowed*, and every
+ * API request waits on it — give up sooner and use the local fallback. */
+const UPSTASH_TIMEOUT_MS = 1_500;
+
+interface Limit { max: number; windowMs: number }
+interface RouteRule {
+  name: string;
+  /** Per IP + actor; omitted where the actor is the thing being created. */
+  actor?: Limit;
+  ip: Limit;
+}
+
+const ROUTE_RULES = {
+  // Each call writes a ~29 KB exam_sessions row. A real student starts a
+  // handful a day; a 40-seat lab behind one IP still fits the IP limit.
+  examStart: { name: 'exam-start', actor: { max: 20, windowMs: HOUR }, ip: { max: 120, windowMs: HOUR } },
+  // Only counted when a new identity would be minted (no valid cookie) —
+  // returning guests are never limited here.
+  guestMint: { name: 'guest-mint', ip: { max: 60, windowMs: HOUR } },
+  // Admin-only, but each call is a paid OpenAI request.
+  generate: { name: 'generate', actor: { max: 10, windowMs: HOUR }, ip: { max: 30, windowMs: HOUR } },
+  // The route also has its own DB-backed 5 saves/min per account.
+  officialScore: { name: 'official-score', actor: { max: 10, windowMs: MINUTE }, ip: { max: 60, windowMs: MINUTE } },
+} satisfies Record<string, RouteRule>;
+
+export function routeRule(req: NextRequest): RouteRule | null {
+  const { pathname } = req.nextUrl;
+  const method = req.method;
+  if (pathname === '/api/exam/start' && method === 'POST') return ROUTE_RULES.examStart;
+  if (pathname === '/api/questions/generate' && method === 'POST') return ROUTE_RULES.generate;
+  if (pathname === '/api/official-score' && (method === 'PUT' || method === 'DELETE')) return ROUTE_RULES.officialScore;
+  if (pathname === '/api/auth/guest' && method === 'POST'
+    && !verifyGuestToken(req.cookies.get(GUEST_COOKIE)?.value, guestSigningKey())) {
+    return ROUTE_RULES.guestMint;
+  }
+  return null;
+}
 
 function actorKey(req: NextRequest): string {
   const auth = req.headers.get('authorization');
@@ -54,43 +99,72 @@ const redis = process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN
     })
   : null;
 
-const actorRatelimit = redis
-  ? new Ratelimit({
+function windowSpec(windowMs: number): `${number} s` {
+  return `${windowMs / 1000} s`;
+}
+
+// One Upstash limiter per (prefix, limit), created on first use.
+const limiters = new Map<string, Ratelimit>();
+function upstashLimiter(prefix: string, { max, windowMs }: Limit): Ratelimit | null {
+  if (!redis) return null;
+  const id = `${prefix}:${max}:${windowMs}`;
+  let limiter = limiters.get(id);
+  if (!limiter) {
+    limiter = new Ratelimit({
       redis,
-      limiter: Ratelimit.slidingWindow(ACTOR_MAX_REQUESTS, '60 s'),
-      analytics: true,
-      prefix: 'amiret-ratelimit-actor',
-    })
-  : null;
+      limiter: Ratelimit.slidingWindow(max, windowSpec(windowMs)),
+      // Analytics writes extra Redis commands on every call — quota that a
+      // busy day would burn through, which is exactly what makes Upstash
+      // start failing.
+      analytics: false,
+      timeout: UPSTASH_TIMEOUT_MS,
+      prefix,
+    });
+    limiters.set(id, limiter);
+  }
+  return limiter;
+}
 
-const ipRatelimit = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(IP_MAX_REQUESTS, '60 s'),
-      analytics: true,
-      prefix: 'amiret-ratelimit-ip',
-    })
-  : null;
+// In-memory fallback: used when Upstash isn't configured, errors, or times out
+const hits = new Map<string, { windowMs: number; at: number[] }>();
 
-// In-memory fallback, only used when Upstash isn't configured
-const hits = new Map<string, number[]>();
-
-function inMemoryLimit(key: string, max: number): boolean {
+function inMemoryLimit(key: string, { max, windowMs }: Limit): boolean {
   const now = Date.now();
-  const windowStart = now - WINDOW_MS;
+  const entry = hits.get(key) ?? { windowMs, at: [] };
+  entry.at = entry.at.filter(t => t > now - windowMs);
+  entry.at.push(now);
+  hits.set(key, entry);
 
-  const timestamps = (hits.get(key) ?? []).filter(t => t > windowStart);
-  timestamps.push(now);
-  hits.set(key, timestamps);
-
-  // Opportunistic cleanup so the map cannot grow unbounded
+  // Opportunistic cleanup so the map cannot grow unbounded — each entry
+  // expires on its own window, so a minute-scale sweep never drops an
+  // hour-scale count.
   if (hits.size > 5000) {
     for (const [k, v] of hits) {
-      if (v[v.length - 1] < windowStart) hits.delete(k);
+      if (v.at[v.at.length - 1] <= now - v.windowMs) hits.delete(k);
     }
   }
 
-  return timestamps.length <= max;
+  return entry.at.length <= max;
+}
+
+/**
+ * Shared limit when Upstash answers; otherwise the same limit per instance.
+ * Never "allow because the limiter is down": a transient Upstash error must
+ * not take down every /api/* route (so no 500s), but it must not remove the
+ * limits either.
+ */
+async function allow(prefix: string, key: string, limit: Limit): Promise<boolean> {
+  const limiter = upstashLimiter(prefix, limit);
+  if (limiter) {
+    try {
+      const res = await limiter.limit(key);
+      if (res.reason !== 'timeout') return res.success;
+      console.error(`rate limit check timed out (${prefix}), using local limit`);
+    } catch (err) {
+      console.error(`rate limit check failed (${prefix}), using local limit:`, err);
+    }
+  }
+  return inMemoryLimit(`${prefix}:${key}`, limit);
 }
 
 export async function proxy(req: NextRequest) {
@@ -98,30 +172,18 @@ export async function proxy(req: NextRequest) {
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
   const actor = `${ip}:${actorKey(req)}`;
+  const rule = routeRule(req);
 
-  // A transient Upstash error/timeout must not take down every /api/*
-  // route with it (this middleware runs in front of all of them, including
-  // login and guest-cookie issuance) — fail OPEN (treat as allowed) on a
-  // rate-limiter failure rather than letting the rejection propagate and
-  // 500 the request. The in-memory fallback below already handles the
-  // "not configured" case; this handles the separate "configured but
-  // erroring right now" case the same way: degrade, don't block everyone.
-  const [actorAllowed, ipAllowed] = await Promise.all([
-    actorRatelimit
-      ? actorRatelimit.limit(actor).then(r => r.success).catch(err => {
-          console.error('actor rate limit check failed, failing open:', err);
-          return true;
-        })
-      : inMemoryLimit(actor, ACTOR_MAX_REQUESTS),
-    ipRatelimit
-      ? ipRatelimit.limit(ip).then(r => r.success).catch(err => {
-          console.error('IP rate limit check failed, failing open:', err);
-          return true;
-        })
-      : inMemoryLimit(`ip:${ip}`, IP_MAX_REQUESTS),
-  ]);
+  const checks = [
+    allow('amiret-ratelimit-actor', actor, { max: ACTOR_MAX_REQUESTS, windowMs: MINUTE }),
+    allow('amiret-ratelimit-ip', ip, { max: IP_MAX_REQUESTS, windowMs: MINUTE }),
+  ];
+  if (rule) {
+    checks.push(allow(`amiret-ratelimit-${rule.name}-ip`, ip, rule.ip));
+    if (rule.actor) checks.push(allow(`amiret-ratelimit-${rule.name}-actor`, actor, rule.actor));
+  }
 
-  if (!actorAllowed || !ipAllowed) {
+  if (!(await Promise.all(checks)).every(Boolean)) {
     return NextResponse.json(
       { error: 'Too many requests — try again in a minute' },
       { status: 429, headers: { 'Retry-After': '60' } },

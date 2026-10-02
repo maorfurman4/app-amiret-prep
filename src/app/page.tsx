@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { BrandLogo } from '@/components/BrandLogo';
-import { Target, PenLine, BookOpen, Brain, Lightbulb, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
+import { Target, PenLine, BookOpen, Brain, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
 import { UserMenu } from '@/components/UserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { DashboardSummaryProvider } from '@/lib/dashboard-context';
@@ -109,21 +109,8 @@ export default function HomePage() {
             <div className="mt-3"><VictoryPathSummary /></div>
           </section>
 
-          {/* Tips — full-width row */}
-          <Link
-            href="/tips"
-            className="flex items-center gap-3 p-4 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform animate-fade-up [animation-delay:420ms]"
-          >
-            <Lightbulb className="w-6 h-6 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />
-            <div className="flex-1 text-right">
-              <div className="font-semibold text-sm">טיפים אסטרטגיים לבחינה</div>
-              <div className="text-exam-ink-soft text-xs">לפי סוג שאלה: השלמת משפטים, ניסוח מחדש, הבנת הנקרא</div>
-            </div>
-            <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
-          </Link>
-
           {/* Score scale — collapsed by default to keep the page short on mobile */}
-          <details className="bg-exam-surface border border-exam-border rounded-2xl shadow-surface group animate-fade-up [animation-delay:480ms]">
+          <details className="bg-exam-surface border border-exam-border rounded-2xl shadow-surface group animate-fade-up [animation-delay:420ms]">
             <summary className="p-4 text-sm font-semibold text-exam-ink-soft cursor-pointer select-none list-none flex items-center justify-between rounded-2xl hover:bg-exam-paper-alt transition-colors duration-300 ease-spring">
               <span className="flex items-center gap-2">
                 <Ruler className="w-4 h-4" aria-hidden />

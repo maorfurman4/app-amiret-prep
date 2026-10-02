@@ -4,8 +4,7 @@ import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { QuestionCard } from '@/components/exam/QuestionCard';
-import { classifyScore, isCorrectAnswer, type Question, type QuestionType } from '@/types/exam';
-import { estimateThetaEAP, thetaToScore, routeNextDifficulty, itemIrtParams } from '@/lib/adaptive';
+import { isCorrectAnswer, type Question, type QuestionType } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 import { ensureGuestIdentity } from '@/lib/guest';
@@ -18,7 +17,7 @@ import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { PaceGauge } from '@/components/exam/PaceGauge';
 import { ExamReview } from '@/components/exam/ExamReview';
 import type { ResponseLogEntry } from '@/lib/response-log-client';
-import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, Clock, FileText, ChevronRight, ArrowRight, Plus, Minus, Info } from 'lucide-react';
+import { PenLine, RotateCcw, BookOpen, Dices, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, Clock, FileText, ChevronRight, ArrowRight, Plus, Minus, Info } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import {
@@ -838,18 +837,8 @@ function PracticeContent() {
     const pct = Math.round((correctCount / questions.length) * 100);
     const color = pct >= 80 ? 'text-exam-sage-strong' : pct >= 60 ? 'text-exam-alt' : 'text-exam-wrong';
 
-    // Level diagnosis via IRT — same 3PL model the adaptive exam uses.
-    // Most meaningful in mixed mode, where questions span all 5 levels.
-    const hasIrtParams = questions.every(q => isFinite(q.b));
-    const diagTheta = hasIrtParams
-      ? estimateThetaEAP(
-          questions.map(itemIrtParams),
-          questions.map((q, i) => (isCorrectAnswer(q, answers[i]) ? 1 : 0)),
-        )
-      : null;
-    const diagScore = diagTheta !== null ? thetaToScore(diagTheta) : null;
-    const diagLevel = diagTheta !== null ? routeNextDifficulty(diagTheta) : null;
-    const diagClass = diagScore !== null ? classifyScore(diagScore) : null;
+    // No level/score estimate here: a handful of practice items can't
+    // support one (the prior dominates — 0/4 read as ~85).
     const strategyTip = pickContextualTip(
       questions.map((q, i) => ({ id: q.id, type: q.type, correct: isCorrectAnswer(q, answers[i]) })),
     );
@@ -881,35 +870,6 @@ function PracticeContent() {
                 </div>
               )}
             </div>
-
-            {/* Level diagnosis — IRT-based, like the real adaptive exam */}
-            {diagLevel !== null && diagScore !== null && diagClass !== null && (
-              <div className="bg-exam-surface rounded-2xl shadow-surface border border-exam-border p-5 text-right">
-                <div className="flex items-center gap-2 mb-3">
-                  <Target className="w-5 h-5 text-exam-ink" strokeWidth={1.75} aria-hidden />
-                  <span className="font-bold text-exam-ink">אבחון רמה</span>
-                  {selectedDiff === 'random' && (
-                    <span className="text-xs bg-exam-accent/10 text-exam-accent px-2 py-0.5 rounded-sm font-semibold">רמה מעורבת</span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-sm text-exam-ink-soft">הרמה המשוערת שלך</div>
-                    <div className="text-2xl font-bold text-exam-ink">רמה {diagLevel}/5</div>
-                  </div>
-                  <div className="text-left">
-                    <div className="text-sm text-exam-ink-soft">אומדן פנימי</div>
-                    <div className={`text-2xl font-bold ${diagClass.color}`}><bdi dir="ltr">~{diagScore}</bdi></div>
-                    <div className={`text-xs font-semibold ${diagClass.color}`}>{diagClass.label}</div>
-                  </div>
-                </div>
-                <p className="mt-3 text-xs text-exam-ink-soft">
-                  הערכה סטטיסטית לפי מודל ה-IRT הפנימי של האתר, על סמך {heCount(questions.length, 'question')} בלבד. זה לא ציון רשמי של מאל&quot;ו.
-                  {selectedDiff !== 'random' && ' לאומדן מדויק יותר, תרגל ברמה מעורבת או עשה סימולציה של פרקי הליבה.'}
-                  {' '}כל מוסד קובע בעצמו את הסף לפטור ולכל רמה; {diagClass.label} הוא הטווח הנפוץ.
-                </p>
-              </div>
-            )}
 
             {strategyTip && <ContextualStrategyCard tip={strategyTip} />}
 

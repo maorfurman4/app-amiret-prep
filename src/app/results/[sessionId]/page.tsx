@@ -13,7 +13,6 @@ import { scoreInterval, sessionMeasurement } from '@/lib/exemption';
 import { sectionLevelTag, type ThetaHistoryEntry } from '@/lib/routed-level';
 import { examEffort } from '@/lib/exam-effort';
 import { ResultsScorePrompt } from '@/components/official-score/ResultsScorePrompt';
-import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
 import { heCount, agree } from '@/lib/hebrew-count';
 import { localDateStr, todayLocalStr } from '@/lib/date-local';
 import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
@@ -85,13 +84,13 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   const score = session.score ?? thetaToScore(session.theta_final ?? 0);
   const classification = classifyScore(score);
   const exemption = sessionMeasurement(session);
-  // The likely range of the score (same 80% interval as the exemption card).
+  // The likely range of the score (80% interval of this exam's measurement).
   const interval = exemption ? scoreInterval(exemption) : null;
   const sectionResults = session.section_results as SectionResult[];
   const totalCorrect = sectionResults.reduce((a, s) => a + (s.correctCount ?? 0), 0);
   const totalQuestions = sectionResults.reduce((a, s) => a + (s.totalCount ?? 0), 0);
   // Clicked through at random? Then the score describes the clicking, not
-  // the student (src/lib/exam-effort.ts) — said plainly, and no probability.
+  // the student (src/lib/exam-effort.ts) — said plainly.
   const effort = examEffort(sectionResults);
   // How hard the scored questions were, by their own level: the context
   // that makes "x of y correct" readable next to an adaptive score.
@@ -176,7 +175,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                   המבחן הזה לא מדד את הרמה שלך
                 </div>
                 {effort.rapid} מתוך {effort.answered} התשובות ניתנו תוך שניות בודדות, ושיעור ההצלחה ({effort.correct} מתוך {effort.answered}) לא גבוה מניחוש אקראי.
-                {' '}לכן הציון לא נכלל ברמה המשוערת, בתחזית ובמדד המוכנות. כדי למדוד את הרמה, ענה על המבחן הבא בקצב רגיל.
+                {' '}לכן הציון לא נכלל בציון המוביל בסטטיסטיקה, במגמה ובמדד המוכנות. כדי למדוד את הרמה, ענה על המבחן הבא בקצב רגיל.
               </div>
             )}
           </div>
@@ -189,18 +188,6 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         {!session.is_practice && <ResultsScorePrompt />}
 
         <AuthCTA message="התחבר כדי לשמור את הציון הזה ולהמשיך מכל מכשיר. כל מה שעשית עד עכשיו יעבור אוטומטית לחשבון." />
-
-        {/* Probability of exemption — the real measurement uncertainty of
-            THIS exam (stored at completion, or re-derived identically for
-            exams scored before it was stored), replacing the old fixed ±10. */}
-        {exemption && !effort.lowEffort && (
-          <ExemptionCard
-            measurement={exemption}
-            heading={<>מה הסיכוי שלך ל-<ExemptTarget />?</>}
-            basis="המבחן הזה"
-            score={score}
-          />
-        )}
 
         {/* Score scale */}
         <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-6 animate-fade-up [animation-delay:140ms]">

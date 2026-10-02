@@ -6,7 +6,7 @@ import { Stethoscope, Timer, Gauge, Sparkles, ArrowLeft, BookOpen, Target, Chevr
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
-import { classifyScore, type Question } from '@/types/exam';
+import type { Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
 import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
@@ -225,7 +225,6 @@ export default function DiagnosticPage() {
 /* ─── Results: one action first, context second ─────────────────────────── */
 
 function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
-  const band = classifyScore(plan.score);
   const [lo, hi] = plan.levelRange;
   const typeLine = plan.byType.map(t => `${TYPE_LABEL[t.type]}: ${t.correct} מתוך ${t.total}`).join(' · ');
 
@@ -274,15 +273,11 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
 
         {/* Where you stand, with honest uncertainty */}
         <section className="rounded-2xl border border-exam-border bg-exam-surface p-5 shadow-surface animate-fade-up" style={{ animationDelay: '160ms' }}>
-          <div className="flex items-end justify-between gap-3 mb-3">
-            <div>
-              <div className="text-sm text-exam-ink-soft">הרמה שלך</div>
-              <div className="text-3xl font-bold text-exam-ink">רמה {plan.level}/5</div>
-            </div>
-            <div className="text-left">
-              <div className="text-sm text-exam-ink-soft">אומדן פנימי</div>
-              <div className={`text-xl font-bold ${band.color}`}><bdi dir="ltr">~{plan.score}</bdi></div>
-            </div>
+          {/* Level only, with its range below: a point score from 6–10
+              items (80% range ~35 points wide) would claim false precision. */}
+          <div className="mb-3">
+            <div className="text-sm text-exam-ink-soft">הרמה שלך</div>
+            <div className="text-3xl font-bold text-exam-ink">רמה {plan.level}/5</div>
           </div>
           <div dir="ltr" className="flex gap-1.5 mb-2" role="img" aria-label={lo === hi ? `הרמה שלך: ${lo}` : `הטווח הסביר: רמות ${lo} עד ${hi}`}>
             {[1, 2, 3, 4, 5].map(l => (

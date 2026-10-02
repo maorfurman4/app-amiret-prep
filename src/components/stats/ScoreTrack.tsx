@@ -12,22 +12,13 @@ export interface TrackMarker {
 /**
  * The one score scale the app draws: 50 → 150, left to right in every
  * direction (the wrapper is dir="ltr", so an RTL page can't mirror it),
- * with the likely range as a band, the 134 line and optional score dots.
- * Decorative — callers state the same numbers in text.
+ * with the 134 line and score dots. Decorative — callers state the same
+ * numbers in text.
  */
-export function ScoreTrack({ lo, hi, bandClass, markers = [] }: {
-  lo: number;
-  hi: number;
-  bandClass: string;
-  markers?: TrackMarker[];
-}) {
+export function ScoreTrack({ markers }: { markers: TrackMarker[] }) {
   return (
     <div dir="ltr" aria-hidden>
       <div className="relative h-3 rounded-full bg-exam-paper-alt border border-exam-border">
-        <div
-          className={`absolute inset-y-0 rounded-full opacity-35 ${bandClass}`}
-          style={{ left: `${trackPct(lo)}%`, width: `${Math.max(trackPct(hi) - trackPct(lo), 1.5)}%` }}
-        />
         <div className="absolute -top-1.5 -bottom-1.5 w-0.5 rounded-full bg-exam-sage-strong" style={{ left: `calc(${trackPct(EXEMPTION_SCORE)}% - 1px)` }} />
         {markers.map((m, i) => (
           <div

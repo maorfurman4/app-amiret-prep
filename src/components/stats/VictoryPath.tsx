@@ -5,21 +5,18 @@ import {
   Line, LineChart, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { TrendingUp } from 'lucide-react';
-import { computeForecast, type ForecastSession } from '@/lib/forecast';
+import { computeTrend, MIN_MEANINGFUL_SLOPE, MIN_SESSIONS, type TrendSession } from '@/lib/trend';
 import { heCount } from '@/lib/hebrew-count';
 
 interface VictoryPathProps {
-  sessions: ForecastSession[];
+  sessions: TrendSession[];
   targetScore?: number;
 }
 
 interface ChartPoint {
   date: string;
-  actual?: number;
-  projected?: number;
+  actual: number;
 }
-
-const MOMENTUM_WINDOW = 5;
 
 function formatDateShort(iso: string): string {
   const d = new Date(iso);
@@ -43,39 +40,32 @@ function formatRate(slopePerDay: number): string {
 }
 
 /**
- * Recharts is a real (already-installed, previously unused) dependency —
- * this is its first consumer. First-party consumer of src/lib/forecast.ts:
- * a calendar-day-based projection (not exams-based) of when the student
- * will reach their target score, rendered as an actual-vs-projected line
- * with a target reference line. Below the trust guardrail in forecast.ts
- * (fewer than 4 exams or fewer than 3 distinct days), this renders an
- * honest "not enough data yet" state instead of guessing from noise.
+ * The student's actual exam scores over time against the 134 line, with
+ * the trend so far (src/lib/trend.ts). No projected date: extrapolating a
+ * few noisy scores into "N days to 134" claimed more than the data knew.
+ * Below the trend guardrail (fewer than 4 exams or 3 distinct days) the
+ * chart still shows the scores, and the text says a trend needs more data.
  */
 export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
-  const forecast = useMemo(() => computeForecast(sessions, targetScore), [sessions, targetScore]);
+  const trend = useMemo(() => computeTrend(sessions), [sessions]);
 
-  // Momentum idea: if the last 5 exams are trending steeper than the
-  // all-time trend, the projected line renders in exam-sage ("accelerating")
-  // instead of the neutral accent — a quiet color shift instead of a badge.
-  const recentForecast = useMemo(
-    () => computeForecast(sessions.slice(-MOMENTUM_WINDOW), targetScore),
-    [sessions, targetScore],
+  const heading = (
+    <h2 className="font-bold text-exam-ink mb-1 flex items-center gap-2">
+      <TrendingUp className="w-4 h-4" aria-hidden />
+      מסלול הניצחון
+    </h2>
   );
-  const accelerating = !!(forecast && recentForecast && recentForecast.slopePerDay > forecast.slopePerDay * 1.15);
 
-  if (!forecast) {
-    const remaining = Math.max(0, 4 - sessions.length);
+  const remaining = Math.max(0, MIN_SESSIONS - sessions.length);
+  const needMore = remaining > 0
+    ? `עוד ${heCount(remaining, 'exam')} ונוכל למדוד מגמה. היא מבוססת על הקצב שלך לאורך זמן, לא על ניחוש`
+    : 'עוד קצת. כדי למדוד מגמה צריך מבחנים מכמה ימים שונים';
+
+  if (sessions.length < 2) {
     return (
       <div className="bg-exam-surface rounded-2xl shadow-surface hover:shadow-raised transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up">
-        <h2 className="font-bold text-exam-ink mb-1 flex items-center gap-2">
-          <TrendingUp className="w-4 h-4" aria-hidden />
-          מסלול הניצחון
-        </h2>
-        <p className="text-sm text-exam-ink-soft">
-          {remaining > 0
-            ? `עוד ${heCount(remaining, 'exam')} ונוכל לחשב תחזית אמינה. היא מבוססת על הקצב שלך לאורך זמן, לא על ניחוש`
-            : 'עוד קצת. כדי לחשב תחזית אמינה צריך מבחנים מכמה ימים שונים'}
-        </p>
+        {heading}
+        <p className="text-sm text-exam-ink-soft">{needMore}</p>
       </div>
     );
   }
@@ -83,38 +73,22 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
   const sorted = [...sessions].sort((a, b) => a.completed_at.localeCompare(b.completed_at));
   const data: ChartPoint[] = sorted.map(s => ({ date: s.completed_at.slice(0, 10), actual: s.score }));
 
-  if (forecast.projectedDate && forecast.daysToTarget !== null && forecast.daysToTarget > 0) {
-    // Bridge point so the dashed projection visually continues from
-    // exactly where the solid actual line ends, not a disconnected segment.
-    const last = data[data.length - 1];
-    data[data.length - 1] = { ...last, projected: last.actual };
-    data.push({ date: forecast.projectedDate, projected: targetScore });
-  }
-
   const yMin = Math.min(50, ...sorted.map(s => s.score), targetScore) - 5;
   const yMax = Math.max(150, ...sorted.map(s => s.score), targetScore) + 5;
 
   return (
     <div className="bg-exam-surface rounded-2xl shadow-raised hover:shadow-overlay transition-shadow duration-300 ease-spring border border-exam-border p-5 animate-fade-up">
-      <h2 className="font-bold text-exam-ink mb-1 flex items-center gap-2">
-        <TrendingUp className="w-4 h-4" aria-hidden />
-        מסלול הניצחון
-      </h2>
+      {heading}
       <p className="text-xs text-exam-ink-soft mb-2">כל {sessions.length} המבחנים · הקצב נמדד לפי ימים, לא לפי מספר המבחנים</p>
-      <p className="text-sm text-exam-ink-soft mb-4">
-        {forecast.daysToTarget === 0 ? (
-          <>הגעת ליעד: <bdi dir="ltr" className="font-bold text-exam-sage-strong">{targetScore}+</bdi> כבר בכיס. עכשיו שומרים על הכושר.</>
-        ) : forecast.daysToTarget === null ? (
-          <>
-            המגמה עדיין לא עולה, ולכן אין תחזית. הציון במבחן האחרון: <span className="font-bold text-exam-ink tabular-nums">{Math.round(forecast.currentScore)}</span>.
-            {' '}תרגול ממוקד בנקודות החולשה הוא מה שיזיז אותו למעלה.
-          </>
+      <p className="text-sm text-exam-ink-soft mb-4" data-metric="trend">
+        {!trend ? (
+          needMore
+        ) : trend.currentScore >= targetScore ? (
+          <>הגעת ליעד: <bdi dir="ltr" className="font-bold text-exam-sage-strong">{targetScore}+</bdi> במבחן האחרון. עכשיו שומרים על הכושר.</>
+        ) : trend.slopePerDay < MIN_MEANINGFUL_SLOPE ? (
+          <>המגמה עדיין לא עולה. תרגול ממוקד בנקודות החולשה הוא מה שיזיז אותה למעלה.</>
         ) : (
-          <>
-            הציון שלך עולה ב{formatRate(forecast.slopePerDay)}. בקצב הזה תגיע ל-<span className="font-bold text-exam-ink tabular-nums">{targetScore}</span> בעוד
-            <span className={`font-bold ${accelerating ? 'text-exam-sage-strong' : 'text-exam-ink'}`}>{' '}{heCount(forecast.daysToTarget, 'day')}</span>
-            {accelerating ? ', והקצב אפילו מאיץ.' : '.'}
-          </>
+          <>הציון שלך עולה ב{formatRate(trend.slopePerDay)}.</>
         )}
       </p>
       <div className="h-56" dir="ltr">
@@ -138,7 +112,7 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
             />
             <Tooltip
               labelFormatter={label => formatDateShort(String(label))}
-              formatter={(value, name) => [Math.round(Number(value)), name === 'actual' ? 'ציון' : 'תחזית']}
+              formatter={value => [Math.round(Number(value)), 'ציון']}
               contentStyle={{ fontSize: 12, direction: 'rtl', background: 'var(--exam-surface)', border: '1px solid var(--exam-border)', borderRadius: 6 }}
             />
             <ReferenceLine
@@ -159,20 +133,6 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
               strokeLinejoin="round"
               dot={{ r: 3.5, strokeWidth: 0, fill: 'currentColor' }}
               activeDot={{ r: 5, strokeWidth: 2, stroke: 'var(--exam-surface)' }}
-              style={{ filter: 'drop-shadow(0 0 3px currentColor)' }}
-              connectNulls
-              isAnimationActive={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="projected"
-              stroke="currentColor"
-              className={accelerating ? 'text-exam-sage-strong' : 'text-exam-accent'}
-              strokeWidth={2}
-              strokeDasharray="6 4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              dot={false}
               style={{ filter: 'drop-shadow(0 0 3px currentColor)' }}
               connectNulls
               isAnimationActive={false}

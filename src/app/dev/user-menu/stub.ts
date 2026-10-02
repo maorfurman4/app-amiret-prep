@@ -102,9 +102,6 @@ export function installProfileStub() {
     score,
     completed_at: new Date(Date.UTC(2026, 8, 20 + i * 3)).toISOString(),
     section_results: [],
-    theta_final: null,
-    theta_se: null,
-    p_exempt: null,
   }));
 
   const realFetch = window.fetch.bind(window);

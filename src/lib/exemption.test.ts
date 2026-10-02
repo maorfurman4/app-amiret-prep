@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  sessionMeasurement, pooledMeasurement, scoreInterval, exemptionTone, formatProbability, INTERVAL_Z,
+  sessionMeasurement, pooledMeasurement, scoreInterval, INTERVAL_Z,
   currentEstimate, consistentWithLatest, CONSISTENCY_Z,
 } from './exemption';
 import { exemptionProbability, standardError, CUT_THETA } from './calibration';
@@ -57,19 +57,11 @@ describe('pooledMeasurement', () => {
   });
 });
 
-describe('display helpers', () => {
+describe('scoreInterval', () => {
   it('score interval is θ̂ ± 1.28·SE on the 50–150 scale', () => {
     expect(INTERVAL_Z).toBeCloseTo(1.2816, 4);
     expect(scoreInterval({ theta: 1.2, se: 0.45 })).toEqual({ lo: 112, hi: 136 });
     expect(scoreInterval({ theta: 3, se: 1 })).toEqual({ lo: 134, hi: 150 }); // clamped
-  });
-
-  it('tones: ≥70% likely, 30–70% close, <30% building', () => {
-    expect([0.95, 0.7, 0.69, 0.3, 0.29, 0].map(exemptionTone)).toEqual(['likely', 'likely', 'close', 'close', 'building', 'building']);
-  });
-
-  it('never claims certainty', () => {
-    expect([0.72, 0.999, 0.001, 0.5].map(formatProbability)).toEqual(['72%', '>99%', '<1%', '50%']);
   });
 });
 

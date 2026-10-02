@@ -132,3 +132,34 @@ describe('current level', () => {
     expect(m.readiness.reasons.some(r => r.text.includes('⁦50–56⁩'))).toBe(true);
   });
 });
+
+describe('exams clicked through at random', () => {
+  // Those same three exams really were answered in about a second per
+  // question (median 0.7–0.9 s), at chance accuracy.
+  const withSeconds = (row: StatsRow, seconds: number): StatsRow => ({
+    ...row,
+    section_results: (row.section_results as { answers: unknown[] }[]).map(sr => ({ ...sr, timings: sr.answers.map(() => seconds) })),
+  });
+  const clicked = [-2.718, -2.770, -2.375].map((theta, i) => withSeconds(exam(i, () => false, { theta, se: 0.6, score: 50 }), 1));
+  const measured = [1.2, 1.4].map((theta, i) => withSeconds(exam(10 + i, (s, q) => q < 3, { theta, se: 0.45, score: 125 }), 30));
+
+  it('are left out of the current level and readiness, but still counted as exams', () => {
+    const m = computeStatsMetrics([...measured, ...clicked])!;
+    expect(m.examCount).toBe(5);
+    expect(m.lastScore).toBe(50);
+    expect(m.excludedLowEffort).toBe(3);
+    expect(m.current!.used).toBe(2);
+    expect(m.current).toEqual(computeCurrentLevel(measured));
+  });
+
+  it('leave no current level when nothing measured the student', () => {
+    const m = computeStatsMetrics(clicked)!;
+    expect(m.current).toBeNull();
+    expect(m.excludedLowEffort).toBe(3);
+  });
+
+  it('a fast exam that is right is not excluded', () => {
+    const fastAndRight = withSeconds(exam(20, () => true, { theta: 2.4, se: 0.5, score: 148 }), 1);
+    expect(computeStatsMetrics([fastAndRight])!.excludedLowEffort).toBe(0);
+  });
+});

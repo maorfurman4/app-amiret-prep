@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { BarChart3 } from 'lucide-react';
 import type { StatsMetrics, StatsRow } from '@/lib/stats-metrics';
+import { isLowEffortExam } from '@/lib/exam-effort';
 import { BackNav } from '@/components/BackNav';
 import { OfficialScoresSection } from '@/components/official-score/OfficialScoresSection';
 import { StatsHero } from './StatsHero';
@@ -35,7 +36,8 @@ export function StatsView({ metrics, rows }: { metrics: StatsMetrics | null; row
       <div className="max-w-2xl mx-auto space-y-5 py-6 px-4">
         <h1 className="text-2xl font-bold text-exam-ink">הסטטיסטיקה שלי</h1>
         <StatsHero metrics={metrics} />
-        <VictoryPath sessions={rows} targetScore={134} />
+        {/* The trend line rests on the same measured exams as the current level. */}
+        <VictoryPath sessions={rows.filter(r => !isLowEffortExam(r.section_results))} targetScore={134} />
         <TypePerformanceCard recent={metrics.recent} allTime={metrics.allTime} weakestType={metrics.weakest?.type ?? null} />
         <OfficialScoresSection />
       </div>

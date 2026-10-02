@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { computeStreakInfo } from '@/lib/streak-server';
 import { computeForecast, type Forecast } from '@/lib/forecast';
+import { isLowEffortExam } from '@/lib/exam-effort';
 import { computeRings, DEFAULT_EFFORT_TARGET, type Rings } from '@/lib/rings';
 import { shouldPromptForScore } from '@/lib/official-score';
 import { todayLocalStr } from '@/lib/date-local';
@@ -97,12 +98,12 @@ export async function GET() {
       .order('completed_at', { ascending: false })
       .limit(1)
       .maybeSingle(),
-    // Same shape /api/stats fetches for the full Victory Path chart, minus
-    // section_results — the home page only needs the compact headline, not
-    // the full chart, but the forecast math needs the whole score history.
+    // Same rows /api/stats feeds the full Victory Path chart. section_results
+    // is read (server-side only) so exams clicked through at random can be
+    // left out of the forecast, exactly as on /stats.
     supabase
       .from('exam_sessions')
-      .select('score, completed_at')
+      .select('score, completed_at, section_results')
       .eq('user_id', owner)
       .eq('is_practice', false)
       .not('completed_at', 'is', null)
@@ -161,6 +162,9 @@ export async function GET() {
     examDate: goal?.exam_date ?? null,
     canSetExamDate: !!user,
     officialScorePrompt,
-    forecast: computeForecast(forecastRowsRes.data ?? [], VICTORY_PATH_TARGET_SCORE),
+    forecast: computeForecast(
+      (forecastRowsRes.data ?? []).filter(r => !isLowEffortExam(r.section_results)),
+      VICTORY_PATH_TARGET_SCORE,
+    ),
   } satisfies DashboardSummary);
 }

@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { GraduationCap, Target, PenLine, BookOpen, Brain, Trophy, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
+import { Target, PenLine, BookOpen, Brain, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
 import { UserMenu } from '@/components/UserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { DashboardSummaryProvider } from '@/lib/dashboard-context';
@@ -30,7 +31,7 @@ const CARD_CLASSES = 'flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-e
 
 export default function HomePage() {
   return (
-    <div className="min-h-dvh bg-exam-paper flex flex-col items-center px-4 pt-4 pb-8 text-exam-ink" dir="rtl">
+    <main id="main" className="min-h-dvh overflow-x-clip bg-exam-paper flex flex-col items-center px-4 pt-4 pb-8 text-exam-ink" dir="rtl">
       <DashboardSummaryProvider>
         <StreakCelebration />
         <div className="w-full max-w-lg space-y-7">
@@ -43,9 +44,9 @@ export default function HomePage() {
 
           {/* Hero — the big score mark anchors the page again */}
           <div className="text-center animate-fade-up [animation-delay:60ms]">
-            <GraduationCap className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
-            <h1 className="text-display mb-2" dir="ltr">
-              134<span className="text-exam-accent">+</span>
+            <h1 className="mb-3">
+              <BrandLogo className="w-40 h-auto mx-auto" />
+              <span className="sr-only">: הכנה לאמירנ&quot;ט</span>
             </h1>
             <HeroTagline />
           </div>
@@ -101,17 +102,10 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Progress & comparison */}
+          {/* Progress */}
           <section className="animate-fade-up [animation-delay:360ms]">
             <h2 className="text-label text-exam-ink-soft mb-2 pr-1">מעקב והתקדמות</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <StatsCard />
-              <Link href="/leaderboard" className={CARD_CLASSES}>
-                <Trophy className="w-7 h-7 text-exam-ink-soft" strokeWidth={1.75} aria-hidden />
-                <span className="font-semibold text-sm">לוח מובילים</span>
-                <span className="text-exam-ink-soft text-xs">איפה אתה ביחס לכולם</span>
-              </Link>
-            </div>
+            <StatsCard />
             <div className="mt-3"><VictoryPathSummary /></div>
           </section>
 
@@ -142,6 +136,6 @@ export default function HomePage() {
           </details>
         </div>
       </DashboardSummaryProvider>
-    </div>
+    </main>
   );
 }

@@ -1,19 +1,15 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { BASELINE_A } from '@/lib/adaptive';
 import { ELO_K0, ELO_N0, MIN_CALIBRATION_HISTORY } from '@/lib/calibration';
-import { RAPID_GUESS_SHARE, TIME_BUDGET_SECONDS } from '@/lib/fsrs';
+import { isRapidGuess } from '@/lib/exam-effort';
+
+// One definition of a rapid guess, shared with exam-level effort checks.
+export { isRapidGuess };
 
 export interface CalibrationCandidate {
   responseId: number;
   type: string;
   latencyMs: number | null;
-}
-
-/** Answered faster than this share of the time budget → almost certainly a
- * guess (Wise & Kong, 2005): it says nothing about the item's difficulty. */
-export function isRapidGuess(type: string, latencyMs: number | null): boolean {
-  if (latencyMs === null || !Number.isFinite(latencyMs)) return false;
-  return latencyMs < (TIME_BUDGET_SECONDS[type] ?? 90) * 1000 * RAPID_GUESS_SHARE;
 }
 
 /**

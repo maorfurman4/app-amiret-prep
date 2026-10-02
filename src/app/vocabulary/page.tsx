@@ -6,7 +6,9 @@ import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
 import { ensureGuestIdentity } from '@/lib/guest';
-import { nextInterval, addDays, isDue } from '@/lib/spaced-repetition';
+import { useActivityGuard } from '@/lib/activity-guard';
+import { nextInterval, addDays } from '@/lib/spaced-repetition';
+import { activeDeck, emptyDeckState } from '@/lib/vocab-deck';
 import {
   BookOpen, Heart, Volume2, Trash2, Search, Star, Lightbulb, PartyPopper,
   RotateCcw, Trophy, ThumbsUp, Settings, Check, X, Target, Clock,
@@ -17,12 +19,13 @@ import { heCount } from '@/lib/hebrew-count';
 import { cleanSnippet } from '@/lib/vocab-text';
 import { PARTS_OF_SPEECH, PART_OF_SPEECH_LABEL, PART_OF_SPEECH_TAG, THEME_LABEL, partOfSpeechOf, type PartOfSpeech } from '@/lib/part-of-speech';
 import { EMPTY_FILTERS, LEVELS, activeFilterCount, applyFilters, countFor, filtersFromParams, isFiltered, toggle, type Source, type VocabFilters } from '@/lib/vocab-filter';
+import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { Modal } from '@/components/ui/Modal';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
 function StarRow({ n, size = 14 }: { n: number; size?: number }) {
   return (
-    <span className="inline-flex items-center gap-0.5" aria-label={`רמה ${n} מתוך 5`}>
+    <span className="inline-flex items-center gap-0.5" role="img" aria-label={`רמה ${n} מתוך 5`}>
       {Array.from({ length: 5 }, (_, i) => (
         <Star key={i} width={size} height={size} className={i < n ? 'fill-current text-exam-alt' : 'text-exam-border'} aria-hidden />
       ))}
@@ -288,6 +291,16 @@ function VocabularyContent() {
   const [deck, setDeck] = useState<VocabWord[]>([]);
   const [flipped, setFlipped] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  // Has the current flashcard deck been worked through at all (a card
+  // marked known/unknown)? Reset whenever the deck is rebuilt.
+  const [deckTouched, setDeckTouched] = useState(false);
+  // False until the deck-rebuild effect has built a deck from the loaded word
+  // list at least once — until then an empty `deck` means "not built yet",
+  // not "finished" (see emptyDeckState).
+  const [deckBuilt, setDeckBuilt] = useState(false);
+  // Bumped by "התחל מחדש" to force a rebuild after the known set is cleared —
+  // `known` itself isn't a rebuild dependency (see the deck-rebuild effect).
+  const [deckResetVersion, setDeckResetVersion] = useState(0);
   const [showKnownList, setShowKnownList] = useState(false);
   const [showFavoritesList, setShowFavoritesList] = useState(false);
   const dragStartX = useRef<number | null>(null);
@@ -485,21 +498,27 @@ function VocabularyContent() {
   // deck once its spaced-repetition interval says it's due again — otherwise
   // it stays hidden, same as before.
   const favoritesSignature = filterAxes.source === 'favorites' ? Array.from(favorites).sort().join(',') : '';
+  //
+  // The deck is applied in a microtask, not a requestAnimationFrame: browsers
+  // pause rAF while the page is hidden, so a reload that came up in the
+  // background (or a cached word list landing before first paint) left the
+  // deck empty — which rendered as "סיימת את כל הכרטיסיות" with every word
+  // still remaining.
   useEffect(() => {
     if (!allWords.length) return;
     // Always shuffle from scratch so deck order is never derived from allWords order
-    const active = shuffle(filteredWords).filter(w => {
-      if (!known.has(w.id)) return true;
-      const sched = knownSchedule[w.id];
-      return !sched || isDue(sched.next_review_at);
-    });
-    const frame = requestAnimationFrame(() => {
+    const active = activeDeck(shuffle(filteredWords), known, knownSchedule);
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (cancelled) return;
       setDeck(active);
+      setDeckBuilt(true);
+      setDeckTouched(false);
       setFlipped(false);
       setShowHint(false);
     });
-    return () => cancelAnimationFrame(frame);
-  }, [allWords, filtersKey, favoritesSignature, knownSyncVersion]); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => { cancelled = true; };
+  }, [allWords, filtersKey, favoritesSignature, knownSyncVersion, deckResetVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Build quiz options for current question ───────────────────────────────
   const buildQuizOptions = useCallback((word: VocabWord, pool: VocabWord[]): string[] => {
@@ -552,6 +571,20 @@ function VocabularyContent() {
   // Sync timedIndex/timeLeft to refs (fix stale closure in timer)
   useEffect(() => { timedIndexRef.current = timedIndex; }, [timedIndex]);
   useEffect(() => { timeLeftRef.current = timeLeft; }, [timeLeft]);
+
+  // Flag mid-deck activity so the bottom nav asks for a confirming second
+  // tap before navigating away (same as practice): a flashcard deck once a
+  // card has been marked, a quiz once a question has been answered, a timed
+  // run while it's running.
+  const { setInProgress } = useActivityGuard();
+  const midDeck =
+    mode === 'flashcard' ? deckTouched && deck.length > 0
+    : mode === 'quiz' ? quizScore.total > 0 && !quizDone
+    : timedDeck.length > 0 && !timedDone && !showTimedConfig;
+  useEffect(() => {
+    setInProgress(midDeck);
+    return () => setInProgress(false);
+  }, [midDeck, setInProgress]);
 
   // Switching modes preserves an unfinished run; filters apply to the next run.
   const changeMode = (nextMode: Mode) => {
@@ -699,6 +732,7 @@ function VocabularyContent() {
 
   // ─── Flashcard handlers ────────────────────────────────────────────────────
   const current = deck[0] ?? null;
+  const emptyState = emptyDeckState({ deckBuilt, scopeCount: filteredWords.length, knownCount: known.size });
 
   const handleKnew = useCallback(() => {
     if (!current || animating) return;
@@ -719,6 +753,7 @@ function VocabularyContent() {
       setKnownSchedule(nextSchedule);
       saveSchedule(nextSchedule);
       setDeck(prev => prev.slice(1));
+      setDeckTouched(true);
       setFlipped(false);
       setShowHint(false);
       setDragX(0);
@@ -744,6 +779,7 @@ function VocabularyContent() {
     setAnimating('left');
     setTimeout(() => {
       setDeck(prev => [...prev.slice(1), prev[0]]);
+      setDeckTouched(true);
       setFlipped(false);
       setShowHint(false);
       setDragX(0);
@@ -785,6 +821,7 @@ function VocabularyContent() {
     setKnownSchedule({});
     saveSchedule({});
     setShowKnownList(false);
+    setDeckResetVersion(v => v + 1);
     if (userId) {
       writeWithRetry(() => supabase.from('user_vocab_known').delete().eq('user_id', userId))
         .then(ok => { if (!ok) setSyncFailed(true); });
@@ -807,9 +844,9 @@ function VocabularyContent() {
   useEffect(() => {
     if (mode !== 'flashcard' || showFilterDrawer || showFavoritesList) return;
     const onKey = (e: KeyboardEvent) => {
-      // Typing in a field (the filter search) must not flip or mark cards.
-      const t = e.target as HTMLElement | null;
-      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      // Typing in a field (the filter search) must not flip or mark cards, and
+      // Space on a focused button (ידעתי, הצג תרגום…) activates that button.
+      if (focusedControlOwnsKey(e.target, e.key)) return;
       if (e.key === 'ArrowRight') handleKnew();
       else if (e.key === 'ArrowLeft') handleUnknown();
       else if (e.key === ' ') { e.preventDefault(); setFlipped(f => !f); }
@@ -847,7 +884,7 @@ function VocabularyContent() {
     <div className="min-h-dvh w-full bg-exam-paper overflow-x-clip" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
 
-      <div className="max-w-lg mx-auto px-4 pt-4 pb-32">
+      <main id="main" className="max-w-lg mx-auto px-4 pt-4 pb-32">
         {syncFailed && (
           <div className="mb-4 flex items-center gap-2 px-3 py-2.5 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt">
             <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
@@ -912,7 +949,7 @@ function VocabularyContent() {
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <bdi dir="ltr" className="font-serif font-bold text-exam-ink text-sm">{w.word}</bdi>
+                        <bdi lang="en" dir="ltr" className="font-serif font-bold text-exam-ink text-sm">{w.word}</bdi>
                         {known.has(w.id) && (
                           <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-sm bg-exam-sage-bg text-exam-sage-strong text-[10px] font-semibold">
                             <Check className="w-2.5 h-2.5" strokeWidth={3} aria-hidden />ידוע
@@ -921,7 +958,7 @@ function VocabularyContent() {
                       </div>
                       <div className="text-exam-ink-soft text-xs mt-0.5">{w.hebrew_translation}</div>
                       {w.example_sentence && (
-                        <div dir="ltr" className="font-serif text-exam-ink-soft text-xs mt-0.5 italic truncate text-left">{cleanSnippet(w.example_sentence, { keepPeriod: true })}</div>
+                        <div lang="en" dir="ltr" className="font-serif text-exam-ink-soft text-xs mt-0.5 italic truncate text-left">{cleanSnippet(w.example_sentence, { keepPeriod: true })}</div>
                       )}
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
@@ -949,6 +986,7 @@ function VocabularyContent() {
           ] as { id: Mode; label: string }[]).map(m => (
             <button
               key={m.id}
+              aria-pressed={mode === m.id}
               onClick={() => changeMode(m.id)}
               className={`hit-44 flex-1 py-2 rounded-xl text-sm font-semibold transition-[background-color,color,box-shadow,transform] duration-300 ease-spring active:scale-[0.96] ${mode === m.id ? 'bg-exam-surface text-exam-ink shadow-surface' : 'text-exam-ink-soft hover:text-exam-ink'}`}
             >{m.label}</button>
@@ -1069,7 +1107,7 @@ function VocabularyContent() {
                 onChange={e => setSearch(e.target.value)}
                 dir="auto"
                 placeholder="חפש מילה בעברית או באנגלית"
-                className="w-full px-4 py-3 rounded-xl border border-exam-border bg-exam-paper-alt text-sm focus:outline-none focus:border-exam-accent text-start placeholder:text-right text-exam-ink"
+                className="w-full px-4 py-3 rounded-xl border border-exam-border-input bg-exam-paper-alt text-sm focus:outline-none focus:border-exam-accent text-start placeholder:text-right text-exam-ink"
               />
             </FilterSection>
           </div>
@@ -1136,7 +1174,7 @@ function VocabularyContent() {
                   {/* Favorite button */}
                   <button
                     onClick={e => toggleFavorite(current.id, e)}
-                    className="absolute top-4 right-4 z-10 text-exam-wrong"
+                    className="absolute top-4 right-4 z-10 text-exam-wrong after:absolute after:-inset-3 after:content-['']"
                     aria-label={favorites.has(current.id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
                     aria-pressed={favorites.has(current.id)}
                   ><Heart className="w-5 h-5" fill={favorites.has(current.id) ? 'currentColor' : 'none'} aria-hidden /></button>
@@ -1161,11 +1199,12 @@ function VocabularyContent() {
                         )}
                       </div>
                       <div className="flex items-center justify-center gap-3 mb-2">
-                        <div className="font-serif text-5xl font-bold text-exam-ink leading-tight">{current.word}</div>
+                        <div lang="en" className="font-serif text-5xl font-bold text-exam-ink leading-tight">{current.word}</div>
                         <button
                           onClick={e => { e.stopPropagation(); speak(current.word); }}
-                          className="hover:scale-110 transition-transform text-exam-ink-soft"
+                          className="hit-44 hover:scale-110 transition-transform text-exam-ink-soft"
                           title="הגייה"
+                          aria-label={`השמע הגייה של ${current.word}`}
                         ><Volume2 className="w-6 h-6" aria-hidden /></button>
                       </div>
                       <div className="mb-4 flex justify-center"><StarRow n={current.difficulty_level} size={18} /></div>
@@ -1173,7 +1212,7 @@ function VocabularyContent() {
                       {/* Front: the word only. The hint is an example sentence that uses
                           it; the definition waits on the back with the translation. */}
                       {showHint && current.example_sentence ? (
-                        <p className="font-serif mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-sm text-exam-alt italic leading-relaxed text-left">
+                        <p lang="en" className="font-serif mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-sm text-exam-alt italic leading-relaxed text-left">
                           {cleanSnippet(current.example_sentence, { keepPeriod: true })}
                         </p>
                       ) : current.example_sentence && (
@@ -1186,22 +1225,22 @@ function VocabularyContent() {
 
                       <button
                         onClick={e => { e.stopPropagation(); setFlipped(true); }}
-                        className="mt-6 w-full py-2.5 rounded-sm bg-exam-paper-alt hover:bg-exam-border/40 text-sm font-medium text-exam-ink transition-colors"
+                        className="hit-44 mt-6 w-full py-2.5 rounded-sm bg-exam-paper-alt hover:bg-exam-border/40 text-sm font-medium text-exam-ink transition-colors"
                         dir="rtl"
                       >הצג תרגום</button>
                     </div>
                   ) : (
                     <div key="back" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="rtl" style={{ opacity: faceOpacity }}>
                       <div className="flex items-center justify-center gap-2 mb-1" dir="ltr">
-                        <span className="font-serif text-lg font-bold text-exam-ink-soft">{current.word}</span>
-                        <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>
+                        <span lang="en" className="font-serif text-lg font-bold text-exam-ink-soft">{current.word}</span>
+                        <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="hit-44 text-exam-ink-soft" aria-label={`השמע הגייה של ${current.word}`}><Volume2 className="w-4 h-4" aria-hidden /></button>
                       </div>
                       <div className="text-3xl font-bold text-exam-accent mb-3">{current.hebrew_translation}</div>
                       {current.definition && (
-                        <p dir="ltr" className="text-exam-ink-soft text-sm leading-relaxed mb-4">{cleanSnippet(current.definition)}</p>
+                        <p lang="en" dir="ltr" className="text-exam-ink-soft text-sm leading-relaxed mb-4">{cleanSnippet(current.definition)}</p>
                       )}
                       {current.example_sentence && (
-                        <div className="font-serif p-3 bg-exam-paper-alt border border-exam-border rounded-xl text-xs text-exam-ink-soft italic leading-relaxed text-left" dir="ltr">
+                        <div lang="en" className="font-serif p-3 bg-exam-paper-alt border border-exam-border rounded-xl text-xs text-exam-ink-soft italic leading-relaxed text-left" dir="ltr">
                           {cleanSnippet(current.example_sentence, { keepPeriod: true })}
                         </div>
                       )}
@@ -1215,7 +1254,9 @@ function VocabularyContent() {
               </div>
             ) : (
               <div className="text-center py-16">
-                {filteredWords.length > 0 && known.size > 0 ? (
+                {emptyState === 'building' ? (
+                  <div className="text-exam-ink-soft">טוען מילים...</div>
+                ) : emptyState === 'finished' ? (
                   <>
                     <PartyPopper className="w-12 h-12 mx-auto mb-4 text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
                     <div className="text-xl font-bold text-exam-ink mb-2">
@@ -1281,7 +1322,7 @@ function VocabularyContent() {
                         className="flex items-center justify-between px-4 py-2.5 bg-exam-surface border border-exam-border rounded-xl animate-fade-up"
                       >
                         <div dir="ltr">
-                          <span className="font-semibold text-exam-ink text-sm">{w.word}</span>
+                          <span lang="en" className="font-semibold text-exam-ink text-sm">{w.word}</span>
                           <span className="text-exam-ink-soft text-xs mr-2"> — {w.hebrew_translation}</span>
                           {knownSchedule[w.id] && (
                             <span dir="rtl" className="text-exam-ink-soft text-[11px] block mt-0.5">{dueLabel(knownSchedule[w.id].next_review_at)}</span>
@@ -1355,7 +1396,7 @@ function VocabularyContent() {
                       {quizWrongWords.map(w => (
                         <div key={w.id} className="flex items-center justify-between px-4 py-2.5 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm">
                           <div>
-                            <div className="font-semibold text-exam-ink text-sm" dir="ltr">{w.word}</div>
+                            <div lang="en" className="font-semibold text-exam-ink text-sm" dir="ltr">{w.word}</div>
                             <div className="text-exam-ink-soft text-xs">{w.hebrew_translation}</div>
                           </div>
                           <div className="flex items-center gap-2 mr-2">
@@ -1417,11 +1458,11 @@ function VocabularyContent() {
                     ><Heart className="w-5 h-5" fill={favorites.has(quizDeck[quizIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>
                     <div className="flex items-center gap-2" dir="ltr">
                       <span className="font-serif text-3xl font-bold text-exam-ink">{quizDeck[quizIndex].word}</span>
-                      <button onClick={() => speak(quizDeck[quizIndex].word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
+                      <button onClick={() => speak(quizDeck[quizIndex].word)} className="hit-44 text-exam-ink-soft hover:text-exam-ink transition-colors" aria-label={`השמע הגייה של ${quizDeck[quizIndex].word}`}><Volume2 className="w-5 h-5" aria-hidden /></button>
                     </div>
                   </div>
                   {quizDeck[quizIndex].example_sentence && (
-                    <p className="font-serif text-exam-ink-soft text-xs italic text-left" dir="ltr">
+                    <p lang="en" className="font-serif text-exam-ink-soft text-xs italic text-left" dir="ltr">
                       {cleanSnippet(quizDeck[quizIndex].example_sentence, { keepPeriod: true })}
                     </p>
                   )}
@@ -1442,7 +1483,8 @@ function VocabularyContent() {
                       cls += 'bg-exam-surface border-exam-border text-exam-ink-soft opacity-70';
                     }
                     return (
-                      <button key={i} onClick={() => handleQuizSelect(i, opt)} className={cls} disabled={quizSelected !== null}>
+                      // aria-disabled keeps keyboard focus on the answer once it locks.
+                      <button key={i} type="button" onClick={() => { if (quizSelected === null) handleQuizSelect(i, opt); }} className={cls} aria-disabled={quizSelected !== null || undefined}>
                         {opt}
                         {quizSelected !== null && isCorrectOpt && <Check className="inline w-3.5 h-3.5 mr-1" strokeWidth={3} aria-hidden />}
                         {quizSelected === i && !isCorrectOpt && <X className="inline w-3.5 h-3.5 mr-1" strokeWidth={3} aria-hidden />}
@@ -1451,6 +1493,10 @@ function VocabularyContent() {
                   })}
                 </div>
 
+                {/* Announces right/wrong; always mounted so the change is read. */}
+                <p role="status" className="sr-only">
+                  {quizSelected !== null && (quizCorrect ? 'נכון!' : `לא נכון. התשובה הנכונה: ${quizDeck[quizIndex].hebrew_translation}`)}
+                </p>
                 {quizSelected !== null && (
                   <div className="text-center">
                     <div className={`text-lg font-bold mb-3 flex items-center justify-center gap-1.5 ${quizCorrect ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}>
@@ -1555,7 +1601,7 @@ function VocabularyContent() {
                   {timedResults.map((r, i) => (
                     <div key={i} className={`flex items-center justify-between px-4 py-3 rounded-sm border ${r.correct ? 'bg-exam-sage-bg border-exam-sage/40' : 'bg-exam-wrong-bg border-exam-wrong/40'}`}>
                       <div className="text-left">
-                        <div className="font-bold text-exam-ink text-sm" dir="ltr">{r.word.word}</div>
+                        <div lang="en" className="font-bold text-exam-ink text-sm" dir="ltr">{r.word.word}</div>
                         <div className="text-xs text-exam-ink-soft">{r.word.hebrew_translation}</div>
                         <div className="text-xs text-exam-ink-soft"><bdi dir="ltr">{r.timeTaken.toFixed(1)}</bdi> שנ׳</div>
                       </div>
@@ -1627,12 +1673,12 @@ function VocabularyContent() {
                       aria-pressed={favorites.has(timedDeck[timedIndex].id)}
                     ><Heart className="w-5 h-5" fill={favorites.has(timedDeck[timedIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>
                     <div className="flex items-center gap-2" dir="ltr">
-                      <span className="font-serif text-3xl font-bold text-exam-ink">{timedDeck[timedIndex].word}</span>
-                      <button onClick={() => speak(timedDeck[timedIndex].word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
+                      <span lang="en" className="font-serif text-3xl font-bold text-exam-ink">{timedDeck[timedIndex].word}</span>
+                      <button onClick={() => speak(timedDeck[timedIndex].word)} aria-label={`השמע הגייה של ${timedDeck[timedIndex].word}`} className="hit-44 text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
                     </div>
                   </div>
                   {timedDeck[timedIndex].example_sentence && (
-                    <p className="font-serif text-exam-ink-soft text-xs italic text-left" dir="ltr">
+                    <p lang="en" className="font-serif text-exam-ink-soft text-xs italic text-left" dir="ltr">
                       {cleanSnippet(timedDeck[timedIndex].example_sentence, { keepPeriod: true })}
                     </p>
                   )}
@@ -1677,7 +1723,7 @@ function VocabularyContent() {
             )}
           </>
         )}
-      </div>
+      </main>
     </div>
   );
 }

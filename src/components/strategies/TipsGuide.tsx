@@ -38,7 +38,7 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
   return (
     <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
       <BackNav backHref="/tips" backLabel="אסטרטגיות" />
-      <div className="flex-1 flex flex-col items-center px-4 py-10">
+      <main id="main" className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-2xl space-y-8">
 
           <div className="text-center">
@@ -181,7 +181,7 @@ export function TipsGuide({ type }: { type: QuestionTypeId }) {
           </div>
 
         </div>
-      </div>
+      </main>
     </div>
   );
 }

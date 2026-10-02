@@ -1,8 +1,18 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" fill="#1d4ed8"/>
-  <polygon points="256,88 444,170 256,252 68,170" fill="#ffffff"/>
-  <path d="M168 216 v72 c0 32 176 32 176 0 v-72 l-88 38 z" fill="#dbeafe"/>
-  <rect x="432" y="170" width="15" height="88" rx="7" fill="#fbbf24"/>
-  <circle cx="439.5" cy="272" r="17" fill="#fbbf24"/>
-  <text x="256" y="448" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="118" font-weight="800" fill="#ffffff">134+</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="title">
+  <title id="title">134+</title>
+  <!-- Tile: exam-accent. Numerals and cap: exam-paper (cap underside a muted paper tone). Cord and "+": amber (dark-mode exam-alt). -->
+  <rect width="512" height="512" rx="112" fill="#283F5A"/>
+  <g transform="translate(30 96) scale(.84)" fill="none" stroke="#FAF8F2" stroke-width="44" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M90 214 L128 176 V376"/>
+    <path d="M180 208 A48 48 0 1 1 225 272 A52 52 0 1 1 176 342 M206 272 H225"/>
+    <path d="M392 376 V176 L300 316 H418"/>
+  </g>
+  <!-- Mortarboard tilted on the "4". -->
+  <g transform="rotate(-12 352 170)">
+    <path d="M290.6 186.5 V229 Q352 257.3 413.4 229 V186.5" fill="#C9CEC8"/>
+    <path d="M352 122.8 L470 170 L352 217.2 L234 170 Z" fill="#FAF8F2"/>
+  </g>
+  <!-- Tassel cord ending in the "+". -->
+  <path d="M352 170 L442 151 V250" fill="none" stroke="#F1C779" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M442 250 V318 M408 284 H476" fill="none" stroke="#F1C779" stroke-width="34" stroke-linecap="round"/>
 </svg>

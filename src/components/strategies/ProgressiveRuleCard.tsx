@@ -72,7 +72,7 @@ function PairView({ pair }: { pair: MinimalPair }) {
             {ROW[tone].icon}
             {ROW[tone].label}
           </div>
-          <p dir="ltr" className="font-serif text-[15px] leading-relaxed text-exam-ink text-left">
+          <p dir="ltr" lang="en" className="font-serif text-[15px] leading-relaxed text-exam-ink text-left">
             {withHighlights(text, phrases, ROW[tone].mark)}
           </p>
         </div>
@@ -132,7 +132,7 @@ export function ProgressiveRuleCard({ rule, index }: { rule: LayeredRule; index?
         <div className="pt-3 mt-3 border-t border-exam-border">
           <div className="text-[11px] font-bold text-exam-ink-soft mb-1">למה</div>
           <p className="text-sm text-exam-ink-soft leading-relaxed"><RichText text={rule.why} /></p>
-          {rule.source && <p className="mt-1.5 text-[11px] text-exam-ink-soft/80" dir="ltr">{rule.source}</p>}
+          {rule.source && <p className="mt-1.5 text-[11px] text-exam-ink-soft/80" dir="ltr" lang="en">{rule.source}</p>}
         </div>
       </Reveal>
 

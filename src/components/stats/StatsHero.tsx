@@ -6,6 +6,7 @@ import { Check, ChevronDown, ChevronLeft } from 'lucide-react';
 import { EXEMPTION_SCORE } from '@/lib/calibration';
 import { formatProbability } from '@/lib/exemption';
 import { currentLabel, typeLabel, windowLabel, type StatsMetrics } from '@/lib/stats-metrics';
+import { heCount, agree } from '@/lib/hebrew-count';
 import { frequencySentence, ExemptTarget } from '@/components/results/ExemptionCard';
 import { Reveal } from '@/components/strategies/Reveal';
 import { ScoreTrack } from './ScoreTrack';
@@ -23,7 +24,7 @@ const VERDICT = {
  * here is read from StatsMetrics, never recomputed.
  */
 export function StatsHero({ metrics }: { metrics: StatsMetrics }) {
-  const { current, examCount, bestScore, lastScore, bestClassification, weakest, readiness, recent } = metrics;
+  const { current, examCount, bestScore, lastScore, bestClassification, weakest, readiness, recent, excludedLowEffort } = metrics;
   const headingId = useId();
   const readinessId = useId();
   const [open, setOpen] = useState(false);
@@ -70,6 +71,11 @@ export function StatsHero({ metrics }: { metrics: StatsMetrics }) {
         </>
       ) : (
         <p className="mt-2 text-sm text-exam-ink-soft">עוד אין מספיק נתוני מדידה כדי להעריך רמה. אחרי המבחן הבא יופיע כאן טווח.</p>
+      )}
+      {excludedLowEffort > 0 && (
+        <p className="mt-1 text-xs text-exam-ink-soft" data-metric="excluded-low-effort">
+          לא כללנו ברמה {heCount(excludedLowEffort, 'exam')} {agree(excludedLowEffort, 'שנענה', 'שנענו')} בשניות בודדות לשאלה, ברמת הצלחה של ניחוש אקראי.
+        </p>
       )}
 
       <dl className="mt-4 grid grid-cols-3 gap-2 text-center">
@@ -127,7 +133,7 @@ export function StatsHero({ metrics }: { metrics: StatsMetrics }) {
             {readiness.reasons.map((r, i) => (
               <li key={i} className="flex items-start gap-2 text-sm">
                 <span className={`mt-0.5 ${r.ok ? 'text-exam-sage-strong' : 'text-exam-alt'}`}>
-                  {r.ok ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-label="עומד ביעד" /> : <span aria-label="עוד לא">•</span>}
+                  {r.ok ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-label="עומד ביעד" /> : <span role="img" aria-label="עוד לא">•</span>}
                 </span>
                 {r.href
                   ? <Link href={r.href} className="text-exam-ink-soft underline underline-offset-2">{r.text}</Link>

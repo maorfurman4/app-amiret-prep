@@ -7,24 +7,28 @@ import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
 import { AlertTriangle, CheckCircle2, BookOpen, Clock, Trophy, Target, ChevronLeft } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
-import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
+import { classifyScore, isExperimentalSection, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
 import { scoreInterval, sessionMeasurement } from '@/lib/exemption';
-import { routedLevel } from '@/lib/routed-level';
+import { sectionLevelTag, type ThetaHistoryEntry } from '@/lib/routed-level';
+import { examEffort } from '@/lib/exam-effort';
 import { ResultsScorePrompt } from '@/components/official-score/ResultsScorePrompt';
 import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
 import { heCount, agree } from '@/lib/hebrew-count';
+import { localDateStr, todayLocalStr } from '@/lib/date-local';
+import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
 
 interface SessionData {
   score: number;
   theta_final: number;
   theta_se?: number | null;
   p_exempt?: number | null;
-  theta_history: { after_section: number; theta: number; target_theta?: number }[];
+  theta_history: ThetaHistoryEntry[];
   section_results: SectionResult[];
   answers_by_section: Record<number, (number | null)[]>;
   questions_by_section: Record<number, Question[]>;
   is_practice: boolean;
+  completed_at?: string | null;
 }
 
 export default function ResultsPage({ params }: { params: Promise<{ sessionId: string }> }) {
@@ -55,7 +59,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
   if (error) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper px-4" dir="rtl">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper px-4" dir="rtl">
         <div className="text-center space-y-4 max-w-sm">
           <AlertTriangle className="w-10 h-10 mx-auto text-exam-wrong" strokeWidth={1.5} aria-hidden />
           <p className="text-exam-ink-soft text-sm">לא הצלחנו לטעון את התוצאות. בדוק את החיבור ונסה שוב.</p>
@@ -66,15 +70,15 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             נסה שוב
           </button>
         </div>
-      </div>
+      </main>
     );
   }
 
   if (!session) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper">
         <div className="text-exam-ink-soft">טוען תוצאות...</div>
-      </div>
+      </main>
     );
   }
 
@@ -86,6 +90,19 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   const sectionResults = session.section_results as SectionResult[];
   const totalCorrect = sectionResults.reduce((a, s) => a + (s.correctCount ?? 0), 0);
   const totalQuestions = sectionResults.reduce((a, s) => a + (s.totalCount ?? 0), 0);
+  // Clicked through at random? Then the score describes the clicking, not
+  // the student (src/lib/exam-effort.ts) — said plainly, and no probability.
+  const effort = examEffort(sectionResults);
+  // How hard the scored questions were, by their own level: the context
+  // that makes "x of y correct" readable next to an adaptive score.
+  const scoredLevels = sectionResults
+    .filter(sr => !isExperimentalSection(sr.sectionIndex))
+    .flatMap(sr => (sr.questions ?? []).map(q => q?.difficulty_level))
+    .filter((l): l is NonNullable<typeof l> => typeof l === 'number');
+  const meanLevel = scoredLevels.length > 0
+    ? Math.round(scoredLevels.reduce((a, l) => a + l, 0) / scoredLevels.length)
+    : null;
+  const anyCutTargeted = sectionResults.some(sr => sectionLevelTag(sr.sectionIndex, session.theta_history, sr.questions)?.cutTargeted);
 
   const TYPE_LABELS: Record<string, string> = {
     sentence_completion: 'השלמת משפטים',
@@ -105,9 +122,12 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   }
 
   return (
-    <div className="min-h-dvh bg-exam-paper" dir="rtl">
+    // overflow-x-clip: the score glows bleed past narrow screens (not
+    // overflow-hidden, which would break the sticky nav).
+    <div className="min-h-dvh overflow-x-clip bg-exam-paper" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
-      <div className="max-w-2xl mx-auto space-y-8 py-8 px-4">
+      <main id="main" className="max-w-2xl mx-auto space-y-8 py-8 px-4">
+        <h1 className="sr-only">תוצאות המבחן</h1>
         {/* Score card — the moment of the whole page: a staggered cascade
             reveal inside a glowing, glassmorphic hero, colored by how the
             score classifies (sage for pass, accent for mid, amber for low
@@ -140,13 +160,31 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             <div className="text-exam-ink font-medium animate-fade-up [animation-delay:400ms]">
               {totalCorrect} מתוך {totalQuestions} תשובות נכונות
             </div>
+            <p className="text-xs text-exam-ink-soft mt-1 leading-relaxed animate-fade-up [animation-delay:430ms]" data-testid="adaptive-scoring-note">
+              במבחן אדפטיבי הציון לא נקבע לפי אחוז התשובות הנכונות בלבד: כל תשובה נכונה מביאה שאלה קשה יותר, ולכן הציון תלוי גם ברמת הקושי של השאלות שעליהן ענית נכון.
+              {meanLevel !== null && <> רמת הקושי הממוצעת של השאלות שקיבלת: <bdi dir="ltr">{meanLevel}/5</bdi>.</>}
+            </p>
             {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
               <div className="text-xs text-exam-ink-soft mt-1 animate-fade-up [animation-delay:460ms]">
                 כולל התרגול החלופי, שאינו חלק מפרקי הליבה. טעויות בו לא הורידו לך את האומדן
               </div>
             )}
+            {effort.lowEffort && (
+              <div role="note" data-testid="low-effort-notice" className="mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-start text-sm text-exam-alt leading-relaxed">
+                <div className="font-semibold mb-1 flex items-center gap-1.5">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
+                  המבחן הזה לא מדד את הרמה שלך
+                </div>
+                {effort.rapid} מתוך {effort.answered} התשובות ניתנו תוך שניות בודדות, ושיעור ההצלחה ({effort.correct} מתוך {effort.answered}) לא גבוה מניחוש אקראי.
+                {' '}לכן הציון לא נכלל ברמה המשוערת, בתחזית ובמדד המוכנות. כדי למדוד את הרמה, ענה על המבחן הבא בקצב רגיל.
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Only the exam just finished can have earned today's streak — not a
+            results page reopened from history. */}
+        {session.completed_at && localDateStr(new Date(session.completed_at)) === todayLocalStr() && <SessionStreakCelebration />}
 
         {!session.is_practice && <ResultsScorePrompt />}
 
@@ -155,7 +193,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         {/* Probability of exemption — the real measurement uncertainty of
             THIS exam (stored at completion, or re-derived identically for
             exams scored before it was stored), replacing the old fixed ±10. */}
-        {exemption && (
+        {exemption && !effort.lowEffort && (
           <ExemptionCard
             measurement={exemption}
             heading={<>מה הסיכוי שלך ל-<ExemptTarget />?</>}
@@ -205,7 +243,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 >
                   <div className="text-2xl font-bold">{correct}/{total}</div>
                   <div className="text-xs font-semibold mt-1">{TYPE_LABELS[type] ?? type}</div>
-                  <div className="text-xs opacity-75">{pct}%</div>
+                  <div className="text-xs">{pct}%</div>
                 </div>
               );
             })}
@@ -214,14 +252,17 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           <h3 className="font-semibold text-exam-ink text-sm mb-3">פירוט לפי פרק, והמסלול האדפטיבי שלך</h3>
           <p className="text-xs text-exam-ink-soft mb-3">
             התגית &quot;רמה X/5&quot; היא הרמה שאליה כיוון אותך האלגוריתם בכל פרק, לפי התשובות שלך עד אותו רגע. במבחן האמיתי, רק הגעה לרמות הגבוהות מאפשרת ציון גבוה.
+            {anyCutTargeted && (
+              <> בפרקים שמסומנים &quot;מכוון לסף הפטור&quot; הציון שלך היה קרוב ל-<bdi dir="ltr">134</bdi>, ולכן האלגוריתם כיוון את השאלות לסף עצמו כדי להכריע אם עברת אותו. שם התגית מציגה את רמת השאלות שקיבלת בפועל.</>
+            )}
           </p>
           <div className="space-y-3">
             {sectionResults.filter(sr => sr.totalCount > 0).map((sr) => {
               const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
               const pct = sr.totalCount > 0 ? Math.round((sr.correctCount / sr.totalCount) * 100) : 0;
-              // The level the section was aimed at; exams from before targets
-              // were stored fall back to the first question's label.
-              const difficulty = routedLevel(sr.sectionIndex, session.theta_history) ?? sr.questions?.[0]?.difficulty_level;
+              // Where the student's answers had routed them — or, for a
+              // section aimed at the 134 cut, the level actually served.
+              const tag = sectionLevelTag(sr.sectionIndex, session.theta_history, sr.questions);
               const isExperimental = cfg?.experimental === true;
               return (
                 <div key={sr.sectionIndex} className="flex items-center gap-3">
@@ -232,13 +273,16 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-exam-ink flex items-center gap-1.5">
+                      <span className="text-exam-ink flex flex-wrap items-center gap-1.5">
                         {TYPE_LABELS[cfg?.type ?? sr.type]}
                         {isExperimental && (
                           <span className="px-1.5 py-0.5 rounded-sm bg-exam-alt-bg text-exam-alt text-[10px] font-semibold">תרגול חלופי</span>
                         )}
-                        {difficulty && (
-                          <span className="px-1.5 py-0.5 rounded-sm bg-exam-paper-alt text-exam-ink-soft text-[10px] font-mono">רמה {difficulty}/5</span>
+                        {tag && (
+                          <span className="px-1.5 py-0.5 rounded-sm bg-exam-paper-alt text-exam-ink-soft text-[10px] font-mono">רמה {tag.level}/5</span>
+                        )}
+                        {tag?.cutTargeted && (
+                          <span className="px-1.5 py-0.5 rounded-sm bg-exam-accent/10 text-exam-accent text-[10px] font-semibold">מכוון לסף הפטור</span>
                         )}
                       </span>
                       <span className="text-exam-ink-soft">{sr.correctCount}/{sr.totalCount}</span>
@@ -356,7 +400,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             הסטטיסטיקה שלי
           </button>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

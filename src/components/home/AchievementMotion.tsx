@@ -17,7 +17,9 @@ export function RollingNumber({ value, from = value }: { value: number; from?: n
   const previous = String(from).padStart(next.length, ' ');
   const roll = value > from;
   return (
-    <span className="rolling-number" dir="ltr" aria-label={String(value)}>
+    <span className="rolling-number" dir="ltr">
+      {/* The digit tracks hold old and new digits; screen readers get just the value. */}
+      <span className="sr-only">{value}</span>
       <span className="inline-flex" aria-hidden="true">
         {[...next].map((digit, i) => (
           <span className="rolling-digit" key={next.length - i}>

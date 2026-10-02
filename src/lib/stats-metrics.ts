@@ -2,6 +2,7 @@ import { SECTION_CONFIGS, classifyScore, isCorrectAnswer, isExperimentalSection,
 import { thetaToScore } from '@/lib/adaptive';
 import { EXEMPTION_SCORE } from '@/lib/calibration';
 import { currentEstimate, scoreInterval, sessionMeasurement, POOL_WINDOW, type Measurement } from '@/lib/exemption';
+import { isLowEffortExam } from '@/lib/exam-effort';
 import { aggregateAccuracyByType, computeWeakestType, type AccuracyByType, type TypeAccuracy, type WeaknessResult } from '@/lib/weakness';
 import { heCount, agree } from '@/lib/hebrew-count';
 
@@ -18,6 +19,10 @@ import { heCount, agree } from '@/lib/hebrew-count';
  *  - exam count, best score, trend: all exams
  * Accuracy only counts scored questions (the experimental section never
  * counts toward the score).
+ *
+ * The current level and readiness rest only on exams that measured the
+ * student: one clicked through at random (src/lib/exam-effort.ts) still
+ * counts as an exam and keeps its score, but says nothing about ability.
  */
 
 export const RECENT_WINDOW = 10;
@@ -78,6 +83,8 @@ export interface StatsMetrics {
   /** Weakest type over the recent window + the practice level — the same pick as today's session. */
   weakest: WeaknessResult | null;
   readiness: Readiness;
+  /** Exams left out of the current level and readiness as clicked through at random. */
+  excludedLowEffort: number;
 }
 
 const PACE_CAPS: Record<string, number> = { sentence_completion: 90, restatement: 150, reading_comprehension: 180 };
@@ -243,7 +250,8 @@ export function computeStatsMetrics(rows: StatsRow[]): StatsMetrics | null {
   if (rows.length === 0) return null;
   const scores = rows.map(r => r.score);
   const bestScore = Math.max(...scores);
-  const current = computeCurrentLevel(rows);
+  const measured = rows.filter(r => !isLowEffortExam(r.section_results));
+  const current = computeCurrentLevel(measured);
   const recent = accuracyWindow(rows.slice(-RECENT_WINDOW), rows.length);
   const allTime = accuracyWindow(rows, rows.length);
   return {
@@ -255,6 +263,7 @@ export function computeStatsMetrics(rows: StatsRow[]): StatsMetrics | null {
     recent,
     allTime,
     weakest: computeWeakestType(rows),
-    readiness: readiness(rows, current, recent),
+    readiness: readiness(measured, current, recent),
+    excludedLowEffort: rows.length - measured.length,
   };
 }

@@ -10,6 +10,7 @@ import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry, type ResponseLogEntry } from '@/lib/response-log-client';
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { heCount, agree } from '@/lib/hebrew-count';
+import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { Modal } from '@/components/ui/Modal';
 
 type Step = 'loading' | 'empty' | 'error' | 'overview' | 'reviewing' | 'done';
@@ -237,7 +238,7 @@ export default function ReviewQueuePage() {
   useEffect(() => {
     if (step !== 'reviewing') return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (focusedControlOwnsKey(e.target, e.key)) return;
       if (showResult) {
         if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleNext(); }
       } else {
@@ -253,9 +254,9 @@ export default function ReviewQueuePage() {
 
   if (step === 'loading') {
     return (
-      <div className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
+      <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
         <div className="text-exam-ink-soft text-lg">טוען שאלות לחזרה...</div>
-      </div>
+      </main>
     );
   }
 
@@ -263,7 +264,7 @@ export default function ReviewQueuePage() {
     return (
       <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+        <main id="main" className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-4">
             <AlertTriangle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
             <h1 className="text-xl font-bold text-exam-ink">לא הצלחנו לטעון את החזרה</h1>
@@ -275,7 +276,7 @@ export default function ReviewQueuePage() {
               נסה שוב
             </button>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
@@ -284,7 +285,7 @@ export default function ReviewQueuePage() {
     return (
       <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+        <main id="main" className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-6">
             <PartyPopper className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
             <h1 className="text-2xl font-bold text-exam-ink">סגרת את כל החזרות</h1>
@@ -296,7 +297,7 @@ export default function ReviewQueuePage() {
               חזרה לתפריט
             </button>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
@@ -308,7 +309,7 @@ export default function ReviewQueuePage() {
     return (
       <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex-1 px-4 py-8">
+        <main id="main" className="flex-1 px-4 py-8">
           <div className="w-full max-w-lg mx-auto space-y-6">
             <div className="text-center">
               <RotateCcw className="w-9 h-9 mx-auto mb-2 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
@@ -330,13 +331,13 @@ export default function ReviewQueuePage() {
                   </div>
                   <button
                     onClick={() => handleStartReview(type)}
-                    className="px-3 py-2 bg-exam-alt text-on-amber rounded-xl text-sm font-bold shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform flex-shrink-0"
+                    className="hit-44 px-3 py-2 bg-exam-alt text-on-amber rounded-xl text-sm font-bold shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform flex-shrink-0"
                   >
                     <span className="inline-flex items-center gap-1">תרגל<ChevronLeft className="w-4 h-4" aria-hidden /></span>
                   </button>
                   <button
                     onClick={() => handleDeleteCategory(type)}
-                    className="w-9 h-9 flex items-center justify-center rounded-xl text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg active:scale-90 transition-[background-color,color,transform] duration-300 ease-spring text-base flex-shrink-0"
+                    className="hit-44 w-9 h-9 flex items-center justify-center rounded-xl text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg active:scale-90 transition-[background-color,color,transform] duration-300 ease-spring text-base flex-shrink-0"
                     title={`מחק את כל שאלות ${CATEGORY_LABELS[type] ?? type}`}
                   >
                     <Trash2 className="w-4 h-4 mx-auto" aria-hidden />
@@ -360,7 +361,7 @@ export default function ReviewQueuePage() {
               </button>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
@@ -370,7 +371,7 @@ export default function ReviewQueuePage() {
     const color = pct >= 80 ? 'text-exam-sage-strong' : pct >= 60 ? 'text-exam-alt' : 'text-exam-wrong';
 
     return (
-      <div className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4" dir="rtl">
+      <main id="main" className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4" dir="rtl">
         <div className="w-full max-w-sm text-center space-y-6">
           {pct >= 80 ? <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden /> : pct >= 60 ? <ThumbsUp className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden /> : <BookOpen className="w-14 h-14 mx-auto text-exam-ink-soft" strokeWidth={1.5} aria-hidden />}
           <div>
@@ -403,7 +404,7 @@ export default function ReviewQueuePage() {
             </button>
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -548,7 +549,7 @@ export default function ReviewQueuePage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main id="main" className="max-w-2xl mx-auto px-4 py-8">
         <QuestionCard
           question={question}
           questionNumber={currentIndex + 1}

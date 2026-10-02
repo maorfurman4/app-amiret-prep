@@ -85,3 +85,19 @@ describe('StatsView renders each metric once, from computeStatsMetrics', () => {
     }
   });
 });
+
+describe('exams clicked through at random', () => {
+  const timed = (row: StatsRow, seconds: number): StatsRow => ({
+    ...row,
+    section_results: (row.section_results as { answers: unknown[] }[]).map(sr => ({ ...sr, timings: sr.answers.map(() => seconds) })),
+  });
+
+  it('says how many were left out of the current level', () => {
+    const r = [timed(exam(0, (_, q) => q < 3, 1.1, 122), 30), timed(exam(1, () => false, -2.7, 50), 1), timed(exam(2, () => false, -2.6, 50), 1)];
+    expect(metric(render(r), 'excluded-low-effort')).toEqual(['לא כללנו ברמה שני מבחנים שנענו בשניות בודדות לשאלה, ברמת הצלחה של ניחוש אקראי.']);
+  });
+
+  it('says nothing when every exam measured the student', () => {
+    expect(render(rows)).not.toContain('excluded-low-effort');
+  });
+});

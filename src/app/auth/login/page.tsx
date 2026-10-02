@@ -2,12 +2,13 @@
 
 export const dynamic = 'force-dynamic';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useId } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
-import { UserCircle, Mail, AlertCircle, GraduationCap, RotateCcw, ArrowRight } from 'lucide-react';
+import { UserCircle, Mail, AlertCircle, RotateCcw, ArrowRight } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { mergeGuestProgress } from '@/lib/merge-guest-client';
 import { clearGuestIdentity } from '@/lib/guest';
@@ -32,6 +33,11 @@ function LoginForm() {
   // holds the access token so "try again" can re-run just the merge without
   // asking the user to log in a second time.
   const [mergeFailedToken, setMergeFailedToken] = useState<string | null>(null);
+  const fieldId = useId();
+  const emailId = `${fieldId}-email`;
+  const passwordId = `${fieldId}-password`;
+  const hintId = `${fieldId}-hint`;
+  const errorId = `${fieldId}-error`;
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user ?? null));
@@ -231,14 +237,15 @@ function LoginForm() {
           </p>
         </div>
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-exam-ink">אימייל</label>
+          <label htmlFor={emailId} className="block text-sm font-medium text-exam-ink">אימייל</label>
           <input
-            type="email" value={email} onChange={e => setEmail(e.target.value)}
-            required dir="ltr" placeholder="your@email.com"
-            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
+            id={emailId} type="email" value={email} onChange={e => setEmail(e.target.value)}
+            required dir="ltr" placeholder="your@email.com" autoComplete="email"
+            aria-invalid={!!error} aria-describedby={error ? errorId : undefined}
+            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
           />
         </div>
-        {error && <p className="text-exam-wrong text-sm">{error}</p>}
+        {error && <p id={errorId} role="alert" className="text-exam-wrong text-sm">{error}</p>}
         <button
           type="submit" disabled={loading}
           className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
@@ -284,12 +291,16 @@ function LoginForm() {
       {/* Tabs */}
       <div className="flex rounded-sm bg-exam-paper-alt p-1 gap-1">
         <button
+          type="button"
+          aria-pressed={tab === 'login'}
           onClick={() => { setTab('login'); setError(null); }}
           className={`hit-44 flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'login' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
         >
           כניסה
         </button>
         <button
+          type="button"
+          aria-pressed={tab === 'signup'}
           onClick={() => { setTab('signup'); setError(null); }}
           className={`hit-44 flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'signup' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
         >
@@ -300,40 +311,45 @@ function LoginForm() {
       {/* Email/password form */}
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-exam-ink">אימייל</label>
+          <label htmlFor={emailId} className="block text-sm font-medium text-exam-ink">אימייל</label>
           <input
-            type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}
+            id={emailId} type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}
             required dir="ltr" placeholder="your@email.com" autoComplete="email"
-            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left placeholder:text-exam-ink-soft"
+            aria-invalid={!!error} aria-describedby={error ? errorId : undefined}
+            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left placeholder:text-exam-ink-soft"
           />
         </div>
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-exam-ink">
-            סיסמה
+          {/* The forgot link sits beside the label, not inside it, so the
+              field's accessible name stays just "סיסמה". */}
+          <div className="flex items-center justify-between">
+            <label htmlFor={passwordId} className="block text-sm font-medium text-exam-ink">סיסמה</label>
             {tab === 'login' && (
               <button
                 type="button"
                 onClick={() => { setShowForgot(true); setError(null); }}
-                className="hit-44 float-left text-xs text-exam-accent hover:underline font-normal"
+                className="hit-44 text-xs text-exam-accent hover:underline font-normal"
               >
                 שכחת סיסמה?
               </button>
             )}
-          </label>
+          </div>
           <input
-            type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}
+            id={passwordId} type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}
             required minLength={6} dir="ltr" placeholder="••••••••" autoComplete={tab === 'signup' ? 'new-password' : 'current-password'}
-            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none"
+            aria-invalid={!!error}
+            aria-describedby={[tab === 'signup' ? hintId : '', error ? errorId : ''].filter(Boolean).join(' ') || undefined}
+            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none"
           />
           {tab === 'signup' && (
-            <p className="text-xs text-exam-ink-soft">לפחות 6 תווים</p>
+            <p id={hintId} className="text-xs text-exam-ink-soft">לפחות 6 תווים</p>
           )}
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm">
+          <div role="alert" className="flex items-center gap-2 p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm">
             <AlertCircle className="w-4 h-4 text-exam-wrong flex-shrink-0" aria-hidden />
-            <p className="text-exam-wrong text-sm">{error}</p>
+            <p id={errorId} className="text-exam-wrong text-sm">{error}</p>
           </div>
         )}
 
@@ -351,13 +367,13 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
+    <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
       <div className="w-full max-w-sm">
         {/* Header */}
         <div className="text-center mb-8">
-          <GraduationCap className="w-12 h-12 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
-          <h1 className="text-4xl font-bold text-exam-ink tracking-tight" dir="ltr">
-            134<span className="text-exam-accent">+</span>
+          <h1>
+            <BrandLogo className="w-36 h-auto mx-auto" />
+            <span className="sr-only">: כניסה לחשבון</span>
           </h1>
           <p className="text-exam-ink-soft text-sm mt-2">הכנה ממוקדת לאמירנ&quot;ט</p>
         </div>
@@ -375,6 +391,6 @@ export default function LoginPage() {
           {' '}(ההתקדמות תישמר רק בדפדפן הזה, ותימחק אם תנקה את נתוני האתר).
         </p>
       </div>
-    </div>
+    </main>
   );
 }

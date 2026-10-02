@@ -10,15 +10,19 @@ import { pickDistinctOptions } from '@/lib/option-overlap';
  * carry the most Fisher information at a target θ (the student's ability,
  * or the cut score in decision sections — see chooseRouteTarget), using
  * the calibrated difficulties. Exposure control is randomesque: the draw is
- * random among the top RANDOMESQUE_FACTOR × needed items, so two students at
- * the same θ don't get identical sections. The SQL is in migration
- * 20260923200000 (pick_informative_items / pick_informative_passage).
+ * random among the top CANDIDATE_FACTOR × needed items, so two students at
+ * the same θ don't get identical sections. The SQL is in migrations
+ * 20260923200000 and 20260926120000 (pick_informative_items /
+ * pick_informative_passage).
  */
-export const RANDOMESQUE_FACTOR = 3;
-/** Candidates drawn per item needed, so items sharing answer choices (with
- * each other or with earlier sections) can be skipped. Items from one
- * generation batch often share a difficulty, so the extra candidates cost
- * next to no information. */
+/** Size of the randomesque pool, per item needed: the SQL returns the top
+ * CANDIDATE_FACTOR × needed items by information in random order, and the
+ * first ones that share no answer choice (with each other or with earlier
+ * sections) are taken. The pool is wide so that skipping is always possible;
+ * items from one generation batch often share a difficulty, so it costs
+ * next to no information — measured on the real bank (2026-10-02), the
+ * served items carry ≥97.5% of the best possible information at every
+ * target from θ −2 to +2.5. */
 export const CANDIDATE_FACTOR = 20;
 /** Passages are drawn from the top few by summed information. */
 export const PASSAGE_POOL = 5;

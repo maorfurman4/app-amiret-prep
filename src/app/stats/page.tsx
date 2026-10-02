@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
-import { authFetch } from '@/lib/auth-fetch';
+import { fetchStatsRows } from '@/lib/stats-client';
 import { computeStatsMetrics, type StatsRow } from '@/lib/stats-metrics';
 import { BackNav } from '@/components/BackNav';
 import { StatsView } from '@/components/stats/StatsView';
@@ -33,11 +33,10 @@ export default function StatsPage() {
         return;
       }
 
-      authFetch(`/api/stats?guestId=${encodeURIComponent(localStorage.getItem('amiret_guest_id') ?? '')}`)
-        .then(r => { if (!r.ok) throw new Error(`stats fetch failed: ${r.status}`); return r.json(); })
-        .then((d: { sessions: StatsRow[] }) => {
+      fetchStatsRows()
+        .then(sessions => {
           if (cancelled) return;
-          setRows(d.sessions ?? []);
+          setRows(sessions);
           setLoading(false);
         })
         .catch(() => {
@@ -53,7 +52,7 @@ export default function StatsPage() {
     return (
       <div className="min-h-dvh bg-exam-paper" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex flex-col items-center justify-center h-[calc(100dvh-3rem)] text-center px-4">
+        <main id="main" className="flex flex-col items-center justify-center h-[calc(100dvh-3rem)] text-center px-4">
           <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-exam-wrong" strokeWidth={1.5} aria-hidden />
           <p className="text-exam-ink-soft mb-6">לא הצלחנו לטעון את הסטטיסטיקה. בדוק את החיבור ונסה שוב.</p>
           <button
@@ -62,7 +61,7 @@ export default function StatsPage() {
           >
             נסה שוב
           </button>
-        </div>
+        </main>
       </div>
     );
   }
@@ -71,7 +70,7 @@ export default function StatsPage() {
     return (
       <div className="min-h-dvh bg-exam-paper" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex items-center justify-center h-[calc(100dvh-3rem)] text-exam-ink-soft">טוען...</div>
+        <main id="main" className="flex items-center justify-center h-[calc(100dvh-3rem)] text-exam-ink-soft">טוען...</main>
       </div>
     );
   }

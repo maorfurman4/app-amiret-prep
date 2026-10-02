@@ -9,8 +9,10 @@ import { AuthCTA } from '@/components/AuthCTA';
 import { classifyScore, type Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
+import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
 import { toCanonicalOption } from '@/lib/option-shuffle';
 import { ensureGuestIdentity } from '@/lib/guest';
+import { useActivityGuard } from '@/lib/activity-guard';
 import { DIAGNOSTIC, type DiagnosticState, type DiagnosticType, type StartPlan } from '@/lib/diagnostic-plan';
 import { heCount } from '@/lib/hebrew-count';
 
@@ -47,6 +49,14 @@ export default function DiagnosticPage() {
   const [answers, setAnswers] = useState<{ id: string; chosen: number }[]>([]);
   const [state, setState] = useState<DiagnosticState | null>(null);
   const [plan, setPlan] = useState<StartPlan | null>(null);
+  const { setInProgress } = useActivityGuard();
+
+  // Flag mid-diagnostic activity so the bottom nav asks for a confirming
+  // second tap before navigating away (same as practice).
+  useEffect(() => {
+    setInProgress(phase === 'answering');
+    return () => setInProgress(false);
+  }, [phase, setInProgress]);
 
   // No server session to resume from — warn before a refresh loses the run.
   useEffect(() => {
@@ -109,7 +119,7 @@ export default function DiagnosticPage() {
     return (
       <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/" backLabel="דף הבית" />
-        <div className="flex-1 flex items-center justify-center px-4 py-10">
+        <main id="main" className="flex-1 flex items-center justify-center px-4 py-10">
           <div className="w-full max-w-lg text-center space-y-6 animate-fade-up">
             <Stethoscope className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
             <h1 className="text-3xl font-bold text-exam-ink">מאיפה להתחיל? נגלה ביחד</h1>
@@ -130,21 +140,21 @@ export default function DiagnosticPage() {
               {pending ? 'מכין את השאלה הראשונה...' : 'התחל אבחון'}
             </button>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
 
   if (phase === 'error') {
     return (
-      <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
+      <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center space-y-3">
           <div className="text-exam-wrong">לא הצלחנו לטעון את השאלה הבאה</div>
           <button onClick={() => step(answers)} disabled={pending} className="text-exam-accent underline text-sm">
             {pending ? 'מנסה שוב...' : 'נסה שוב'}
           </button>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -163,7 +173,7 @@ export default function DiagnosticPage() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <Stethoscope className="w-4 h-4 text-exam-ink" aria-hidden />
-              <span className="text-sm font-bold text-exam-ink">אבחון חכם</span>
+              <h1 className="text-sm font-bold text-exam-ink">אבחון חכם</h1>
               {question && <span className="text-xs text-exam-ink-soft">{TYPE_LABEL[question.type as DiagnosticType]}</span>}
             </div>
             <span className="text-xs text-exam-ink-soft">
@@ -183,7 +193,7 @@ export default function DiagnosticPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main id="main" className="max-w-2xl mx-auto px-4 py-8">
         {question && (
           <QuestionCard
             key={question.id}
@@ -232,7 +242,8 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
   ];
 
   return (
-    <div className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
+    <main id="main" className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
+      <SessionStreakCelebration />
       <div className="max-w-lg mx-auto space-y-5">
         <div className="text-center animate-fade-up">
           <Sparkles className="w-9 h-9 mx-auto mb-2 text-exam-accent animate-check-pop" strokeWidth={1.5} aria-hidden />
@@ -273,7 +284,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
               <div className={`text-xl font-bold ${band.color}`}><bdi dir="ltr">~{plan.score}</bdi></div>
             </div>
           </div>
-          <div dir="ltr" className="flex gap-1.5 mb-2" aria-label={lo === hi ? `הרמה שלך: ${lo}` : `הטווח הסביר: רמות ${lo} עד ${hi}`}>
+          <div dir="ltr" className="flex gap-1.5 mb-2" role="img" aria-label={lo === hi ? `הרמה שלך: ${lo}` : `הטווח הסביר: רמות ${lo} עד ${hi}`}>
             {[1, 2, 3, 4, 5].map(l => (
               <div
                 key={l}
@@ -327,6 +338,6 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
           ))}
         </section>
       </div>
-    </div>
+    </main>
   );
 }

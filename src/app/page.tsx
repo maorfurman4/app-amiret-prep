@@ -11,7 +11,6 @@ import { ReviewQueueCard } from '@/components/home/ReviewQueueCard';
 import { StatsCard } from '@/components/home/StatsCard';
 import { StreakCelebration } from '@/components/home/StreakCelebration';
 import { TodaySessionCta } from '@/components/home/TodaySessionCta';
-import { VictoryPathSummary } from '@/components/home/VictoryPathSummary';
 import { ExamDateCard } from '@/components/home/ExamDateCard';
 import { OfficialScorePrompt } from '@/components/home/OfficialScorePrompt';
 
@@ -106,7 +105,6 @@ export default function HomePage() {
           <section className="animate-fade-up [animation-delay:360ms]">
             <h2 className="text-label text-exam-ink-soft mb-2 pr-1">מעקב והתקדמות</h2>
             <StatsCard />
-            <div className="mt-3"><VictoryPathSummary /></div>
           </section>
 
           {/* Score scale — collapsed by default to keep the page short on mobile */}

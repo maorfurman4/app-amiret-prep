@@ -16,7 +16,7 @@ import { isExperimentalSection, type SectionResult } from '@/types/exam';
  * That is, the answers are indistinguishable from random clicking, so the
  * score describes the clicking, not the student. Such an exam still shows
  * its score, but is left out of every ability estimate built on top of it
- * (current level, readiness, forecast, the official-score prediction).
+ * (the stats headline score, readiness, trend, the official-score prediction).
  */
 
 /** Answered faster than this share of the time budget → almost certainly a

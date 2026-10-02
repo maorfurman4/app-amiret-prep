@@ -107,7 +107,6 @@ export interface PracticeStep {
 export interface StartPlan {
   theta: number;
   sd: number;
-  score: number;
   level: DifficultyLevel;
   /** Levels covered by θ̂ ± 1 SD — the honest uncertainty band. */
   levelRange: [DifficultyLevel, DifficultyLevel];
@@ -143,17 +142,15 @@ export function buildStartPlan(items: ScoredItem[]): StartPlan {
     : 'sentence_completion';
   const other: DiagnosticType = weaker === 'sentence_completion' ? 'restatement' : 'sentence_completion';
 
-  const score = thetaToScore(theta);
   return {
     theta,
     sd,
-    score,
     level,
     levelRange: [routeNextDifficulty(theta - sd), routeNextDifficulty(theta + sd)],
     split: significant,
     primary: { type: weaker, level: levelOf(weaker), href: practiceHref(weaker, levelOf(weaker)) },
     secondary: { type: other, level: levelOf(other), href: practiceHref(other, levelOf(other)) },
-    suggestVocabulary: score < 100,
+    suggestVocabulary: thetaToScore(theta) < 100,
     byType,
   };
 }

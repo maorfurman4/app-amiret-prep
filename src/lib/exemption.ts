@@ -3,10 +3,11 @@ import { exemptionProbability, standardError } from '@/lib/calibration';
 import { isExperimentalSection, type Question, type SectionResult } from '@/types/exam';
 
 /**
- * Presentation-side exemption math: one exam's measurement, several exams
- * pooled into a current estimate, and the score range the uncertainty
- * implies. Pure — the same functions the server uses at exam completion
- * (src/lib/calibration.ts), so a number shown here is the number stored.
+ * Exemption math: one exam's measurement, several exams pooled into a
+ * current estimate (snapshotted when an official score is reported, to
+ * calibrate against — src/lib/official-score.ts), and the score range the
+ * uncertainty implies. Pure — the same functions the server uses at exam
+ * completion (src/lib/calibration.ts), so a number shown is the number stored.
  */
 
 export interface Measurement {
@@ -118,21 +119,4 @@ export const INTERVAL_Z = 1.2816;
 /** The score range θ̂ ± z·SE maps to (on the app's 50–150 scale). */
 export function scoreInterval(m: Pick<Measurement, 'theta' | 'se'>, z = INTERVAL_Z): { lo: number; hi: number } {
   return { lo: thetaToScore(m.theta - z * m.se), hi: thetaToScore(m.theta + z * m.se) };
-}
-
-export type ExemptionTone = 'likely' | 'close' | 'building';
-
-/** Visual tone of a probability: ≥70% likely, 30–70% a coin-flip zone, <30% still building. */
-export function exemptionTone(p: number): ExemptionTone {
-  if (p >= 0.7) return 'likely';
-  if (p >= 0.3) return 'close';
-  return 'building';
-}
-
-/** Whole-percent display that never claims certainty the model can't have. */
-export function formatProbability(p: number): string {
-  const pct = Math.round(p * 100);
-  if (pct >= 100) return '>99%';
-  if (pct <= 0) return '<1%';
-  return `${pct}%`;
 }

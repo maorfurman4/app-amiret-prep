@@ -2,14 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { SECTION_CONFIGS } from '@/types/exam';
 import { computeWeakestType } from '@/lib/weakness';
 import {
-  aggregateAccuracyByDifficulty, computeCurrentLevel, computeStatsMetrics, windowLabel, type StatsRow,
+  aggregateAccuracyByDifficulty, computeStatsMetrics, windowLabel, type StatsRow,
 } from './stats-metrics';
 
 // ── Fixture: a full 7-section exam (section 7 = the unscored experimental one) ──
 
 type Outcome = (sectionIndex: number, q: number) => boolean;
 
-function exam(i: number, outcome: Outcome, opts: { level?: (s: number, q: number) => number; score?: number; theta?: number; se?: number } = {}): StatsRow {
+function exam(i: number, outcome: Outcome, opts: { level?: (s: number, q: number) => number; score?: number } = {}): StatsRow {
   const section_results = SECTION_CONFIGS.map(cfg => {
     const questions = Array.from({ length: cfg.questionCount }, (_, q) => ({
       id: `e${i}-s${cfg.index}-q${q}`,
@@ -30,9 +30,6 @@ function exam(i: number, outcome: Outcome, opts: { level?: (s: number, q: number
     score: opts.score ?? 60,
     completed_at: new Date(Date.UTC(2026, 8, 1 + i)).toISOString(),
     section_results,
-    theta_final: opts.theta ?? -2,
-    theta_se: opts.se ?? 0.5,
-    p_exempt: null,
   };
 }
 
@@ -105,31 +102,28 @@ describe('windows', () => {
   });
 });
 
-describe('current level', () => {
-  // The real pooled inputs behind the reported "50–56" (last 3 exams: θ̂ and SE, read-only query 2026-09-30).
-  const real = [
-    { theta: -2.718, se: 0.584 },
-    { theta: -2.770, se: 0.607 },
-    { theta: -2.375, se: 0.551 },
-  ].map((m, i) => exam(i, () => false, { theta: m.theta, se: m.se, score: [50, 50, 53][i] }));
+describe('headline score and readiness rest on actual scores', () => {
+  const scored = (scores: number[]) => scores.map((score, i) => exam(i, () => false, { score }));
 
-  it('pools the last 3 into one range, flags the floor, and derives the one points-to-134 from it', () => {
-    const c = computeCurrentLevel(real)!;
-    expect([c.lo, c.hi]).toEqual([50, 56]);
-    expect(c.loAtFloor).toBe(true);
-    expect(c.pointsToTarget).toBe(78);
-    expect(c.used).toBe(3);
+  it('the headline is the last exam\'s score, with the gap to 134 from it', () => {
+    const m = computeStatsMetrics(scored([50, 50, 53]))!;
+    expect(m.measured).toEqual({ score: 53, isLatestExam: true, pointsToTarget: 81 });
   });
 
-  it('readiness quotes that same range and gap', () => {
-    const m = computeStatsMetrics(real)!;
-    expect(m.readiness.reasons.some(r => r.text.includes('50–56') && r.text.includes('לפחות 78'))).toBe(true);
+  it('readiness quotes the lowest of the last 3 scores, and the verdict follows it', () => {
+    const m = computeStatsMetrics(scored([140, 150, 118, 138, 136]))!;
+    expect(m.readiness.reasons.some(r => r.text.includes('הציון הנמוך מבין 3 המבחנים האחרונים: 118') && r.text.includes('חסרות 16'))).toBe(true);
     expect(m.readiness.verdict).toBe('not_yet');
   });
 
-  it('isolates the range LTR so Hebrew text can\'t print it "56–50"', () => {
-    const m = computeStatsMetrics(real)!;
-    expect(m.readiness.reasons.some(r => r.text.includes('⁦50–56⁩'))).toBe(true);
+  it('one good day isn\'t "ready": the lowest recent score decides', () => {
+    const almost = computeStatsMetrics(scored([125, 122, 145]))!;
+    expect(almost.readiness.verdict).toBe('almost');
+  });
+
+  it('no reason mentions a modelled level', () => {
+    const m = computeStatsMetrics(scored([90, 100, 110]))!;
+    expect(m.readiness.reasons.some(r => r.text.includes('משוערת'))).toBe(false);
   });
 });
 
@@ -140,26 +134,26 @@ describe('exams clicked through at random', () => {
     ...row,
     section_results: (row.section_results as { answers: unknown[] }[]).map(sr => ({ ...sr, timings: sr.answers.map(() => seconds) })),
   });
-  const clicked = [-2.718, -2.770, -2.375].map((theta, i) => withSeconds(exam(i, () => false, { theta, se: 0.6, score: 50 }), 1));
-  const measured = [1.2, 1.4].map((theta, i) => withSeconds(exam(10 + i, (_s, q) => q < 3, { theta, se: 0.45, score: 125 }), 30));
+  const clicked = [0, 1, 2].map(i => withSeconds(exam(i, () => false, { score: 50 }), 1));
+  const measured = [124, 125].map((score, i) => withSeconds(exam(10 + i, (_s, q) => q < 3, { score }), 30));
 
-  it('are left out of the current level and readiness, but still counted as exams', () => {
+  it('are left out of the headline score and readiness, but still counted as exams', () => {
     const m = computeStatsMetrics([...measured, ...clicked])!;
     expect(m.examCount).toBe(5);
     expect(m.lastScore).toBe(50);
     expect(m.excludedLowEffort).toBe(3);
-    expect(m.current!.used).toBe(2);
-    expect(m.current).toEqual(computeCurrentLevel(measured));
+    expect(m.measured).toEqual({ score: 125, isLatestExam: false, pointsToTarget: 9 });
+    expect(m.readiness.reasons.some(r => r.text.includes('2 המבחנים האחרונים'))).toBe(true);
   });
 
-  it('leave no current level when nothing measured the student', () => {
+  it('leave no headline score when nothing measured the student', () => {
     const m = computeStatsMetrics(clicked)!;
-    expect(m.current).toBeNull();
+    expect(m.measured).toBeNull();
     expect(m.excludedLowEffort).toBe(3);
   });
 
   it('a fast exam that is right is not excluded', () => {
-    const fastAndRight = withSeconds(exam(20, () => true, { theta: 2.4, se: 0.5, score: 148 }), 1);
+    const fastAndRight = withSeconds(exam(20, () => true, { score: 148 }), 1);
     expect(computeStatsMetrics([fastAndRight])!.excludedLowEffort).toBe(0);
   });
 });

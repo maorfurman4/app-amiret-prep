@@ -1,7 +1,6 @@
 import { SECTION_CONFIGS, classifyScore, isCorrectAnswer, isExperimentalSection, type Question, type ScoreClassification, type SectionResult } from '@/types/exam';
-import { thetaToScore } from '@/lib/adaptive';
 import { EXEMPTION_SCORE } from '@/lib/calibration';
-import { currentEstimate, scoreInterval, sessionMeasurement, POOL_WINDOW, type Measurement } from '@/lib/exemption';
+import { POOL_WINDOW } from '@/lib/exemption';
 import { isLowEffortExam } from '@/lib/exam-effort';
 import { aggregateAccuracyByType, computeWeakestType, type AccuracyByType, type TypeAccuracy, type WeaknessResult } from '@/lib/weakness';
 import { heCount, agree } from '@/lib/hebrew-count';
@@ -14,28 +13,28 @@ import { heCount, agree } from '@/lib/hebrew-count';
  * unlabelled windows).
  *
  * Windows, each named wherever its numbers are shown:
- *  - current level: the last POOL_WINDOW exams (src/lib/exemption.ts)
+ *  - headline score: the latest exam that measured the student
+ *  - readiness scores: the last POOL_WINDOW of those (src/lib/exemption.ts)
  *  - accuracy, difficulty, pace: the last RECENT_WINDOW exams, or all-time
  *  - exam count, best score, trend: all exams
  * Accuracy only counts scored questions (the experimental section never
  * counts toward the score).
  *
- * The current level and readiness rest only on exams that measured the
+ * Only actual exam scores are shown — no pooled "estimated level" or
+ * exemption probability: with uncalibrated items and no official scores
+ * to anchor the scale, those claimed more than the data supports.
+ *
+ * The headline score and readiness rest only on exams that measured the
  * student: one clicked through at random (src/lib/exam-effort.ts) still
  * counts as an exam and keeps its score, but says nothing about ability.
  */
 
 export const RECENT_WINDOW = 10;
-/** The bottom of the app's score scale (thetaToScore clamps here). */
-export const SCALE_MIN = 50;
 
 export interface StatsRow {
   score: number;
   completed_at: string;
   section_results: unknown;
-  theta_final?: number | null;
-  theta_se?: number | null;
-  p_exempt?: number | null;
 }
 
 export type DifficultyBucket = 'easy' | 'medium' | 'hard';
@@ -51,17 +50,12 @@ export interface AccuracyWindow {
   byDifficulty: Record<DifficultyBucket, TypeAccuracy>;
 }
 
-export interface CurrentLevel {
-  measurement: Measurement;
-  /** Exams pooled into it, and recent ones left out as clearly below the latest. */
-  used: number;
-  dropped: number;
-  /** The likely range (80% interval) on the 50–150 scale. */
-  lo: number;
-  hi: number;
-  /** The range's low end is the scale's floor, so the level may sit below it. */
-  loAtFloor: boolean;
-  /** Points from the top of the range to 134: "at least this many to go". 0 once the range reaches it. */
+export interface MeasuredScore {
+  /** The score of the latest exam that measured the student. */
+  score: number;
+  /** False when a later exam was clicked through at random and left out. */
+  isLatestExam: boolean;
+  /** Points from that score to 134; 0 once it's reached. */
   pointsToTarget: number;
 }
 
@@ -77,13 +71,14 @@ export interface StatsMetrics {
   bestScore: number;
   lastScore: number;
   bestClassification: ScoreClassification;
-  current: CurrentLevel | null;
+  /** Null when no exam measured the student. */
+  measured: MeasuredScore | null;
   recent: AccuracyWindow;
   allTime: AccuracyWindow;
   /** Weakest type over the recent window + the practice level — the same pick as today's session. */
   weakest: WeaknessResult | null;
   readiness: Readiness;
-  /** Exams left out of the current level and readiness as clicked through at random. */
+  /** Exams left out of the headline score, trend and readiness as clicked through at random. */
   excludedLowEffort: number;
 }
 
@@ -151,18 +146,14 @@ function accuracyWindow(rows: StatsRow[], all: number): AccuracyWindow {
   };
 }
 
-export function computeCurrentLevel(rows: StatsRow[]): CurrentLevel | null {
-  const est = currentEstimate(rows.map(sessionMeasurement).filter((m): m is Measurement => m !== null));
-  if (!est) return null;
-  const { lo, hi } = scoreInterval(est.measurement);
+/** `measured` = the exams that measured the student, oldest first; `all` = every exam. */
+export function computeMeasuredScore(measured: StatsRow[], all: StatsRow[]): MeasuredScore | null {
+  const latest = measured[measured.length - 1];
+  if (!latest) return null;
   return {
-    measurement: est.measurement,
-    used: est.used,
-    dropped: est.dropped,
-    lo,
-    hi,
-    loAtFloor: lo <= SCALE_MIN,
-    pointsToTarget: Math.max(0, EXEMPTION_SCORE - hi),
+    score: latest.score,
+    isLatestExam: latest === all[all.length - 1],
+    pointsToTarget: Math.max(0, EXEMPTION_SCORE - latest.score),
   };
 }
 
@@ -173,12 +164,12 @@ export function windowLabel(w: Pick<AccuracyWindow, 'exams' | 'isAllTime'>): str
   return `${w.exams} המבחנים האחרונים`;
 }
 
-/** The label for the current-level window. */
+/** The label for the readiness score window. */
 export function currentLabel(used: number): string {
   return used === 1 ? 'המבחן האחרון' : `${used} המבחנים האחרונים`;
 }
 
-function readiness(rows: StatsRow[], current: CurrentLevel | null, recent: AccuracyWindow): Readiness {
+function readiness(rows: StatsRow[], recent: AccuracyWindow): Readiness {
   const reasons: ReadinessReason[] = [];
   const n = rows.length;
   reasons.push({
@@ -187,18 +178,20 @@ function readiness(rows: StatsRow[], current: CurrentLevel | null, recent: Accur
     href: n >= 3 ? undefined : '/exam',
   });
 
-  const levelScore = current ? thetaToScore(current.measurement.theta) : null;
-  if (current && levelScore !== null) {
-    const range = ltr(`${current.lo}–${current.hi}`);
-    reasons.push(levelScore >= EXEMPTION_SCORE
-      ? { ok: true, text: `רמה נוכחית משוערת ${range}: באזור ${EXEMPTION_SCORE} ומעלה` }
-      : { ok: false, text: current.pointsToTarget > 0
-          ? `רמה נוכחית משוערת ${range}: חסרות לפחות ${current.pointsToTarget} נק׳ ל-${EXEMPTION_SCORE}`
-          : `רמה נוכחית משוערת ${range}: ${EXEMPTION_SCORE} בתוך הטווח, אבל עוד לא מעליו` });
+  // The actual scores of the last few measured exams; the verdict goes by
+  // the lowest of them, so one good day doesn't read as "ready".
+  const lastScores = rows.slice(-POOL_WINDOW).map(r => r.score);
+  const floorScore = lastScores.length > 0 ? Math.min(...lastScores) : null;
+  if (floorScore !== null) {
+    const basis = currentLabel(lastScores.length);
+    reasons.push(floorScore >= EXEMPTION_SCORE
+      ? { ok: true, text: lastScores.length === 1 ? `${basis}: ${floorScore}, ${EXEMPTION_SCORE} ומעלה` : `${basis}: כולם ${EXEMPTION_SCORE} ומעלה` }
+      : { ok: false, text: lastScores.length === 1
+          ? `${basis}: ${floorScore}. חסרות ${EXEMPTION_SCORE - floorScore} נק׳ ל-${EXEMPTION_SCORE}`
+          : `הציון הנמוך מבין ${basis}: ${floorScore}. חסרות ${EXEMPTION_SCORE - floorScore} נק׳ ל-${EXEMPTION_SCORE}` });
   }
 
-  // Stability: the same exams the current level rests on.
-  const lastScores = rows.slice(-POOL_WINDOW).map(r => r.score);
+  // Stability: the same exams.
   if (lastScores.length >= 2) {
     const spread = Math.max(...lastScores) - Math.min(...lastScores);
     const basis = currentLabel(lastScores.length);
@@ -237,9 +230,9 @@ function readiness(rows: StatsRow[], current: CurrentLevel | null, recent: Accur
   }
 
   const allOk = reasons.every(r => r.ok);
-  const verdict = allOk && n >= 3 && levelScore !== null && levelScore >= EXEMPTION_SCORE
+  const verdict = allOk && n >= 3 && floorScore !== null && floorScore >= EXEMPTION_SCORE
     ? 'ready'
-    : n >= 3 && levelScore !== null && levelScore >= 120
+    : n >= 3 && floorScore !== null && floorScore >= 120
     ? 'almost'
     : 'not_yet';
   return { verdict, reasons };
@@ -251,7 +244,6 @@ export function computeStatsMetrics(rows: StatsRow[]): StatsMetrics | null {
   const scores = rows.map(r => r.score);
   const bestScore = Math.max(...scores);
   const measured = rows.filter(r => !isLowEffortExam(r.section_results));
-  const current = computeCurrentLevel(measured);
   const recent = accuracyWindow(rows.slice(-RECENT_WINDOW), rows.length);
   const allTime = accuracyWindow(rows, rows.length);
   return {
@@ -259,11 +251,11 @@ export function computeStatsMetrics(rows: StatsRow[]): StatsMetrics | null {
     bestScore,
     lastScore: scores[scores.length - 1],
     bestClassification: classifyScore(bestScore),
-    current,
+    measured: computeMeasuredScore(measured, rows),
     recent,
     allTime,
     weakest: computeWeakestType(rows),
-    readiness: readiness(measured, current, recent),
+    readiness: readiness(measured, recent),
     excludedLowEffort: rows.length - measured.length,
   };
 }

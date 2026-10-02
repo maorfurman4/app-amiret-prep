@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { computeStreakInfo } from '@/lib/streak-server';
-import { computeForecast, type Forecast } from '@/lib/forecast';
-import { isLowEffortExam } from '@/lib/exam-effort';
 import { computeRings, DEFAULT_EFFORT_TARGET, type Rings } from '@/lib/rings';
 import { shouldPromptForScore } from '@/lib/official-score';
 import { todayLocalStr } from '@/lib/date-local';
-
-const VICTORY_PATH_TARGET_SCORE = 134;
 
 export interface DashboardSummary {
   streak: number;
@@ -25,7 +21,6 @@ export interface DashboardSummary {
   /** Set when the student's exam date has passed and its official score
    * hasn't been reported or declined — the dashboard asks for it. */
   officialScorePrompt: { testDate: string } | null;
-  forecast: Forecast | null;
 }
 
 const EMPTY: DashboardSummary = {
@@ -43,7 +38,6 @@ const EMPTY: DashboardSummary = {
   examDate: null,
   canSetExamDate: false,
   officialScorePrompt: null,
-  forecast: null,
 };
 
 /**
@@ -86,7 +80,7 @@ export async function GET() {
     ? supabase.from('user_goals').select('daily_activity_target, exam_date, score_prompt_dismissed_for').eq('user_id', user.id).maybeSingle()
     : null;
 
-  const [streakInfo, lastScoreRes, forecastRowsRes, examCountRes, reviewCountRes, vocabDueRes, goalRes] = await Promise.all([
+  const [streakInfo, lastScoreRes, examCountRes, reviewCountRes, vocabDueRes, goalRes] = await Promise.all([
     computeStreakInfo(supabase, owner),
     supabase
       .from('exam_sessions')
@@ -98,17 +92,6 @@ export async function GET() {
       .order('completed_at', { ascending: false })
       .limit(1)
       .maybeSingle(),
-    // Same rows /api/stats feeds the full Victory Path chart. section_results
-    // is read (server-side only) so exams clicked through at random can be
-    // left out of the forecast, exactly as on /stats.
-    supabase
-      .from('exam_sessions')
-      .select('score, completed_at, section_results')
-      .eq('user_id', owner)
-      .eq('is_practice', false)
-      .not('completed_at', 'is', null)
-      .not('score', 'is', null)
-      .order('completed_at', { ascending: true }),
     supabase
       .from('exam_sessions')
       .select('id', { count: 'exact', head: true })
@@ -162,9 +145,5 @@ export async function GET() {
     examDate: goal?.exam_date ?? null,
     canSetExamDate: !!user,
     officialScorePrompt,
-    forecast: computeForecast(
-      (forecastRowsRes.data ?? []).filter(r => !isLowEffortExam(r.section_results)),
-      VICTORY_PATH_TARGET_SCORE,
-    ),
   } satisfies DashboardSummary);
 }

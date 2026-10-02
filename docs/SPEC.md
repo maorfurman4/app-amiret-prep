@@ -79,7 +79,7 @@
 ### 3.2 משתמש רשום
 - Supabase Auth, session ב-**localStorage** (לא cookies). לכן השרת לומד מי המשתמש דרך `Authorization: Bearer <access_token>` — `lib/auth-fetch.ts::authFetch` מצרף אותו לכל קריאה; אורחים פשוט לא שולחים header.
 - `lib/supabase-server.ts::getServerClients()` מחזיר `{ supabase (service-role, לכל השאילתות), user (מ-bearer, או מ-cookies כ-fallback) }`. **דפוס חובה** בכל route: זהות מ-`user`, נתונים דרך ה-service client.
-- מיזוג אורח→חשבון: `/api/auth/merge-guest` נקרא אחרי כל התחברות (callback של OAuth ולוגין אימייל). מעביר `exam_sessions`, `review_queue` (עם dedup), היסטוריית שאלות/קטעים, ומחשב מחדש `user_stats` + `leaderboard`. אידמפוטנטי. **אבטחה (2026-09):** דוחה `guestId` שהוא בעצם id של משתמש רשום (`auth.admin.getUserById` → 403), אחרת משתמש יכול היה "לגנוב" היסטוריה של אחר.
+- מיזוג אורח→חשבון: `/api/auth/merge-guest` נקרא אחרי כל התחברות (callback של OAuth ולוגין אימייל). מעביר `exam_sessions`, `review_queue` (עם dedup), היסטוריית שאלות/קטעים, ומחשב מחדש `user_stats`. אידמפוטנטי. **אבטחה (2026-09):** דוחה `guestId` שהוא בעצם id של משתמש רשום (`auth.admin.getUserById` → 403), אחרת משתמש יכול היה "לגנוב" היסטוריה של אחר.
 
 ### 3.3 מסכי אימות
 | נתיב | תפקיד |
@@ -89,7 +89,7 @@
 | `/auth/reset-password` | (חדש 2026-09-16) ממתין לסשן שחזור; טופס סיסמה חדשה + אימות; `auth.updateUser({password})`; מצבים: בודק / טופס / הצלחה / "הקישור אינו תקף" (אחרי 4 שניות בלי סשן). אומת מקצה לקצה עם משתמש-בדיקה זמני. |
 
 ### 3.4 פרופיל (`UserMenu`)
-תפריט בדף הבית: שם תצוגה (`/api/profile/update-name` → `user_stats` + `leaderboard`), אווטאר (`/api/profile/upload-avatar` POST/DELETE → bucket `avatars`, `user_metadata`, `user_stats`, `leaderboard`; מחיקה מחזירה לראשי תיבות, לא לתמונת OAuth), שינוי סיסמה, קישור לסטטיסטיקות, יציאה.
+תפריט בדף הבית: שם תצוגה (`/api/profile/update-name` → `user_stats`), אווטאר (`/api/profile/upload-avatar` POST/DELETE → bucket `avatars`, `user_metadata`, `user_stats`; מחיקה מחזירה לראשי תיבות, לא לתמונת OAuth), שינוי סיסמה, קישור לסטטיסטיקות, יציאה.
 
 ---
 
@@ -237,7 +237,7 @@
 - דיוק לפי סוג שאלה ולפי רמת קושי (נגזר מ-`questions[0].difficulty_level` בכל פרק), "תרגל את החולשה שלך" → deep-link ל-`/practice`.
 
 ### 5.11 `/leaderboard` — הוסר (2026-10-01)
-הדף, כרטיס דף הבית והרשומה ב-sitemap הוסרו. הטבלה `leaderboard` והטריגר שמזין אותה נשארו ב-DB (ממתין להחלטה), וה-API של שם/אווטאר/merge-guest עדיין מסנכרנים אליה. ה-keepalive ב-GitHub Actions קורא ממנה.
+הדף, כרטיס דף הבית והרשומה ב-sitemap הוסרו. הטבלה `leaderboard` נמחקה מה-DB (`20261001090000_drop_leaderboard.sql`), וה-upsert אליה הוסר מהטריגר `update_user_stats_on_complete`. ה-API של שם/אווטאר/merge-guest כבר לא נוגעים בה, וה-keepalive ב-GitHub Actions קורא מ-`vocabulary`.
 
 ### 5.12 `/strategies` — מדריך אסטרטגיה (server component, data-driven)
 9 נושאים באקורדיון: חוקי המשחק (אדפטיביות, אין חזרה, טיימר קשיח, אין קנס), תקציב זמן + stuck caps, השלמת משפטים (שיטה + דוגמה), ניסוח מחדש, הבנת הנקרא, מילות קישור (ניגוד/סיבה-תוצאה/תוספת/תנאי), איפה להשקיע (פרק 1 קובע מסלול, RC = בור זמן בטוח, ניסיוני = בונוס), שיטות קריאה (שאלות-קודם / קריאה מלאה / משולב — מומלץ), הרגלי הכנה (עם CTA לאתר). ניסוחים שרוככו 2026-09-16: "לא **רק** מבחן אוצר מילים". הבעלים בחר **להשאיר**: "אך ורק דרך פרקים קשים", "בדיוק כשאתה עומד לשכוח", "10 דקות = 50 שאלות".
@@ -322,13 +322,12 @@
 | (`user_goals` +) | `score_prompt_dismissed_for` ("מעדיף לא לשתף" לאותו מועד) | | |
 | `activity_log` | `user_id text, activity_date, source` (העמודות `activity_units`/`review_cleared` כבר לא נקראות — streak בלבד) | ✅ | public ALL ("app enforces ownership") |
 | `user_stats` | `user_id, total_exams, best_score, avg_score, last_exam_at, score_history jsonb, performance_by_type, display_name, avatar_url` | ✅ | own read/write (`auth.uid()`) |
-| `leaderboard` | `user_id, display_name, avatar_url, best_score, total_exams, avg_score, last_exam_at` | ✅ | public SELECT **+ GRANT ברמת עמודה** ל-anon/authenticated על כל העמודות **חוץ מ-`user_id`** |
 | `responses` | `owner_id, owner_type (user/guest), item_id → questions, context (exam/practice/review/diagnostic), correct, chosen_option (אינדקס קנוני; null = ריק), latency_ms (זמן על הפריט עד תשובה סופית), confidence 1–3, theta_before, section_index, session_id → exam_sessions (set null), created_at` | ✅ | אין (service-role בלבד); merge-guest מעביר שורות אורח |
 | `vocabulary` | `id, word (unique), definition, hebrew_translation, example_sentence, category, difficulty_level` | ✅ | public read |
 | `user_vocab_known`, `user_vocab_favorites` | `user_id, word_id` | ✅ | own rows |
 
 ### 8.2 טריגר ופונקציה
-`trg_update_stats` (AFTER UPDATE על `exam_sessions`) → `update_user_stats_on_complete()` (SECURITY DEFINER, `search_path` נעול): כשמבחן הושלם לראשונה עם ציון **ומשתמש קיים ב-`auth.users`** — upsert ל-`user_stats` (ממוצע מצטבר, שיא, היסטוריה) ואז upsert ל-`leaderboard`. **אורחים לא נכנסים** לסטטיסטיקות/לוח — לכן `merge-guest` מחשב אותם מחדש בעצמו.
+`trg_update_stats` (AFTER UPDATE על `exam_sessions`) → `update_user_stats_on_complete()` (SECURITY DEFINER, `search_path` נעול): כשמבחן הושלם לראשונה עם ציון **ומשתמש קיים ב-`auth.users`** — upsert ל-`user_stats` (ממוצע מצטבר, שיא, היסטוריה); מבחני תרגול (`is_practice`) לא נספרים. **אורחים לא נכנסים** לסטטיסטיקות — לכן `merge-guest` מחשב אותם מחדש בעצמו.
 
 ### 8.3 אינדקסים, הרחבות, Storage
 אינדקסים על `questions(type,difficulty)`, `questions(passage)`, `questions(active)`, היסטוריות לפי `user_key`, `review_queue` לפי guest/due ו-user, `exam_sessions(user)`. הרחבות: `pg_trgm` (שימש לאיתור קטעים כפולים דומים), `uuid-ossp`, `pgcrypto`. Storage bucket `avatars` (public).
@@ -391,7 +390,7 @@
 | streak פעם ביום לאחר פעילות, כהודעה לא חוסמת | שדרוג gamification: גלילת ספרות, spring וזוהר עדין; בלי חגיגה חוזרת בכל טעינה |
 | `/api/dashboard-summary` נפרד מ-`/api/stats` | דף הבית צריך 4 מספרים, לא את כל ה-JSONB |
 | Serverless ב-bom1, Edge/Redis ב-fra1 | Serverless צמוד ל-DB; Middleware רץ ב-PoP הקרוב למשתמש (ישראל) |
-| `leaderboard` טבלה ייעודית במקום view על `auth.users` | דליפת מיילים בעבר |
+| `leaderboard` טבלה ייעודית במקום view על `auth.users` (הפיצ׳ר והטבלה הוסרו 2026-10-01) | דליפת מיילים בעבר |
 | ±10 בטווח הציון | SE אמפירי של CAT ב-~27 פריטים |
 | dedup בין סשנים עד מיצוי הפול | "לא לראות אותה שאלה פעמיים" |
 | review-queue: טעות חדשה זמינה מיד | Anki-style; המרווח מתחיל רק אחרי הצלחה |

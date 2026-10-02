@@ -373,6 +373,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <h1>
             <BrandLogo className="w-36 h-auto mx-auto" />
+            <span className="sr-only">: כניסה לחשבון</span>
           </h1>
           <p className="text-exam-ink-soft text-sm mt-2">הכנה ממוקדת לאמירנ&quot;ט</p>
         </div>

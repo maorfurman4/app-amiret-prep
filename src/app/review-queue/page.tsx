@@ -331,13 +331,13 @@ export default function ReviewQueuePage() {
                   </div>
                   <button
                     onClick={() => handleStartReview(type)}
-                    className="px-3 py-2 bg-exam-alt text-on-amber rounded-xl text-sm font-bold shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform flex-shrink-0"
+                    className="hit-44 px-3 py-2 bg-exam-alt text-on-amber rounded-xl text-sm font-bold shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.95] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform flex-shrink-0"
                   >
                     <span className="inline-flex items-center gap-1">תרגל<ChevronLeft className="w-4 h-4" aria-hidden /></span>
                   </button>
                   <button
                     onClick={() => handleDeleteCategory(type)}
-                    className="w-9 h-9 flex items-center justify-center rounded-xl text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg active:scale-90 transition-[background-color,color,transform] duration-300 ease-spring text-base flex-shrink-0"
+                    className="hit-44 w-9 h-9 flex items-center justify-center rounded-xl text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg active:scale-90 transition-[background-color,color,transform] duration-300 ease-spring text-base flex-shrink-0"
                     title={`מחק את כל שאלות ${CATEGORY_LABELS[type] ?? type}`}
                   >
                     <Trash2 className="w-4 h-4 mx-auto" aria-hidden />

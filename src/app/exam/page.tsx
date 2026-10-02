@@ -97,7 +97,8 @@ export default function ExamModePage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <p role="status" className="sr-only">{loading ? 'מכין את המבחן...' : ''}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4" aria-busy={loading}>
           {MODES.map(m => (
             <button
               key={m.mode}

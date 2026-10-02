@@ -31,7 +31,7 @@ const CARD_CLASSES = 'flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-e
 
 export default function HomePage() {
   return (
-    <main id="main" className="min-h-dvh bg-exam-paper flex flex-col items-center px-4 pt-4 pb-8 text-exam-ink" dir="rtl">
+    <main id="main" className="min-h-dvh overflow-x-clip bg-exam-paper flex flex-col items-center px-4 pt-4 pb-8 text-exam-ink" dir="rtl">
       <DashboardSummaryProvider>
         <StreakCelebration />
         <div className="w-full max-w-lg space-y-7">
@@ -46,6 +46,7 @@ export default function HomePage() {
           <div className="text-center animate-fade-up [animation-delay:60ms]">
             <h1 className="mb-3">
               <BrandLogo className="w-40 h-auto mx-auto" />
+              <span className="sr-only">: הכנה לאמירנ&quot;ט</span>
             </h1>
             <HeroTagline />
           </div>

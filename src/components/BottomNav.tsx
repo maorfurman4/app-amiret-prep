@@ -53,6 +53,8 @@ function BottomNavContent({ pathname }: { pathname: string }) {
       dir="rtl"
       style={{ WebkitTransform: 'translateZ(0)' }}
     >
+      {/* The first tap mid-activity only swaps a label; say why nothing happened. */}
+      <p role="status" className="sr-only">{pendingHref ? 'באמצע תרגול. לחץ שוב כדי לצאת' : ''}</p>
       <div className="flex">
         {TABS.map(tab => {
           const active =
@@ -89,6 +91,7 @@ function BottomNavContent({ pathname }: { pathname: string }) {
               key={tab.href}
               href={tab.href}
               onClick={handleClick}
+              aria-current={active ? 'page' : undefined}
               className={`relative flex-1 flex flex-col items-center pt-2.5 pb-2 gap-1 transition-colors ${
                 active
                   ? 'text-exam-accent'

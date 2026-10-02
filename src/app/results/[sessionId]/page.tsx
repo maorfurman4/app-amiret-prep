@@ -122,9 +122,12 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   }
 
   return (
-    <div className="min-h-dvh bg-exam-paper" dir="rtl">
+    // overflow-x-clip: the score glows bleed past narrow screens (not
+    // overflow-hidden, which would break the sticky nav).
+    <div className="min-h-dvh overflow-x-clip bg-exam-paper" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
       <main id="main" className="max-w-2xl mx-auto space-y-8 py-8 px-4">
+        <h1 className="sr-only">תוצאות המבחן</h1>
         {/* Score card — the moment of the whole page: a staggered cascade
             reveal inside a glowing, glassmorphic hero, colored by how the
             score classifies (sage for pass, accent for mid, amber for low

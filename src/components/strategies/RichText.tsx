@@ -16,7 +16,7 @@ function isolateLatin(text: string, keyPrefix: string): ReactNode[] {
   let last = 0;
   for (const m of text.matchAll(LATIN_RUN)) {
     if (m.index > last) out.push(text.slice(last, m.index));
-    out.push(<bdi key={`${keyPrefix}-${m.index}`} dir="ltr">{m[0]}</bdi>);
+    out.push(<bdi key={`${keyPrefix}-${m.index}`} dir="ltr" lang="en">{m[0]}</bdi>);
     last = m.index + m[0].length;
   }
   if (last < text.length) out.push(text.slice(last));

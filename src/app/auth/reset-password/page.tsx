@@ -190,6 +190,7 @@ export default function ResetPasswordPage() {
         <div className="text-center mb-8">
           <h1>
             <BrandLogo className="w-36 h-auto mx-auto" />
+            <span className="sr-only">: בחירת סיסמה חדשה</span>
           </h1>
           <p className="text-exam-ink-soft text-sm mt-2 flex items-center justify-center gap-1.5">
             <KeyRound className="w-4 h-4" aria-hidden />

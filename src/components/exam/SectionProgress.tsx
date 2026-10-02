@@ -23,19 +23,30 @@ export function SectionProgress({ currentSection, completedSections }: SectionPr
   // Auto-scroll so the current section stays in view (centered) as it advances —
   // otherwise on narrow screens sections 4-7 stay hidden off to the side.
   useEffect(() => {
-    currentRef.current?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    currentRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
   }, [currentSection]);
 
   return (
-    <div ref={containerRef} className="flex items-center gap-1 overflow-x-auto pb-1 scroll-smooth" dir="rtl">
+    // Scrolls sideways on narrow screens, so it is a focusable, named region
+    // (keyboard users can scroll it); each step says its state in words.
+    <div
+      ref={containerRef}
+      tabIndex={0}
+      role="region"
+      aria-label="התקדמות בפרקי המבחן"
+      className="flex items-center gap-1 overflow-x-auto pb-1 scroll-smooth motion-reduce:scroll-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-exam-accent"
+      dir="rtl"
+    >
       {SECTION_CONFIGS.map((cfg) => {
         const isDone = completedSections.includes(cfg.index);
         const isCurrent = currentSection === cfg.index;
 
         return (
-          <div key={cfg.index} ref={isCurrent ? currentRef : undefined} className="flex items-center gap-1 flex-shrink-0">
+          <div key={cfg.index} ref={isCurrent ? currentRef : undefined} aria-current={isCurrent ? 'step' : undefined} className="flex items-center gap-1 flex-shrink-0">
             <div className="flex flex-col items-center">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold border transition-colors ${
+              <span className="sr-only">{`פרק ${cfg.index}${isDone ? ', הושלם' : isCurrent ? ', הפרק הנוכחי' : ''}:`}</span>
+              <div aria-hidden className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold border transition-colors ${
                 isDone    ? 'bg-exam-sage border-exam-sage text-on-emerald' :
                 isCurrent ? (cfg.experimental
                               ? 'bg-exam-alt border-exam-alt text-on-amber'
@@ -54,7 +65,7 @@ export function SectionProgress({ currentSection, completedSections }: SectionPr
               </span>
             </div>
             {cfg.index < SECTION_CONFIGS.length && (
-              <div className={`w-6 h-px mb-4 transition-colors ${isDone ? 'bg-exam-sage' : 'bg-exam-border'}`} />
+              <div aria-hidden className={`w-6 h-px mb-4 transition-colors ${isDone ? 'bg-exam-sage' : 'bg-exam-border'}`} />
             )}
           </div>
         );

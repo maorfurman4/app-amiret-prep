@@ -328,8 +328,8 @@ export default function TodaySessionPage() {
             {!flipped ? (
               <div dir="ltr">
                 <div className="flex items-center justify-center gap-2 mb-3">
-                  <div className="font-serif text-4xl font-bold text-exam-ink">{currentWord.word}</div>
-                  <button onClick={() => speak(currentWord.word)} aria-label={`השמע הגייה של ${currentWord.word}`} className="text-exam-ink-soft hover:text-exam-ink transition-colors">
+                  <div lang="en" className="font-serif text-4xl font-bold text-exam-ink">{currentWord.word}</div>
+                  <button onClick={() => speak(currentWord.word)} aria-label={`השמע הגייה של ${currentWord.word}`} className="hit-44 text-exam-ink-soft hover:text-exam-ink transition-colors">
                     <Volume2 className="w-5 h-5" aria-hidden />
                   </button>
                 </div>
@@ -341,7 +341,7 @@ export default function TodaySessionPage() {
               </div>
             ) : (
               <div>
-                <div className="font-serif text-lg text-exam-ink-soft mb-1" dir="ltr">{currentWord.word}</div>
+                <div lang="en" className="font-serif text-lg text-exam-ink-soft mb-1" dir="ltr">{currentWord.word}</div>
                 <div className="text-3xl font-bold text-exam-accent">{currentWord.hebrew_translation}</div>
               </div>
             )}

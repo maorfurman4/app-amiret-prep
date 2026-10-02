@@ -130,7 +130,7 @@ export function QuestionCard({
               key={option.id ?? i}
               type="button"
               // aria-disabled, not disabled, once the result shows: a disabled
-              // button drops keyboard focus to <body> (WCAG 2.4.3).
+              // button drops keyboard focus to the page body (WCAG 2.4.3).
               onClick={() => { if (!showResult) onSelect(i); }}
               aria-disabled={showResult || undefined}
               aria-pressed={showResult ? undefined : isSelected}

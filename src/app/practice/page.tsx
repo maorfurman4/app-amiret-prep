@@ -496,6 +496,7 @@ function PracticeContent() {
               <button
                 key={String(opt.value)}
                 dir="rtl"
+                aria-pressed={selectedDiff === opt.value}
                 onClick={() => {
                   setDiff(opt.value);
                   setStep('pick-count');
@@ -539,6 +540,7 @@ function PracticeContent() {
             {([5, 10] as const).map((n, i) => (
               <button
                 key={n}
+                aria-pressed={selectedCount === n}
                 onClick={() => { setCount(n); }}
                 style={{ animationDelay: `${i * 60}ms` }}
                 className={`p-6 rounded-2xl border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform text-center animate-fade-up ${
@@ -558,7 +560,7 @@ function PracticeContent() {
           <div className="mt-6 space-y-2">
             {[
               { id: 'learn', title: 'למידה', desc: 'הסבר מיידי אחרי כל תשובה, בקצב שלך', active: !examMode && !sectionMode, on: () => { setExamMode(false); setSectionMode(false); } },
-              { id: 'perQ', title: 'אימון מהירות', desc: 'טיימר לכל שאלה בנפרד, הסברים בסוף', active: examMode && !sectionMode, on: () => { setExamMode(true); setSectionMode(false); } },
+              { id: 'perQ', title: 'אימון מהירות', desc: 'טיימר לכל שאלה בנפרד, הסברים בסוף. בלי טיימר: בחר "למידה"', active: examMode && !sectionMode, on: () => { setExamMode(true); setSectionMode(false); } },
               // A real exam section is always a single question type, so
               // "true exam conditions" mode doesn't map onto a mixed-type
               // session — filtered out below rather than shown disabled.
@@ -566,6 +568,7 @@ function PracticeContent() {
             ].map((m, i) => (
               <button
                 key={m.id}
+                aria-pressed={m.active}
                 onClick={m.on}
                 style={{ animationDelay: `${120 + i * 60}ms` }}
                 className={`w-full text-right p-4 rounded-2xl border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform animate-fade-up ${
@@ -583,6 +586,7 @@ function PracticeContent() {
           <button
             onClick={() => fetchQuestions()}
             disabled={loading}
+            aria-busy={loading}
             className="mt-8 w-full py-4 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold text-lg transition-[opacity,box-shadow,transform] duration-300 ease-spring will-change-transform disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-raised"
           >
             {loading ? 'טוען...' : sectionMode ? 'התחל מקבץ אמיתי' : examMode ? 'התחל בחינה' : 'התחל תרגול'}
@@ -603,7 +607,7 @@ function PracticeContent() {
           <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="min-w-0">
               <div className="text-sm font-bold text-exam-ink flex items-center gap-2 flex-wrap">
-                <span className="whitespace-nowrap">{TYPE_OPTIONS.find(t => t.type === selectedType)?.label}</span>
+                <h1 className="whitespace-nowrap">{TYPE_OPTIONS.find(t => t.type === selectedType)?.label}</h1>
                 {examMode && (
                   <span className="text-xs bg-exam-alt-bg text-exam-alt px-2 py-0.5 rounded-sm font-semibold whitespace-nowrap flex-shrink-0">
                     מצב בחינה
@@ -635,13 +639,13 @@ function PracticeContent() {
             <div className="flex items-center gap-3">
               {/* Timer (exam mode only) */}
               {examMode && !sectionMode && (
-                <div className={`font-mono text-xl font-bold tabular-nums ${timerColor(timeLeft)}`}>
+                <div role="timer" aria-label={`זמן שנותר לשאלה: ${timeLeft} שניות`} className={`font-mono text-xl font-bold tabular-nums ${timerColor(timeLeft)}`}>
                   {formatTime(timeLeft)}
                 </div>
               )}
               {/* Section timer — one hard countdown for the whole section */}
               {sectionMode && (
-                <div className={`font-mono text-xl font-bold tabular-nums ${sectionTimeLeft <= 30 ? 'text-exam-wrong' : sectionTimeLeft <= 60 ? 'text-exam-alt' : 'text-exam-ink'}`}>
+                <div role="timer" aria-label={`זמן שנותר בפרק: ${formatTime(sectionTimeLeft)}`} className={`font-mono text-xl font-bold tabular-nums ${sectionTimeLeft <= 30 ? 'text-exam-wrong' : sectionTimeLeft <= 60 ? 'text-exam-alt' : 'text-exam-ink'}`}>
                   {formatTime(sectionTimeLeft)}
                 </div>
               )}
@@ -653,8 +657,9 @@ function PracticeContent() {
                     <button
                       key={i}
                       onClick={() => setCurrentIndex(i)}
-                      aria-label={`שאלה ${i + 1}`}
-                      className={`w-7 h-7 rounded-full text-xs font-bold transition-all ${
+                      aria-label={`שאלה ${i + 1}${answers[i] === null ? ', עוד לא ענית' : ''}`}
+                      aria-current={i === currentIndex ? 'step' : undefined}
+                      className={`hit-44 w-7 h-7 rounded-full text-xs font-bold transition-all ${
                         i === currentIndex ? 'bg-exam-accent text-exam-accent-ink ring-2 ring-exam-accent/30' :
                         answers[i] !== null ? 'bg-exam-accent/10 text-exam-accent' :
                         'bg-exam-paper-alt text-exam-ink-soft border border-dashed border-exam-border-strong'
@@ -805,6 +810,7 @@ function PracticeContent() {
       <main id="main" className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
         <SessionStreakCelebration />
         <div className="max-w-2xl mx-auto">
+          <h1 className="sr-only">תוצאות התרגול</h1>
           {/* Score summary */}
           <div className="text-center space-y-4 mb-10">
             {pct >= 80 ? <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden /> : pct >= 60 ? <ThumbsUp className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden /> : <BookOpen className="w-14 h-14 mx-auto text-exam-ink-soft" strokeWidth={1.5} aria-hidden />}

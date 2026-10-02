@@ -133,7 +133,7 @@ export function StatsHero({ metrics }: { metrics: StatsMetrics }) {
             {readiness.reasons.map((r, i) => (
               <li key={i} className="flex items-start gap-2 text-sm">
                 <span className={`mt-0.5 ${r.ok ? 'text-exam-sage-strong' : 'text-exam-alt'}`}>
-                  {r.ok ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-label="עומד ביעד" /> : <span aria-label="עוד לא">•</span>}
+                  {r.ok ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-label="עומד ביעד" /> : <span role="img" aria-label="עוד לא">•</span>}
                 </span>
                 {r.href
                   ? <Link href={r.href} className="text-exam-ink-soft underline underline-offset-2">{r.text}</Link>

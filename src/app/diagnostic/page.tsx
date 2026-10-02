@@ -173,7 +173,7 @@ export default function DiagnosticPage() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <Stethoscope className="w-4 h-4 text-exam-ink" aria-hidden />
-              <span className="text-sm font-bold text-exam-ink">אבחון חכם</span>
+              <h1 className="text-sm font-bold text-exam-ink">אבחון חכם</h1>
               {question && <span className="text-xs text-exam-ink-soft">{TYPE_LABEL[question.type as DiagnosticType]}</span>}
             </div>
             <span className="text-xs text-exam-ink-soft">
@@ -284,7 +284,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
               <div className={`text-xl font-bold ${band.color}`}><bdi dir="ltr">~{plan.score}</bdi></div>
             </div>
           </div>
-          <div dir="ltr" className="flex gap-1.5 mb-2" aria-label={lo === hi ? `הרמה שלך: ${lo}` : `הטווח הסביר: רמות ${lo} עד ${hi}`}>
+          <div dir="ltr" className="flex gap-1.5 mb-2" role="img" aria-label={lo === hi ? `הרמה שלך: ${lo}` : `הטווח הסביר: רמות ${lo} עד ${hi}`}>
             {[1, 2, 3, 4, 5].map(l => (
               <div
                 key={l}

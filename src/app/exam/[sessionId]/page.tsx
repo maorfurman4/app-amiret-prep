@@ -11,6 +11,7 @@ import { SECTION_CONFIGS, type Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
 import { clearExamDraft, readExamDraft, writeExamDraft } from '@/lib/exam-draft';
 import { heCount } from '@/lib/hebrew-count';
+import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 
 interface SessionState {
   id: string;
@@ -153,7 +154,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   useEffect(() => {
     if (!session || currentQuestions.length === 0) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      // Enter/Space on a focused button (סיים פרק, יציאה, קודם…) is that button's.
+      if (focusedControlOwnsKey(e.target, e.key)) return;
       if (isSubmittingRef.current) return;
       const locked = session.is_practice && lockedAnswers.has(currentQuestionIndex);
       const idx = parseInt(e.key) - 1;

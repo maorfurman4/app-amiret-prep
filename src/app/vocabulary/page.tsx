@@ -19,6 +19,7 @@ import { heCount } from '@/lib/hebrew-count';
 import { cleanSnippet } from '@/lib/vocab-text';
 import { PARTS_OF_SPEECH, PART_OF_SPEECH_LABEL, PART_OF_SPEECH_TAG, THEME_LABEL, partOfSpeechOf, type PartOfSpeech } from '@/lib/part-of-speech';
 import { EMPTY_FILTERS, LEVELS, activeFilterCount, applyFilters, countFor, filtersFromParams, isFiltered, toggle, type Source, type VocabFilters } from '@/lib/vocab-filter';
+import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { Modal } from '@/components/ui/Modal';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
@@ -843,9 +844,9 @@ function VocabularyContent() {
   useEffect(() => {
     if (mode !== 'flashcard' || showFilterDrawer || showFavoritesList) return;
     const onKey = (e: KeyboardEvent) => {
-      // Typing in a field (the filter search) must not flip or mark cards.
-      const t = e.target as HTMLElement | null;
-      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      // Typing in a field (the filter search) must not flip or mark cards, and
+      // Space on a focused button (ידעתי, הצג תרגום…) activates that button.
+      if (focusedControlOwnsKey(e.target, e.key)) return;
       if (e.key === 'ArrowRight') handleKnew();
       else if (e.key === 'ArrowLeft') handleUnknown();
       else if (e.key === ' ') { e.preventDefault(); setFlipped(f => !f); }

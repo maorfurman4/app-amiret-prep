@@ -19,6 +19,7 @@ import { PaceGauge } from '@/components/exam/PaceGauge';
 import type { ResponseLogEntry } from '@/lib/response-log-client';
 import { PenLine, RotateCcw, BookOpen, Dices, Target, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, ChevronRight, ArrowRight, Plus, Minus, Info } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
+import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import {
   MIXED_DEFAULT, MIXED_LIMITS, MIXED_PRESETS, RC_PER_PASSAGE,
   interleaveMixed, planIsValid, planMinutes, planQuestionCount, samePlan,
@@ -374,7 +375,7 @@ function PracticeContent() {
   useEffect(() => {
     if (step !== 'practicing') return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (focusedControlOwnsKey(e.target, e.key)) return;
       if (examMode || sectionMode) {
         // Exam/section mode: number keys select answer
         const idx = parseInt(e.key) - 1;

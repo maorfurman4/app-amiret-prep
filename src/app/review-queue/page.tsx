@@ -10,6 +10,7 @@ import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry, type ResponseLogEntry } from '@/lib/response-log-client';
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { heCount, agree } from '@/lib/hebrew-count';
+import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { Modal } from '@/components/ui/Modal';
 
 type Step = 'loading' | 'empty' | 'error' | 'overview' | 'reviewing' | 'done';
@@ -237,7 +238,7 @@ export default function ReviewQueuePage() {
   useEffect(() => {
     if (step !== 'reviewing') return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (focusedControlOwnsKey(e.target, e.key)) return;
       if (showResult) {
         if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleNext(); }
       } else {

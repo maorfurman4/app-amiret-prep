@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { routedLevel } from './routed-level';
+import { routedLevel, sectionLevelTag } from './routed-level';
 
 // The θ trail of the exam that scored 58 (sections 3 and 4 showed "level 2"
 // from their first question, while the algorithm aimed them at level 3).
@@ -27,5 +27,41 @@ describe('routedLevel', () => {
 
   it('returns null when the previous section has no target', () => {
     expect(routedLevel(9, history)).toBeNull();
+  });
+});
+
+describe('sectionLevelTag', () => {
+  // A ~112-level student (the audit's θ ≈ +0.5 case): sections 5–6 were aimed
+  // at the 134 cut (θ 1.7 → "level 5"), but the items served were level 4.
+  const nearCut = [
+    { after_section: 1, theta: 0.6, target_theta: 0.55, target_reason: 'ability' },
+    { after_section: 2, theta: 0.7, target_theta: 0.62, target_reason: 'ability' },
+    { after_section: 3, theta: 0.8, target_theta: 0.71, target_reason: 'ability' },
+    { after_section: 4, theta: 0.9, target_theta: 1.7, target_reason: 'cut_score' },
+    { after_section: 5, theta: 0.9, target_theta: 1.7, target_reason: 'cut_score' },
+    { after_section: 6, theta: 0.9, target_theta: 0.85, target_reason: 'ability' },
+  ];
+  const lv = (...ls: number[]) => ls.map(difficulty_level => ({ difficulty_level }));
+
+  it('shows the served level, marked, when a section was aimed at the cut', () => {
+    expect(routedLevel(5, nearCut)).toBe(5); // what the old tag said
+    expect(sectionLevelTag(5, nearCut, lv(4, 4, 4))).toEqual({ level: 4, cutTargeted: true });
+    expect(sectionLevelTag(6, nearCut, lv(4, 4, 5, 4))).toEqual({ level: 4, cutTargeted: true });
+  });
+
+  it('keeps the routed level for ability-targeted sections', () => {
+    expect(sectionLevelTag(1, nearCut, lv(2, 2, 2, 2))).toEqual({ level: 3, cutTargeted: false });
+    expect(sectionLevelTag(4, nearCut, lv(3, 3, 3))).toEqual({ level: 4, cutTargeted: false });
+    expect(sectionLevelTag(7, nearCut, lv(4, 4, 4, 4))).toEqual({ level: 4, cutTargeted: false });
+  });
+
+  it('falls back to the first question\'s label for exams without targets', () => {
+    const old = [{ after_section: 1, theta: 0.2 }];
+    expect(sectionLevelTag(2, old, lv(2, 3))).toEqual({ level: 2, cutTargeted: false });
+    expect(sectionLevelTag(2, old, [])).toBeNull();
+  });
+
+  it('still marks a cut-targeted section whose questions carry no level labels', () => {
+    expect(sectionLevelTag(5, nearCut, [{}])).toEqual({ level: 5, cutTargeted: true });
   });
 });

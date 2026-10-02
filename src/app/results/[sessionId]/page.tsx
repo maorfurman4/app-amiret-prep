@@ -10,7 +10,7 @@ import { authFetch } from '@/lib/auth-fetch';
 import { classifyScore, isExperimentalSection, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
 import { scoreInterval, sessionMeasurement } from '@/lib/exemption';
-import { routedLevel } from '@/lib/routed-level';
+import { sectionLevelTag, type ThetaHistoryEntry } from '@/lib/routed-level';
 import { examEffort } from '@/lib/exam-effort';
 import { ResultsScorePrompt } from '@/components/official-score/ResultsScorePrompt';
 import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
@@ -23,7 +23,7 @@ interface SessionData {
   theta_final: number;
   theta_se?: number | null;
   p_exempt?: number | null;
-  theta_history: { after_section: number; theta: number; target_theta?: number }[];
+  theta_history: ThetaHistoryEntry[];
   section_results: SectionResult[];
   answers_by_section: Record<number, (number | null)[]>;
   questions_by_section: Record<number, Question[]>;
@@ -102,6 +102,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   const meanLevel = scoredLevels.length > 0
     ? Math.round(scoredLevels.reduce((a, l) => a + l, 0) / scoredLevels.length)
     : null;
+  const anyCutTargeted = sectionResults.some(sr => sectionLevelTag(sr.sectionIndex, session.theta_history, sr.questions)?.cutTargeted);
 
   const TYPE_LABELS: Record<string, string> = {
     sentence_completion: 'השלמת משפטים',
@@ -248,14 +249,17 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           <h3 className="font-semibold text-exam-ink text-sm mb-3">פירוט לפי פרק, והמסלול האדפטיבי שלך</h3>
           <p className="text-xs text-exam-ink-soft mb-3">
             התגית &quot;רמה X/5&quot; היא הרמה שאליה כיוון אותך האלגוריתם בכל פרק, לפי התשובות שלך עד אותו רגע. במבחן האמיתי, רק הגעה לרמות הגבוהות מאפשרת ציון גבוה.
+            {anyCutTargeted && (
+              <> בפרקים שמסומנים &quot;מכוון לסף הפטור&quot; הציון שלך היה קרוב ל-<bdi dir="ltr">134</bdi>, ולכן האלגוריתם כיוון את השאלות לסף עצמו כדי להכריע אם עברת אותו. שם התגית מציגה את רמת השאלות שקיבלת בפועל.</>
+            )}
           </p>
           <div className="space-y-3">
             {sectionResults.filter(sr => sr.totalCount > 0).map((sr) => {
               const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
               const pct = sr.totalCount > 0 ? Math.round((sr.correctCount / sr.totalCount) * 100) : 0;
-              // The level the section was aimed at; exams from before targets
-              // were stored fall back to the first question's label.
-              const difficulty = routedLevel(sr.sectionIndex, session.theta_history) ?? sr.questions?.[0]?.difficulty_level;
+              // Where the student's answers had routed them — or, for a
+              // section aimed at the 134 cut, the level actually served.
+              const tag = sectionLevelTag(sr.sectionIndex, session.theta_history, sr.questions);
               const isExperimental = cfg?.experimental === true;
               return (
                 <div key={sr.sectionIndex} className="flex items-center gap-3">
@@ -266,13 +270,16 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-exam-ink flex items-center gap-1.5">
+                      <span className="text-exam-ink flex flex-wrap items-center gap-1.5">
                         {TYPE_LABELS[cfg?.type ?? sr.type]}
                         {isExperimental && (
                           <span className="px-1.5 py-0.5 rounded-sm bg-exam-alt-bg text-exam-alt text-[10px] font-semibold">תרגול חלופי</span>
                         )}
-                        {difficulty && (
-                          <span className="px-1.5 py-0.5 rounded-sm bg-exam-paper-alt text-exam-ink-soft text-[10px] font-mono">רמה {difficulty}/5</span>
+                        {tag && (
+                          <span className="px-1.5 py-0.5 rounded-sm bg-exam-paper-alt text-exam-ink-soft text-[10px] font-mono">רמה {tag.level}/5</span>
+                        )}
+                        {tag?.cutTargeted && (
+                          <span className="px-1.5 py-0.5 rounded-sm bg-exam-accent/10 text-exam-accent text-[10px] font-semibold">מכוון לסף הפטור</span>
                         )}
                       </span>
                       <span className="text-exam-ink-soft">{sr.correctCount}/{sr.totalCount}</span>

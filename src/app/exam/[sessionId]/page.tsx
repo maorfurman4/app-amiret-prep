@@ -11,6 +11,7 @@ import { SECTION_CONFIGS, type Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
 import { clearExamDraft, readExamDraft, writeExamDraft } from '@/lib/exam-draft';
 import { heCount } from '@/lib/hebrew-count';
+import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 
 interface SessionState {
   id: string;
@@ -24,6 +25,17 @@ interface SessionState {
 }
 
 const EMPTY_QUESTIONS: Question[] = [];
+
+// Prev · question dots · next fits on one line only above a width that grows
+// with the dot count (measured at the last question, where "סיים פרק" is
+// widest: 3 dots 336px, 4 dots 382px, 5 dots 416px). Below it the dots move
+// to their own centered line, so the page never scrolls sideways (WCAG 1.4.10).
+// Literal class strings, so Tailwind generates each container query.
+const NAV_DOTS_STACK: Record<number, string> = {
+  3: '@max-[21rem]:order-first @max-[21rem]:w-full @max-[21rem]:justify-center',
+  4: '@max-[24rem]:order-first @max-[24rem]:w-full @max-[24rem]:justify-center',
+  5: '@max-[26rem]:order-first @max-[26rem]:w-full @max-[26rem]:justify-center',
+};
 
 export default function ExamPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = use(params);
@@ -41,6 +53,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const [submitWarning, setSubmitWarning] = useState<string | null>(null);
   const [lateNotice, setLateNotice] = useState(false);
   const [exitConfirm, setExitConfirm] = useState(false);
+  // The exit confirmation opens above the question; move focus there so a
+  // keyboard / screen-reader user lands on it (the safe "stay" choice).
+  const stayButtonRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => { if (exitConfirm) stayButtonRef.current?.focus(); }, [exitConfirm]);
 
   // Practice mode: track which question indices have been answered (locked)
   const [lockedAnswers, setLockedAnswers] = useState<Set<number>>(new Set());
@@ -153,7 +169,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   useEffect(() => {
     if (!session || currentQuestions.length === 0) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      // Enter/Space on a focused button (סיים פרק, יציאה, קודם…) is that button's.
+      if (focusedControlOwnsKey(e.target, e.key)) return;
       if (isSubmittingRef.current) return;
       const locked = session.is_practice && lockedAnswers.has(currentQuestionIndex);
       const idx = parseInt(e.key) - 1;
@@ -293,20 +310,20 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   if (error) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
-          <div className="text-exam-wrong text-xl mb-4 font-sans">{error}</div>
+          <div role="alert" className="text-exam-wrong text-xl mb-4 font-sans">{error}</div>
           <button onClick={loadSession} className="text-exam-ink underline font-sans">נסה שוב</button>
         </div>
-      </div>
+      </main>
     );
   }
 
   if (!session || currentQuestions.length === 0) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
-        <div className="text-exam-ink-soft text-lg font-sans">טוען מבחן...</div>
-      </div>
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
+        <div role="status" className="text-exam-ink-soft text-lg font-sans">טוען מבחן...</div>
+      </main>
     );
   }
 
@@ -322,12 +339,12 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
               onClick={() => setExitConfirm(true)}
               disabled={isSubmitting}
               aria-label="יציאה מהמבחן"
-              className="flex-shrink-0 w-8 h-8 rounded-sm border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt hover:text-exam-ink transition-colors flex items-center justify-center disabled:opacity-40"
+              className="hit-44 flex-shrink-0 w-8 h-8 rounded-sm border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt hover:text-exam-ink transition-colors flex items-center justify-center disabled:opacity-40"
             >
               <X className="w-4 h-4" aria-hidden />
             </button>
             <div className="flex flex-col flex-1">
-              <span className="text-sm font-bold text-exam-ink">סימולציית פרקי הליבה</span>
+              <h1 className="text-sm font-bold text-exam-ink">סימולציית פרקי הליבה</h1>
               <span className="text-xs text-exam-ink-soft">
                 פרק {currentSection} — {currentCfg?.type === 'sentence_completion' ? 'השלמת משפטים' :
                   currentCfg?.type === 'restatement' ? 'ניסוח מחדש' :
@@ -369,10 +386,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       </header>
 
       {/* Main exam area */}
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main id="main" className="max-w-2xl mx-auto px-4 py-8">
         {/* Exit confirmation */}
         {exitConfirm && (
-          <div className="mb-6 p-4 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm" dir="rtl">
+          <div role="alert" className="mb-6 p-4 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm" dir="rtl">
             <p className="text-exam-wrong text-sm font-semibold mb-3">
               לצאת מהמבחן? ההתקדמות בו לא תישמר, ותוכל להתחיל מבחן חדש מתי שתרצה.
             </p>
@@ -385,6 +402,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
                 {isExiting ? 'יוצא...' : 'כן, לצאת מהמבחן'}
               </button>
               <button
+                ref={stayButtonRef}
                 onClick={() => setExitConfirm(false)}
                 disabled={isExiting}
                 className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft text-sm hover:bg-exam-paper-alt transition-colors disabled:opacity-50"
@@ -396,7 +414,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         )}
 
         {lateNotice && (
-          <div className="mb-6 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt flex items-center justify-between gap-3" dir="rtl">
+          <div role="status" className="mb-6 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt flex items-center justify-between gap-3" dir="rtl">
             <span>הפרק הקודם נשלח אחרי שהזמן נגמר, ולכן, כמו במבחן האמיתי, התשובות בו לא נספרו.</span>
             <button onClick={() => setLateNotice(false)} className="text-xs underline flex-shrink-0">הבנתי</button>
           </div>
@@ -413,7 +431,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <button
               onClick={() => session && submitSection(session, answers)}
               disabled={isSubmitting}
-              className="mt-3 px-4 py-2 rounded-sm border border-exam-alt/50 text-exam-alt text-sm font-semibold hover:bg-exam-alt-bg transition-colors disabled:opacity-60"
+              className="hit-44 mt-3 px-4 py-2 rounded-sm border border-exam-alt/50 text-exam-alt text-sm font-semibold hover:bg-exam-alt-bg transition-colors disabled:opacity-60"
             >
               <span className="inline-flex items-center gap-1">דלג על התרגול החלופי וסיים<ChevronLeft className="w-4 h-4" aria-hidden /></span>
             </button>
@@ -430,40 +448,45 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             showResult={session.is_practice && lockedAnswers.has(currentQuestionIndex)}
           />
         </div>
-        {isSubmitting && (
-          <div className="flex items-center justify-center gap-2 mt-4 text-sm text-exam-ink-soft" dir="rtl">
-            <span className="w-4 h-4 border-2 border-exam-border border-t-exam-ink rounded-full animate-spin" />
-            שולח את הפרק וטוען את הבא. רגע אחד...
-          </div>
-        )}
+        {/* Always mounted so the "sending" message is announced. */}
+        <div role="status">
+          {isSubmitting && (
+            <div className="flex items-center justify-center gap-2 mt-4 text-sm text-exam-ink-soft" dir="rtl">
+              <span className="w-4 h-4 border-2 border-exam-border border-t-exam-ink rounded-full animate-spin" aria-hidden />
+              שולח את הפרק וטוען את הבא. רגע אחד...
+            </div>
+          )}
+        </div>
 
         {/* Inline submit warning */}
         {submitWarning && (
-          <div className="mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm flex items-center justify-between gap-3" dir="rtl">
+          <div role="alert" className="mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm flex items-center justify-between gap-3" dir="rtl">
             <p className="text-exam-alt text-sm">{submitWarning}</p>
-            <button onClick={() => setSubmitWarning(null)} className="text-xs px-3 py-1.5 rounded-sm border border-exam-alt/50 text-exam-alt hover:bg-exam-alt-bg flex-shrink-0">הבנתי</button>
+            <button onClick={() => setSubmitWarning(null)} className="hit-44 text-xs px-3 py-1.5 rounded-sm border border-exam-alt/50 text-exam-alt hover:bg-exam-alt-bg flex-shrink-0">הבנתי</button>
           </div>
         )}
 
         {/* Navigation */}
-        <div className="mt-8 flex items-center justify-between gap-3">
+        <div className="@container mt-8">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-4">
           <button
             onClick={handlePrev}
             disabled={currentQuestionIndex === 0 || isSubmitting}
-            className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt transition-colors text-sm"
+            className="hit-44 px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt transition-colors text-sm"
           >
             <span className="inline-flex items-center gap-1"><ChevronRight className="w-4 h-4" aria-hidden />קודם</span>
           </button>
 
           {/* Question nav dots */}
-          <div className="flex gap-2">
+          <div className={`flex gap-2 ${NAV_DOTS_STACK[currentQuestions.length] ?? NAV_DOTS_STACK[5]}`}>
             {currentQuestions.map((_, i) => (
               <button
                 key={i}
                 onClick={() => { if (!isSubmitting) setCurrentQuestionIndex(i); }}
                 disabled={isSubmitting}
                 aria-label={`שאלה ${i + 1}${answers[i] === null ? ', עוד לא ענית' : ''}`}
-                className={`w-8 h-8 rounded-sm text-xs font-bold transition-colors disabled:opacity-40 border ${
+                aria-current={i === currentQuestionIndex ? 'step' : undefined}
+                className={`hit-44 w-8 h-8 rounded-sm text-xs font-bold transition-colors disabled:opacity-40 border ${
                   i === currentQuestionIndex ? 'bg-exam-accent border-exam-accent text-exam-accent-ink' :
                   answers[i] !== null ? 'bg-exam-paper-alt border-exam-border text-exam-ink' :
                   'bg-exam-surface text-exam-ink-soft border-dashed border-exam-border hover:border-exam-border-strong'
@@ -478,7 +501,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <button
               onClick={handleNext}
               disabled={isSubmitting}
-              className="px-4 py-2 rounded-sm bg-exam-accent text-exam-accent-ink hover:opacity-90 transition-opacity text-sm font-medium disabled:opacity-50"
+              className="hit-44 px-4 py-2 rounded-sm bg-exam-accent text-exam-accent-ink hover:opacity-90 transition-opacity text-sm font-medium disabled:opacity-50"
             >
               <span className="inline-flex items-center gap-1">הבא<ChevronLeft className="w-4 h-4" aria-hidden /></span>
             </button>
@@ -486,13 +509,14 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <button
               onClick={handleSubmitSection}
               disabled={isSubmitting}
-              className="px-5 py-2 rounded-sm bg-exam-sage-strong text-on-emerald hover:opacity-90 transition-opacity text-sm font-bold disabled:opacity-60"
+              className="hit-44 px-5 py-2 rounded-sm bg-exam-sage-strong text-on-emerald hover:opacity-90 transition-opacity text-sm font-bold disabled:opacity-60"
             >
               {isSubmitting ? 'שולח...' : currentSection < SECTION_CONFIGS.length ? <span className="inline-flex items-center gap-1">סיים פרק<ChevronLeft className="w-4 h-4" aria-hidden /></span> : (
               <span className="inline-flex items-center gap-1.5">סיים מבחן <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span>
             )}
             </button>
           )}
+        </div>
         </div>
 
         {/* Official AMIRNET guidance */}

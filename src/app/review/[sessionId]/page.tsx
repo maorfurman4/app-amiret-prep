@@ -59,20 +59,20 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
 
   if (fetchError) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
           <div className="text-exam-wrong text-xl mb-3">לא הצלחנו לטעון את השאלות</div>
           <button onClick={() => { setFetchError(false); setLoadToken(t => t + 1); }} className="text-exam-accent underline text-sm">נסה שוב</button>
         </div>
-      </div>
+      </main>
     );
   }
 
   if (!data) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper">
         <div className="text-exam-ink-soft">טוען שאלות...</div>
-      </div>
+      </main>
     );
   }
 
@@ -107,7 +107,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <div className="text-sm font-bold text-exam-ink">סקירת מבחן</div>
+              <h1 className="text-sm font-bold text-exam-ink">סקירת מבחן</h1>
               <div className="text-xs text-exam-ink-soft">
                 {filteredIndices.length === 0
                   ? (filter === 'wrong' ? 'אין שאלות שגויות' : filter === 'correct' ? 'אין תשובות נכונות' : 'אין שאלות')
@@ -119,7 +119,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
             </div>
             <button
               onClick={() => router.push(`/results/${sessionId}`)}
-              className="text-sm text-exam-accent hover:underline"
+              className="hit-44 text-sm text-exam-accent hover:underline"
             >
               <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה לתוצאות</span>
             </button>
@@ -134,8 +134,9 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
             ] as { value: Filter; label: string }[]).map(opt => (
               <button
                 key={opt.value}
+                aria-pressed={filter === opt.value}
                 onClick={() => { setFilter(opt.value); setCurrentIndex(0); }}
-                className={`px-3 py-1.5 rounded-sm text-sm font-medium transition-colors border ${
+                className={`hit-44 px-3 py-1.5 rounded-sm text-sm font-medium transition-colors border ${
                   filter === opt.value
                     ? 'bg-exam-accent text-exam-accent-ink border-exam-accent'
                     : 'bg-exam-paper-alt text-exam-ink-soft border-exam-border hover:bg-exam-border/30'
@@ -159,6 +160,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                   key={flatIdx}
                   onClick={() => goTo(pos)}
                   aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ', נכונה' : ', שגויה'}`}
+                  aria-current={pos === currentIndex ? 'step' : undefined}
                   className={`w-full py-1.5 rounded-sm text-xs font-bold transition-all border ${
                     pos === currentIndex
                       ? 'bg-exam-accent text-exam-accent-ink border-exam-accent scale-105'
@@ -175,7 +177,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
         </aside>
 
         {/* Main question area */}
-        <main className="flex-1 min-w-0">
+        <main id="main" className="flex-1 min-w-0">
           {filteredIndices.length === 0 ? (
             <div className="text-center py-20 text-exam-ink-soft">
               {filter === 'wrong'
@@ -218,7 +220,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                 <button
                   onClick={() => goTo(Math.max(0, currentIndex - 1))}
                   disabled={currentIndex === 0}
-                  className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt text-sm"
+                  className="hit-44 px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt text-sm"
                 >
                   <span className="inline-flex items-center gap-1"><ChevronRight className="w-4 h-4" aria-hidden />קודם</span>
                 </button>
@@ -232,7 +234,8 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                         key={flatIdx}
                         onClick={() => goTo(pos)}
                         aria-label={`שאלה ${flatIdx + 1}${isCorrect ? ', נכונה' : ', שגויה'}`}
-                        className={`w-7 h-7 rounded-sm text-xs font-bold transition-all border ${
+                        aria-current={pos === currentIndex ? 'step' : undefined}
+                        className={`hit-44 w-7 h-7 rounded-sm text-xs font-bold transition-all border ${
                           pos === currentIndex
                             ? 'bg-exam-accent text-exam-accent-ink border-exam-accent scale-110'
                             : isCorrect
@@ -249,7 +252,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
                 <button
                   onClick={() => goTo(Math.min(filteredIndices.length - 1, currentIndex + 1))}
                   disabled={currentIndex === filteredIndices.length - 1}
-                  className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt text-sm"
+                  className="hit-44 px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt text-sm"
                 >
                   <span className="inline-flex items-center gap-1">הבא<ChevronLeft className="w-4 h-4" aria-hidden /></span>
                 </button>

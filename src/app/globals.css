@@ -46,6 +46,7 @@
   --color-exam-ink-soft: var(--exam-ink-soft);
   --color-exam-border: var(--exam-border);
   --color-exam-border-strong: var(--exam-border-strong);
+  --color-exam-border-input: var(--exam-border-input);
   --color-exam-sage: var(--exam-sage);
   --color-exam-sage-bg: var(--exam-sage-bg);
   --color-exam-sage-strong: var(--exam-sage-strong);
@@ -61,6 +62,7 @@
   --color-menu-ink: var(--menu-ink);
   --color-menu-ink-soft: var(--menu-ink-soft);
   --color-menu-border: var(--menu-border);
+  --color-menu-border-input: var(--menu-border-input);
   --color-menu-hover: var(--menu-hover);
   --color-menu-accent: var(--menu-accent);
   --color-menu-danger: var(--menu-danger);
@@ -236,6 +238,8 @@
   --exam-ink-soft: #586573;
   --exam-border: #DCDDD5;
   --exam-border-strong: #A4ACA7;
+  /* Text-field outline only: ≥3:1 against surface, paper and paper-alt (WCAG 1.4.11). */
+  --exam-border-input: #7E8782;
   --exam-sage: #176648;
   --exam-sage-bg: #E6F3EB;
   --exam-sage-strong: #14563E;
@@ -265,6 +269,7 @@
   --exam-ink-soft: #B6C1CD;
   --exam-border: #3C4853;
   --exam-border-strong: #647585;
+  --exam-border-input: #74879A;
   --exam-sage: #79D8AF;
   --exam-sage-bg: #16372C;
   --exam-sage-strong: #96E5C1;
@@ -291,6 +296,7 @@
   --menu-ink: #202C38;
   --menu-ink-soft: #586573;
   --menu-border: #DCDDD5;
+  --menu-border-input: #7E8782;
   --menu-hover: #F0EDE5;
   --menu-accent: #283F5A;
   --menu-danger: #9C3E36;
@@ -386,6 +392,11 @@
 :where(a, button, input, select, textarea):focus-visible {
   outline: 2px solid var(--exam-accent);
   outline-offset: 3px;
+}
+/* The account popover stays white in both themes, so the dark theme's pale
+   accent would vanish on it (≈1.4:1). Use the menu's own navy (10.8:1). */
+[data-menu-surface] :where(a, button, input, select, textarea):focus-visible {
+  outline-color: var(--menu-accent);
 }
 
 @media (prefers-reduced-motion: reduce) {

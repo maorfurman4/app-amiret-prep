@@ -187,7 +187,7 @@ export function OfficialScorePrompt() {
             onChange={e => { setDraft(e.target.value.replace(/\D/g, '')); setError(null); }}
             aria-describedby={error ? `${inputId}-error` : undefined}
             aria-invalid={!!error}
-            className="flex-1 min-w-0 px-4 py-3 text-center text-3xl font-black tabular-nums text-exam-ink placeholder:text-exam-border-strong placeholder:text-lg placeholder:font-semibold bg-exam-paper-alt border border-exam-border rounded-xl shadow-pressed focus:outline-none focus:border-exam-accent focus:ring-2 focus:ring-exam-accent/30 transition-[border-color,box-shadow] duration-300 ease-spring"
+            className="flex-1 min-w-0 px-4 py-3 text-center text-3xl font-black tabular-nums text-exam-ink placeholder:text-exam-ink-soft placeholder:text-lg placeholder:font-semibold bg-exam-paper-alt border border-exam-border-input rounded-xl shadow-pressed focus:outline-none focus:border-exam-accent focus:ring-2 focus:ring-exam-accent/30 transition-[border-color,box-shadow] duration-300 ease-spring"
           />
           <button
             type="submit"

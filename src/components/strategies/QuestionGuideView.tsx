@@ -73,10 +73,10 @@ function WorkedExample({ example }: { example: QuestionGuide['workedExample'] })
       <h3 className="font-bold text-sm mb-3 text-exam-ink flex items-center gap-1.5"><NotebookPen className="w-4 h-4" aria-hidden />דוגמה מלאה עם פתרון צעד-אחר-צעד:</h3>
       {/* LTR as a whole: the prompt is exam English, and the reading-comprehension
           one interleaves short Hebrew labels that read fine inside an LTR line. */}
-      <p dir="ltr" className="font-serif text-sm text-exam-ink leading-relaxed mb-3 font-medium text-left">
+      <p dir="ltr" lang="en" className="font-serif text-sm text-exam-ink leading-relaxed mb-3 font-medium text-left">
         {example.prompt}
       </p>
-      <ol dir="ltr" className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+      <ol dir="ltr" lang="en" className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
         {example.options.map((opt, i) => {
           const shown = d.open && i === example.correctIndex;
           return (
@@ -115,7 +115,7 @@ export function QuestionGuideView({ guide }: { guide: QuestionGuide }) {
         <div className={`w-12 h-12 rounded-md flex items-center justify-center ${tone.badge}`}><guide.icon className="w-6 h-6" strokeWidth={1.75} aria-hidden /></div>
         <div>
           <h2 className="text-xl font-bold text-exam-ink leading-tight">{guide.titleHe}</h2>
-          <span dir="ltr" className="text-xs text-exam-ink-soft font-medium">{guide.titleEn}</span>
+          <span dir="ltr" lang="en" className="text-xs text-exam-ink-soft font-medium">{guide.titleEn}</span>
         </div>
       </div>
 

@@ -160,7 +160,7 @@ export default function ResetPasswordPage() {
             id="new-password"
             type="password" value={password} onChange={e => setPassword(e.target.value)}
             required minLength={MIN_PASSWORD_LENGTH} dir="ltr" placeholder="••••••••" autoComplete="new-password"
-            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
+            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
           />
           <p className="text-xs text-exam-ink-soft">לפחות {MIN_PASSWORD_LENGTH} תווים</p>
         </div>
@@ -170,7 +170,7 @@ export default function ResetPasswordPage() {
             id="confirm-password"
             type="password" value={confirm} onChange={e => setConfirm(e.target.value)}
             required minLength={MIN_PASSWORD_LENGTH} dir="ltr" placeholder="••••••••" autoComplete="new-password"
-            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
+            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
           />
         </div>
         {error && <p className="text-exam-wrong text-sm" role="alert">{error}</p>}
@@ -185,11 +185,12 @@ export default function ResetPasswordPage() {
   })();
 
   return (
-    <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
+    <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <h1>
             <BrandLogo className="w-36 h-auto mx-auto" />
+            <span className="sr-only">: בחירת סיסמה חדשה</span>
           </h1>
           <p className="text-exam-ink-soft text-sm mt-2 flex items-center justify-center gap-1.5">
             <KeyRound className="w-4 h-4" aria-hidden />
@@ -198,6 +199,6 @@ export default function ResetPasswordPage() {
         </div>
         <div className="bg-exam-surface border border-exam-border rounded-md p-7">{card}</div>
       </div>
-    </div>
+    </main>
   );
 }

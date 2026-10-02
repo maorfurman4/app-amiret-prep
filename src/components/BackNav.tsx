@@ -26,6 +26,7 @@ export function BackNav({ backHref = '/', backLabel = 'דף הבית', title }: 
 
   return (
     <nav
+      aria-label="ניווט עליון"
       className="sticky top-0 z-30 bg-exam-surface border-b border-exam-border"
       dir="rtl"
     >
@@ -50,7 +51,7 @@ export function BackNav({ backHref = '/', backLabel = 'דף הבית', title }: 
         <div className="mr-auto flex items-center gap-2 flex-shrink-0">
           <Link
             href="/"
-            className="hidden md:flex items-center gap-1 text-xs text-exam-ink-soft hover:text-exam-ink transition-colors"
+            className="hit-44 hidden md:flex items-center gap-1 text-xs text-exam-ink-soft hover:text-exam-ink transition-colors"
           >
             <Home className="w-3.5 h-3.5" aria-hidden />
             בית
@@ -75,7 +76,8 @@ export function BackNav({ backHref = '/', backLabel = 'דף הבית', title }: 
               key={link.href}
               href={link.href}
               onClick={handleClick}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-medium transition-colors flex-shrink-0 border ${
+              aria-current={active ? 'page' : undefined}
+              className={`hit-44 flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-medium transition-colors flex-shrink-0 border ${
                 active
                   ? 'bg-exam-accent/10 border-exam-accent/30 text-exam-accent'
                   : 'border-transparent text-exam-ink-soft hover:bg-exam-paper-alt hover:text-exam-ink'

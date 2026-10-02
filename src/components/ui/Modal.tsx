@@ -4,11 +4,14 @@ import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 /**
  * The one overlay pattern for the app: a full-screen dimmed backdrop with a
  * single panel centered in it. Rendered into <body> so no transformed or
  * clipped ancestor can shift or cut it. Closes on the backdrop, the close
- * button and Escape; the page behind stops scrolling while it's open.
+ * button and Escape; the page behind stops scrolling while it's open, and
+ * Tab / Shift+Tab cycle inside the panel instead of reaching the page.
  *
  *   header  — title (+ optional actions beside the close button)
  *   body    — scrolls on its own when the content is taller than the panel
@@ -33,6 +36,7 @@ export function Modal({
 }) {
   const titleId = useId();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   // Callers pass inline arrows; reading the latest one through a ref keeps the
   // effect below from re-running (and stealing focus) on every render.
   const onCloseRef = useRef(onClose);
@@ -40,7 +44,17 @@ export function Modal({
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onCloseRef.current(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { onCloseRef.current(); return; }
+      if (e.key !== 'Tab' || !panelRef.current) return;
+      const nodes = [...panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(n => n.offsetParent !== null);
+      if (nodes.length === 0) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      const inside = panelRef.current.contains(document.activeElement);
+      if (e.shiftKey && (document.activeElement === first || !inside)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && (document.activeElement === last || !inside)) { e.preventDefault(); first.focus(); }
+    };
     const previousFocus = document.activeElement as HTMLElement | null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -59,6 +73,7 @@ export function Modal({
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" dir="rtl">
       <div className="absolute inset-0 bg-black/55 backdrop-blur-[2px] animate-backdrop-in touch-manipulation" onClick={onClose} aria-hidden />
       <div
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}

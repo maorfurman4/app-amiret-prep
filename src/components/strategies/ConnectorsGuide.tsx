@@ -47,7 +47,7 @@ function WordRow({ w, tone }: { w: ConnectorWord; tone: CategoryColor }) {
         className={`w-full grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 px-3 py-3 text-start transition-colors hover:bg-exam-paper-alt ${d.open ? 'bg-exam-paper-alt' : ''}`}
       >
         <span className="min-w-0">
-          <span dir="ltr" className="block text-end font-serif font-bold text-exam-ink text-[15px] leading-snug">{w.word}</span>
+          <span dir="ltr" lang="en" className="block text-end font-serif font-bold text-exam-ink text-[15px] leading-snug">{w.word}</span>
           <span className="block text-xs text-exam-ink-soft mt-0.5">{w.meaning}</span>
         </span>
         {w.pattern ? (
@@ -62,7 +62,7 @@ function WordRow({ w, tone }: { w: ConnectorWord; tone: CategoryColor }) {
           <Prose text={w.grammar} />
           <div>
             <div className="text-[11px] font-bold text-exam-ink-soft mb-1">דוגמה</div>
-            <p dir="ltr" className="font-serif text-[15px] text-exam-ink italic leading-relaxed rounded-sm bg-exam-surface border border-exam-border px-3 py-2 text-left">
+            <p dir="ltr" lang="en" className="font-serif text-[15px] text-exam-ink italic leading-relaxed rounded-sm bg-exam-surface border border-exam-border px-3 py-2 text-left">
               {withHighlights(w.example, connectorPhrase(w.word, w.example), TONE[tone].mark)}
             </p>
           </div>

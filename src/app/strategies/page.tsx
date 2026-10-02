@@ -34,6 +34,7 @@ export default function StrategiesPage() {
     <div className="min-h-dvh bg-exam-paper pb-24" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
 
+      <main id="main">
       <div className="bg-exam-surface border-b border-exam-border px-4 py-5">
         <h1 className="text-2xl font-bold text-exam-ink flex items-center gap-2"><Brain className="w-6 h-6" aria-hidden />המדריך המלא לפתרון האמירנ&quot;ט</h1>
         <p className="text-sm text-exam-ink-soft mt-1">
@@ -122,6 +123,7 @@ export default function StrategiesPage() {
           </div>
         )}
       </div>
+      </main>
     </div>
   );
 }

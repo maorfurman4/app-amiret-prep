@@ -59,7 +59,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
 
   if (error) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper px-4" dir="rtl">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper px-4" dir="rtl">
         <div className="text-center space-y-4 max-w-sm">
           <AlertTriangle className="w-10 h-10 mx-auto text-exam-wrong" strokeWidth={1.5} aria-hidden />
           <p className="text-exam-ink-soft text-sm">לא הצלחנו לטעון את התוצאות. בדוק את החיבור ונסה שוב.</p>
@@ -70,15 +70,15 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             נסה שוב
           </button>
         </div>
-      </div>
+      </main>
     );
   }
 
   if (!session) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper">
         <div className="text-exam-ink-soft">טוען תוצאות...</div>
-      </div>
+      </main>
     );
   }
 
@@ -122,9 +122,12 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   }
 
   return (
-    <div className="min-h-dvh bg-exam-paper" dir="rtl">
+    // overflow-x-clip: the score glows bleed past narrow screens (not
+    // overflow-hidden, which would break the sticky nav).
+    <div className="min-h-dvh overflow-x-clip bg-exam-paper" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
-      <div className="max-w-2xl mx-auto space-y-8 py-8 px-4">
+      <main id="main" className="max-w-2xl mx-auto space-y-8 py-8 px-4">
+        <h1 className="sr-only">תוצאות המבחן</h1>
         {/* Score card — the moment of the whole page: a staggered cascade
             reveal inside a glowing, glassmorphic hero, colored by how the
             score classifies (sage for pass, accent for mid, amber for low
@@ -240,7 +243,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 >
                   <div className="text-2xl font-bold">{correct}/{total}</div>
                   <div className="text-xs font-semibold mt-1">{TYPE_LABELS[type] ?? type}</div>
-                  <div className="text-xs opacity-75">{pct}%</div>
+                  <div className="text-xs">{pct}%</div>
                 </div>
               );
             })}
@@ -397,7 +400,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             הסטטיסטיקה שלי
           </button>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

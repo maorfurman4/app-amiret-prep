@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { BackNav } from '@/components/BackNav';
+import { FitWord } from '@/components/FitWord';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
@@ -327,8 +328,9 @@ export default function TodaySessionPage() {
           <div className="bg-exam-surface rounded-md border border-exam-border p-8 min-h-[260px] flex flex-col justify-center text-center">
             {!flipped ? (
               <div dir="ltr">
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <div lang="en" className="font-serif text-4xl font-bold text-exam-ink">{currentWord.word}</div>
+                <div className="@container flex items-center justify-center gap-2 mb-3">
+                  {/* Reserve = speaker icon (w-5) + gap-2. */}
+                  <FitWord text={currentWord.word} max="2.25rem" reserve="1.75rem" className="font-serif font-bold text-exam-ink" />
                   <button onClick={() => speak(currentWord.word)} aria-label={`השמע הגייה של ${currentWord.word}`} className="hit-44 text-exam-ink-soft hover:text-exam-ink transition-colors">
                     <Volume2 className="w-5 h-5" aria-hidden />
                   </button>

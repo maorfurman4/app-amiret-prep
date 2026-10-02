@@ -120,6 +120,16 @@
     transform: translate(-50%, -50%);
   }
 }
+/* Flashcard headword that shrinks to fit its card instead of overflowing it
+   (see FitWord.tsx). Short words keep --fit-max; a long unbreakable word
+   ("interdisciplinary") scales down so its longest run — --fit-em wide at
+   1em — fits the nearest @container's width minus --fit-reserve (whatever
+   shares the row, e.g. the speaker button). break-word is only a safety net. */
+@utility fit-word {
+  font-size: min(var(--fit-max, 3rem), calc((100cqi - var(--fit-reserve, 0px)) / var(--fit-em, 10)));
+  overflow-wrap: break-word;
+  min-width: 0;
+}
 /* iOS Safari zooms the page when a focused field's text is under 16px, and
    stays zoomed (which reads as horizontal scrolling). Touch devices only, so
    desktop keeps its compact field styles. */

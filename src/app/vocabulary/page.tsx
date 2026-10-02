@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect, useRef, useCallback, useMemo, type React
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import { BackNav } from '@/components/BackNav';
+import { FitWord } from '@/components/FitWord';
 import { authFetch } from '@/lib/auth-fetch';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { useActivityGuard } from '@/lib/activity-guard';
@@ -1198,8 +1199,9 @@ function VocabularyContent() {
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center justify-center gap-3 mb-2">
-                        <div lang="en" className="font-serif text-5xl font-bold text-exam-ink leading-tight">{current.word}</div>
+                      <div className="@container flex items-center justify-center gap-3 mb-2">
+                        {/* Reserve = speaker icon (w-6) + gap-3. */}
+                        <FitWord text={current.word} max="3rem" reserve="2.25rem" className="font-serif font-bold text-exam-ink leading-tight" />
                         <button
                           onClick={e => { e.stopPropagation(); speak(current.word); }}
                           className="hit-44 hover:scale-110 transition-transform text-exam-ink-soft"

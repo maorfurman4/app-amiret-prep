@@ -129,14 +129,14 @@ export default function ExamModePage() {
           </Link>
         </div>
 
-        {/* Tips link */}
+        {/* Strategies guide link */}
         <div className="mt-4 text-center">
           <Link
-            href="/tips"
+            href="/strategies"
             className="hit-44 inline-flex items-center gap-2 px-5 py-2.5 bg-exam-surface rounded-sm border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong transition-colors text-sm text-exam-ink-soft hover:text-exam-ink"
           >
             <Sparkles className="w-4 h-4" strokeWidth={1.75} aria-hidden />
-            <span>אסטרטגיות לפי סוג שאלה</span>
+            <span>אסטרטגיות ומדריך למבחן</span>
           </Link>
         </div>
       </div>

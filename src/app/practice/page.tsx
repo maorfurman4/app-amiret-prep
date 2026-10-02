@@ -456,7 +456,7 @@ function PracticeContent() {
           <div className="mt-4 text-center animate-fade-up [animation-delay:280ms]">
             <Link
               href="/vocabulary"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-exam-surface rounded-2xl border border-exam-border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] hover:border-exam-border-strong transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform text-sm text-exam-ink-soft hover:text-exam-ink"
+              className="hit-44 inline-flex items-center gap-2 px-5 py-2.5 bg-exam-surface rounded-2xl border border-exam-border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] hover:border-exam-border-strong transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform text-sm text-exam-ink-soft hover:text-exam-ink"
             >
               <BookOpen className="w-4 h-4" strokeWidth={1.75} aria-hidden />
               <span>אוצר מילים: כרטיסיות לימוד</span>

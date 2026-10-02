@@ -1225,7 +1225,7 @@ function VocabularyContent() {
 
                       <button
                         onClick={e => { e.stopPropagation(); setFlipped(true); }}
-                        className="mt-6 w-full py-2.5 rounded-sm bg-exam-paper-alt hover:bg-exam-border/40 text-sm font-medium text-exam-ink transition-colors"
+                        className="hit-44 mt-6 w-full py-2.5 rounded-sm bg-exam-paper-alt hover:bg-exam-border/40 text-sm font-medium text-exam-ink transition-colors"
                         dir="rtl"
                       >הצג תרגום</button>
                     </div>

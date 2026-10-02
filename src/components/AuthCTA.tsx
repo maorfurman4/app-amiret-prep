@@ -43,7 +43,7 @@ export function AuthCTA({ message }: AuthCTAProps) {
         </div>
         <Link
           href={`/auth/login?next=${next}`}
-          className="flex-shrink-0 px-5 py-2.5 bg-exam-accent-ink text-exam-accent rounded-sm font-bold text-sm hover:opacity-90 transition-opacity"
+          className="hit-44 flex-shrink-0 px-5 py-2.5 bg-exam-accent-ink text-exam-accent rounded-sm font-bold text-sm hover:opacity-90 transition-opacity"
         >
           <span className="inline-flex items-center gap-1">התחברות או הרשמה<ChevronLeft className="w-4 h-4" aria-hidden /></span>
         </Link>

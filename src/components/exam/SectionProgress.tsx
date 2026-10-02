@@ -35,7 +35,7 @@ export function SectionProgress({ currentSection, completedSections }: SectionPr
       tabIndex={0}
       role="region"
       aria-label="התקדמות בפרקי המבחן"
-      className="flex items-center gap-1 overflow-x-auto pb-1 scroll-smooth motion-reduce:scroll-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-exam-accent"
+      className="relative flex items-center gap-1 overflow-x-auto pb-1 scroll-smooth motion-reduce:scroll-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-exam-accent"
       dir="rtl"
     >
       {SECTION_CONFIGS.map((cfg) => {

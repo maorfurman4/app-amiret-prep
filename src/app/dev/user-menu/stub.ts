@@ -10,6 +10,12 @@
  *   ?stats=none      no completed exams
  *   ?stats=error     /api/stats fails
  *   ?fail=name|avatar|password   that write returns an error
+ *   ?provider=google a Google user: user_metadata.avatar_url is the Google
+ *                    photo, as every Google sign-in resets it to
+ *   ?avatar=custom   user_stats.avatar_url already holds a custom upload
+ *   ?live=1          the real auth subscription on the stub session (no
+ *                    previewUser); window.__profileStub.refresh() runs a real
+ *                    token refresh and remount() simulates a page change
  *
  * Every intercepted call is logged to window.__profileStub.calls.
  */
@@ -27,15 +33,31 @@ function json(body: unknown, status = 200) {
 // supabase-js keeps the session under sb-<first host label>-auth-token.
 const storageKey = () => (SUPABASE_URL ? `sb-${new URL(SUPABASE_URL).hostname.split('.')[0]}-auth-token` : '');
 
-const STUB_USER = {
-  id: STUB_USER_ID,
-  aud: 'authenticated',
-  role: 'authenticated',
-  email: 'student@example.com',
-  app_metadata: { provider: 'email' },
-  user_metadata: { full_name: 'נועה לוי' },
-  created_at: '2026-01-01T00:00:00.000Z',
-};
+const photo = (fill: string, label: string) =>
+  `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="${fill}"/><text x="32" y="42" font-size="28" font-family="sans-serif" font-weight="bold" fill="#fff" text-anchor="middle">${label}</text></svg>`)}`;
+/** Stand-ins for the provider's photo and a custom upload, told apart at a glance. */
+export const GOOGLE_PHOTO = photo('#4285f4', 'G');
+export const CUSTOM_PHOTO = photo('#16a34a', 'C');
+
+const isGoogle = () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('provider') === 'google';
+
+/** The user as auth hands it back on any sign-in or refresh. */
+export function stubUser(google = isGoogle()) {
+  return {
+    id: STUB_USER_ID,
+    aud: 'authenticated',
+    role: 'authenticated',
+    email: 'student@example.com',
+    app_metadata: { provider: google ? 'google' : 'email' },
+    user_metadata: google ? { full_name: 'נועה לוי', avatar_url: GOOGLE_PHOTO } : { full_name: 'נועה לוי' },
+    created_at: '2026-01-01T00:00:00.000Z',
+  };
+}
+
+const stubSession = () => ({
+  access_token: 'stub-access-token', refresh_token: 'stub-refresh-token', token_type: 'bearer',
+  expires_in: 3600, expires_at: Math.floor(Date.now() / 1000) + 3600, user: stubUser(),
+});
 
 /**
  * A far-from-expiry fake session: supabase-js serves it from storage without
@@ -43,10 +65,7 @@ const STUB_USER = {
  */
 export function writeStubSession() {
   try {
-    localStorage.setItem(storageKey(), JSON.stringify({
-      access_token: 'stub-access-token', refresh_token: 'stub-refresh-token', token_type: 'bearer',
-      expires_in: 3600, expires_at: Math.floor(Date.now() / 1000) + 3600, user: STUB_USER,
-    }));
+    localStorage.setItem(storageKey(), JSON.stringify(stubSession()));
   } catch { /* storage disabled */ }
 }
 
@@ -69,7 +88,11 @@ export function installProfileStub() {
   else writeStubSession();
   window.addEventListener('pagehide', removeStubSession);
 
-  const state: Record<string, unknown> = { displayName: 'נועה Levi 2', avatarUrl: null, passwordLength: 0 };
+  const state: Record<string, unknown> = {
+    displayName: 'נועה Levi 2',
+    avatarUrl: params.get('avatar') === 'custom' ? CUSTOM_PHOTO : null,
+    passwordLength: 0,
+  };
   const calls: Call[] = [];
   w.__profileStub = { calls, state };
 
@@ -128,14 +151,18 @@ export function installProfileStub() {
     if (SUPABASE_URL && url.href.startsWith(SUPABASE_URL)) {
       if (url.pathname === '/rest/v1/user_stats') {
         log();
-        return json({ display_name: state.displayName });
+        return json({ display_name: state.displayName, avatar_url: state.avatarUrl });
       }
       if (url.pathname === '/auth/v1/user' && method === 'PUT') {
         const body = JSON.parse(String(init.body ?? '{}')) as { password?: string };
         log({ passwordLength: body.password?.length ?? 0 });
         if (fail === 'password') return json({ code: 422, error_code: 'weak_password', msg: 'הסיסמה נדחתה (stub)' }, 422);
         state.passwordLength = body.password?.length ?? 0;
-        return json(STUB_USER);
+        return json(stubUser());
+      }
+      if (url.pathname === '/auth/v1/token') {
+        log();
+        return json(stubSession());
       }
       if (url.pathname === '/auth/v1/logout') {
         log();

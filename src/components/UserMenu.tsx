@@ -29,6 +29,26 @@ const ERROR = 'text-xs font-semibold text-menu-danger';
 const SUCCESS = 'min-h-4 text-xs font-semibold text-menu-success';
 
 /**
+ * The profile as stored in user_stats, per user. Every page mounts its own
+ * UserMenu, so this lets a page change show the avatar and name at once
+ * instead of waiting on the user_stats read again.
+ */
+type Profile = { id: string; name: string; avatar: string | null };
+const profileCache = new Map<string, Profile>();
+
+/**
+ * The provider's photo, used only when there's no custom avatar. Auth
+ * user_metadata can't hold the custom one: every Google sign-in resets
+ * avatar_url to the Google photo, and the copy in the browser's session isn't
+ * updated by an upload. A URL into our avatars bucket there is a stale custom
+ * upload (possibly a removed one), so it's ignored; user_stats has the truth.
+ */
+function providerAvatar(user: User): string | null {
+  const url = user.user_metadata?.avatar_url;
+  return typeof url === 'string' && url && !url.includes('/storage/v1/object/public/avatars/') ? url : null;
+}
+
+/**
  * The account popover: an identity header (avatar, name, and the same three
  * numbers /stats leads with), links, and the account settings as rows that
  * open in place. It's a non-modal dialog (it holds forms, so not a menu):
@@ -52,7 +72,13 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
   const [metrics, setMetrics] = useState<StatsMetrics | null | undefined>(undefined);
   const [statsError, setStatsError] = useState(false);
 
-  const [displayName, setDisplayName] = useState('');
+  // What this mount loaded or saved, else what an earlier page's menu cached.
+  const [loaded, setLoaded] = useState<Profile | null>(null);
+  const profile = user ? (loaded?.id === user.id ? loaded : profileCache.get(user.id)) : undefined;
+  const displayName = profile?.name ?? '';
+  // user_stats.avatar_url: undefined until it loads, null when there's no custom avatar.
+  const customAvatar = profile ? profile.avatar : undefined;
+
   const [nameInput, setNameInput] = useState('');
   const [nameSaving, setNameSaving] = useState(false);
   const [nameError, setNameError] = useState<string | null>(null);
@@ -65,7 +91,6 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
   const [pwError, setPwError] = useState<string | null>(null);
   const [pwSuccess, setPwSuccess] = useState(false);
 
-  const [avatarOverride, setAvatarOverride] = useState<string | null | undefined>(undefined);
   const [avatarSaving, setAvatarSaving] = useState(false);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [avatarStatus, setAvatarStatus] = useState<string | null>(null);
@@ -83,15 +108,33 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
     return () => subscription.unsubscribe();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Name and avatar come from user_stats, the durable copy. Keyed on the id,
+  // not the user object, which every token refresh replaces.
+  const userId = user?.id;
   useEffect(() => {
     if (!user) return;
-    (supabase.from('user_stats') as any).select('display_name').eq('user_id', user.id).maybeSingle() // eslint-disable-line @typescript-eslint/no-explicit-any
-      .then(({ data }: { data: { display_name: string | null } | null }) => {
-        const name = (data?.display_name as string | null) ?? (user.user_metadata?.full_name as string | undefined) ?? '';
-        setDisplayName(name);
-        setNameInput(name);
+    const id = user.id;
+    let live = true;
+    (supabase.from('user_stats') as any).select('display_name, avatar_url').eq('user_id', id).maybeSingle() // eslint-disable-line @typescript-eslint/no-explicit-any
+      .then(({ data, error }: { data: { display_name: string | null; avatar_url: string | null } | null; error: unknown }) => {
+        if (!live) return;
+        const next = {
+          id,
+          name: data?.display_name ?? (user.user_metadata?.full_name as string | undefined) ?? '',
+          avatar: data?.avatar_url ?? null,
+        };
+        if (!error) profileCache.set(id, next);
+        setLoaded(next);
       });
-  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => { live = false; };
+  }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const saveProfile = (patch: Partial<Omit<Profile, 'id'>>) => {
+    if (!user) return;
+    const next = { id: user.id, name: displayName, avatar: customAvatar ?? null, ...patch };
+    profileCache.set(user.id, next);
+    setLoaded(next);
+  };
 
   // The header numbers come from the exact pipeline /stats uses (same rows,
   // same computeStatsMetrics), fetched fresh on every open so a just-finished
@@ -215,7 +258,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
       });
       const data = await res.json();
       if (!res.ok) { setNameError(data.error ?? 'לא הצלחנו לשמור. נסה שוב.'); return; }
-      setDisplayName(data.displayName);
+      saveProfile({ name: data.displayName });
       setNameInput(data.displayName);
       setNameSaved(true);
     } catch {
@@ -267,7 +310,8 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
       const res = await authFetch('/api/profile/upload-avatar', { method: 'POST', body });
       const data = await res.json();
       if (!res.ok) { setAvatarError(data.error ?? 'לא הצלחנו להעלות את התמונה.'); return; }
-      setAvatarOverride(data.avatarUrl);
+      // The URL carries a fresh ?t= cache-buster, so the new image shows at once.
+      saveProfile({ avatar: data.avatarUrl });
       setAvatarStatus('התמונה עודכנה');
     } catch {
       setAvatarError('אין חיבור לאינטרנט.');
@@ -285,7 +329,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
       const res = await authFetch('/api/profile/upload-avatar', { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) { setAvatarError(data.error ?? 'לא הצלחנו להסיר את התמונה.'); return; }
-      setAvatarOverride(null);
+      saveProfile({ avatar: null });
       setAvatarStatus('התמונה הוסרה');
       setRefocusPick(n => n + 1);
     } catch {
@@ -309,9 +353,10 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
   }
 
   const initial = (displayName || user.email || '?')[0].toUpperCase();
-  const avatarUrl = avatarOverride !== undefined
-    ? avatarOverride ?? undefined
-    : (user.user_metadata?.avatar_url as string | undefined);
+  // The custom avatar wins; the provider photo is only the default. Until
+  // user_stats answers, show the initial rather than flash the provider photo.
+  const avatarUrl = customAvatar === undefined ? undefined : customAvatar ?? providerAvatar(user) ?? undefined;
+  const hasCustomAvatar = !!customAvatar;
   const canChangePassword = user.app_metadata?.provider === 'email';
   const sectionId = (s: Section) => `${uid}-${s}`;
 
@@ -478,9 +523,9 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
       <Reveal open={section === 'avatar'} id={sectionId('avatar')}>
         <div className="px-3 pb-3 pt-1 space-y-2">
           <button ref={avatarPickRef} type="button" data-autofocus onClick={handlePickAvatar} aria-disabled={avatarSaving} className={PRIMARY}>
-            {avatarSaving ? 'מעלה...' : avatarUrl ? 'החלפת תמונה' : 'בחירת תמונה'}
+            {avatarSaving ? 'מעלה...' : hasCustomAvatar ? 'החלפת תמונה' : 'בחירת תמונה'}
           </button>
-          {avatarUrl && (
+          {hasCustomAvatar && (
             <button
               type="button"
               onClick={handleRemoveAvatar}

@@ -59,20 +59,20 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
 
   if (fetchError) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
           <div className="text-exam-wrong text-xl mb-3">לא הצלחנו לטעון את השאלות</div>
           <button onClick={() => { setFetchError(false); setLoadToken(t => t + 1); }} className="text-exam-accent underline text-sm">נסה שוב</button>
         </div>
-      </div>
+      </main>
     );
   }
 
   if (!data) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper">
         <div className="text-exam-ink-soft">טוען שאלות...</div>
-      </div>
+      </main>
     );
   }
 
@@ -175,7 +175,7 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
         </aside>
 
         {/* Main question area */}
-        <main className="flex-1 min-w-0">
+        <main id="main" className="flex-1 min-w-0">
           {filteredIndices.length === 0 ? (
             <div className="text-center py-20 text-exam-ink-soft">
               {filter === 'wrong'

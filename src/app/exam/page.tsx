@@ -84,7 +84,7 @@ export default function ExamModePage() {
   return (
     <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+      <main id="main" className="flex-1 flex flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-2xl">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-exam-ink mb-2">בחר מצב</h1>
@@ -92,7 +92,7 @@ export default function ExamModePage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm text-center">
+          <div role="alert" className="mb-6 p-4 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm text-center">
             {error}
           </div>
         )}
@@ -139,7 +139,7 @@ export default function ExamModePage() {
           </Link>
         </div>
       </div>
-      </div>
+      </main>
     </div>
   );
 }

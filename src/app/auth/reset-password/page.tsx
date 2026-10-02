@@ -185,7 +185,7 @@ export default function ResetPasswordPage() {
   })();
 
   return (
-    <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
+    <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <h1>
@@ -198,6 +198,6 @@ export default function ResetPasswordPage() {
         </div>
         <div className="bg-exam-surface border border-exam-border rounded-md p-7">{card}</div>
       </div>
-    </div>
+    </main>
   );
 }

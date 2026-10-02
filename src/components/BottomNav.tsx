@@ -45,6 +45,7 @@ function BottomNavContent({ pathname }: { pathname: string }) {
 
   return (
     <nav
+      aria-label="ניווט ראשי"
       // pb-2.5: lifts the tabs ~2.5mm off the screen's bottom edge. A fixed
       // value, since the viewport doesn't use viewport-fit=cover, so
       // env(safe-area-inset-bottom) is always 0 here.

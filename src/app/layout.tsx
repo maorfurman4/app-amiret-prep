@@ -63,6 +63,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t;try{t=localStorage.getItem('theme')}catch(e){}if(t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}})()` }} />
       </head>
       <body className="min-h-full flex flex-col bg-exam-paper pb-24 md:pb-0">
+        {/* Keyboard users skip the top bar / nav straight to the page's
+            <main id="main">. Hidden until focused (WCAG 2.4.1). */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-[100] focus:px-4 focus:py-2.5 focus:rounded-xl focus:bg-exam-accent focus:text-exam-accent-ink focus:font-bold focus:shadow-overlay"
+        >
+          דלג לתוכן הראשי
+        </a>
         <ActivityGuardProvider>
           {children}
           <BottomNav />

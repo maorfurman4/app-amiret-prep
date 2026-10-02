@@ -26,6 +26,7 @@ export function BackNav({ backHref = '/', backLabel = 'דף הבית', title }: 
 
   return (
     <nav
+      aria-label="ניווט עליון"
       className="sticky top-0 z-30 bg-exam-surface border-b border-exam-border"
       dir="rtl"
     >

@@ -11,7 +11,7 @@ export default function TipsIndexPage() {
   return (
     <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
-      <div className="flex-1 flex flex-col items-center px-4 py-10">
+      <main id="main" className="flex-1 flex flex-col items-center px-4 py-10">
         <div className="w-full max-w-2xl">
           <div className="text-center mb-10">
             <Sparkles className="w-9 h-9 mx-auto mb-3 text-exam-ink" strokeWidth={1.5} aria-hidden />
@@ -44,7 +44,7 @@ export default function TipsIndexPage() {
             כל האסטרטגיות מותאמות לפורמט האמירנ&quot;ט הנוכחי
           </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

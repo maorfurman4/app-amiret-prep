@@ -119,7 +119,7 @@ export default function DiagnosticPage() {
     return (
       <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/" backLabel="דף הבית" />
-        <div className="flex-1 flex items-center justify-center px-4 py-10">
+        <main id="main" className="flex-1 flex items-center justify-center px-4 py-10">
           <div className="w-full max-w-lg text-center space-y-6 animate-fade-up">
             <Stethoscope className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
             <h1 className="text-3xl font-bold text-exam-ink">מאיפה להתחיל? נגלה ביחד</h1>
@@ -140,21 +140,21 @@ export default function DiagnosticPage() {
               {pending ? 'מכין את השאלה הראשונה...' : 'התחל אבחון'}
             </button>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
 
   if (phase === 'error') {
     return (
-      <div className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
+      <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center space-y-3">
           <div className="text-exam-wrong">לא הצלחנו לטעון את השאלה הבאה</div>
           <button onClick={() => step(answers)} disabled={pending} className="text-exam-accent underline text-sm">
             {pending ? 'מנסה שוב...' : 'נסה שוב'}
           </button>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -193,7 +193,7 @@ export default function DiagnosticPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main id="main" className="max-w-2xl mx-auto px-4 py-8">
         {question && (
           <QuestionCard
             key={question.id}
@@ -242,7 +242,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
   ];
 
   return (
-    <div className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
+    <main id="main" className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
       <SessionStreakCelebration />
       <div className="max-w-lg mx-auto space-y-5">
         <div className="text-center animate-fade-up">
@@ -338,6 +338,6 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
           ))}
         </section>
       </div>
-    </div>
+    </main>
   );
 }

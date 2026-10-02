@@ -52,6 +52,9 @@ export function QuestionCard({
   premium = false,
 }: QuestionCardProps) {
   const [hintQuestionId, setHintQuestionId] = useState<string | null>(null);
+  // Review/summary screens mount cards that are already answered; only a card
+  // answered live announces right/wrong.
+  const [mountedWithResult] = useState(showResult);
   const hintVisible = hintQuestionId === question.id;
   const explanation = isPractice && showResult ? parseExplanation(question.explanation) : null;
   const hintStrategy = (question as Question & { hint?: string }).hint
@@ -78,10 +81,15 @@ export function QuestionCard({
 
       {/* Passage for reading comprehension — paper-like box, serif, LTR */}
       {question.passage && (
+        // Scrolls on its own, so it takes keyboard focus: otherwise a
+        // keyboard-only user can't reach the rest of the passage (WCAG 2.1.1).
         <div
           dir="ltr"
           lang="en"
-          className="font-serif mb-6 p-5 bg-exam-paper-alt border border-exam-border rounded-md text-[15px] leading-[1.75] text-exam-ink max-h-56 overflow-y-auto text-left"
+          tabIndex={0}
+          role="region"
+          aria-label="קטע קריאה"
+          className="font-serif mb-6 p-5 bg-exam-paper-alt border border-exam-border rounded-md text-[15px] leading-[1.75] text-exam-ink max-h-56 overflow-y-auto text-left focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-exam-accent"
         >
           <div className="font-sans text-[11px] uppercase tracking-wider text-exam-ink-soft mb-2 not-italic">
             Reading Passage
@@ -120,8 +128,12 @@ export function QuestionCard({
           return (
             <button
               key={option.id ?? i}
-              onClick={() => onSelect(i)}
-              disabled={showResult}
+              type="button"
+              // aria-disabled, not disabled, once the result shows: a disabled
+              // button drops keyboard focus to <body> (WCAG 2.4.3).
+              onClick={() => { if (!showResult) onSelect(i); }}
+              aria-disabled={showResult || undefined}
+              aria-pressed={showResult ? undefined : isSelected}
               className={`w-full text-left px-4 py-3 border flex items-center gap-3 ${
                 premium
                   ? `rounded-2xl shadow-surface transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ${
@@ -144,12 +156,27 @@ export function QuestionCard({
                 {OPTION_LABELS[i]}
               </span>
               <span className="flex-1 font-serif">{option.text}</span>
+              {showCorrect && <span className="sr-only" lang="he" dir="rtl">{isSelected ? ' (התשובה שלך, נכונה)' : ' (התשובה הנכונה)'}</span>}
+              {isWrong && <span className="sr-only" lang="he" dir="rtl"> (התשובה שלך, שגויה)</span>}
               {showResult && isCorrect && <Check className="w-4 h-4 text-exam-sage flex-shrink-0" strokeWidth={3} aria-hidden />}
               {isWrong && <X className="w-4 h-4 text-exam-wrong flex-shrink-0" strokeWidth={3} aria-hidden />}
             </button>
           );
         })}
       </div>
+
+      {/* Practice: say right/wrong out loud once the answer locks — the
+          colors and icons above are visual only. Always mounted, so the
+          change is announced. */}
+      {isPractice && !mountedWithResult && (
+        <p role="status" className="sr-only" dir="rtl">
+          {showResult && selectedAnswer !== null
+            ? (selectedAnswer === question.correct_answer
+              ? 'נכון!'
+              : `לא נכון. התשובה הנכונה: ${OPTION_LABELS[question.correct_answer] ?? ''}`)
+            : ''}
+        </p>
+      )}
 
       {/* Hint — practice only, before answer */}
       {isPractice && !showResult && hintStrategy && (

@@ -42,6 +42,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const [submitWarning, setSubmitWarning] = useState<string | null>(null);
   const [lateNotice, setLateNotice] = useState(false);
   const [exitConfirm, setExitConfirm] = useState(false);
+  // The exit confirmation opens above the question; move focus there so a
+  // keyboard / screen-reader user lands on it (the safe "stay" choice).
+  const stayButtonRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => { if (exitConfirm) stayButtonRef.current?.focus(); }, [exitConfirm]);
 
   // Practice mode: track which question indices have been answered (locked)
   const [lockedAnswers, setLockedAnswers] = useState<Set<number>>(new Set());
@@ -295,20 +299,20 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
   if (error) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
-          <div className="text-exam-wrong text-xl mb-4 font-sans">{error}</div>
+          <div role="alert" className="text-exam-wrong text-xl mb-4 font-sans">{error}</div>
           <button onClick={loadSession} className="text-exam-ink underline font-sans">נסה שוב</button>
         </div>
-      </div>
+      </main>
     );
   }
 
   if (!session || currentQuestions.length === 0) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
-        <div className="text-exam-ink-soft text-lg font-sans">טוען מבחן...</div>
-      </div>
+      <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
+        <div role="status" className="text-exam-ink-soft text-lg font-sans">טוען מבחן...</div>
+      </main>
     );
   }
 
@@ -371,10 +375,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       </header>
 
       {/* Main exam area */}
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main id="main" className="max-w-2xl mx-auto px-4 py-8">
         {/* Exit confirmation */}
         {exitConfirm && (
-          <div className="mb-6 p-4 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm" dir="rtl">
+          <div role="alert" className="mb-6 p-4 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm" dir="rtl">
             <p className="text-exam-wrong text-sm font-semibold mb-3">
               לצאת מהמבחן? ההתקדמות בו לא תישמר, ותוכל להתחיל מבחן חדש מתי שתרצה.
             </p>
@@ -387,6 +391,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
                 {isExiting ? 'יוצא...' : 'כן, לצאת מהמבחן'}
               </button>
               <button
+                ref={stayButtonRef}
                 onClick={() => setExitConfirm(false)}
                 disabled={isExiting}
                 className="px-4 py-2 rounded-sm border border-exam-border text-exam-ink-soft text-sm hover:bg-exam-paper-alt transition-colors disabled:opacity-50"
@@ -398,7 +403,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         )}
 
         {lateNotice && (
-          <div className="mb-6 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt flex items-center justify-between gap-3" dir="rtl">
+          <div role="status" className="mb-6 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt flex items-center justify-between gap-3" dir="rtl">
             <span>הפרק הקודם נשלח אחרי שהזמן נגמר, ולכן, כמו במבחן האמיתי, התשובות בו לא נספרו.</span>
             <button onClick={() => setLateNotice(false)} className="text-xs underline flex-shrink-0">הבנתי</button>
           </div>
@@ -432,16 +437,19 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             showResult={session.is_practice && lockedAnswers.has(currentQuestionIndex)}
           />
         </div>
-        {isSubmitting && (
-          <div className="flex items-center justify-center gap-2 mt-4 text-sm text-exam-ink-soft" dir="rtl">
-            <span className="w-4 h-4 border-2 border-exam-border border-t-exam-ink rounded-full animate-spin" />
-            שולח את הפרק וטוען את הבא. רגע אחד...
-          </div>
-        )}
+        {/* Always mounted so the "sending" message is announced. */}
+        <div role="status">
+          {isSubmitting && (
+            <div className="flex items-center justify-center gap-2 mt-4 text-sm text-exam-ink-soft" dir="rtl">
+              <span className="w-4 h-4 border-2 border-exam-border border-t-exam-ink rounded-full animate-spin" aria-hidden />
+              שולח את הפרק וטוען את הבא. רגע אחד...
+            </div>
+          )}
+        </div>
 
         {/* Inline submit warning */}
         {submitWarning && (
-          <div className="mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm flex items-center justify-between gap-3" dir="rtl">
+          <div role="alert" className="mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm flex items-center justify-between gap-3" dir="rtl">
             <p className="text-exam-alt text-sm">{submitWarning}</p>
             <button onClick={() => setSubmitWarning(null)} className="text-xs px-3 py-1.5 rounded-sm border border-exam-alt/50 text-exam-alt hover:bg-exam-alt-bg flex-shrink-0">הבנתי</button>
           </div>

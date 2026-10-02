@@ -884,7 +884,7 @@ function VocabularyContent() {
     <div className="min-h-dvh w-full bg-exam-paper overflow-x-clip" dir="rtl">
       <BackNav backHref="/" backLabel="דף הבית" />
 
-      <div className="max-w-lg mx-auto px-4 pt-4 pb-32">
+      <main id="main" className="max-w-lg mx-auto px-4 pt-4 pb-32">
         {syncFailed && (
           <div className="mb-4 flex items-center gap-2 px-3 py-2.5 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt">
             <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
@@ -1203,6 +1203,7 @@ function VocabularyContent() {
                           onClick={e => { e.stopPropagation(); speak(current.word); }}
                           className="hover:scale-110 transition-transform text-exam-ink-soft"
                           title="הגייה"
+                          aria-label={`השמע הגייה של ${current.word}`}
                         ><Volume2 className="w-6 h-6" aria-hidden /></button>
                       </div>
                       <div className="mb-4 flex justify-center"><StarRow n={current.difficulty_level} size={18} /></div>
@@ -1231,7 +1232,7 @@ function VocabularyContent() {
                     <div key="back" className="text-center animate-card-flip motion-reduce:animate-none [backface-visibility:hidden]" dir="rtl" style={{ opacity: faceOpacity }}>
                       <div className="flex items-center justify-center gap-2 mb-1" dir="ltr">
                         <span className="font-serif text-lg font-bold text-exam-ink-soft">{current.word}</span>
-                        <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-exam-ink-soft"><Volume2 className="w-4 h-4" aria-hidden /></button>
+                        <button onClick={e => { e.stopPropagation(); speak(current.word); }} className="text-exam-ink-soft" aria-label={`השמע הגייה של ${current.word}`}><Volume2 className="w-4 h-4" aria-hidden /></button>
                       </div>
                       <div className="text-3xl font-bold text-exam-accent mb-3">{current.hebrew_translation}</div>
                       {current.definition && (
@@ -1456,7 +1457,7 @@ function VocabularyContent() {
                     ><Heart className="w-5 h-5" fill={favorites.has(quizDeck[quizIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>
                     <div className="flex items-center gap-2" dir="ltr">
                       <span className="font-serif text-3xl font-bold text-exam-ink">{quizDeck[quizIndex].word}</span>
-                      <button onClick={() => speak(quizDeck[quizIndex].word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
+                      <button onClick={() => speak(quizDeck[quizIndex].word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors" aria-label={`השמע הגייה של ${quizDeck[quizIndex].word}`}><Volume2 className="w-5 h-5" aria-hidden /></button>
                     </div>
                   </div>
                   {quizDeck[quizIndex].example_sentence && (
@@ -1481,7 +1482,8 @@ function VocabularyContent() {
                       cls += 'bg-exam-surface border-exam-border text-exam-ink-soft opacity-70';
                     }
                     return (
-                      <button key={i} onClick={() => handleQuizSelect(i, opt)} className={cls} disabled={quizSelected !== null}>
+                      // aria-disabled keeps keyboard focus on the answer once it locks.
+                      <button key={i} type="button" onClick={() => { if (quizSelected === null) handleQuizSelect(i, opt); }} className={cls} aria-disabled={quizSelected !== null || undefined}>
                         {opt}
                         {quizSelected !== null && isCorrectOpt && <Check className="inline w-3.5 h-3.5 mr-1" strokeWidth={3} aria-hidden />}
                         {quizSelected === i && !isCorrectOpt && <X className="inline w-3.5 h-3.5 mr-1" strokeWidth={3} aria-hidden />}
@@ -1490,6 +1492,10 @@ function VocabularyContent() {
                   })}
                 </div>
 
+                {/* Announces right/wrong; always mounted so the change is read. */}
+                <p role="status" className="sr-only">
+                  {quizSelected !== null && (quizCorrect ? 'נכון!' : `לא נכון. התשובה הנכונה: ${quizDeck[quizIndex].hebrew_translation}`)}
+                </p>
                 {quizSelected !== null && (
                   <div className="text-center">
                     <div className={`text-lg font-bold mb-3 flex items-center justify-center gap-1.5 ${quizCorrect ? 'text-exam-sage-strong' : 'text-exam-wrong'}`}>
@@ -1667,7 +1673,7 @@ function VocabularyContent() {
                     ><Heart className="w-5 h-5" fill={favorites.has(timedDeck[timedIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>
                     <div className="flex items-center gap-2" dir="ltr">
                       <span className="font-serif text-3xl font-bold text-exam-ink">{timedDeck[timedIndex].word}</span>
-                      <button onClick={() => speak(timedDeck[timedIndex].word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
+                      <button onClick={() => speak(timedDeck[timedIndex].word)} aria-label={`השמע הגייה של ${timedDeck[timedIndex].word}`} className="text-exam-ink-soft hover:text-exam-ink transition-colors"><Volume2 className="w-5 h-5" aria-hidden /></button>
                     </div>
                   </div>
                   {timedDeck[timedIndex].example_sentence && (
@@ -1716,7 +1722,7 @@ function VocabularyContent() {
             )}
           </>
         )}
-      </div>
+      </main>
     </div>
   );
 }

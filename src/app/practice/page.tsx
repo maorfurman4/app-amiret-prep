@@ -410,7 +410,7 @@ function PracticeContent() {
     return (
       <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+        <main id="main" className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg">
           <h1 className="text-2xl font-bold text-exam-ink mb-1">תרגול סעיף</h1>
           <p className="text-exam-ink-soft mb-8 text-sm">בחר את סוג השאלות שתרצה לתרגל</p>
@@ -463,14 +463,14 @@ function PracticeContent() {
             </Link>
           </div>
         </div>
-        </div>
+        </main>
       </div>
     );
   }
 
   if (step === 'pick-difficulty') {
     return (
-      <div className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
+      <main id="main" className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
         <div className="w-full max-w-lg">
           <button
             onClick={() => {
@@ -514,13 +514,13 @@ function PracticeContent() {
             ))}
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   if (step === 'pick-count') {
     return (
-      <div className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
+      <main id="main" className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
         <div className="w-full max-w-lg">
           <button onClick={() => setStep('pick-difficulty')} className="text-exam-ink-soft text-sm mb-6 hover:text-exam-ink">
             <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה</span>
@@ -588,7 +588,7 @@ function PracticeContent() {
             {loading ? 'טוען...' : sectionMode ? 'התחל מקבץ אמיתי' : examMode ? 'התחל בחינה' : 'התחל תרגול'}
           </button>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -682,7 +682,7 @@ function PracticeContent() {
           </div>
         </header>
 
-        <main className="max-w-2xl mx-auto px-4 py-8">
+        <main id="main" className="max-w-2xl mx-auto px-4 py-8">
           {mixNotice && (
             <div role="status" className="mb-6 flex items-start gap-2 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-exam-alt text-sm">
               <Info className="w-4 h-4 mt-0.5 flex-shrink-0" aria-hidden />
@@ -802,7 +802,7 @@ function PracticeContent() {
     );
 
     return (
-      <div className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
+      <main id="main" className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
         <SessionStreakCelebration />
         <div className="max-w-2xl mx-auto">
           {/* Score summary */}
@@ -947,13 +947,13 @@ function PracticeContent() {
             </div>
           )}
         </div>
-      </div>
+      </main>
     );
   }
 
   // Loading / error fallback
   return (
-    <div className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
+    <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
       {loading
         ? <div className="text-exam-ink-soft">טוען שאלות...</div>
         : <div className="text-center">
@@ -961,7 +961,7 @@ function PracticeContent() {
             <button onClick={handleRestart} className="text-exam-accent underline text-sm">נסה שוב</button>
           </div>
       }
-    </div>
+    </main>
   );
 }
 

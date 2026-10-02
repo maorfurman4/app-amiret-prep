@@ -254,9 +254,9 @@ export default function ReviewQueuePage() {
 
   if (step === 'loading') {
     return (
-      <div className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
+      <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
         <div className="text-exam-ink-soft text-lg">טוען שאלות לחזרה...</div>
-      </div>
+      </main>
     );
   }
 
@@ -264,7 +264,7 @@ export default function ReviewQueuePage() {
     return (
       <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+        <main id="main" className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-4">
             <AlertTriangle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
             <h1 className="text-xl font-bold text-exam-ink">לא הצלחנו לטעון את החזרה</h1>
@@ -276,7 +276,7 @@ export default function ReviewQueuePage() {
               נסה שוב
             </button>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
@@ -285,7 +285,7 @@ export default function ReviewQueuePage() {
     return (
       <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+        <main id="main" className="flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-full max-w-sm text-center space-y-6">
             <PartyPopper className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
             <h1 className="text-2xl font-bold text-exam-ink">סגרת את כל החזרות</h1>
@@ -297,7 +297,7 @@ export default function ReviewQueuePage() {
               חזרה לתפריט
             </button>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
@@ -309,7 +309,7 @@ export default function ReviewQueuePage() {
     return (
       <div className="min-h-dvh bg-exam-paper flex flex-col" dir="rtl">
         <BackNav backHref="/exam" backLabel="מבחן" />
-        <div className="flex-1 px-4 py-8">
+        <main id="main" className="flex-1 px-4 py-8">
           <div className="w-full max-w-lg mx-auto space-y-6">
             <div className="text-center">
               <RotateCcw className="w-9 h-9 mx-auto mb-2 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
@@ -361,7 +361,7 @@ export default function ReviewQueuePage() {
               </button>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
@@ -371,7 +371,7 @@ export default function ReviewQueuePage() {
     const color = pct >= 80 ? 'text-exam-sage-strong' : pct >= 60 ? 'text-exam-alt' : 'text-exam-wrong';
 
     return (
-      <div className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4" dir="rtl">
+      <main id="main" className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4" dir="rtl">
         <div className="w-full max-w-sm text-center space-y-6">
           {pct >= 80 ? <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden /> : pct >= 60 ? <ThumbsUp className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden /> : <BookOpen className="w-14 h-14 mx-auto text-exam-ink-soft" strokeWidth={1.5} aria-hidden />}
           <div>
@@ -404,7 +404,7 @@ export default function ReviewQueuePage() {
             </button>
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -549,7 +549,7 @@ export default function ReviewQueuePage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main id="main" className="max-w-2xl mx-auto px-4 py-8">
         <QuestionCard
           question={question}
           questionNumber={currentIndex + 1}

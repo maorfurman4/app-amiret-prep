@@ -12,8 +12,8 @@ const ALLOWED_TYPES: Record<string, string> = {
 /**
  * POST /api/profile/upload-avatar  (multipart/form-data, field "file")
  * Uploads to the public "avatars" bucket at {user.id}/avatar.{ext} (upsert),
- * then syncs the resulting URL onto auth user_metadata and user_stats so it
- * shows up everywhere a display_name change already does.
+ * then syncs the resulting URL onto auth user_metadata and user_stats.
+ * user_stats is the copy the UI reads: a Google sign-in resets user_metadata.
  */
 export async function POST(req: NextRequest) {
   const { supabase, user } = await getServerClients();
@@ -61,7 +61,8 @@ export async function POST(req: NextRequest) {
 
 /**
  * DELETE /api/profile/upload-avatar
- * Clears the custom avatar — falls back to initials, not the original OAuth photo.
+ * Clears the custom avatar. The menu then shows the provider photo if there
+ * is one (a Google sign-in puts it back in user_metadata anyway), else initials.
  */
 export async function DELETE() {
   const { supabase, user } = await getServerClients();

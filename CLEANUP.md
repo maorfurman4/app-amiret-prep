@@ -158,3 +158,22 @@ Worktree `amirnet-scoring-diagnosis-c32c76` removed. It had no tracked or untrac
 | 4 | 66 / 680 ✓ | 0 | 0 | ✓ | ✓ |
 
 No item had to be reverted: every removal built and tested green on the first try. The final build lists 52 routes (pages + API). Every route in the baseline build output is still present, and no route was removed (the `/dev/*` pages are kept).
+
+## Deploy / PR results
+
+- **PR #6 merged** (`6dcc37b`, 2026-10-02 09:56 UTC):
+  - CI: first run hit a flaky `next/font` Google Fonts fetch (`Cannot read properties of null` in the font loader). One rerun passed and no code changed.
+  - Preview checked: the "טיפים אסטרטגיים" row is gone and there are no console errors.
+  - Production deploy: `success`.
+  - `https://amiret-prep.vercel.app/` checked: the row is absent from both the HTML and the screen.
+- **Cleanup PR: [#19](https://github.com/maorfurman4/app-amiret-prep/pull/19).** Not merged; it's for your review.
+  - Synced with main after #6 (`page.tsx` only) and re-verified green.
+  - CI `test-and-build` passes and Vercel preview passes.
+  - Preview checks:
+    - Every live screen returns 200: `/`, `/practice`, `/vocabulary`, `/review-queue`, `/strategies`, `/tips` + 3 subpages, `/stats`, `/today`, `/diagnostic`, `/exam`, `/auth/login`, `/auth/reset-password`, `/admin`.
+    - `/sw.js` is served (generated at deploy) and the service worker registers.
+    - `manifest.json`, icons, `robots.txt` and `sitemap.xml` return 200.
+    - `/dev/*` returns 404 in production (by design).
+    - Removed `/file.svg` returns 404.
+    - No console errors.
+- Remote branch `claude/remove-home-strategy-tips` deleted after its merge.

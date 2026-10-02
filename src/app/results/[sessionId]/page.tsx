@@ -7,10 +7,11 @@ import { BackNav } from '@/components/BackNav';
 import { AuthCTA } from '@/components/AuthCTA';
 import { AlertTriangle, CheckCircle2, BookOpen, Clock, Trophy, Target, ChevronLeft } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
-import { classifyScore, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
+import { classifyScore, isExperimentalSection, SECTION_CONFIGS, type SectionResult, type Question } from '@/types/exam';
 import { thetaToScore } from '@/lib/adaptive';
 import { scoreInterval, sessionMeasurement } from '@/lib/exemption';
 import { routedLevel } from '@/lib/routed-level';
+import { examEffort } from '@/lib/exam-effort';
 import { ResultsScorePrompt } from '@/components/official-score/ResultsScorePrompt';
 import { ExemptionCard, ExemptTarget } from '@/components/results/ExemptionCard';
 import { heCount, agree } from '@/lib/hebrew-count';
@@ -89,6 +90,18 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   const sectionResults = session.section_results as SectionResult[];
   const totalCorrect = sectionResults.reduce((a, s) => a + (s.correctCount ?? 0), 0);
   const totalQuestions = sectionResults.reduce((a, s) => a + (s.totalCount ?? 0), 0);
+  // Clicked through at random? Then the score describes the clicking, not
+  // the student (src/lib/exam-effort.ts) — said plainly, and no probability.
+  const effort = examEffort(sectionResults);
+  // How hard the scored questions were, by their own level: the context
+  // that makes "x of y correct" readable next to an adaptive score.
+  const scoredLevels = sectionResults
+    .filter(sr => !isExperimentalSection(sr.sectionIndex))
+    .flatMap(sr => (sr.questions ?? []).map(q => q?.difficulty_level))
+    .filter((l): l is NonNullable<typeof l> => typeof l === 'number');
+  const meanLevel = scoredLevels.length > 0
+    ? Math.round(scoredLevels.reduce((a, l) => a + l, 0) / scoredLevels.length)
+    : null;
 
   const TYPE_LABELS: Record<string, string> = {
     sentence_completion: 'השלמת משפטים',
@@ -143,9 +156,23 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             <div className="text-exam-ink font-medium animate-fade-up [animation-delay:400ms]">
               {totalCorrect} מתוך {totalQuestions} תשובות נכונות
             </div>
+            <p className="text-xs text-exam-ink-soft mt-1 leading-relaxed animate-fade-up [animation-delay:430ms]" data-testid="adaptive-scoring-note">
+              במבחן אדפטיבי הציון לא נקבע לפי אחוז התשובות הנכונות בלבד: כל תשובה נכונה מביאה שאלה קשה יותר, ולכן הציון תלוי גם ברמת הקושי של השאלות שעליהן ענית נכון.
+              {meanLevel !== null && <> רמת הקושי הממוצעת של השאלות שקיבלת: <bdi dir="ltr">{meanLevel}/5</bdi>.</>}
+            </p>
             {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
               <div className="text-xs text-exam-ink-soft mt-1 animate-fade-up [animation-delay:460ms]">
                 כולל התרגול החלופי, שאינו חלק מפרקי הליבה. טעויות בו לא הורידו לך את האומדן
+              </div>
+            )}
+            {effort.lowEffort && (
+              <div role="note" data-testid="low-effort-notice" className="mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-start text-sm text-exam-alt leading-relaxed">
+                <div className="font-semibold mb-1 flex items-center gap-1.5">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
+                  המבחן הזה לא מדד את הרמה שלך
+                </div>
+                {effort.rapid} מתוך {effort.answered} התשובות ניתנו תוך שניות בודדות, ושיעור ההצלחה ({effort.correct} מתוך {effort.answered}) לא גבוה מניחוש אקראי.
+                {' '}לכן הציון לא נכלל ברמה המשוערת, בתחזית ובמדד המוכנות. כדי למדוד את הרמה, ענה על המבחן הבא בקצב רגיל.
               </div>
             )}
           </div>
@@ -162,7 +189,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
         {/* Probability of exemption — the real measurement uncertainty of
             THIS exam (stored at completion, or re-derived identically for
             exams scored before it was stored), replacing the old fixed ±10. */}
-        {exemption && (
+        {exemption && !effort.lowEffort && (
           <ExemptionCard
             measurement={exemption}
             heading={<>מה הסיכוי שלך ל-<ExemptTarget />?</>}

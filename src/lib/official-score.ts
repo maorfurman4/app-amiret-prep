@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { thetaToScore } from '@/lib/adaptive';
 import { currentEstimate, sessionMeasurement, POOL_WINDOW, type Measurement, type SessionLike } from '@/lib/exemption';
 import { localDaysBetween, localMidnight } from '@/lib/date-local';
+import { isLowEffortExam } from '@/lib/exam-effort';
 
 /**
  * NITE score linking — collection side. Each official score a student
@@ -41,6 +42,10 @@ const EMPTY_SNAPSHOT: PredictionSnapshot = {
   app_theta: null, app_se: null, app_score: null, app_p_exempt: null, app_exams_used: null, app_days_before: null,
 };
 
+/** How many recent exams are read to find POOL_WINDOW measured ones — a
+ * fetch bound only, so a run of clicked-through exams can't empty the pool. */
+export const PREDICTION_SCAN = POOL_WINDOW * 4;
+
 /**
  * The app's prediction as it stood before `testDate`: the same
  * current-estimate rule the stats page shows (last POOL_WINDOW timed exams,
@@ -61,9 +66,14 @@ export async function predictionBefore(
     .not('score', 'is', null)
     .lt('completed_at', localMidnight(testDate).toISOString())
     .order('completed_at', { ascending: false })
-    .limit(POOL_WINDOW);
+    .limit(PREDICTION_SCAN);
 
-  const rows = ((data ?? []) as (SessionLike & { completed_at: string })[]).slice().reverse();
+  // Exams clicked through at random measured nothing, so the prediction
+  // rests on the last POOL_WINDOW exams that did (src/lib/exam-effort.ts).
+  const rows = ((data ?? []) as (SessionLike & { completed_at: string })[])
+    .filter(r => !isLowEffortExam(r.section_results))
+    .slice(0, POOL_WINDOW)
+    .reverse();
   const measurements = rows.map(r => sessionMeasurement(r)).filter((m): m is Measurement => m !== null);
   const current = currentEstimate(measurements);
   if (!current || rows.length === 0) return EMPTY_SNAPSHOT;

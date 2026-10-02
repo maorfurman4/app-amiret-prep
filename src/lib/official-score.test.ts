@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { shouldPromptForScore, predictionBefore, PROMPT_MAX_DAYS } from './official-score';
+import { shouldPromptForScore, predictionBefore, PROMPT_MAX_DAYS, PREDICTION_SCAN } from './official-score';
 import { currentEstimate } from './exemption';
 import { thetaToScore } from './adaptive';
 
@@ -50,7 +50,7 @@ describe('predictionBefore', () => {
     expect(calls).toEqual(expect.arrayContaining([
       ['eq', 'user_id', 'u1'], ['eq', 'is_practice', false],
       ['lt', 'completed_at', '2026-10-31T22:00:00.000Z'],
-      ['order', 'completed_at', { ascending: false }], ['limit', 3],
+      ['order', 'completed_at', { ascending: false }], ['limit', PREDICTION_SCAN],
     ]));
     const expected = currentEstimate([
       { theta: 1.35, se: 0.43, p: 0.21 }, { theta: 1.55, se: 0.42, p: 0.36 }, { theta: 1.9, se: 0.41, p: 0.69 },
@@ -61,6 +61,27 @@ describe('predictionBefore', () => {
     expect(snap.app_score).toBe(thetaToScore(expected.measurement.theta));
     expect(snap.app_exams_used).toBe(3);
     expect(snap.app_days_before).toBe(4); // last exam 28 Oct → test 1 Nov
+  });
+
+  it('leaves exams clicked through at random out of the prediction', async () => {
+    // 8 sentence-completion answers in 1 s each, 2 right: rapid and at chance.
+    const clickedThrough = [1, 2].map(sectionIndex => ({
+      sectionIndex, type: 'sentence_completion', answers: [0, 1, 2, 3], correctCount: 1, timings: [1, 1, 1, 1],
+    }));
+    const rows = [
+      { completed_at: '2026-10-30T09:00:00Z', theta_final: -2.7, theta_se: 0.6, p_exempt: 0, section_results: clickedThrough },
+      { completed_at: '2026-10-28T09:00:00Z', theta_final: 1.9, theta_se: 0.41, p_exempt: 0.69, section_results: [] },
+      { completed_at: '2026-10-25T09:00:00Z', theta_final: 1.55, theta_se: 0.42, p_exempt: 0.36, section_results: [] },
+      { completed_at: '2026-10-20T09:00:00Z', theta_final: 1.35, theta_se: 0.43, p_exempt: 0.21, section_results: [] },
+    ];
+    const { client } = sessionsClient(rows);
+    const snap = await predictionBefore(client, 'u1', '2026-11-01');
+    const expected = currentEstimate([
+      { theta: 1.35, se: 0.43, p: 0.21 }, { theta: 1.55, se: 0.42, p: 0.36 }, { theta: 1.9, se: 0.41, p: 0.69 },
+    ])!;
+    expect(snap.app_theta).toBeCloseTo(expected.measurement.theta, 12);
+    expect(snap.app_exams_used).toBe(3);
+    expect(snap.app_days_before).toBe(4); // the last *measured* exam, 28 Oct
   });
 
   it('is all-null when the student took no timed exam before the test', async () => {

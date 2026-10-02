@@ -7,7 +7,7 @@
  * in UserMenu, with the numbers from computeStatsMetrics (the /stats pipeline).
  */
 
-import { useId, useState, type CSSProperties, type ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import { BarChart3, Award, Camera, PenLine, ImageIcon, Lock, LogOut, ChevronDown, Eye, EyeOff, LogIn, Check } from 'lucide-react';
 import { Reveal } from '@/components/strategies/Reveal';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -15,15 +15,11 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 type Section = 'name' | 'avatar' | 'password' | null;
 type Stats = { examCount: number; bestScore: number; lastScore: number };
 
-// Proposed fixed-palette token (same hex the code hardcodes today), scoped here
-// so the preview doesn't touch globals.css before the direction is approved.
-const TOKENS = { '--menu-success': '#14563E' } as CSSProperties;
-
 const ROW = 'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm font-semibold text-menu-ink hover:bg-menu-hover focus-visible:bg-menu-hover focus-visible:outline-none transition-colors';
 const ICON = 'w-[18px] h-[18px] flex-shrink-0 text-menu-accent';
 const LABEL = 'block text-xs font-semibold text-menu-ink-soft mb-1';
 const INPUT = 'w-full px-3 py-2 rounded-lg border border-menu-border bg-menu-surface text-sm text-start text-menu-ink placeholder:text-menu-ink-soft focus:outline-none focus:ring-2 focus:ring-menu-accent/30';
-const PRIMARY = 'w-full py-2.5 rounded-xl bg-menu-accent text-white text-sm font-bold shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:shadow-pressed transition-[transform,box-shadow,opacity] duration-300 ease-spring disabled:opacity-50';
+const PRIMARY = 'w-full py-2.5 rounded-xl bg-menu-accent text-menu-accent-ink text-sm font-bold shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:shadow-pressed transition-[transform,box-shadow,opacity] duration-300 ease-spring disabled:opacity-50';
 
 function Panel({ name, email, stats, initialSection = null, emailProvider = true }: {
   name: string; email: string; stats: Stats | null; initialSection?: Section; emailProvider?: boolean;
@@ -55,7 +51,6 @@ function Panel({ name, email, stats, initialSection = null, emailProvider = true
       role="dialog"
       aria-labelledby={`${uid}-title`}
       dir="rtl"
-      style={TOKENS}
       className="w-full max-w-[320px] rounded-2xl border border-menu-border bg-menu-surface p-2 text-menu-ink shadow-raised ring-1 ring-black/5"
     >
       {/* Identity header */}
@@ -67,7 +62,7 @@ function Panel({ name, email, stats, initialSection = null, emailProvider = true
             aria-label="שינוי תמונת פרופיל"
             className="relative flex-shrink-0 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-menu-accent/50"
           >
-            <span className="w-14 h-14 rounded-full bg-menu-accent text-white text-xl font-bold flex items-center justify-center select-none" aria-hidden>
+            <span className="w-14 h-14 rounded-full bg-menu-accent text-menu-accent-ink text-xl font-bold flex items-center justify-center select-none" aria-hidden>
               {(name || email)[0]?.toUpperCase()}
             </span>
             <span className="absolute -bottom-0.5 -end-0.5 w-6 h-6 rounded-full bg-menu-surface border border-menu-border flex items-center justify-center shadow-surface" aria-hidden>

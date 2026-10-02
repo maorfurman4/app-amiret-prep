@@ -42,7 +42,7 @@ export function StreakDisplay({ streak, atRisk = false }: { streak: number; atRi
         </span>
         <span className="text-[15px] font-extrabold tracking-[-0.01em] tabular-nums"><RollingNumber value={streak} from={motion.from} /></span>
       </span>
-      <span className="text-xs font-medium text-exam-alt/85">{streakLabel(labelFor)}</span>
+      <span className="text-xs font-medium text-exam-alt">{streakLabel(labelFor)}</span>
     </div>
   );
 }

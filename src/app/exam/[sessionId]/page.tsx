@@ -26,6 +26,17 @@ interface SessionState {
 
 const EMPTY_QUESTIONS: Question[] = [];
 
+// Prev · question dots · next fits on one line only above a width that grows
+// with the dot count (measured at the last question, where "סיים פרק" is
+// widest: 3 dots 336px, 4 dots 382px, 5 dots 416px). Below it the dots move
+// to their own centered line, so the page never scrolls sideways (WCAG 1.4.10).
+// Literal class strings, so Tailwind generates each container query.
+const NAV_DOTS_STACK: Record<number, string> = {
+  3: '@max-[21rem]:order-first @max-[21rem]:w-full @max-[21rem]:justify-center',
+  4: '@max-[24rem]:order-first @max-[24rem]:w-full @max-[24rem]:justify-center',
+  5: '@max-[26rem]:order-first @max-[26rem]:w-full @max-[26rem]:justify-center',
+};
+
 export default function ExamPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = use(params);
   const router = useRouter();
@@ -456,7 +467,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         )}
 
         {/* Navigation */}
-        <div className="mt-8 flex items-center justify-between gap-3">
+        <div className="@container mt-8">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-4">
           <button
             onClick={handlePrev}
             disabled={currentQuestionIndex === 0 || isSubmitting}
@@ -466,7 +478,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
           </button>
 
           {/* Question nav dots */}
-          <div className="flex gap-2">
+          <div className={`flex gap-2 ${NAV_DOTS_STACK[currentQuestions.length] ?? NAV_DOTS_STACK[5]}`}>
             {currentQuestions.map((_, i) => (
               <button
                 key={i}
@@ -503,6 +515,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             )}
             </button>
           )}
+        </div>
         </div>
 
         {/* Official AMIRNET guidance */}

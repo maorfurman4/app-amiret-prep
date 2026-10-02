@@ -99,7 +99,7 @@ export function OfficialScoreForm({
           value={draft}
           onChange={e => { setDraft(e.target.value.replace(/\D/g, '')); setError(null); }}
           aria-invalid={!!error}
-          className="w-full px-4 py-3 text-center text-3xl font-black tabular-nums text-exam-ink placeholder:text-exam-border-strong placeholder:text-lg placeholder:font-semibold bg-exam-paper-alt border border-exam-border rounded-xl shadow-pressed focus:outline-none focus:border-exam-accent focus:ring-2 focus:ring-exam-accent/30 transition-[border-color,box-shadow] duration-300 ease-spring"
+          className="w-full px-4 py-3 text-center text-3xl font-black tabular-nums text-exam-ink placeholder:text-exam-ink-soft placeholder:text-lg placeholder:font-semibold bg-exam-paper-alt border border-exam-border-input rounded-xl shadow-pressed focus:outline-none focus:border-exam-accent focus:ring-2 focus:ring-exam-accent/30 transition-[border-color,box-shadow] duration-300 ease-spring"
         />
       </div>
 
@@ -110,7 +110,7 @@ export function OfficialScoreForm({
         ) : (
           // The native date field formats by the browser's locale, so it sits
           // invisibly over a Hebrew label and still opens the native picker.
-          <div className="relative flex items-center justify-between gap-3 w-full px-4 py-3 bg-exam-paper-alt border border-exam-border rounded-xl shadow-pressed has-[:focus-visible]:border-exam-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-exam-accent/30">
+          <div className="relative flex items-center justify-between gap-3 w-full px-4 py-3 bg-exam-paper-alt border border-exam-border-input rounded-xl shadow-pressed has-[:focus-visible]:border-exam-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-exam-accent/30">
             <span className={`font-semibold ${testDate ? 'text-exam-ink' : 'text-exam-ink-soft'}`} aria-hidden>
               {testDate ? formatExamDate(testDate) : 'בחר תאריך'}
             </span>

@@ -23,7 +23,7 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), [tabi
 const ROW = 'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm font-semibold text-menu-ink hover:bg-menu-hover focus-visible:bg-menu-hover focus-visible:outline-none transition-colors';
 const ROW_ICON = 'w-[18px] h-[18px] flex-shrink-0 text-menu-accent';
 const LABEL = 'block text-xs font-semibold text-menu-ink-soft mb-1';
-const INPUT = 'w-full px-3 py-2 rounded-lg border border-menu-border bg-menu-surface text-sm text-start text-menu-ink placeholder:text-menu-ink-soft focus:outline-none focus:ring-2 focus:ring-menu-accent/30';
+const INPUT = 'w-full px-3 py-2 rounded-lg border border-menu-border-input bg-menu-surface text-sm text-start text-menu-ink placeholder:text-menu-ink-soft focus:outline-none focus:ring-2 focus:ring-menu-accent/30';
 const PRIMARY = 'w-full py-2.5 rounded-xl bg-menu-accent text-white text-sm font-bold shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:shadow-pressed transition-[transform,box-shadow,opacity] duration-300 ease-spring aria-disabled:opacity-50';
 const ERROR = 'text-xs font-semibold text-menu-danger';
 const SUCCESS = 'min-h-4 text-xs font-semibold text-menu-success';
@@ -393,6 +393,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
     <div
       ref={panelRef}
       id="user-menu"
+      data-menu-surface
       role="dialog"
       aria-labelledby={`${uid}-title`}
       tabIndex={-1}

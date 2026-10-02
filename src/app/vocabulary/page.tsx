@@ -1106,7 +1106,7 @@ function VocabularyContent() {
                 onChange={e => setSearch(e.target.value)}
                 dir="auto"
                 placeholder="חפש מילה בעברית או באנגלית"
-                className="w-full px-4 py-3 rounded-xl border border-exam-border bg-exam-paper-alt text-sm focus:outline-none focus:border-exam-accent text-start placeholder:text-right text-exam-ink"
+                className="w-full px-4 py-3 rounded-xl border border-exam-border-input bg-exam-paper-alt text-sm focus:outline-none focus:border-exam-accent text-start placeholder:text-right text-exam-ink"
               />
             </FilterSection>
           </div>

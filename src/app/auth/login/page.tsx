@@ -242,7 +242,7 @@ function LoginForm() {
             id={emailId} type="email" value={email} onChange={e => setEmail(e.target.value)}
             required dir="ltr" placeholder="your@email.com" autoComplete="email"
             aria-invalid={!!error} aria-describedby={error ? errorId : undefined}
-            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
+            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
           />
         </div>
         {error && <p id={errorId} role="alert" className="text-exam-wrong text-sm">{error}</p>}
@@ -316,7 +316,7 @@ function LoginForm() {
             id={emailId} type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}
             required dir="ltr" placeholder="your@email.com" autoComplete="email"
             aria-invalid={!!error} aria-describedby={error ? errorId : undefined}
-            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left placeholder:text-exam-ink-soft"
+            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left placeholder:text-exam-ink-soft"
           />
         </div>
         <div className="space-y-1">
@@ -339,7 +339,7 @@ function LoginForm() {
             required minLength={6} dir="ltr" placeholder="••••••••" autoComplete={tab === 'signup' ? 'new-password' : 'current-password'}
             aria-invalid={!!error}
             aria-describedby={[tab === 'signup' ? hintId : '', error ? errorId : ''].filter(Boolean).join(' ') || undefined}
-            className="w-full border border-exam-border bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none"
+            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none"
           />
           {tab === 'signup' && (
             <p id={hintId} className="text-xs text-exam-ink-soft">לפחות 6 תווים</p>

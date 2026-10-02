@@ -240,7 +240,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                 >
                   <div className="text-2xl font-bold">{correct}/{total}</div>
                   <div className="text-xs font-semibold mt-1">{TYPE_LABELS[type] ?? type}</div>
-                  <div className="text-xs opacity-75">{pct}%</div>
+                  <div className="text-xs">{pct}%</div>
                 </div>
               );
             })}

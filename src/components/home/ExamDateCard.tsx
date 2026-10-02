@@ -113,7 +113,7 @@ export function ExamDateCard() {
         {/* The native date field formats by the browser's locale ("24 Nov 2026"),
             so it sits invisibly over a Hebrew label and still opens the native
             picker on tap. */}
-        <div className="relative flex items-center justify-between gap-3 w-full px-4 py-3 bg-exam-paper-alt border border-exam-border rounded-xl shadow-pressed has-[:focus-visible]:border-exam-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-exam-accent/30 transition-[border-color,box-shadow] duration-300 ease-spring">
+        <div className="relative flex items-center justify-between gap-3 w-full px-4 py-3 bg-exam-paper-alt border border-exam-border-input rounded-xl shadow-pressed has-[:focus-visible]:border-exam-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-exam-accent/30 transition-[border-color,box-shadow] duration-300 ease-spring">
           <span className={`text-lg font-semibold ${draft ? 'text-exam-ink' : 'text-exam-ink-soft'}`} aria-hidden>
             {draft ? formatExamDate(draft) : 'בחר תאריך'}
           </span>

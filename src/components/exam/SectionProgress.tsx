@@ -48,7 +48,7 @@ export function SectionProgress({ currentSection, completedSections }: SectionPr
               <span className={`mt-1 text-[10px] whitespace-nowrap ${
                 isCurrent ? (cfg.experimental ? 'text-exam-alt font-semibold' : 'text-exam-accent font-semibold') :
                 isDone    ? 'text-exam-sage-strong' :
-                cfg.experimental ? 'text-exam-alt/70' : 'text-exam-ink-soft'
+                cfg.experimental ? 'text-exam-alt' : 'text-exam-ink-soft'
               }`}>
                 {cfg.experimental ? 'תרגול חלופי' : TYPE_LABELS[cfg.type]}
               </span>

@@ -103,7 +103,7 @@
 
 ## What was approved
 
-- **Approved:** C1, all High (H1–H10), and Medium/Low M1–M10, L1, L2, L4 and L5. The four visible changes (H7 contrast, H8 popover focus ring, M7 input-border token, and the wider M3 exam-nav stacking) were approved after a before/after review: [docs/a11y/before-after.png](docs/a11y/before-after.png).
+- **Approved:** C1, all High (H1–H10), and Medium/Low M1–M10, L1, L2, L4 and L5. The four visible changes (H7 contrast, H8 popover focus ring, M7 input-border token, and the wider M3 exam-nav stacking) were approved after a before/after review: [docs/a11y/before-after.png](a11y/before-after.png).
 - **Excluded by agreement:** **L3** (single-key 1–4 shortcuts). Meeting 2.1.4 needs either a new on/off setting or shortcuts that only work while an answer has focus. The risk is low because those screens have no text fields.
 - **Order applied:** C1 first, then High, then Medium/Low. Each batch was re-measured in headless Chrome against the same DB-isolated sandbox as Phase 1.
 

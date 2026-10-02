@@ -1,6 +1,15 @@
 -- ═══════════════════════════════════════════════════════════════
 --  AMIRET Prep Platform — Supabase Schema
 -- ═══════════════════════════════════════════════════════════════
+--
+--  ⚠️ HISTORICAL — NOT IN SYNC WITH THE LIVE DATABASE. Do not run.
+--  This is the original 2026-06 base schema. The live Supabase DB is the
+--  source of truth; changes since then live in supabase/migrations/ and
+--  are summarised in docs/SPEC.md §8. Known drift: several tables
+--  (review_queue, vocabulary, user_*_history, activity_log, …) are missing
+--  here, exam_sessions/user_stats differ, and the `leaderboard` view below
+--  no longer exists (the feature and its table were removed 2026-10-01).
+--
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

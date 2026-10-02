@@ -71,7 +71,7 @@ describe('difficulty is per question, not per section', () => {
 });
 
 describe('windows', () => {
-  const rows = Array.from({ length: 13 }, (_, i) => exam(i, (s, q) => (i < 3 ? true : q === 0)));
+  const rows = Array.from({ length: 13 }, (_, i) => exam(i, (_s, q) => (i < 3 ? true : q === 0)));
 
   it('recent = last 10, allTime = all, and each carries a distinct label', () => {
     const m = computeStatsMetrics(rows)!;
@@ -141,7 +141,7 @@ describe('exams clicked through at random', () => {
     section_results: (row.section_results as { answers: unknown[] }[]).map(sr => ({ ...sr, timings: sr.answers.map(() => seconds) })),
   });
   const clicked = [-2.718, -2.770, -2.375].map((theta, i) => withSeconds(exam(i, () => false, { theta, se: 0.6, score: 50 }), 1));
-  const measured = [1.2, 1.4].map((theta, i) => withSeconds(exam(10 + i, (s, q) => q < 3, { theta, se: 0.45, score: 125 }), 30));
+  const measured = [1.2, 1.4].map((theta, i) => withSeconds(exam(10 + i, (_s, q) => q < 3, { theta, se: 0.45, score: 125 }), 30));
 
   it('are left out of the current level and readiness, but still counted as exams', () => {
     const m = computeStatsMetrics([...measured, ...clicked])!;

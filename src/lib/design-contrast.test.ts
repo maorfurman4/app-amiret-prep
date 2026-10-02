@@ -22,26 +22,28 @@ for (const selector of [':root', '.dark']) {
     ['on-emerald', 'exam-sage'], ['on-emerald', 'exam-sage-strong'],
     ['on-amber', 'exam-alt'], ['on-danger', 'exam-wrong'],
   ];
+  // Account popover: text, plus its focus ring (menu-accent) and field outline at 3:1.
+  const menuPairs = [
+    ...['menu-surface', 'menu-hover'].flatMap(bg =>
+      ['menu-ink', 'menu-ink-soft', 'menu-accent', 'menu-danger', 'menu-success'].map(fg => [fg, bg])),
+    ['menu-danger', 'menu-danger-bg'], ['menu-accent-ink', 'menu-accent'],
+  ];
+  const menuUiPairs = [
+    ['menu-accent', 'menu-surface'], ['menu-accent', 'menu-hover'], ['menu-accent', 'menu-danger-bg'],
+    ['menu-border-input', 'menu-surface'],
+  ];
+  const ratio = (fg: string, bg: string) => {
+    const a = luminance(tokens[fg]), b = luminance(tokens[bg]);
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  };
   describe(`${selector} text contrast`, () => {
-    it.each(pairs)('%s on %s meets 4.5:1', (fg, bg) => {
-      const a = luminance(tokens[fg]), b = luminance(tokens[bg]);
-      expect((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)).toBeGreaterThanOrEqual(4.5);
+    it.each([...pairs, ...menuPairs])('%s on %s meets 4.5:1', (fg, bg) => {
+      expect(ratio(fg, bg)).toBeGreaterThanOrEqual(4.5);
     });
   });
-}
-
-// The popover menu palette is theme-independent (a white sheet in both themes).
-{
-  const block = css.slice(css.indexOf(':root, .dark {')).split('}')[0];
-  const tokens = Object.fromEntries([...block.matchAll(/--([\w-]+):\s*(#[a-f\d]{6})/gi)].map(m => [m[1], m[2]]));
-  const pairs = [
-    ...['menu-surface', 'menu-hover'].flatMap(bg => ['menu-ink', 'menu-ink-soft', 'menu-accent', 'menu-danger'].map(fg => [fg, bg])),
-    ['menu-danger', 'menu-danger-bg'],
-  ];
-  describe('menu text contrast', () => {
-    it.each(pairs)('%s on %s meets 4.5:1', (fg, bg) => {
-      const a = luminance(tokens[fg]), b = luminance(tokens[bg]);
-      expect((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)).toBeGreaterThanOrEqual(4.5);
+  describe(`${selector} menu UI contrast`, () => {
+    it.each(menuUiPairs)('%s on %s meets 3:1', (fg, bg) => {
+      expect(ratio(fg, bg)).toBeGreaterThanOrEqual(3);
     });
   });
 }

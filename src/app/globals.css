@@ -65,6 +65,7 @@
   --color-menu-border-input: var(--menu-border-input);
   --color-menu-hover: var(--menu-hover);
   --color-menu-accent: var(--menu-accent);
+  --color-menu-accent-ink: var(--menu-accent-ink);
   --color-menu-danger: var(--menu-danger);
   --color-menu-danger-bg: var(--menu-danger-bg);
   --color-menu-success: var(--menu-success);
@@ -268,6 +269,19 @@
   --depth-pressed: inset 0 1px 3px rgb(32 44 56 / 0.16), inset 0 -1px 0 rgb(255 255 255 / 0.25);
   --depth-progress: 0 0 16px rgb(23 102 72 / 0.12), 0 3px 8px rgb(23 102 72 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.7);
   --ring-glow-color: rgb(23 102 72 / 0.28);
+  /* Account popover palette. Kept separate from --exam-* so the menu's own
+     contrast pairs are checked as a set (design-contrast.test.ts). */
+  --menu-surface: #FFFFFF;
+  --menu-ink: #202C38;
+  --menu-ink-soft: #586573;
+  --menu-border: #DCDDD5;
+  --menu-border-input: #7E8782;
+  --menu-hover: #F0EDE5;
+  --menu-accent: #283F5A;
+  --menu-accent-ink: #FFFFFF;
+  --menu-danger: #9C3E36;
+  --menu-danger-bg: #FBECE7;
+  --menu-success: #14563E;
 }
 
 .dark {
@@ -298,20 +312,22 @@
   --depth-pressed: inset 0 2px 4px rgb(0 0 0 / 0.28), inset 0 -1px 0 rgb(255 255 255 / 0.04);
   --depth-progress: 0 0 18px rgb(121 216 175 / 0.15), 0 4px 12px rgb(0 0 0 / 0.2), inset 0 1px 0 rgb(255 255 255 / 0.1);
   --ring-glow-color: rgb(121 216 175 / 0.35);
+  /* Matches the dark popover/card surfaces so the menu reads as native. */
+  --menu-surface: #202830;
+  --menu-ink: #F4F1E8;
+  --menu-ink-soft: #B6C1CD;
+  --menu-border: #3C4853;
+  --menu-border-input: #74879A;
+  --menu-hover: #2A333D;
+  --menu-accent: #B7C9F1;
+  --menu-accent-ink: #19283F;
+  --menu-danger: #FFB4A7;
+  --menu-danger-bg: #402923;
+  --menu-success: #96E5C1;
 }
 
 /* Resolve aliases on both theme roots so primitives and legacy screens agree. */
 :root, .dark {
-  --menu-surface: #FFFFFF;
-  --menu-ink: #202C38;
-  --menu-ink-soft: #586573;
-  --menu-border: #DCDDD5;
-  --menu-border-input: #7E8782;
-  --menu-hover: #F0EDE5;
-  --menu-accent: #283F5A;
-  --menu-danger: #9C3E36;
-  --menu-danger-bg: #FBECE7;
-  --menu-success: #14563E;
   --background: var(--exam-paper);
   --foreground: var(--exam-ink);
   --card: var(--exam-surface);
@@ -403,8 +419,8 @@
   outline: 2px solid var(--exam-accent);
   outline-offset: 3px;
 }
-/* The account popover stays white in both themes, so the dark theme's pale
-   accent would vanish on it (≈1.4:1). Use the menu's own navy (10.8:1). */
+/* Inside the account popover the ring follows the menu's own accent, so it is
+   always measured against the surface it's drawn on (10.8:1 light, 9.0:1 dark). */
 [data-menu-surface] :where(a, button, input, select, textarea):focus-visible {
   outline-color: var(--menu-accent);
 }

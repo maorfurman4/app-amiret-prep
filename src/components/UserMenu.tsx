@@ -19,12 +19,12 @@ const MENU_WIDTH = 320;
 const VIEWPORT_GUTTER = 8;
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-/* Fixed-palette classes (menu-* tokens are identical in light and dark). */
+/* Menu-palette classes (menu-* tokens have their own light and dark values). */
 const ROW = 'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-start text-sm font-semibold text-menu-ink hover:bg-menu-hover focus-visible:bg-menu-hover focus-visible:outline-none transition-colors';
 const ROW_ICON = 'w-[18px] h-[18px] flex-shrink-0 text-menu-accent';
 const LABEL = 'block text-xs font-semibold text-menu-ink-soft mb-1';
 const INPUT = 'w-full px-3 py-2 rounded-lg border border-menu-border-input bg-menu-surface text-sm text-start text-menu-ink placeholder:text-menu-ink-soft focus:outline-none focus:ring-2 focus:ring-menu-accent/30';
-const PRIMARY = 'w-full py-2.5 rounded-xl bg-menu-accent text-white text-sm font-bold shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:shadow-pressed transition-[transform,box-shadow,opacity] duration-300 ease-spring aria-disabled:opacity-50';
+const PRIMARY = 'w-full py-2.5 rounded-xl bg-menu-accent text-menu-accent-ink text-sm font-bold shadow-raised hover:-translate-y-0.5 active:translate-y-0 active:shadow-pressed transition-[transform,box-shadow,opacity] duration-300 ease-spring aria-disabled:opacity-50';
 const ERROR = 'text-xs font-semibold text-menu-danger';
 const SUCCESS = 'min-h-4 text-xs font-semibold text-menu-success';
 
@@ -316,11 +316,11 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
   const sectionId = (s: Section) => `${uid}-${s}`;
 
   const avatar = (size: 'sm' | 'lg') => {
-    // The trigger follows the page theme; inside the always-white menu the
-    // avatar uses the fixed menu palette.
+    // The trigger follows the page palette; inside the menu the avatar uses
+    // the menu palette.
     const cls = size === 'sm'
       ? 'w-8 h-8 text-sm bg-exam-accent text-exam-accent-ink'
-      : 'w-14 h-14 text-xl bg-menu-accent text-white';
+      : 'w-14 h-14 text-xl bg-menu-accent text-menu-accent-ink';
     return avatarUrl ? (
       // eslint-disable-next-line @next/next/no-img-element
       <img src={avatarUrl} alt="" className={`${cls} rounded-full object-cover`} referrerPolicy="no-referrer" />

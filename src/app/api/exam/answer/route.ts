@@ -10,6 +10,7 @@ import { calibrateItems } from '@/lib/calibration-server';
 import { estimateOwnerAbility } from '@/lib/ability';
 import { buildExamResponseRows } from '@/lib/responses';
 import { applyResponsesToSrs } from '@/lib/srs';
+import { isPastSectionDeadline, savedSectionAnswers } from '@/lib/exam-deadline';
 
 /**
  * POST /api/exam/answer
@@ -97,17 +98,22 @@ export async function POST(req: NextRequest) {
   }
   const cfg = SECTION_CONFIGS[body.sectionIndex - 1];
 
-  // Server-side time enforcement. The client auto-submits at 0:00 and
-  // /api/exam/state auto-submits blanks if it sees an expired timer, so a
-  // hard reject here would just bounce those legitimate late-by-a-second
-  // submits. Instead, mirror the real exam: past the deadline (plus a short
-  // grace for network/clock skew) the section is scored as unanswered and
-  // the exam still advances. Practice sessions are untimed.
-  const LATE_GRACE_MS = 20_000;
-  const lateSubmission = !session.is_practice
-    && !!session.current_section_expires_at
-    && Date.now() > new Date(session.current_section_expires_at).getTime() + LATE_GRACE_MS;
-  const answers: (number | null)[] = lateSubmission ? currentQuestions.map(() => null) : body.answers;
+  // Server-side time enforcement. Past the deadline (plus a short grace for
+  // network/clock skew, src/lib/exam-deadline.ts) nothing the client sends
+  // counts — but the section is NOT wiped: it is scored on the answers the
+  // server already received in time (/api/exam/progress saves each pick as
+  // it's made). A phone that slept through the deadline, or a retry after a
+  // server error, still gets every answer chosen in time; only picks that
+  // never reached the server in time are dropped (and counted, so the
+  // client can say so). Practice sessions are untimed.
+  const lateSubmission = isPastSectionDeadline(session);
+  const answers: (number | null)[] = lateSubmission
+    ? savedSectionAnswers(session.answers_by_section, body.sectionIndex, currentQuestions.length)
+      ?? currentQuestions.map(() => null)
+    : body.answers;
+  const notCountedAnswers = lateSubmission
+    ? body.answers.filter((a, i) => a !== null && a !== answers[i]).length
+    : 0;
 
   // ── Step 1: Update θ via MLE/EAP (cumulative — all sections, not just current) ─
   const previousResults = (session.section_results as SectionResult[]);
@@ -273,7 +279,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Every question in the section is logged — right, wrong, or left blank
-  // (a late submission logs the blanks it was scored as).
+  // (a late submission logs the answers it was scored on).
   const responseRows = buildExamResponseRows({
     questions: currentQuestions,
     answers,
@@ -364,5 +370,6 @@ export async function POST(req: NextRequest) {
     nextSectionIndex: isLastSection ? null : nextSectionIndex,
     nextExpiresAt: updatePayload.current_section_expires_at ?? null,
     lateSubmission,
+    notCountedAnswers,
   });
 }

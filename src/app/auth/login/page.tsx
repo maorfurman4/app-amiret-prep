@@ -11,6 +11,7 @@ import { UserCircle, Mail, Lock, ArrowRight, Check, ShieldCheck } from 'lucide-r
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { mergeGuestProgress } from '@/lib/merge-guest-client';
 import { clearGuestIdentity } from '@/lib/guest';
+import { clearLocalLearningData } from '@/lib/local-learning-data';
 import { authCallbackUrl } from '@/lib/auth-redirect';
 import { MIN_PASSWORD_LENGTH } from '@/lib/password-recovery';
 import {
@@ -83,11 +84,11 @@ function LoginForm({ onSignedInChange }: { onSignedInChange: (signedIn: boolean)
   const emailError = touched.email || submitted ? validateEmail(email) : null;
   const passwordError = touched.password || submitted ? validatePassword(password, mode) : null;
 
-  const finishLogin = useCallback(async (accessToken: string) => {
+  const finishLogin = useCallback(async ({ access_token: accessToken, user }: Session) => {
     setFinishing(true);
     // The merge never blocks: it answers fast when there's nothing to move,
     // and a transient failure is retried quietly on the next page load.
-    await mergeGuestProgress(accessToken);
+    await mergeGuestProgress(accessToken, user.id);
     router.replace(next);
   }, [next, router]);
 
@@ -96,7 +97,7 @@ function LoginForm({ onSignedInChange }: { onSignedInChange: (signedIn: boolean)
   useEffect(() => {
     if (view !== 'check-email') return;
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, s) => {
-      if (event === 'SIGNED_IN' && s) void finishLogin(s.access_token);
+      if (event === 'SIGNED_IN' && s) void finishLogin(s);
     });
     return () => subscription.unsubscribe();
   }, [view, supabase.auth, finishLogin]);
@@ -166,7 +167,7 @@ function LoginForm({ onSignedInChange }: { onSignedInChange: (signedIn: boolean)
           setAlert({ tone: 'error', message: failure.message, action: failure.kind === 'already_registered' ? 'go-login' : undefined });
         } else if (data.session) {
           // Email confirmation off: signed in straight away.
-          await finishLogin(data.session.access_token);
+          await finishLogin(data.session);
           return;
         } else if (signUpHitExistingAccount(data.user)) {
           setAlert({ tone: 'info', message: ALREADY_REGISTERED_MESSAGE, action: 'go-login' });
@@ -185,7 +186,7 @@ function LoginForm({ onSignedInChange }: { onSignedInChange: (signedIn: boolean)
           });
           if (failure.kind === 'invalid_credentials') passwordRef.current?.select();
         } else if (data.session) {
-          await finishLogin(data.session.access_token);
+          await finishLogin(data.session);
           return;
         }
       }
@@ -208,6 +209,8 @@ function LoginForm({ onSignedInChange }: { onSignedInChange: (signedIn: boolean)
   };
 
   const handleSignOut = async () => {
+    // The device's copy of this account's lists must not reach the next sign-in.
+    clearLocalLearningData();
     await supabase.auth.signOut();
     await clearGuestIdentity();
     setSession(null);

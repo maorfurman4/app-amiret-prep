@@ -15,7 +15,7 @@ export function GuestMergeRetry() {
     if (!hasPendingGuestMerge()) return;
     let cancelled = false;
     createClient().auth.getSession().then(({ data: { session } }) => {
-      if (!cancelled && session) void mergeGuestProgress(session.access_token);
+      if (!cancelled && session) void mergeGuestProgress(session.access_token, session.user.id);
     }).catch(() => {});
     return () => { cancelled = true; };
   }, []);

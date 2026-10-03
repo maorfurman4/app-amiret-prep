@@ -1,14 +1,22 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { CheckCircle2, LinkIcon, LogIn } from 'lucide-react';
 import { recoveryLinkIsInvalid } from '@/lib/password-recovery';
 import { safeRedirectPath } from '@/lib/safe-redirect';
+import { parseAuthFlow } from '@/lib/auth-redirect';
 import { mergeGuestProgress } from '@/lib/merge-guest-client';
-import { RotateCcw, AlertCircle } from 'lucide-react';
+import { AuthShell, PrimaryButton, Spinner, StatusView } from '@/components/auth/AuthUI';
 
-function CallbackHandler() {
+type Phase = 'working' | 'confirmed' | 'link-error' | 'no-session';
+
+// Long enough to read "your account is confirmed", short enough not to stall.
+const CONFIRMED_PAUSE_MS = 1200;
+
+function CallbackHandlerImpl() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -16,13 +24,18 @@ function CallbackHandler() {
   // the tokens, so by the time an effect runs it may already be gone.
   const [initialHash] = useState(() => (typeof window !== 'undefined' ? window.location.hash : ''));
   const supabase = createClient();
-  // Set only if the post-login guest-data merge fails after its retries —
-  // holds what's needed to retry just the merge without re-running OAuth.
-  const [mergeFailed, setMergeFailed] = useState<{ token: string; destination: string } | null>(null);
+  const flow = parseAuthFlow(searchParams.get('flow'));
+  const safeNext = safeRedirectPath(searchParams.get('next'));
+  const hashParams = new URLSearchParams(initialHash.replace(/^#/, ''));
+  const isRecovery = hashParams.get('type') === 'recovery' || flow === 'recovery' || safeNext === '/auth/reset-password';
+  const isSignupConfirm = hashParams.get('type') === 'signup' || flow === 'signup';
+  // Supabase comes back with `#error=...` (or `?error=` for OAuth) when an
+  // email link is expired/reused or the user backed out of Google. There's
+  // no session to wait for — explain it right away instead of spinning.
+  const linkFailed = recoveryLinkIsInvalid(initialHash) || searchParams.has('error');
+  const [phase, setPhase] = useState<Phase>(linkFailed && !isRecovery ? 'link-error' : 'working');
 
   useEffect(() => {
-    const safeNext = safeRedirectPath(searchParams.get('next'));
-    const isRecovery = new URLSearchParams(initialHash.replace(/^#/, '')).get('type') === 'recovery';
     let navigated = false;
     let cancelled = false;
     const navigate = (destination: string) => {
@@ -31,60 +44,56 @@ function CallbackHandler() {
       router.replace(destination);
     };
 
-    // Supabase redirects here with `#error=...&error_code=otp_expired` when a
-    // magic/recovery link is reused or expired. There is no session to wait
-    // for, so send the user somewhere that explains it instead of spinning
-    // for 6s and dumping them on the login form.
-    if (recoveryLinkIsInvalid(initialHash)) {
-      navigate('/auth/reset-password?error=invalid_link');
+    if (linkFailed) {
+      // A dead recovery link gets the reset page's own explanation; any
+      // other dead link is already showing the link-error state.
+      if (isRecovery) navigate('/auth/reset-password?error=invalid_link');
       return;
     }
 
+    // Nothing arrived at all — say so instead of silently dropping the user
+    // on the login form. (finishAuth is only called after this line runs.)
+    const timer = setTimeout(async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (cancelled) return;
+      if (session) void finishAuth(session.access_token);
+      else setPhase('no-session');
+    }, 8000);
+
     // With flowType: 'implicit', Supabase puts the session in the URL hash.
     // detectSessionInUrl: true auto-processes it and fires SIGNED_IN.
-    // Move any guest-mode history onto the account before continuing —
-    // awaited and retried, because a silently-lost merge here means real
-    // study progress (a streak, known/favorited vocab words) never makes it
-    // onto the account. Only blocks navigation if it still fails after
-    // retrying, so the user can choose to continue without it.
-    const finishAuth = async (accessToken: string, destination: string) => {
-      const result = await mergeGuestProgress(accessToken);
+    let finishing = false;
+    const finishAuth = async (accessToken: string) => {
+      if (finishing) return;
+      finishing = true;
+      clearTimeout(timer);
+      if (isRecovery) { navigate('/auth/reset-password'); return; }
+      const started = Date.now();
+      if (isSignupConfirm) setPhase('confirmed');
+      // Never blocks the signed-in user: a missing guest identity is a normal
+      // "nothing to merge", and a transient failure is retried quietly later.
+      await mergeGuestProgress(accessToken);
       if (cancelled) return;
-      if (!result.ok) {
-        // Stop the 6s fallback from yanking the user past this — they
-        // should get to choose retry vs. continue, not have it decided for
-        // them by a timer that has nothing to do with the merge itself.
-        clearTimeout(timer);
-        setMergeFailed({ token: accessToken, destination });
-        return;
-      }
-      navigate(destination);
+      const wait = isSignupConfirm ? Math.max(0, CONFIRMED_PAUSE_MS - (Date.now() - started)) : 0;
+      setTimeout(() => { if (!cancelled) navigate(safeNext); }, wait);
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       // A password-recovery link must end on the reset screen no matter what
       // `next` says, otherwise the user never gets to set a new password.
       if (event === 'PASSWORD_RECOVERY' && session) {
+        clearTimeout(timer);
         navigate('/auth/reset-password');
         return;
       }
-      if (event === 'SIGNED_IN' && session) {
-        void finishAuth(session.access_token, isRecovery ? '/auth/reset-password' : safeNext);
-      }
+      if (event === 'SIGNED_IN' && session) void finishAuth(session.access_token);
     });
 
-    // Fallback: if already signed in or no hash event fires
+    // Fallback: already signed in, or the hash was processed before we subscribed.
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        void finishAuth(session.access_token, isRecovery ? '/auth/reset-password' : safeNext);
-      }
+      if (session) void finishAuth(session.access_token);
     });
 
-    // Last resort timeout — only redirect if session exists, otherwise show error
-    const timer = setTimeout(async () => {
-      const { data: { session: fallbackSession } } = await supabase.auth.getSession();
-      navigate(fallbackSession ? (isRecovery ? '/auth/reset-password' : safeNext) : '/auth/login');
-    }, 6000);
 
     return () => {
       navigated = true;
@@ -95,63 +104,71 @@ function CallbackHandler() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const retryMerge = async () => {
-    if (!mergeFailed) return;
-    const { token, destination } = mergeFailed;
-    const result = await mergeGuestProgress(token);
-    if (result.ok) {
-      setMergeFailed(null);
-      router.replace(destination);
-    } else {
-      setMergeFailed({ token, destination });
-    }
-  };
-
-  if (mergeFailed) {
+  if (phase === 'confirmed') {
     return (
-      <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
-        <div className="text-center space-y-4 max-w-sm">
-          <AlertCircle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
-          <h2 className="text-xl font-bold text-exam-ink">ההתחברות הצליחה</h2>
-          <p className="text-exam-ink-soft text-sm leading-relaxed">
-            אבל לא הצלחנו לאשר שההתקדמות שצברת כאורח/ת (רצף ימים, מילים שסימנת) הועברה לחשבון.
-            הנתונים עדיין שמורים במכשיר הזה, אז כדאי לנסות שוב.
-          </p>
-          <button
-            onClick={retryMerge}
-            className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-          >
-            <RotateCcw className="w-4 h-4" aria-hidden />נסה שוב
-          </button>
-          <button
-            onClick={() => router.replace(mergeFailed.destination)}
-            className="w-full py-2.5 border border-exam-border text-exam-ink-soft rounded-sm text-sm hover:bg-exam-paper-alt transition-colors"
-          >
-            המשך בלי לשמור כרגע
-          </button>
-        </div>
-      </main>
+      <StatusView icon={CheckCircle2} tone="success" title="החשבון אושר!">
+        <p className="flex items-center justify-center gap-2" role="status">
+          <Spinner className="w-4 h-4 text-exam-sage" />מכינים לך את הכל…
+        </p>
+      </StatusView>
     );
   }
 
-  return (
-    <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center">
-      <div className="text-exam-ink text-center space-y-4">
-        <div className="w-10 h-10 border-2 border-exam-border border-t-exam-accent rounded-full animate-spin mx-auto" />
-        <p className="text-exam-ink-soft">מתחבר...</p>
-      </div>
-    </main>
-  );
+  if (phase === 'link-error') {
+    const oauth = flow === 'oauth';
+    return (
+      <StatusView
+        icon={oauth ? LogIn : LinkIcon}
+        tone="warning"
+        title={oauth ? 'הכניסה לא הושלמה' : 'הקישור כבר לא בתוקף'}
+        actions={<PrimaryButton onClick={() => router.replace('/auth/login')}>חזרה למסך הכניסה</PrimaryButton>}
+      >
+        {oauth ? (
+          <p>נראה שהחלון של Google נסגר לפני הסוף. אפשר פשוט לנסות שוב.</p>
+        ) : (
+          <>
+            <p>קישור האישור פג תוקף או שכבר נעשה בו שימוש.</p>
+            <p className="text-sm">כבר לחצת עליו פעם? אז החשבון מאושר — פשוט נכנסים. אם לא, בכניסה עם האימייל והסיסמה נציע לשלוח קישור חדש.</p>
+          </>
+        )}
+      </StatusView>
+    );
+  }
+
+  if (phase === 'no-session') {
+    return (
+      <StatusView
+        icon={LogIn}
+        tone="warning"
+        title="לא הצלחנו להשלים את הכניסה"
+        actions={<PrimaryButton onClick={() => router.replace('/auth/login')}>חזרה למסך הכניסה</PrimaryButton>}
+      >
+        <p>משהו בדרך לא הסתדר. כדאי לנסות שוב — זה בדרך כלל עובד בפעם השנייה.</p>
+      </StatusView>
+    );
+  }
+
+  return <Working />;
 }
+
+// The whole screen is decided by the URL hash (tokens or an error), which
+// only exists in the browser — rendering it on the server would always
+// produce the spinner and then mismatch on hydration.
+const Working = () => (
+  <div className="py-8 flex flex-col items-center gap-3" role="status">
+    <Spinner className="w-9 h-9 text-exam-accent" />
+    <p className="text-exam-ink font-semibold">מחברים אותך…</p>
+    <p className="text-xs text-exam-ink-soft">זה לוקח רק רגע</p>
+  </div>
+);
+const CallbackHandler = dynamic(() => Promise.resolve(CallbackHandlerImpl), { ssr: false, loading: Working });
 
 export default function CallbackPage() {
   return (
-    <Suspense fallback={
-      <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center">
-        <div className="text-exam-ink">טוען...</div>
-      </main>
-    }>
-      <CallbackHandler />
-    </Suspense>
+    <AuthShell srTitle="134+: מתחברים">
+      <Suspense fallback={<Working />}>
+        <CallbackHandler />
+      </Suspense>
+    </AuthShell>
   );
 }

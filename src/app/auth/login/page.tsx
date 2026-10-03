@@ -2,395 +2,425 @@
 
 export const dynamic = 'force-dynamic';
 
-import { Suspense, useState, useEffect, useId } from 'react';
+import { Suspense, useState, useEffect, useId, useRef, useCallback } from 'react';
 import { createClient } from '@/lib/supabase';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import type { User } from '@supabase/supabase-js';
-import { UserCircle, Mail, AlertCircle, RotateCcw, ArrowRight } from 'lucide-react';
-import { BrandLogo } from '@/components/BrandLogo';
+import type { Session } from '@supabase/supabase-js';
+import { UserCircle, Mail, Lock, ArrowRight, Check, ShieldCheck } from 'lucide-react';
 import { safeRedirectPath } from '@/lib/safe-redirect';
 import { mergeGuestProgress } from '@/lib/merge-guest-client';
 import { clearGuestIdentity } from '@/lib/guest';
+import { authCallbackUrl } from '@/lib/auth-redirect';
+import { MIN_PASSWORD_LENGTH } from '@/lib/password-recovery';
+import {
+  ALREADY_REGISTERED_MESSAGE,
+  classifySignInError,
+  classifySignUpError,
+  signUpHitExistingAccount,
+  validateEmail,
+  validatePassword,
+} from '@/lib/auth-messages';
+import {
+  AuthField,
+  AuthHeading,
+  AuthShell,
+  Divider,
+  FormAlert,
+  GoogleButton,
+  PrimaryButton,
+  SecondaryButton,
+  Spinner,
+  StatusView,
+  TextButton,
+} from '@/components/auth/AuthUI';
+import { CheckEmailView } from '@/components/auth/CheckEmailView';
 
-function LoginForm() {
+type Mode = 'login' | 'signup';
+type View = 'form' | 'forgot' | 'forgot-sent' | 'check-email';
+type Alert = { tone: 'error' | 'info'; message: string; action?: 'resend-confirmation' | 'go-login' | 'go-forgot' };
+
+const COPY: Record<Mode, { title: string; subtitle: string; submit: string; busy: string }> = {
+  login: { title: 'ברוך שובך', subtitle: 'ממשיכים בדיוק מאיפה שעצרת', submit: 'כניסה', busy: 'נכנסים…' },
+  signup: { title: 'יצירת חשבון', subtitle: 'חינם. ההתקדמות נשמרת בכל מכשיר', submit: 'יצירת חשבון', busy: 'יוצרים חשבון…' },
+};
+
+function LoginForm({ onSignedInChange }: { onSignedInChange: (signedIn: boolean) => void }) {
   const supabase = createClient();
   const router = useRouter();
   const params = useSearchParams();
   const next = safeRedirectPath(params.get('next'));
 
-  const [tab, setTab] = useState<'login' | 'signup'>('login');
+  const [mode, setMode] = useState<Mode>(params.get('mode') === 'signup' ? 'signup' : 'login');
+  const [view, setView] = useState<View>(params.get('view') === 'forgot' ? 'forgot' : 'form');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [touched, setTouched] = useState<{ email: boolean; password: boolean }>({ email: false, password: false });
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [finishing, setFinishing] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [signUpDone, setSignUpDone] = useState(false);
-  const [forgotSent, setForgotSent] = useState(false);
-  const [showForgot, setShowForgot] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null | undefined>(undefined);
-  // Set only when the post-login guest-data merge fails after its retries —
-  // holds the access token so "try again" can re-run just the merge without
-  // asking the user to log in a second time.
-  const [mergeFailedToken, setMergeFailedToken] = useState<string | null>(null);
-  const fieldId = useId();
-  const emailId = `${fieldId}-email`;
-  const passwordId = `${fieldId}-password`;
-  const hintId = `${fieldId}-hint`;
-  const errorId = `${fieldId}-error`;
+  const [alert, setAlert] = useState<Alert | null>(null);
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
 
+  const uid = useId();
+  const ids = { email: `${uid}-email`, password: `${uid}-password`, panel: `${uid}-panel`, alert: `${uid}-alert` };
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const tabRefs = useRef<Record<Mode, HTMLButtonElement | null>>({ login: null, signup: null });
+
+  // Local session check only decides which screen to show — instant, no
+  // network round-trip before the form appears.
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user ?? null));
+    supabase.auth.getSession().then(({ data }) => setSession(data.session ?? null));
   }, [supabase.auth]);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    await clearGuestIdentity();
-    setCurrentUser(null);
+  // "Continue without an account" makes no sense to someone already in one.
+  useEffect(() => { onSignedInChange(!!session || finishing); }, [session, finishing, onSignedInChange]);
+
+  // Errors appear once a field has been left (or on submit), never while the
+  // user is still typing their first attempt.
+  const emailError = touched.email || submitted ? validateEmail(email) : null;
+  const passwordError = touched.password || submitted ? validatePassword(password, mode) : null;
+
+  const finishLogin = useCallback(async (accessToken: string) => {
+    setFinishing(true);
+    // The merge never blocks: it answers fast when there's nothing to move,
+    // and a transient failure is retried quietly on the next page load.
+    await mergeGuestProgress(accessToken);
+    router.replace(next);
+  }, [next, router]);
+
+  // Confirming the email in another tab of this browser signs this tab in
+  // too (supabase-js broadcasts the session) — carry on from here.
+  useEffect(() => {
+    if (view !== 'check-email') return;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, s) => {
+      if (event === 'SIGNED_IN' && s) void finishLogin(s.access_token);
+    });
+    return () => subscription.unsubscribe();
+  }, [view, supabase.auth, finishLogin]);
+
+  const switchMode = (m: Mode, opts: { keepAlert?: boolean } = {}) => {
+    setMode(m);
+    setSubmitted(false);
+    setTouched({ email: false, password: false });
+    if (!opts.keepAlert) setAlert(null);
+  };
+
+  const onTabKey = (e: React.KeyboardEvent) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+    e.preventDefault();
+    const target: Mode = mode === 'login' ? 'signup' : 'login';
+    switchMode(target);
+    tabRefs.current[target]?.focus();
+  };
+
+  const confirmRedirect = () => authCallbackUrl(window.location.origin, next, 'signup');
+
+  const resendConfirmation = async () => {
+    const { error } = await supabase.auth.resend({ type: 'signup', email: email.trim(), options: { emailRedirectTo: confirmRedirect() } });
+    return !error;
+  };
+
+  const sendReset = async () => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: authCallbackUrl(window.location.origin, '/auth/reset-password', 'recovery'),
+    });
+    return !error;
   };
 
   const handleGoogle = async () => {
     setGoogleLoading(true);
-    setError(null);
-    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
+    setAlert(null);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo },
+      options: { redirectTo: authCallbackUrl(window.location.origin, next, 'oauth') },
     });
-    if (error) { setError('לא הצלחנו להתחבר עם Google. נסה שוב.'); setGoogleLoading(false); }
-  };
-
-  // Moves guest-mode history (exam sessions, review queue, streak, vocab
-  // known/favorites) onto the account before continuing — awaited and
-  // retried, because a silently-lost merge here means real study progress
-  // (a streak, known words) is gone for good. Only blocks navigation on
-  // failure, so the user can still choose to continue without it.
-  const finishLogin = async (accessToken: string) => {
-    const result = await mergeGuestProgress(accessToken);
-    if (!result.ok) {
-      setMergeFailedToken(accessToken);
-      setLoading(false);
-      return;
+    if (error) {
+      setAlert({ tone: 'error', message: 'לא הצלחנו לפתוח את הכניסה עם Google. נסה שוב.' });
+      setGoogleLoading(false);
     }
-    setMergeFailedToken(null);
-    router.push(next);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+    setSubmitted(true);
+    setAlert(null);
+    const eErr = validateEmail(email);
+    const pErr = validatePassword(password, mode);
+    if (eErr) { emailRef.current?.focus(); return; }
+    if (pErr) { passwordRef.current?.focus(); return; }
 
-    if (tab === 'signup') {
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      if (error) {
-        setError(error.message.includes('already registered')
-          ? 'כתובת האימייל הזו כבר רשומה. נסה להתחבר'
-          : 'לא הצלחנו להשלים את ההרשמה. נסה שוב.');
-      } else if (data.session) {
-        // signUp() returns an active session immediately when email
-        // confirmation is off; falls to the "check your email" branch
-        // below when it's on (as it currently is in production).
-        await finishLogin(data.session.access_token);
+    setLoading(true);
+    const cleanEmail = email.trim();
+    try {
+      if (mode === 'signup') {
+        const { data, error } = await supabase.auth.signUp({
+          email: cleanEmail,
+          password,
+          options: { emailRedirectTo: confirmRedirect() },
+        });
+        if (error) {
+          const failure = classifySignUpError(error);
+          setAlert({ tone: 'error', message: failure.message, action: failure.kind === 'already_registered' ? 'go-login' : undefined });
+        } else if (data.session) {
+          // Email confirmation off: signed in straight away.
+          await finishLogin(data.session.access_token);
+          return;
+        } else if (signUpHitExistingAccount(data.user)) {
+          setAlert({ tone: 'info', message: ALREADY_REGISTERED_MESSAGE, action: 'go-login' });
+        } else {
+          setView('check-email');
+        }
       } else {
-        setSignUpDone(true);
+        const { data, error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
+        if (error) {
+          const failure = classifySignInError(error);
+          setAlert({
+            tone: failure.kind === 'email_not_confirmed' ? 'info' : 'error',
+            message: failure.message,
+            action: failure.kind === 'email_not_confirmed' ? 'resend-confirmation'
+              : failure.kind === 'invalid_credentials' ? 'go-forgot' : undefined,
+          });
+          if (failure.kind === 'invalid_credentials') passwordRef.current?.select();
+        } else if (data.session) {
+          await finishLogin(data.session.access_token);
+          return;
+        }
       }
-    } else {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        setError('אימייל או סיסמה שגויים');
-      } else if (data.session) {
-        await finishLogin(data.session.access_token);
-      }
+    } catch {
+      setAlert({ tone: 'error', message: 'אין חיבור לשרת כרגע. כדאי לבדוק את האינטרנט ולנסות שוב.' });
     }
     setLoading(false);
   };
 
   const handleForgot = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitted(true);
+    setAlert(null);
+    if (validateEmail(email)) { emailRef.current?.focus(); return; }
     setLoading(true);
-    setError(null);
-    // Land on the dedicated reset screen (via the callback, which consumes
-    // the recovery token from the URL hash) instead of bouncing to home.
-    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent('/auth/reset-password')}`;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-    if (error) {
-      setError('לא הצלחנו לשלוח את המייל. נסה שוב.');
-    } else {
-      setForgotSent(true);
-    }
+    const ok = await sendReset();
     setLoading(false);
+    if (ok) setView('forgot-sent');
+    else setAlert({ tone: 'error', message: 'לא הצלחנו לשלוח את המייל כרגע. כדאי לחכות דקה ולנסות שוב.' });
   };
 
-  // ── Guest-progress merge failed after retries ─────────────────────────────
-  // The account itself is already created/signed in at this point — this is
-  // purely "we couldn't confirm your streak/vocab progress made it over."
-  // Offer a real retry (idempotent server-side) before letting the user
-  // continue without it.
-  if (mergeFailedToken) {
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    await clearGuestIdentity();
+    setSession(null);
+  };
+
+  // Move focus to the new heading whenever the card swaps content, so
+  // screen-reader and keyboard users land on what just appeared.
+  useEffect(() => {
+    if (view === 'check-email' || view === 'forgot-sent') document.getElementById('check-email-heading')?.focus();
+  }, [view]);
+
+  // ── Signing in: hold a calm state while the merge + navigation finish ────
+  if (finishing) {
     return (
-      <div className="text-center space-y-4">
-        <AlertCircle className="w-12 h-12 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden />
-        <h2 className="text-xl font-bold text-exam-ink">ההתחברות הצליחה</h2>
-        <p className="text-exam-ink-soft text-sm leading-relaxed">
-          אבל לא הצלחנו לאשר שההתקדמות שצברת כאורח/ת (רצף ימים, מילים שסימנת) הועברה לחשבון.
-          הנתונים עדיין שמורים במכשיר הזה, אז כדאי לנסות שוב.
-        </p>
-        <button
-          onClick={() => finishLogin(mergeFailedToken)}
-          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-        >
-          <RotateCcw className="w-4 h-4" aria-hidden />נסה שוב
-        </button>
-        <button
-          onClick={() => router.push(next)}
-          className="w-full py-2.5 border border-exam-border text-exam-ink-soft rounded-sm text-sm hover:bg-exam-paper-alt transition-colors"
-        >
-          המשך בלי לשמור כרגע
-        </button>
+      <div className="py-10 flex flex-col items-center gap-3 text-exam-ink-soft" role="status">
+        <Spinner className="w-8 h-8 text-exam-accent" />
+        <p className="text-sm">מחוברים! מעבירים אותך…</p>
       </div>
     );
   }
 
-  // ── Already logged in ─────────────────────────────────────────────────────
-  if (currentUser) {
+  if (session === undefined) {
+    return <div className="py-10 flex justify-center text-exam-accent" role="status" aria-label="טוען"><Spinner className="w-8 h-8" /></div>;
+  }
+
+  if (session) {
     return (
-      <div className="text-center space-y-4">
-        <UserCircle className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
-        <h2 className="text-xl font-bold text-exam-ink">כבר מחובר</h2>
-        <p className="text-exam-ink-soft text-sm">
-          מחובר בתור<br />
-          <bdi dir="ltr" className="font-semibold text-exam-ink">{currentUser.email}</bdi>
-        </p>
-        <button
-          onClick={() => router.push('/')}
-          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
-        >
-          חזרה לדף הבית
-        </button>
-        <button
-          onClick={handleSignOut}
-          className="w-full py-2.5 border border-exam-border text-exam-ink-soft rounded-sm text-sm hover:bg-exam-paper-alt transition-colors"
-        >
-          יציאה מהחשבון
-        </button>
-      </div>
-    );
-  }
-
-  // Still loading auth state
-  if (currentUser === undefined) {
-    return <div className="text-center text-exam-ink-soft py-8">טוען...</div>;
-  }
-
-  // ── Sign-up success ────────────────────────────────────────────────────────
-  if (signUpDone) {
-    return (
-      <div className="text-center space-y-4">
-        <Mail className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
-        <h2 className="text-xl font-bold text-exam-ink">בדוק את תיבת המייל שלך</h2>
-        <p className="text-exam-ink-soft text-sm leading-relaxed">
-          שלחנו לך קישור אישור לכתובת<br />
-          <bdi dir="ltr" className="font-semibold text-exam-ink">{email}</bdi>
-        </p>
-        <p className="text-exam-ink-soft text-xs">
-          לחץ על הקישור במייל כדי לאמת את החשבון ולהתחיל
-        </p>
-        <button
-          onClick={() => { setSignUpDone(false); setTab('login'); }}
-          className="text-sm text-exam-accent hover:underline"
-        >
-          חזרה לכניסה
-        </button>
-      </div>
-    );
-  }
-
-  // ── Forgot-password success ────────────────────────────────────────────────
-  if (forgotSent) {
-    return (
-      <div className="text-center space-y-4">
-        <Mail className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
-        <h2 className="text-xl font-bold text-exam-ink">מייל איפוס נשלח</h2>
-        <p className="text-exam-ink-soft text-sm">
-          שלחנו לך קישור לאיפוס הסיסמה לכתובת<br />
-          <bdi dir="ltr" className="font-semibold text-exam-ink">{email}</bdi>
-        </p>
-        <button
-          onClick={() => { setForgotSent(false); setShowForgot(false); }}
-          className="text-sm text-exam-accent hover:underline"
-        >
-          חזרה לכניסה
-        </button>
-      </div>
-    );
-  }
-
-  // ── Forgot password form ───────────────────────────────────────────────────
-  if (showForgot) {
-    return (
-      <form onSubmit={handleForgot} className="space-y-4">
-        <div>
-          <h2 className="text-lg font-bold text-exam-ink mb-1">שכחת סיסמה?</h2>
-          <p className="text-exam-ink-soft text-sm">
-            הזן את כתובת האימייל שלך, ונשלח לך קישור לאיפוס הסיסמה
-          </p>
-        </div>
-        <div className="space-y-1">
-          <label htmlFor={emailId} className="block text-sm font-medium text-exam-ink">אימייל</label>
-          <input
-            id={emailId} type="email" value={email} onChange={e => setEmail(e.target.value)}
-            required dir="ltr" placeholder="your@email.com" autoComplete="email"
-            aria-invalid={!!error} aria-describedby={error ? errorId : undefined}
-            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
-          />
-        </div>
-        {error && <p id={errorId} role="alert" className="text-exam-wrong text-sm">{error}</p>}
-        <button
-          type="submit" disabled={loading}
-          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
-        >
-          {loading ? 'שולח...' : 'שלח קישור איפוס'}
-        </button>
-        <button type="button" onClick={() => setShowForgot(false)} className="w-full text-center text-sm text-exam-ink-soft hover:text-exam-ink">
-          <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה לכניסה</span>
-        </button>
-      </form>
-    );
-  }
-
-  // ── Main login / signup form ───────────────────────────────────────────────
-  return (
-    <div className="space-y-4">
-      {/* Google button — primary */}
-      <button
-        onClick={handleGoogle}
-        disabled={googleLoading}
-        className="w-full py-3 bg-exam-surface border border-exam-border rounded-sm font-semibold text-exam-ink hover:bg-exam-paper-alt hover:border-exam-border-strong disabled:opacity-60 transition-colors flex items-center justify-center gap-3"
+      <StatusView
+        icon={UserCircle}
+        title="כבר מחובר"
+        actions={
+          <>
+            <PrimaryButton onClick={() => router.push(next)}>המשך לאתר</PrimaryButton>
+            <SecondaryButton onClick={handleSignOut}>יציאה והתחברות לחשבון אחר</SecondaryButton>
+          </>
+        }
       >
-        {googleLoading ? (
-          <span className="w-5 h-5 border-2 border-exam-border border-t-exam-accent rounded-full animate-spin" />
-        ) : (
-          <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-          </svg>
-        )}
-        {tab === 'signup' ? 'הרשמה עם Google' : 'כניסה עם Google'}
-      </button>
+        <p>
+          מחובר בתור<br />
+          <bdi dir="ltr" className="font-bold text-exam-ink break-all">{session.user.email}</bdi>
+        </p>
+      </StatusView>
+    );
+  }
 
-      {/* Divider */}
-      <div className="flex items-center gap-3">
-        <div className="flex-1 h-px bg-exam-border" />
-        <span className="text-xs text-exam-ink-soft">או עם אימייל</span>
-        <div className="flex-1 h-px bg-exam-border" />
+  if (view === 'check-email') {
+    return (
+      <CheckEmailView
+        email={email.trim()}
+        purpose="confirm"
+        onResend={resendConfirmation}
+        onChangeEmail={() => { setView('form'); setMode('signup'); setTimeout(() => emailRef.current?.focus(), 0); }}
+      />
+    );
+  }
+
+  if (view === 'forgot-sent') {
+    return (
+      <div className="space-y-4">
+        <CheckEmailView
+          email={email.trim()}
+          purpose="reset"
+          onResend={sendReset}
+          onChangeEmail={() => { setView('forgot'); setTimeout(() => emailRef.current?.focus(), 0); }}
+        />
+        <BackToLogin onClick={() => { setView('form'); switchMode('login'); }} />
       </div>
+    );
+  }
 
-      {/* Tabs */}
-      <div className="flex rounded-sm bg-exam-paper-alt p-1 gap-1">
-        <button
-          type="button"
-          aria-pressed={tab === 'login'}
-          onClick={() => { setTab('login'); setError(null); }}
-          className={`hit-44 flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'login' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
-        >
-          כניסה
-        </button>
-        <button
-          type="button"
-          aria-pressed={tab === 'signup'}
-          onClick={() => { setTab('signup'); setError(null); }}
-          className={`hit-44 flex-1 py-2 rounded-sm text-sm font-semibold transition-colors ${tab === 'signup' ? 'bg-exam-surface text-exam-ink' : 'text-exam-ink-soft'}`}
-        >
-          הרשמה
-        </button>
-      </div>
-
-      {/* Email/password form */}
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="space-y-1">
-          <label htmlFor={emailId} className="block text-sm font-medium text-exam-ink">אימייל</label>
-          <input
-            id={emailId} type="email" name="email" value={email} onChange={e => setEmail(e.target.value)}
-            required dir="ltr" placeholder="your@email.com" autoComplete="email"
-            aria-invalid={!!error} aria-describedby={error ? errorId : undefined}
-            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left placeholder:text-exam-ink-soft"
-          />
-        </div>
-        <div className="space-y-1">
-          {/* The forgot link sits beside the label, not inside it, so the
-              field's accessible name stays just "סיסמה". */}
-          <div className="flex items-center justify-between">
-            <label htmlFor={passwordId} className="block text-sm font-medium text-exam-ink">סיסמה</label>
-            {tab === 'login' && (
-              <button
-                type="button"
-                onClick={() => { setShowForgot(true); setError(null); }}
-                className="hit-44 text-xs text-exam-accent hover:underline font-normal"
-              >
-                שכחת סיסמה?
-              </button>
-            )}
-          </div>
-          <input
-            id={passwordId} type="password" name="password" value={password} onChange={e => setPassword(e.target.value)}
-            required minLength={6} dir="ltr" placeholder="••••••••" autoComplete={tab === 'signup' ? 'new-password' : 'current-password'}
-            aria-invalid={!!error}
-            aria-describedby={[tab === 'signup' ? hintId : '', error ? errorId : ''].filter(Boolean).join(' ') || undefined}
-            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none"
-          />
-          {tab === 'signup' && (
-            <p id={hintId} className="text-xs text-exam-ink-soft">לפחות 6 תווים</p>
-          )}
-        </div>
-
-        {error && (
-          <div role="alert" className="flex items-center gap-2 p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm">
-            <AlertCircle className="w-4 h-4 text-exam-wrong flex-shrink-0" aria-hidden />
-            <p id={errorId} className="text-exam-wrong text-sm">{error}</p>
-          </div>
-        )}
-
-        <button
-          type="submit" disabled={loading}
-          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity flex items-center justify-center gap-2"
-        >
-          {loading && <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />}
-          {loading ? (tab === 'signup' ? 'נרשם...' : 'מתחבר...') : (tab === 'signup' ? 'הרשמה' : 'כניסה')}
-        </button>
+  if (view === 'forgot') {
+    return (
+      <form onSubmit={handleForgot} noValidate className="space-y-5">
+        <AuthHeading title="שכחת סיסמה?" subtitle="נשלח לך מייל עם קישור לבחירת סיסמה חדשה" />
+        <AuthField
+          ref={emailRef}
+          id={ids.email} label="אימייל" icon={Mail} type="email" name="email" inputMode="email"
+          autoComplete="email" placeholder="name@email.com" autoFocus
+          value={email} onChange={e => setEmail(e.target.value)}
+          onBlur={() => setTouched(t => ({ ...t, email: true }))}
+          error={emailError}
+        />
+        {alert && <FormAlert tone={alert.tone}>{alert.message}</FormAlert>}
+        <PrimaryButton type="submit" loading={loading} loadingLabel="שולחים…">שליחת קישור</PrimaryButton>
+        <BackToLogin onClick={() => { setView('form'); switchMode('login'); }} />
       </form>
+    );
+  }
+
+  const copy = COPY[mode];
+  const passwordOk = mode === 'signup' && password.length >= MIN_PASSWORD_LENGTH;
+
+  return (
+    <div className="space-y-5">
+      <div role="tablist" aria-label="כניסה או הרשמה" className="grid grid-cols-2 gap-1 rounded-xl bg-exam-paper-alt p-1 shadow-pressed">
+        {(['login', 'signup'] as const).map(m => (
+          <button
+            key={m}
+            ref={el => { tabRefs.current[m] = el; }}
+            type="button"
+            role="tab"
+            id={`${uid}-tab-${m}`}
+            aria-selected={mode === m}
+            aria-controls={ids.panel}
+            tabIndex={mode === m ? 0 : -1}
+            onClick={() => switchMode(m)}
+            onKeyDown={onTabKey}
+            className={`h-10 rounded-lg text-sm transition-[background-color,color,box-shadow] focus-visible:outline-2 focus-visible:outline-exam-accent ${
+              mode === m ? 'bg-exam-surface text-exam-ink font-bold shadow-surface' : 'text-exam-ink-soft font-semibold hover:text-exam-ink'
+            }`}
+          >
+            {m === 'login' ? 'כניסה' : 'הרשמה'}
+          </button>
+        ))}
+      </div>
+
+      <div id={ids.panel} role="tabpanel" aria-labelledby={`${uid}-tab-${mode}`} className="space-y-5">
+        <AuthHeading title={copy.title} subtitle={copy.subtitle} />
+
+        <GoogleButton onClick={handleGoogle} loading={googleLoading} disabled={loading} />
+
+        <Divider label="או עם אימייל" />
+
+        <form onSubmit={handleSubmit} noValidate className="space-y-4">
+          <AuthField
+            ref={emailRef}
+            id={ids.email} label="אימייל" icon={Mail} type="email" name="email" inputMode="email"
+            autoComplete={mode === 'signup' ? 'email' : 'username'} placeholder="name@email.com"
+            value={email} onChange={e => setEmail(e.target.value)}
+            onBlur={() => setTouched(t => ({ ...t, email: true }))}
+            error={emailError}
+          />
+          <AuthField
+            ref={passwordRef}
+            id={ids.password} label="סיסמה" icon={Lock} type="password" name="password" revealable
+            autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} placeholder="••••••••"
+            value={password} onChange={e => setPassword(e.target.value)}
+            onBlur={() => setTouched(t => ({ ...t, password: true }))}
+            error={passwordError}
+            aside={mode === 'login' ? (
+              <TextButton onClick={() => { setView('forgot'); setAlert(null); setSubmitted(false); }}>שכחת סיסמה?</TextButton>
+            ) : undefined}
+            hint={mode === 'signup' ? (
+              <span className={`inline-flex items-center gap-1 ${passwordOk ? 'text-exam-sage' : ''}`}>
+                {passwordOk && <Check className="w-3.5 h-3.5" aria-hidden />}לפחות {MIN_PASSWORD_LENGTH} תווים
+              </span>
+            ) : undefined}
+          />
+
+          {alert && (
+            <FormAlert
+              id={ids.alert}
+              tone={alert.tone}
+              action={
+                alert.action === 'resend-confirmation' ? (
+                  <TextButton onClick={async () => { if (await resendConfirmation()) setView('check-email'); else setAlert({ tone: 'error', message: 'לא הצלחנו לשלוח שוב כרגע. כדאי לחכות דקה ולנסות שוב.' }); }}>
+                    שליחת קישור אישור חדש
+                  </TextButton>
+                ) : alert.action === 'go-login' ? (
+                  <TextButton onClick={() => switchMode('login', { keepAlert: false })}>מעבר לכניסה</TextButton>
+                ) : alert.action === 'go-forgot' ? (
+                  <TextButton onClick={() => { setView('forgot'); setAlert(null); setSubmitted(false); }}>איפוס סיסמה</TextButton>
+                ) : undefined
+              }
+            >
+              {alert.message}
+            </FormAlert>
+          )}
+
+          <PrimaryButton type="submit" loading={loading} loadingLabel={copy.busy} disabled={googleLoading}>{copy.submit}</PrimaryButton>
+        </form>
+
+        {mode === 'signup' && (
+          <p className="flex items-center justify-center gap-1.5 text-xs text-exam-ink-soft">
+            <ShieldCheck className="w-4 h-4 text-exam-sage shrink-0" aria-hidden />
+            ההתקדמות שצברת כאורח עוברת לחשבון אוטומטית
+          </p>
+        )}
+      </div>
     </div>
+  );
+}
+
+function BackToLogin({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="hit-44 w-full flex items-center justify-center gap-1.5 text-sm font-semibold text-exam-ink-soft hover:text-exam-ink rounded-sm focus-visible:outline-2 focus-visible:outline-exam-accent">
+      <ArrowRight className="w-4 h-4" aria-hidden />חזרה לכניסה
+    </button>
+  );
+}
+
+function LoginScreen() {
+  const [signedIn, setSignedIn] = useState(false);
+  return (
+    <AuthShell
+      srTitle="134+: כניסה או הרשמה"
+      footer={signedIn ? undefined : (
+        <p>
+          אפשר גם{' '}
+          <Link href="/" className="font-semibold text-exam-ink underline underline-offset-2 hover:text-exam-accent">להמשיך בלי חשבון</Link>
+          {' '}— ההתקדמות תישמר רק בדפדפן הזה.
+        </p>
+      )}
+    >
+      <LoginForm onSignedInChange={setSignedIn} />
+    </AuthShell>
   );
 }
 
 export default function LoginPage() {
   return (
-    <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
-      <div className="w-full max-w-sm">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1>
-            <BrandLogo className="w-36 h-auto mx-auto" />
-            <span className="sr-only">: כניסה לחשבון</span>
-          </h1>
-          <p className="text-exam-ink-soft text-sm mt-2">הכנה ממוקדת לאמירנ&quot;ט</p>
-        </div>
-
-        {/* Card */}
-        <div className="bg-exam-surface border border-exam-border rounded-md p-7">
-          <Suspense fallback={<div className="text-center text-exam-ink-soft py-8">טוען...</div>}>
-            <LoginForm />
-          </Suspense>
-        </div>
-
-        <p className="text-center text-exam-ink-soft text-xs mt-6">
-          אפשר גם להמשיך{' '}
-          <Link href="/" className="text-exam-ink-soft hover:text-exam-ink underline">בלי חשבון</Link>
-          {' '}(ההתקדמות תישמר רק בדפדפן הזה, ותימחק אם תנקה את נתוני האתר).
-        </p>
-      </div>
-    </main>
+    <Suspense fallback={<AuthShell srTitle="134+: כניסה או הרשמה"><div className="py-10 flex justify-center text-exam-accent"><Spinner className="w-8 h-8" /></div></AuthShell>}>
+      <LoginScreen />
+    </Suspense>
   );
 }

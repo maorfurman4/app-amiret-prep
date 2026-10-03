@@ -35,6 +35,18 @@ export async function POST(req: Request) {
   const vocabKnownIds = sanitizeIds(body.vocabKnown);
   const vocabFavoriteIds = sanitizeIds(body.vocabFavorites);
 
+  // No guest cookie is the normal case, not an error: the visitor signed out
+  // (which ends the guest identity), a previous login already consumed it,
+  // or they came straight to login without ever using guest mode. There is
+  // no server-side guest history to move — but the vocab lists in the body
+  // live in this browser's localStorage regardless of the cookie, and adding
+  // words to the caller's OWN account needs no ownership proof. Answering
+  // 400 here is what used to make a perfectly good login look broken.
+  if (guestId == null) {
+    const { mergedVocabKnown, mergedVocabFavorites } = await mergeVocab(supabase, user.id, vocabKnownIds, vocabFavoriteIds);
+    return NextResponse.json({ ok: true, guest: false, mergedExams: 0, mergedVocabKnown, mergedVocabFavorites });
+  }
+
   // Only the signed server cookie proves ownership, never the request body.
   if (typeof guestId !== 'string' || !UUID_RE.test(guestId) || guestId === user.id) {
     return NextResponse.json({ error: 'Invalid guestId' }, { status: 400 });
@@ -114,27 +126,7 @@ export async function POST(req: Request) {
   //    This is additive (ON CONFLICT DO NOTHING): it only ever adds words
   //    the account doesn't already have, never removes or overwrites one
   //    the account already marked known/favorited itself.
-  let mergedVocabKnown = 0;
-  let mergedVocabFavorites = 0;
-  const candidateIds = [...new Set([...vocabKnownIds, ...vocabFavoriteIds])];
-  if (candidateIds.length > 0) {
-    const { data: validWords } = await supabase.from('vocabulary').select('id').in('id', candidateIds);
-    const validIds = new Set((validWords ?? []).map(w => w.id as string));
-
-    const knownRows = vocabKnownIds.filter(id => validIds.has(id)).map(word_id => ({ user_id: user.id, word_id }));
-    if (knownRows.length > 0) {
-      const { error } = await supabase.from('user_vocab_known')
-        .upsert(knownRows, { onConflict: 'user_id,word_id', ignoreDuplicates: true });
-      if (!error) mergedVocabKnown = knownRows.length;
-    }
-
-    const favRows = vocabFavoriteIds.filter(id => validIds.has(id)).map(word_id => ({ user_id: user.id, word_id }));
-    if (favRows.length > 0) {
-      const { error } = await supabase.from('user_vocab_favorites')
-        .upsert(favRows, { onConflict: 'user_id,word_id', ignoreDuplicates: true });
-      if (!error) mergedVocabFavorites = favRows.length;
-    }
-  }
+  const { mergedVocabKnown, mergedVocabFavorites } = await mergeVocab(supabase, user.id, vocabKnownIds, vocabFavoriteIds);
 
   // 6. Recompute user_stats from the merged exam history
   //    (the completion trigger never saw the guest exams)
@@ -178,7 +170,35 @@ export async function POST(req: Request) {
   // unrelated account created later on the same shared device). A fresh
   // guest identity is minted on demand the next time one is needed (guests
   // and signed-in visitors alike pick one up via ensureGuestIdentity()).
-  const response = NextResponse.json({ ok: true, mergedExams: rows.length, mergedVocabKnown, mergedVocabFavorites });
+  const response = NextResponse.json({ ok: true, guest: true, mergedExams: rows.length, mergedVocabKnown, mergedVocabFavorites });
   response.cookies.delete(GUEST_COOKIE);
   return response;
+}
+
+type DbClient = Awaited<ReturnType<typeof getServerClients>>['supabase'];
+
+/** Unions the browser's locally-kept vocab lists into the account's own. */
+async function mergeVocab(supabase: DbClient, userId: string, knownIds: string[], favoriteIds: string[]) {
+  let mergedVocabKnown = 0;
+  let mergedVocabFavorites = 0;
+  const candidateIds = [...new Set([...knownIds, ...favoriteIds])];
+  if (candidateIds.length === 0) return { mergedVocabKnown, mergedVocabFavorites };
+
+  const { data: validWords } = await supabase.from('vocabulary').select('id').in('id', candidateIds);
+  const validIds = new Set((validWords ?? []).map(w => w.id as string));
+
+  const knownRows = knownIds.filter(id => validIds.has(id)).map(word_id => ({ user_id: userId, word_id }));
+  if (knownRows.length > 0) {
+    const { error } = await supabase.from('user_vocab_known')
+      .upsert(knownRows, { onConflict: 'user_id,word_id', ignoreDuplicates: true });
+    if (!error) mergedVocabKnown = knownRows.length;
+  }
+
+  const favRows = favoriteIds.filter(id => validIds.has(id)).map(word_id => ({ user_id: userId, word_id }));
+  if (favRows.length > 0) {
+    const { error } = await supabase.from('user_vocab_favorites')
+      .upsert(favRows, { onConflict: 'user_id,word_id', ignoreDuplicates: true });
+    if (!error) mergedVocabFavorites = favRows.length;
+  }
+  return { mergedVocabKnown, mergedVocabFavorites };
 }

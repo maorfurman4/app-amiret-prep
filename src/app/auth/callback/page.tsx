@@ -56,14 +56,14 @@ function CallbackHandlerImpl() {
     const timer = setTimeout(async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (cancelled) return;
-      if (session) void finishAuth(session.access_token);
+      if (session) void finishAuth(session.access_token, session.user.id);
       else setPhase('no-session');
     }, 8000);
 
     // With flowType: 'implicit', Supabase puts the session in the URL hash.
     // detectSessionInUrl: true auto-processes it and fires SIGNED_IN.
     let finishing = false;
-    const finishAuth = async (accessToken: string) => {
+    const finishAuth = async (accessToken: string, userId: string) => {
       if (finishing) return;
       finishing = true;
       clearTimeout(timer);
@@ -72,7 +72,7 @@ function CallbackHandlerImpl() {
       if (isSignupConfirm) setPhase('confirmed');
       // Never blocks the signed-in user: a missing guest identity is a normal
       // "nothing to merge", and a transient failure is retried quietly later.
-      await mergeGuestProgress(accessToken);
+      await mergeGuestProgress(accessToken, userId);
       if (cancelled) return;
       const wait = isSignupConfirm ? Math.max(0, CONFIRMED_PAUSE_MS - (Date.now() - started)) : 0;
       setTimeout(() => { if (!cancelled) navigate(safeNext); }, wait);
@@ -86,12 +86,12 @@ function CallbackHandlerImpl() {
         navigate('/auth/reset-password');
         return;
       }
-      if (event === 'SIGNED_IN' && session) void finishAuth(session.access_token);
+      if (event === 'SIGNED_IN' && session) void finishAuth(session.access_token, session.user.id);
     });
 
     // Fallback: already signed in, or the hash was processed before we subscribed.
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) void finishAuth(session.access_token);
+      if (session) void finishAuth(session.access_token, session.user.id);
     });
 
 

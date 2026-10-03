@@ -1,3 +1,5 @@
+import { claimLocalListsFor } from './local-learning-data';
+
 const VOCAB_KNOWN_KEY = 'vocab_known_ids';
 const VOCAB_FAV_KEY = 'vocab_favorites';
 // Set when a merge failed for a transient reason (offline, 5xx) so the next
@@ -41,7 +43,8 @@ type Fetcher = typeof fetch;
 /**
  * Moves guest-mode progress (exam history, review queue, streak, and
  * vocabulary known/favorite words) onto the account right after login or
- * signup. The server route is idempotent and answers 200 even when there is
+ * signup. The local vocab lists are only sent when they are guest progress
+ * or already this account's (src/lib/local-learning-data.ts). The server route is idempotent and answers 200 even when there is
  * no guest history at all, so a non-OK answer is a real problem:
  *   - network failure / 5xx → retried with backoff, then flagged so the next
  *     page load retries silently (the guest cookie and local lists survive
@@ -50,7 +53,11 @@ type Fetcher = typeof fetch;
  * Either way the caller must NOT block the signed-in user on this — the
  * login itself already succeeded.
  */
-export async function mergeGuestProgress(accessToken: string, fetcher: Fetcher = fetch): Promise<MergeGuestResult> {
+export async function mergeGuestProgress(accessToken: string, userId: string, fetcher: Fetcher = fetch): Promise<MergeGuestResult> {
+  // Another account's leftover lists are wiped here, never sent; guest (or
+  // unlabelled, pre-owner) lists now belong to this account — so a retry
+  // that ends up running for someone else can't take them either.
+  claimLocalListsFor(userId);
   const body = JSON.stringify({
     vocabKnown: readLocalIds(VOCAB_KNOWN_KEY),
     vocabFavorites: readLocalIds(VOCAB_FAV_KEY),

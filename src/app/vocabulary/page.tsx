@@ -21,6 +21,7 @@ import { cleanSnippet } from '@/lib/vocab-text';
 import { PARTS_OF_SPEECH, PART_OF_SPEECH_LABEL, PART_OF_SPEECH_TAG, THEME_LABEL, partOfSpeechOf, type PartOfSpeech } from '@/lib/part-of-speech';
 import { EMPTY_FILTERS, LEVELS, activeFilterCount, applyFilters, countFor, filtersFromParams, isFiltered, toggle, type Source, type VocabFilters } from '@/lib/vocab-filter';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
+import { reconcileLocalOwner } from '@/lib/local-learning-data';
 import { Modal } from '@/components/ui/Modal';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
@@ -374,7 +375,17 @@ function VocabularyContent() {
       setUserId(user?.id ?? null);
     });
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      setUserId(session?.user?.id ?? null);
+      const id = session?.user?.id ?? null;
+      setUserId(id);
+      // Lists another account left on this device (its session expired, or
+      // it signed out in another tab) are wiped, not shown or re-saved as
+      // this visitor's — see src/lib/local-learning-data.ts.
+      if (reconcileLocalOwner(id)) {
+        setKnown(new Set());
+        setFavorites(new Set());
+        setKnownSchedule({});
+        setKnownSyncVersion(v => v + 1);
+      }
     });
     return () => subscription.unsubscribe();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

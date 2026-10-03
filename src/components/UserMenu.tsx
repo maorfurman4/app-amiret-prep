@@ -8,6 +8,7 @@ import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import { authFetch } from '@/lib/auth-fetch';
 import { clearGuestIdentity } from '@/lib/guest';
+import { clearLocalLearningData } from '@/lib/local-learning-data';
 import { fetchStatsRows } from '@/lib/stats-client';
 import type { StatsMetrics } from '@/lib/stats-metrics';
 import { Reveal } from '@/components/strategies/Reveal';
@@ -238,6 +239,8 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
   const toggleSection = (s: Section) => (section === s ? setSection(null) : openSection(s));
 
   const handleSignOut = async () => {
+    // The device's copy of this account's lists must not reach the next sign-in.
+    clearLocalLearningData();
     await supabase.auth.signOut();
     await clearGuestIdentity();
     router.push('/auth/login');

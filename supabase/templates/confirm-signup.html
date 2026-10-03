@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>אישור החשבון שלך ב־134+</title>
+</head>
+<body style="margin:0;padding:0;background-color:#FAF8F2;">
+  <!-- Inbox preview line (hidden in the body) -->
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#FAF8F2;">
+    לחיצה אחת ואפשר להתחיל להתכונן לאמירנ״ט עם &#8206;134+&#8206;.
+  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#FAF8F2;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;">
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding-bottom:20px;">
+              <img src="https://amiret-prep.vercel.app/icons/icon-192.png" width="64" height="64" alt="134+" style="display:block;border:0;border-radius:16px;">
+            </td>
+          </tr>
+          <!-- Card -->
+          <tr>
+            <td dir="rtl" style="background-color:#FFFFFF;border:1px solid #DCDDD5;border-radius:16px;padding:32px 28px;text-align:right;font-family:Heebo,Arial,'Segoe UI',sans-serif;color:#202C38;">
+              <h1 style="margin:0 0 8px;font-size:24px;line-height:1.3;font-weight:800;color:#202C38;text-align:center;">
+                ברוכים הבאים ל־&#8206;134+&#8206;
+              </h1>
+              <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:#586573;text-align:center;">
+                נשאר רק לאשר את כתובת האימייל, והחשבון שלך מוכן.
+              </p>
+
+              <!-- Button -->
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto 24px;">
+                <tr>
+                  <td align="center" bgcolor="#283F5A" style="border-radius:12px;">
+                    <a href="{{ .ConfirmationURL }}" target="_blank"
+                       style="display:inline-block;padding:14px 36px;font-family:Heebo,Arial,sans-serif;font-size:16px;font-weight:700;color:#FFFFFF;text-decoration:none;border-radius:12px;">
+                      אישור החשבון
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0 0 6px;font-size:14px;line-height:1.6;color:#202C38;">
+                <strong>מה מחכה לך:</strong>
+              </p>
+              <p style="margin:0 0 20px;font-size:14px;line-height:1.8;color:#586573;">
+                ✓ סימולציות אמירנ״ט מלאות<br>
+                ✓ תרגול ממוקד לפי החולשות שלך<br>
+                ✓ ההתקדמות נשמרת בכל מכשיר
+              </p>
+
+              <p style="margin:0;padding-top:16px;border-top:1px solid #F0EDE5;font-size:12px;line-height:1.6;color:#586573;">
+                המייל נשלח אל <span dir="ltr">{{ .Email }}</span> כי נרשמת ל־&#8206;134+&#8206;.
+                לא נרשמת? אפשר פשוט להתעלם מהמייל — שום חשבון לא ייפתח.
+              </p>
+              <p style="margin:12px 0 0;font-size:12px;line-height:1.6;color:#586573;">
+                הכפתור לא עובד? אפשר להעתיק את הקישור הזה לדפדפן:<br>
+                <a href="{{ .ConfirmationURL }}" dir="ltr" style="color:#283F5A;word-break:break-all;">{{ .ConfirmationURL }}</a>
+              </p>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding-top:20px;font-family:Heebo,Arial,sans-serif;font-size:12px;line-height:1.6;color:#586573;">
+              &#8206;134+&#8206; · הכנה ממוקדת לאמירנ״ט<br>
+              <a href="https://amiret-prep.vercel.app" style="color:#586573;" dir="ltr">amiret-prep.vercel.app</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

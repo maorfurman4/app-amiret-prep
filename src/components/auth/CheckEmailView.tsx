@@ -45,7 +45,7 @@ export function CheckEmailView({ email, purpose, onResend, onChangeEmail }: {
         <bdi dir="ltr" className="font-bold text-exam-ink break-all">{email}</bdi>
       </p>
       <ol className="text-right text-sm text-exam-ink bg-exam-paper-alt rounded-xl p-4 space-y-1.5 list-none">
-        <li>1. פותחים את המייל מ־134+</li>
+        <li>1. פותחים את המייל מ־<bdi dir="ltr">134+</bdi></li>
         <li>2. לוחצים על הקישור שבו</li>
         <li>3. {confirm ? 'חוזרים לכאן מחוברים — ומתחילים' : 'בוחרים סיסמה חדשה — וזהו'}</li>
       </ol>

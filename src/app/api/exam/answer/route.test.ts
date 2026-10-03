@@ -117,7 +117,7 @@ describe('POST /api/exam/answer', () => {
     expect(db.spies.rpc).not.toHaveBeenCalled();
   });
 
-  it('scores every late answer as unanswered before advancing', async () => {
+  it('a late section with nothing saved in time is scored as unanswered before advancing', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-09-16T10:00:21.000Z'));
     const db = createSupabase();
@@ -133,6 +133,64 @@ describe('POST /api/exam/answer', () => {
       expect.objectContaining({ answers: [null, null, null, null], correctCount: 0 }),
     ]);
     vi.useRealTimers();
+  });
+
+  it('an on-time submit is scored on exactly the answers sent (unchanged)', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-16T10:00:19.000Z')); // inside the 20 s grace
+    // An older in-progress save must not override what was submitted in time.
+    const db = createSupabase(session({ answers_by_section: { 1: [3, 3, 3, 3] } }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    const response = await POST(request(validBody()));
+    vi.useRealTimers();
+    const body = await response.json();
+    expect(body).toMatchObject({ lateSubmission: false, notCountedAnswers: 0 });
+    expect(db.getUpdatePayload()?.answers_by_section).toEqual({ 1: [0, 1, 2, 3] });
+    expect(db.getUpdatePayload()?.section_results).toEqual([
+      expect.objectContaining({ answers: [0, 1, 2, 3], correctCount: 1 }),
+    ]);
+  });
+
+  it('a late section is scored on the answers saved in time — a slept phone keeps its in-time answers', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-16T10:00:45.000Z'));
+    // Saved in time via /api/exam/progress: Q1 right, Q2 wrong, Q3–Q4 blank.
+    const db = createSupabase(session({ answers_by_section: { 1: [0, 2, null, null] } }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    // The auto-submit after waking carries the same answers.
+    const response = await POST(request(validBody({ answers: [0, 2, null, null] })));
+    vi.useRealTimers();
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ lateSubmission: true, notCountedAnswers: 0 });
+    expect(db.getUpdatePayload()?.answers_by_section).toEqual({ 1: [0, 2, null, null] });
+    expect(db.getUpdatePayload()?.section_results).toEqual([
+      expect.objectContaining({ answers: [0, 2, null, null], correctCount: 1 }),
+    ]);
+    const rows = db.spies.rpc.mock.calls[0][1].p_responses;
+    expect(rows.map((r: { chosen_option: number | null }) => r.chosen_option)).toEqual([0, 2, null, null]);
+  });
+
+  it('ignores answers sent after the deadline and counts the ones that didn\u2019t make it', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-16T10:00:45.000Z'));
+    const db = createSupabase(session({ answers_by_section: { 1: [0, 2, null, null] } }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    // Q2 changed and Q3 + Q4 filled after the deadline: none of that counts.
+    const response = await POST(request(validBody({ answers: [0, 0, 0, 0] })));
+    vi.useRealTimers();
+    expect(await response.json()).toMatchObject({ lateSubmission: true, notCountedAnswers: 3 });
+    expect(db.getUpdatePayload()?.answers_by_section).toEqual({ 1: [0, 2, null, null] });
+  });
+
+  it('never trusts a saved slot that doesn\u2019t fit the section (late → blanks)', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-09-16T10:00:45.000Z'));
+    const db = createSupabase(session({ answers_by_section: { 1: [0, 9] } }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    const response = await POST(request(validBody()));
+    vi.useRealTimers();
+    expect(await response.json()).toMatchObject({ lateSubmission: true, notCountedAnswers: 4 });
+    expect(db.getUpdatePayload()?.answers_by_section).toEqual({ 1: [null, null, null, null] });
   });
 
   it('returns a conflict when another request already advanced the section', async () => {

@@ -12,6 +12,7 @@ import { authFetch } from '@/lib/auth-fetch';
 import { clearExamDraft, readExamDraft, writeExamDraft } from '@/lib/exam-draft';
 import { heCount } from '@/lib/hebrew-count';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
+import { ExamProgressSaver, lateNoticeText, saveResultFromStatus, type Answers } from '@/lib/exam-progress';
 
 interface SessionState {
   id: string;
@@ -51,7 +52,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const isSubmittingRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [submitWarning, setSubmitWarning] = useState<string | null>(null);
-  const [lateNotice, setLateNotice] = useState(false);
+  // Set when the previous section reached the server after its deadline:
+  // how many of the answers sent then didn't count (they weren't saved in time).
+  const [lateNotice, setLateNotice] = useState<{ notCounted: number } | null>(null);
   const [exitConfirm, setExitConfirm] = useState(false);
   // The exit confirmation opens above the question; move focus there so a
   // keyboard / screen-reader user lands on it (the safe "stay" choice).
@@ -80,6 +83,49 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     try { clearExamDraft(localStorage, sessionId, section); } catch { /* Storage unavailable. */ }
   }, [sessionId]);
 
+  // Every pick is also saved to the server while the section runs
+  // (src/lib/exam-progress.ts), so the answers chosen in time survive a
+  // locked phone or an app switch — the frozen page's auto-submit then
+  // arrives late, and a late section is scored on what was saved in time.
+  // One saver per section; timed exams only.
+  const saverRef = useRef<{ section: number; saver: ExamProgressSaver } | null>(null);
+  const progressSaver = useCallback((section: number) => {
+    if (saverRef.current?.section !== section) {
+      saverRef.current?.saver.stop();
+      saverRef.current = {
+        section,
+        saver: new ExamProgressSaver({
+          send: (answers: Answers) => authFetch('/api/exam/progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId, sectionIndex: section, answers }),
+            // Survives the page being frozen or closed right after the pick.
+            keepalive: true,
+          }).then(res => saveResultFromStatus(res.status)),
+        }),
+      };
+    }
+    return saverRef.current.saver;
+  }, [sessionId]);
+  const stopProgressSaver = useCallback(() => {
+    saverRef.current?.saver.stop();
+    saverRef.current = null;
+  }, []);
+  useEffect(() => stopProgressSaver, [stopProgressSaver]);
+
+  // Locking the screen or switching apps hides the page just before the
+  // phone freezes it: the last chance to get unsaved picks to the server.
+  useEffect(() => {
+    const flush = () => { if (document.visibilityState === 'hidden') saverRef.current?.saver.flush(); };
+    const onPageHide = () => saverRef.current?.saver.flush();
+    document.addEventListener('visibilitychange', flush);
+    window.addEventListener('pagehide', onPageHide);
+    return () => {
+      document.removeEventListener('visibilitychange', flush);
+      window.removeEventListener('pagehide', onPageHide);
+    };
+  }, []);
+
   // Load or recover session state from server
   const loadSession = useCallback(() => {
     const requestStartedAt = Date.now();
@@ -107,8 +153,13 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
     setError(null);
     setSession(data.session);
-    // Server-saved answers win; otherwise restore the local draft for this section.
-    setAnswers(existingAnswers ?? readDraft(section, questionCount) ?? Array(questionCount).fill(null));
+    // This device's draft is never older than the server's copy (every pick
+    // is written here first), so it wins; then the server's in-progress
+    // copy (another device, cleared storage); then a blank section.
+    const restored: (number | null)[] = readDraft(section, questionCount) ?? existingAnswers ?? Array(questionCount).fill(null);
+    setAnswers(restored);
+    // Picks the server may not have yet (a save failed before the reload).
+    if (!data.session.is_practice && restored.some(a => a !== null)) progressSaver(section).save(restored);
 
     // Reset pace tracking for the new section
     timingsRef.current = [];
@@ -118,7 +169,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     }).catch(() => {
       setError('לא הצלחנו להתחבר. בדוק את החיבור ונסה שוב.');
     });
-  }, [sessionId, router, readDraft]);
+  }, [sessionId, router, readDraft, progressSaver]);
 
   useEffect(() => {
     void loadSession();
@@ -157,13 +208,16 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     setAnswers(prev => {
       const next = [...prev];
       next[questionIndex] = optionIndex;
-      if (session) writeDraft(session.current_section_index, next);
+      if (session) {
+        writeDraft(session.current_section_index, next);
+        if (!session.is_practice) progressSaver(session.current_section_index).save(next);
+      }
       return next;
     });
     if (session?.is_practice) {
       setLockedAnswers(prev => new Set([...prev, questionIndex]));
     }
-  }, [session, writeDraft]);
+  }, [session, writeDraft, progressSaver]);
 
   // Keyboard shortcuts: 1-4 select answer, Enter/Space go next question
   useEffect(() => {
@@ -229,6 +283,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       if (res.status === 409) {
         // This section was already processed (double submit / second tab /
         // timed-out retry). The server is the source of truth — resync.
+        stopProgressSaver();
         clearDraft(sess.current_section_index);
         await loadSession();
         setCurrentQuestionIndex(0);
@@ -240,9 +295,10 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
         return;
       }
 
-      const data = await res.json() as { isComplete: boolean; nextSectionIndex: number; nextExpiresAt: string; lateSubmission?: boolean };
+      const data = await res.json() as { isComplete: boolean; nextSectionIndex: number; nextExpiresAt: string; lateSubmission?: boolean; notCountedAnswers?: number };
+      stopProgressSaver();
       clearDraft(sess.current_section_index);
-      setLateNotice(!!data.lateSubmission);
+      setLateNotice(data.lateSubmission ? { notCounted: data.notCountedAnswers ?? 0 } : null);
 
       if (data.isComplete) {
         router.push(`/results/${sess.id}`);
@@ -258,7 +314,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       isSubmittingRef.current = false;
       setIsSubmitting(false);
     }
-  }, [loadSession, router, clearDraft]);
+  }, [loadSession, router, clearDraft, stopProgressSaver]);
 
   const handleTimerExpire = useCallback(() => {
     if (!session) return;
@@ -298,6 +354,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     try {
       const response = await authFetch(`/api/exam/state?sessionId=${sessionId}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Discard failed');
+      stopProgressSaver();
       for (let i = 1; i <= SECTION_CONFIGS.length; i++) clearDraft(i);
       router.push('/');
     } catch {
@@ -415,8 +472,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
 
         {lateNotice && (
           <div role="status" className="mb-6 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt flex items-center justify-between gap-3" dir="rtl">
-            <span>הפרק הקודם נשלח אחרי שהזמן נגמר, ולכן, כמו במבחן האמיתי, התשובות בו לא נספרו.</span>
-            <button onClick={() => setLateNotice(false)} className="text-xs underline flex-shrink-0">הבנתי</button>
+            <span>{lateNoticeText(lateNotice.notCounted)}</span>
+            <button onClick={() => setLateNotice(null)} className="text-xs underline flex-shrink-0">הבנתי</button>
           </div>
         )}
         {currentCfg?.experimental && (

@@ -1,5 +1,8 @@
 const VOCAB_KNOWN_KEY = 'vocab_known_ids';
 const VOCAB_FAV_KEY = 'vocab_favorites';
+// Set when a merge failed for a transient reason (offline, 5xx) so the next
+// page load can quietly try again instead of the login screen blocking on it.
+export const PENDING_MERGE_KEY = 'amiret_pending_guest_merge';
 const MAX_ATTEMPTS = 3;
 const RETRY_BASE_MS = 500;
 
@@ -12,23 +15,42 @@ function readLocalIds(key: string): string[] {
   }
 }
 
+function setPending(pending: boolean) {
+  try {
+    if (pending) localStorage.setItem(PENDING_MERGE_KEY, '1');
+    else localStorage.removeItem(PENDING_MERGE_KEY);
+  } catch { /* Storage may be disabled; the retry is best-effort. */ }
+}
+
+export function hasPendingGuestMerge(): boolean {
+  try { return localStorage.getItem(PENDING_MERGE_KEY) === '1'; }
+  catch { return false; }
+}
+
 export interface MergeGuestResult {
   ok: boolean;
+  /** false when the server answered and retrying cannot change the outcome. */
+  retryable?: boolean;
   mergedExams?: number;
   mergedVocabKnown?: number;
   mergedVocabFavorites?: number;
 }
 
+type Fetcher = typeof fetch;
+
 /**
  * Moves guest-mode progress (exam history, review queue, streak, and
  * vocabulary known/favorite words) onto the account right after login or
- * signup. Callers must await this — a merge that silently fails means real
- * study progress (a streak, known/favorited words) is orphaned under the
- * guest cookie forever, since nothing else ever re-triggers it. Retries a
- * few times with backoff before giving up; the server route is idempotent,
- * so a retry (or a later manual re-trigger) is always safe to repeat.
+ * signup. The server route is idempotent and answers 200 even when there is
+ * no guest history at all, so a non-OK answer is a real problem:
+ *   - network failure / 5xx → retried with backoff, then flagged so the next
+ *     page load retries silently (the guest cookie and local lists survive
+ *     a failed merge, so nothing is lost by deferring it);
+ *   - 4xx → the server deliberately refused; retrying can't help.
+ * Either way the caller must NOT block the signed-in user on this — the
+ * login itself already succeeded.
  */
-export async function mergeGuestProgress(accessToken: string): Promise<MergeGuestResult> {
+export async function mergeGuestProgress(accessToken: string, fetcher: Fetcher = fetch): Promise<MergeGuestResult> {
   const body = JSON.stringify({
     vocabKnown: readLocalIds(VOCAB_KNOWN_KEY),
     vocabFavorites: readLocalIds(VOCAB_FAV_KEY),
@@ -36,15 +58,20 @@ export async function mergeGuestProgress(accessToken: string): Promise<MergeGues
 
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     try {
-      const res = await fetch('/api/auth/merge-guest', {
+      const res = await fetcher('/api/auth/merge-guest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
         body,
         keepalive: true,
       });
       if (res.ok) {
+        setPending(false);
         const data = await res.json().catch(() => ({})) as Omit<MergeGuestResult, 'ok'>;
         return { ok: true, ...data };
+      }
+      if (res.status < 500) {
+        setPending(false);
+        return { ok: false, retryable: false };
       }
     } catch {
       // network failure — fall through to retry
@@ -53,5 +80,6 @@ export async function mergeGuestProgress(accessToken: string): Promise<MergeGues
       await new Promise(r => setTimeout(r, RETRY_BASE_MS * 2 ** attempt));
     }
   }
-  return { ok: false };
+  setPending(true);
+  return { ok: false, retryable: true };
 }

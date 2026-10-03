@@ -3,6 +3,7 @@ import { Heebo, Lora } from 'next/font/google';
 import './globals.css';
 import { BottomNav } from '@/components/BottomNav';
 import { DevMobileAudit } from '@/components/DevMobileAudit';
+import { GuestMergeRetry } from '@/components/GuestMergeRetry';
 import { ActivityGuardProvider } from '@/lib/activity-guard';
 
 // UI font (Hebrew + Latin) — used everywhere via --font-sans in globals.css.
@@ -62,7 +63,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t;try{t=localStorage.getItem('theme')}catch(e){}if(t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}})()` }} />
       </head>
-      <body className="min-h-full flex flex-col bg-exam-paper pb-24 md:pb-0">
+      {/* Auth screens hide the bottom nav, so they drop the space reserved for it too. */}
+      <body className="min-h-full flex flex-col bg-exam-paper pb-24 md:pb-0 has-[[data-auth-shell]]:pb-0">
         {/* Keyboard users skip the top bar / nav straight to the page's
             <main id="main">. Hidden until focused (WCAG 2.4.1). */}
         <a
@@ -75,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <BottomNav />
         </ActivityGuardProvider>
+        <GuestMergeRetry />
         {process.env.NODE_ENV === 'development' && <DevMobileAudit />}
       </body>
     </html>

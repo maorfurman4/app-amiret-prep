@@ -4,8 +4,8 @@ export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Clock, CheckCircle2, KeyRound } from 'lucide-react';
-import { BrandLogo } from '@/components/BrandLogo';
+import { Clock, CheckCircle2, Lock, Check } from 'lucide-react';
+import { AuthField, AuthHeading, AuthShell, FormAlert, PrimaryButton, Spinner, StatusView } from '@/components/auth/AuthUI';
 import { createClient } from '@/lib/supabase';
 import {
   classifyPasswordUpdateError,
@@ -33,6 +33,15 @@ export default function ResetPasswordPage() {
   const [confirm, setConfirm] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [touched, setTouched] = useState({ password: false, confirm: false });
+  const [submitted, setSubmitted] = useState(false);
+
+  const passwordOk = password.length >= MIN_PASSWORD_LENGTH;
+  const passwordError = (touched.password || submitted) && !passwordOk
+    ? (password ? `לפחות ${MIN_PASSWORD_LENGTH} תווים (חסרים עוד ${MIN_PASSWORD_LENGTH - password.length})` : 'צריך למלא סיסמה חדשה')
+    : null;
+  const confirmError = (touched.confirm || submitted) && passwordOk && confirm !== password
+    ? 'הסיסמאות לא זהות' : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -75,11 +84,9 @@ export default function ResetPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const validationError = validateNewPassword(password, confirm);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
+    setSubmitted(true);
+    // Field-level messages above already say what's wrong.
+    if (validateNewPassword(password, confirm)) return;
     setSaving(true);
     try {
     const { error: updateErr } = await supabase.auth.updateUser({ password });
@@ -95,7 +102,7 @@ export default function ResetPasswordPage() {
     }
     setPhase('done');
     } catch {
-      setError('לא הצלחנו להתחבר. בדוק את החיבור ונסה שוב.');
+      setError('אין חיבור לשרת כרגע. כדאי לבדוק את האינטרנט ולנסות שוב.');
     } finally {
       setSaving(false);
     }
@@ -104,101 +111,66 @@ export default function ResetPasswordPage() {
   const card = (() => {
     if (phase === 'checking') {
       return (
-        <div className="text-center py-8 space-y-3">
-          <div className="w-8 h-8 border-2 border-exam-border border-t-exam-accent rounded-full animate-spin mx-auto" />
-          <p className="text-exam-ink-soft text-sm">מאמת את הקישור...</p>
+        <div className="py-8 flex flex-col items-center gap-3" role="status">
+          <Spinner className="w-8 h-8 text-exam-accent" />
+          <p className="text-exam-ink-soft text-sm">בודקים את הקישור…</p>
         </div>
       );
     }
 
     if (phase === 'invalid') {
       return (
-        <div className="text-center space-y-4">
-          <Clock className="w-12 h-12 mx-auto text-exam-ink" strokeWidth={1.5} aria-hidden />
-          <h2 className="text-xl font-bold text-exam-ink">הקישור כבר לא בתוקף</h2>
-          <p className="text-exam-ink-soft text-sm">
-            קישור האיפוס פג תוקף או שכבר נעשה בו שימוש.<br />
-            אפשר לבקש קישור חדש ממסך הכניסה.
-          </p>
-          <button
-            onClick={() => router.push('/auth/login')}
-            className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
-          >
-            למסך הכניסה
-          </button>
-        </div>
+        <StatusView
+          icon={Clock}
+          tone="warning"
+          title="הקישור כבר לא בתוקף"
+          actions={<PrimaryButton onClick={() => router.push('/auth/login?view=forgot')}>לבקשת קישור חדש</PrimaryButton>}
+        >
+          <p>קישור האיפוס פג תוקף או שכבר נעשה בו שימוש. אפשר לבקש קישור חדש — זה לוקח רגע.</p>
+        </StatusView>
       );
     }
 
     if (phase === 'done') {
       return (
-        <div className="text-center space-y-4">
-          <CheckCircle2 className="w-12 h-12 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden />
-          <h2 className="text-xl font-bold text-exam-ink">הסיסמה עודכנה</h2>
-          <p className="text-exam-ink-soft text-sm">
-            מעכשיו נכנסים עם הסיסמה החדשה. אתה כבר מחובר.
-          </p>
-          <button
-            onClick={() => router.push('/')}
-            className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 transition-opacity"
-          >
-            לדף הבית
-          </button>
-        </div>
+        <StatusView
+          icon={CheckCircle2}
+          tone="success"
+          title="הסיסמה עודכנה"
+          actions={<PrimaryButton onClick={() => router.push('/')}>המשך לאתר</PrimaryButton>}
+        >
+          <p>מעכשיו נכנסים עם הסיסמה החדשה. כבר חיברנו אותך.</p>
+        </StatusView>
       );
     }
 
     return (
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <h2 className="text-lg font-bold text-exam-ink mb-1">בחירת סיסמה חדשה</h2>
-          <p className="text-exam-ink-soft text-sm">הזן סיסמה חדשה לחשבון שלך</p>
-        </div>
-        <div className="space-y-1">
-          <label htmlFor="new-password" className="block text-sm font-medium text-exam-ink">סיסמה חדשה</label>
-          <input
-            id="new-password"
-            type="password" value={password} onChange={e => setPassword(e.target.value)}
-            required minLength={MIN_PASSWORD_LENGTH} dir="ltr" placeholder="••••••••" autoComplete="new-password"
-            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
-          />
-          <p className="text-xs text-exam-ink-soft">לפחות {MIN_PASSWORD_LENGTH} תווים</p>
-        </div>
-        <div className="space-y-1">
-          <label htmlFor="confirm-password" className="block text-sm font-medium text-exam-ink">אימות סיסמה</label>
-          <input
-            id="confirm-password"
-            type="password" value={confirm} onChange={e => setConfirm(e.target.value)}
-            required minLength={MIN_PASSWORD_LENGTH} dir="ltr" placeholder="••••••••" autoComplete="new-password"
-            className="w-full border border-exam-border-input bg-exam-surface text-exam-ink rounded-sm px-3 py-2.5 text-sm focus:ring-2 focus:ring-exam-accent outline-none text-left"
-          />
-        </div>
-        {error && <p className="text-exam-wrong text-sm" role="alert">{error}</p>}
-        <button
-          type="submit" disabled={saving}
-          className="w-full py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-bold hover:opacity-90 disabled:opacity-60 transition-opacity"
-        >
-          {saving ? 'מעדכן...' : 'עדכן סיסמה'}
-        </button>
+      <form onSubmit={handleSubmit} noValidate className="space-y-5">
+        <AuthHeading title="בחירת סיסמה חדשה" subtitle="כמעט סיימנו — עוד רגע ונכנסים" />
+        <AuthField
+          id="new-password" label="סיסמה חדשה" icon={Lock} type="password" revealable autoFocus
+          autoComplete="new-password" placeholder="••••••••"
+          value={password} onChange={e => setPassword(e.target.value)}
+          onBlur={() => setTouched(t => ({ ...t, password: true }))}
+          error={passwordError}
+          hint={
+            <span className={`inline-flex items-center gap-1 ${passwordOk ? 'text-exam-sage' : ''}`}>
+              {passwordOk && <Check className="w-3.5 h-3.5" aria-hidden />}לפחות {MIN_PASSWORD_LENGTH} תווים
+            </span>
+          }
+        />
+        <AuthField
+          id="confirm-password" label="אימות סיסמה" icon={Lock} type="password" revealable
+          autoComplete="new-password" placeholder="••••••••"
+          value={confirm} onChange={e => setConfirm(e.target.value)}
+          onBlur={() => setTouched(t => ({ ...t, confirm: true }))}
+          error={confirmError}
+        />
+        {error && <FormAlert tone="error">{error}</FormAlert>}
+        <PrimaryButton type="submit" loading={saving} loadingLabel="מעדכנים…">עדכון סיסמה</PrimaryButton>
       </form>
     );
   })();
 
-  return (
-    <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center px-4 py-12" dir="rtl">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1>
-            <BrandLogo className="w-36 h-auto mx-auto" />
-            <span className="sr-only">: בחירת סיסמה חדשה</span>
-          </h1>
-          <p className="text-exam-ink-soft text-sm mt-2 flex items-center justify-center gap-1.5">
-            <KeyRound className="w-4 h-4" aria-hidden />
-            איפוס סיסמה
-          </p>
-        </div>
-        <div className="bg-exam-surface border border-exam-border rounded-md p-7">{card}</div>
-      </div>
-    </main>
-  );
+  return <AuthShell srTitle="134+: בחירת סיסמה חדשה">{card}</AuthShell>;
 }

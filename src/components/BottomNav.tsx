@@ -24,6 +24,8 @@ function shouldHide(pathname: string): boolean {
   if (/^\/exam\/[^/]+/.test(pathname)) return true;
   // /review/[sessionId] — reviewing past session
   if (/^\/review\/[^/]+/.test(pathname)) return true;
+  // Login / signup / callback / reset — a focused flow with its own exits.
+  if (pathname === '/auth' || pathname.startsWith('/auth/')) return true;
   return false;
 }
 

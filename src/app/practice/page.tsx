@@ -213,7 +213,11 @@ function PracticeContent() {
       });
       const res = await authFetch(`/api/practice/questions?${params}`);
       if (!res.ok) {
-        setError('לא נמצאו שאלות. נסה רמת קושי אחרת.');
+        // Only a 404 means the pool is empty; anything else (503 DB down,
+        // 429, 500) is a failed load the student should simply retry.
+        setError(res.status === 404
+          ? 'לא נמצאו שאלות. נסה רמת קושי אחרת.'
+          : 'לא הצלחנו לטעון שאלות. בדוק את החיבור ונסה שוב.');
         setLoading(false);
         return;
       }

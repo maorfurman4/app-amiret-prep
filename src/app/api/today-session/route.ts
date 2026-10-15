@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import { computeWeakestType } from '@/lib/weakness';
-import { fetchUnseenQuestions, fetchUnseenRCQuestions } from '@/lib/question-history';
+import { fetchUnseenQuestions, fetchUnseenRCQuestions, PoolUnavailableError } from '@/lib/question-history';
 import { shuffleAllOptions } from '@/lib/option-shuffle';
 import { selectDueReviewQuestions } from '@/lib/srs';
 import type { Question, QuestionType } from '@/types/exam';
@@ -41,8 +41,32 @@ interface VocabWord {
  * that part of the session, the same defer-then-confirm pattern the
  * diagnostic uses, so a student who loads this and never starts doesn't
  * burn questions from their own future pool for nothing.
+ *
+ * Any failed read answers 503: an empty block would otherwise make an
+ * outage look like "all caught up" (the page shows error + retry instead).
  */
 export async function GET() {
+  try {
+    return await buildSession();
+  } catch (e) {
+    if (e instanceof PoolUnavailableError || e instanceof TodayReadError) return unavailable();
+    throw e;
+  }
+}
+
+class TodayReadError extends Error {}
+
+function unavailable() {
+  return NextResponse.json({ error: 'today session unavailable' }, { status: 503 });
+}
+
+/** Unwraps a Supabase result, throwing on a failed read. */
+function must<T>({ data, error }: { data: T | null; error: { message: string } | null }): T | null {
+  if (error) throw new TodayReadError(error.message);
+  return data;
+}
+
+async function buildSession() {
   const { supabase, user, guestId } = await getServerClients();
   const owner = user?.id ?? guestId;
   if (!owner) return NextResponse.json({ error: 'auth required' }, { status: 401 });
@@ -50,39 +74,40 @@ export async function GET() {
   const now = new Date().toISOString();
 
   // 1. Due spaced-review concepts
-  const { questions: reviewQuestions } = await selectDueReviewQuestions(
+  const { questions: reviewQuestions, error: reviewErr } = await selectDueReviewQuestions(
     supabase,
     { id: owner, type: user ? 'user' : 'guest' },
     { limit: REVIEW_LIMIT },
   );
+  if (reviewErr) throw new TodayReadError(reviewErr);
 
   // 2. Due vocabulary words — signed-in only, see docstring above
   let vocabWords: VocabWord[] = [];
   if (user) {
-    const { data: dueVocab } = await supabase
+    const dueVocab = must(await supabase
       .from('user_vocab_known')
       .select('word_id, interval_days')
       .eq('user_id', user.id)
       .lte('next_review_at', now)
-      .limit(VOCAB_LIMIT);
+      .limit(VOCAB_LIMIT));
     const wordIds = (dueVocab ?? []).map(r => r.word_id as string);
     if (wordIds.length > 0) {
       // Archived words keep their review rows (so nothing is lost) but are not reviewed.
-      const { data: words } = await supabase.from('vocabulary').select('*').in('id', wordIds).eq('is_archived', false);
+      const words = must(await supabase.from('vocabulary').select('*').in('id', wordIds).eq('is_archived', false));
       const intervalByWordId = Object.fromEntries((dueVocab ?? []).map(r => [r.word_id as string, r.interval_days as number]));
       vocabWords = (words ?? []).map(w => ({ ...w, interval_days: intervalByWordId[w.id] ?? 1 })) as VocabWord[];
     }
   }
 
   // 3. Fresh weak-area questions
-  const { data: sessions } = await supabase
+  const sessions = must(await supabase
     .from('exam_sessions')
     .select('score, section_results')
     .eq('user_id', owner)
     .eq('is_practice', false)
     .not('completed_at', 'is', null)
     .not('score', 'is', null)
-    .order('completed_at', { ascending: true });
+    .order('completed_at', { ascending: true }));
 
   const weakness = computeWeakestType((sessions ?? []) as { score: number; section_results: unknown }[]);
 

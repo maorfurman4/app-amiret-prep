@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { buildRCQuestions, fetchUnseenQuestions, planUnseenQuestions } from './question-history';
+import { buildRCQuestions, fetchUnseenQuestions, fetchUnseenRCQuestions, planUnseenQuestions, PoolUnavailableError } from './question-history';
 
 vi.mock('@/lib/supabase-server', () => ({ createServerSupabaseClient: vi.fn() }));
 
@@ -162,5 +162,38 @@ describe('fetchUnseenQuestions — reset on exhaustion', () => {
     expect(left.filter(r => r.user_key === 'u1').map(r => r.question_id).sort())
       .toEqual(['other0', 'other1', 'other2', 'other3', 'other4']);
     expect(left.filter(r => r.user_key === 'u2')).toHaveLength(2);
+  });
+});
+
+describe('failed reads (DB down)', () => {
+  /** Every request fails the way an unreachable DB does; deletes are recorded. */
+  function downDb() {
+    const deletes: string[] = [];
+    const from = (table: string) => {
+      let op = 'select';
+      const b = {
+        select: () => b,
+        delete: () => { op = 'delete'; return b; },
+        eq: () => b, in: () => b, not: () => b, order: () => b, range: () => b, limit: () => b,
+        then: (ok: (v: unknown) => unknown, bad?: (e: unknown) => unknown) => {
+          if (op === 'delete') deletes.push(table);
+          return Promise.resolve({ data: null, error: { message: 'fetch failed' } }).then(ok, bad);
+        },
+      };
+      return b;
+    };
+    return { supabase: { from } as never, deletes };
+  }
+
+  it('planUnseenQuestions throws rather than returning an empty pool', async () => {
+    await expect(planUnseenQuestions({ supabase: downDb().supabase, ...args, needed: 4 }))
+      .rejects.toBeInstanceOf(PoolUnavailableError);
+  });
+
+  it('fetchUnseenRCQuestions throws and never resets passage history', async () => {
+    const d = downDb();
+    await expect(fetchUnseenRCQuestions({ supabase: d.supabase, userKey: 'u1', difficultyLevel: 3, usedPIds: [] }))
+      .rejects.toBeInstanceOf(PoolUnavailableError);
+    expect(d.deletes).toEqual([]);
   });
 });

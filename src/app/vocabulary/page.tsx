@@ -262,6 +262,10 @@ function VocabularyContent() {
   // Core state
   const [allWords, setAllWords] = useState<VocabWord[]>([]);
   const [loading, setLoading] = useState(true);
+  // The word bank failed to load (and no usable cache) — shown as an error
+  // with a retry, not as an endless "טוען מילים...".
+  const [loadError, setLoadError] = useState(false);
+  const [wordsLoadToken, setWordsLoadToken] = useState(0);
   const [known, setKnown] = useState<Set<string>>(new Set());
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   // Per-word spaced-repetition state for "known" words — when each one is
@@ -450,12 +454,14 @@ function VocabularyContent() {
       let all: VocabWord[] = [];
       let from = 0;
       while (true) {
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from('vocabulary')
           .select('*')
           .eq('is_archived', false) // archived words stay in the table for users' progress, but are not shown
           .order('id')
           .range(from, from + PAGE - 1);
+        // A failed page is not "no more rows" — that left the page loading forever.
+        if (error) throw error;
         const rows = (data ?? []) as VocabWord[];
         all = [...all, ...rows];
         if (rows.length < PAGE) break;
@@ -470,13 +476,19 @@ function VocabularyContent() {
         localStorage.setItem(VOCAB_CACHE_KEY, JSON.stringify({ data: shuffled, ts: Date.now() }));
       } catch { /* storage full */ }
     };
+    const loadWords = () => fetchAll().catch(() => {
+      setLoadError(true);
+      setLoading(false);
+    });
     void Promise.resolve().then(() => {
+      // A retry reloads only the word bank, not the device's own lists.
+      if (wordsLoadToken > 0) return loadWords();
       setKnown(loadSet(STORAGE_KEY));
       setFavorites(loadSet(FAV_KEY));
       setKnownSchedule(loadSchedule());
-      return fetchAll();
+      return loadWords();
     });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [wordsLoadToken]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Filtering ─────────────────────────────────────────────────────────────
   const filters = useMemo<VocabFilters>(() => ({ ...filterAxes, search }), [filterAxes, search]);
@@ -884,6 +896,24 @@ function VocabularyContent() {
     return (
       <div className="min-h-dvh bg-exam-paper flex items-center justify-center" dir="rtl">
         <div className="text-exam-ink-soft text-lg">טוען מילים...</div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="min-h-dvh bg-exam-paper" dir="rtl">
+        <BackNav backHref="/" backLabel="דף הבית" />
+        <main id="main" className="flex flex-col items-center justify-center h-[calc(100dvh-3rem)] text-center px-4">
+          <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-exam-wrong" strokeWidth={1.5} aria-hidden />
+          <p className="text-exam-ink-soft mb-6">לא הצלחנו לטעון את המילים. בדוק את החיבור ונסה שוב.</p>
+          <button
+            onClick={() => { setLoadError(false); setLoading(true); setWordsLoadToken(t => t + 1); }}
+            className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl font-semibold hover:opacity-90 transition-opacity"
+          >
+            נסה שוב
+          </button>
+        </main>
       </div>
     );
   }

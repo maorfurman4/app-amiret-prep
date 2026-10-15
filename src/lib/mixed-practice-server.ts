@@ -13,7 +13,7 @@
 import type { createServerSupabaseClient } from '@/lib/supabase-server';
 import type { DifficultyLevel, Question, QuestionType } from '@/types/exam';
 import { pickDistinctOptions } from '@/lib/option-overlap';
-import { buildRCQuestions, chunks, fetchSeenQuestionIds, ID_CHUNK } from '@/lib/question-history';
+import { buildRCQuestions, chunks, fetchSeenQuestionIds, ID_CHUNK, PoolUnavailableError } from '@/lib/question-history';
 
 type SupabaseClient = Awaited<ReturnType<typeof createServerSupabaseClient>>;
 
@@ -31,7 +31,10 @@ function shuffle<T>(items: T[]): T[] {
 
 async function fetchByIds(supabase: SupabaseClient, ids: string[]): Promise<Map<string, Question>> {
   const pages = await Promise.all(chunks(ids, ID_CHUNK).map(part =>
-    supabase.from('questions').select('*').in('id', part).then(({ data }) => (data ?? []) as Question[])));
+    supabase.from('questions').select('*').in('id', part).then(({ data, error }) => {
+      if (error) throw new PoolUnavailableError(error.message);
+      return (data ?? []) as Question[];
+    })));
   return new Map(pages.flat().map(q => [q.id, q]));
 }
 
@@ -67,7 +70,10 @@ export async function fetchMixedSingles({
       .eq('type', g.type)
       .eq('difficulty_level', g.level)
       .eq('active', true)
-      .then(({ data }) => ((data ?? []) as { id: string }[]).map(r => r.id)))),
+      .then(({ data, error }) => {
+        if (error) throw new PoolUnavailableError(error.message);
+        return ((data ?? []) as { id: string }[]).map(r => r.id);
+      }))),
     userKey ? fetchSeenQuestionIds(supabase, userKey) : Promise.resolve(new Set<string>()),
   ]);
 
@@ -112,7 +118,9 @@ async function queryPassages(supabase: SupabaseClient, level: number, excludeIds
     .eq('active', true)
     .limit(20);
   if (excludeIds.length > 0) q = q.not('id', 'in', `(${excludeIds.join(',')})`);
-  const { data } = await q;
+  const { data, error } = await q;
+  // Read as "every passage seen", a failed query would reset the history.
+  if (error) throw new PoolUnavailableError(error.message);
   return (data ?? []) as PassageRow[];
 }
 

@@ -11,6 +11,18 @@ import { pickDistinctOptions } from '@/lib/option-overlap';
 
 type SupabaseClient = Awaited<ReturnType<typeof createServerSupabaseClient>>;
 
+/**
+ * A pool read failed (DB or network down). Thrown instead of returning an
+ * empty list, so a route answers 503 rather than "no questions left" — and
+ * so a failed passage query is never taken for "all seen" and resets history.
+ */
+export class PoolUnavailableError extends Error {
+  constructor(detail: string) {
+    super(`question pool unavailable: ${detail}`);
+    this.name = 'PoolUnavailableError';
+  }
+}
+
 // ── Question helpers ──────────────────────────────────────────────────────────
 
 /**
@@ -91,7 +103,7 @@ export async function planUnseenQuestions({
 }): Promise<{ questions: Question[]; resetQuestionIds: string[] }> {
   // Get IDs already seen by this user for this type+difficulty combination only
   // (scoped to difficulty so reset doesn't wipe other difficulty levels)
-  const [{ data: allQsOfTypeDiff }, seenByUser] = await Promise.all([
+  const [{ data: allQsOfTypeDiff, error: poolErr }, seenByUser] = await Promise.all([
     supabase
       .from('questions')
       .select('id')
@@ -100,6 +112,8 @@ export async function planUnseenQuestions({
       .eq('active', true),
     fetchSeenQuestionIds(supabase, userKey),
   ]);
+  // A failed read must not look like an empty pool — see PoolUnavailableError.
+  if (poolErr) throw new PoolUnavailableError(poolErr.message);
   const typeDiffIds = (allQsOfTypeDiff ?? []).map((r: { id: string }) => r.id);
   const seenIds = typeDiffIds.filter(id => seenByUser.has(id));
 
@@ -132,7 +146,8 @@ function sample<T>(items: T[], n: number): T[] {
 /** Rows for these ids, in the (already random) order of the ids. */
 async function fetchByIds(supabase: SupabaseClient, ids: string[]): Promise<Question[]> {
   if (ids.length === 0) return [];
-  const { data } = await supabase.from('questions').select('*').in('id', ids);
+  const { data, error } = await supabase.from('questions').select('*').in('id', ids);
+  if (error) throw new PoolUnavailableError(error.message);
   const byId = new Map(((data ?? []) as Question[]).map(q => [q.id, q]));
   return ids.map(id => byId.get(id)).filter((q): q is Question => !!q);
 }
@@ -234,7 +249,9 @@ async function queryPassage(
   if (excludeIds.length > 0) {
     q = q.not('id', 'in', `(${excludeIds.join(',')})`);
   }
-  const { data: passages } = await q;
+  const { data: passages, error } = await q;
+  // Read as "every passage seen", a failed query would reset the history.
+  if (error) throw new PoolUnavailableError(error.message);
   if (!passages || passages.length === 0) return null;
   return passages[Math.floor(Math.random() * passages.length)];
 }

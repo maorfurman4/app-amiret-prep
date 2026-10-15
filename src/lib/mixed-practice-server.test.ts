@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Question } from '@/types/exam';
 import { fetchMixedSingles, fetchMixedPassages } from './mixed-practice-server';
+import { PoolUnavailableError } from './question-history';
 
 type Row = Record<string, unknown>;
 type Call = { table: string; op: 'select' | 'delete'; filters: [string, string, unknown][] };
@@ -10,7 +11,7 @@ type Call = { table: string; op: 'select' | 'delete'; filters: [string, string, 
  * select/eq/in/not-in/order/range/limit/delete to run the helpers, and a log
  * of every request so tests can check what was (and wasn't) asked for.
  */
-function fakeSupabase(tables: Record<string, Row[]>) {
+function fakeSupabase(tables: Record<string, Row[]>, failing: string[] = []) {
   const calls: Call[] = [];
   const from = (table: string) => {
     const call: Call = { table, op: 'select', filters: [] };
@@ -18,6 +19,8 @@ function fakeSupabase(tables: Record<string, Row[]>) {
     let limit: number | null = null;
     const run = () => {
       calls.push(call);
+      // A table in `failing` answers reads the way a down DB does.
+      if (call.op === 'select' && failing.includes(table)) return { data: null, error: { message: 'fetch failed' } };
       const match = (r: Row) => call.filters.every(([kind, col, v]) =>
         kind === 'eq' ? r[col] === v
         : kind === 'in' ? (v as unknown[]).includes(r[col])
@@ -161,5 +164,24 @@ describe('fetchMixedPassages', () => {
     const db = fakeSupabase({});
     expect(await fetchMixedPassages({ supabase: db.client, userKey: 'u1', levels: [] })).toEqual([]);
     expect(db.calls).toHaveLength(0);
+  });
+});
+
+describe('failed reads (DB down)', () => {
+  it('throws instead of serving an empty mix of singles', async () => {
+    const db = fakeSupabase({ questions: bank(), user_question_history: [] }, ['questions']);
+    await expect(fetchMixedSingles({
+      supabase: db.client, userKey: 'u1', levels: [3],
+      requests: [{ type: 'sentence_completion', needed: 4 }],
+    })).rejects.toBeInstanceOf(PoolUnavailableError);
+  });
+
+  it('never takes a failed passage read for "all seen" — passage history survives', async () => {
+    const history = [{ user_key: 'u1', passage_id: 'p1' }];
+    const db = fakeSupabase({ passages: [], user_passage_history: history }, ['passages']);
+    await expect(fetchMixedPassages({ supabase: db.client, userKey: 'u1', levels: [3] }))
+      .rejects.toBeInstanceOf(PoolUnavailableError);
+    expect(db.calls.some(c => c.op === 'delete')).toBe(false);
+    expect(db.tables.user_passage_history).toEqual(history);
   });
 });

@@ -12,6 +12,7 @@ import { thetaToScore } from '@/lib/adaptive';
 import { scoreInterval, sessionMeasurement } from '@/lib/exemption';
 import { sectionLevelTag, type ThetaHistoryEntry } from '@/lib/routed-level';
 import { examEffort } from '@/lib/exam-effort';
+import { aggregateAccuracyByType, isSkippedSection, scoredTotals } from '@/lib/weakness';
 import { ResultsScorePrompt } from '@/components/official-score/ResultsScorePrompt';
 import { heCount, agree } from '@/lib/hebrew-count';
 import { localDateStr, todayLocalStr } from '@/lib/date-local';
@@ -87,8 +88,9 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   // The likely range of the score (80% interval of this exam's measurement).
   const interval = exemption ? scoreInterval(exemption) : null;
   const sectionResults = session.section_results as SectionResult[];
-  const totalCorrect = sectionResults.reduce((a, s) => a + (s.correctCount ?? 0), 0);
-  const totalQuestions = sectionResults.reduce((a, s) => a + (s.totalCount ?? 0), 0);
+  // Scored sections only — the same basis as the score and /stats; the
+  // experimental section is listed on its own below.
+  const { correct: totalCorrect, total: totalQuestions } = scoredTotals(sectionResults);
   // Clicked through at random? Then the score describes the clicking, not
   // the student (src/lib/exam-effort.ts) — said plainly.
   const effort = examEffort(sectionResults);
@@ -110,15 +112,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
     esra: 'אנגלית ESRA',
   };
 
-  // Aggregate by question type
-  const byType: Record<string, { correct: number; total: number }> = {};
-  for (const sr of sectionResults) {
-    const cfg = SECTION_CONFIGS[sr.sectionIndex - 1];
-    const t = cfg?.type ?? sr.type;
-    if (!byType[t]) byType[t] = { correct: 0, total: 0 };
-    byType[t].correct += sr.correctCount ?? 0;
-    byType[t].total += sr.totalCount ?? 0;
-  }
+  // By question type, scored sections only — the same tally /stats uses.
+  const byType = aggregateAccuracyByType([{ section_results: sectionResults }]);
 
   return (
     // overflow-x-clip: the score glows bleed past narrow screens (not
@@ -165,7 +160,7 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             </p>
             {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
               <div className="text-xs text-exam-ink-soft mt-1 animate-fade-up [animation-delay:460ms]">
-                כולל התרגול החלופי, שאינו חלק מפרקי הליבה. טעויות בו לא הורידו לך את האומדן
+                התרגול החלופי מוצג בנפרד למטה: הוא לא נספר כאן, וטעויות בו לא הורידו לך את האומדן
               </div>
             )}
             {effort.lowEffort && (
@@ -251,6 +246,11 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
               // section aimed at the 134 cut, the level actually served.
               const tag = sectionLevelTag(sr.sectionIndex, session.theta_history, sr.questions);
               const isExperimental = cfg?.experimental === true;
+              // It can't lower the score, so no red/amber — and a skipped
+              // one says so instead of "0/4 · 0%".
+              const skipped = isExperimental && isSkippedSection(sr);
+              const barColor = isExperimental ? 'bg-exam-ink-soft/40'
+                : pct >= 75 ? 'bg-exam-sage-strong' : pct >= 50 ? 'bg-exam-alt' : 'bg-exam-wrong';
               return (
                 <div key={sr.sectionIndex} className="flex items-center gap-3">
                   <div className={`w-6 h-6 rounded-full text-xs flex items-center justify-center font-bold flex-shrink-0 border ${
@@ -272,18 +272,16 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
                           <span className="px-1.5 py-0.5 rounded-sm bg-exam-accent/10 text-exam-accent text-[10px] font-semibold">מכוון לסף הפטור</span>
                         )}
                       </span>
-                      <span className="text-exam-ink-soft">{sr.correctCount}/{sr.totalCount}</span>
+                      <span className="text-exam-ink-soft">{skipped ? 'דילגת' : `${sr.correctCount}/${sr.totalCount}`}</span>
                     </div>
                     <div className="h-2 bg-exam-paper-alt rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full transition-all ${
-                          pct >= 75 ? 'bg-exam-sage-strong' : pct >= 50 ? 'bg-exam-alt' : 'bg-exam-wrong'
-                        }`}
-                        style={{ width: `${pct}%` }}
+                        className={`h-full rounded-full transition-all ${barColor}`}
+                        style={{ width: `${skipped ? 0 : pct}%` }}
                       />
                     </div>
                   </div>
-                  <span className="text-sm font-medium text-exam-ink-soft w-10 text-left">{pct}%</span>
+                  <span className="text-sm font-medium text-exam-ink-soft w-10 text-left">{skipped ? '' : `${pct}%`}</span>
                 </div>
               );
             })}

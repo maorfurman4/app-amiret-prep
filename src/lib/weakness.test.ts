@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { computeWeakestType, aggregateAccuracyByType, findWeakestType } from './weakness';
+import { computeWeakestType, aggregateAccuracyByType, findWeakestType, isSkippedSection, scoredTotals } from './weakness';
+import { SECTION_CONFIGS, type SectionResult } from '@/types/exam';
 
 function section(sectionIndex: number, correctCount: number, totalCount: number) {
   return { sectionIndex, type: 'sentence_completion', correctCount, totalCount };
@@ -88,5 +89,38 @@ describe('findWeakestType', () => {
       reading_comprehension: { correct: 0, total: 0 },
     });
     expect(result).toEqual({ type: 'restatement', accuracy: 0.25 });
+  });
+});
+
+describe('results breakdown — scored basis (QA M-2)', () => {
+  /** A full simulation: sections 1–6 as configured, plus the experimental 7th. */
+  const exam = (section7Answers: (number | null)[]): SectionResult[] => SECTION_CONFIGS.map(cfg => {
+    const answers = cfg.experimental ? section7Answers : Array(cfg.questionCount).fill(0);
+    const correctCount = cfg.experimental ? section7Answers.filter(a => a === 0).length : Math.floor(cfg.questionCount / 2);
+    return {
+      sectionIndex: cfg.index, type: cfg.type, questions: [], answers,
+      thetaBefore: 0, thetaAfter: 0, correctCount, totalCount: cfg.questionCount,
+    };
+  });
+  const scoredCount = SECTION_CONFIGS.filter(c => !c.experimental).reduce((a, c) => a + c.questionCount, 0);
+
+  it('a skipped experimental section adds nothing to the total or to sentence completion', () => {
+    const skipped = exam([null, null, null, null]);
+    const none = exam([]).filter(sr => sr.sectionIndex !== 7);
+    expect(scoredTotals(skipped)).toEqual(scoredTotals(none));
+    expect(scoredTotals(skipped).total).toBe(scoredCount);
+    expect(aggregateAccuracyByType([{ section_results: skipped }]))
+      .toEqual(aggregateAccuracyByType([{ section_results: none }]));
+  });
+
+  it('answering the experimental section well does not change the scored total either', () => {
+    expect(scoredTotals(exam([0, 0, 0, 0]))).toEqual(scoredTotals(exam([null, null, null, null])));
+  });
+
+  it('tells a skipped section from an attempted one', () => {
+    const s7 = (answers: (number | null)[]) => exam(answers).find(sr => sr.sectionIndex === 7)!;
+    expect(isSkippedSection(s7([null, null, null, null]))).toBe(true);
+    expect(isSkippedSection(s7([null, 2, null, null]))).toBe(false);
+    expect(isSkippedSection(s7([]))).toBe(false);
   });
 });

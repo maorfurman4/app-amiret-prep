@@ -48,6 +48,27 @@ export function aggregateAccuracyByType(
 }
 
 /**
+ * Correct/total over an exam's scored sections — the questions its score
+ * rests on. The experimental section is left out for the same reason as in
+ * aggregateAccuracyByType: skipping it must not read as 4 wrong answers.
+ */
+export function scoredTotals(sectionResults: SectionResult[]): TypeAccuracy {
+  let correct = 0;
+  let total = 0;
+  for (const sr of sectionResults) {
+    if (isExperimentalSection(sr.sectionIndex)) continue;
+    correct += sr.correctCount ?? 0;
+    total += sr.totalCount ?? 0;
+  }
+  return { correct, total };
+}
+
+/** Every question in the section was left blank (e.g. the experimental one, skipped). */
+export function isSkippedSection(sr: SectionResult): boolean {
+  return Array.isArray(sr.answers) && sr.answers.length > 0 && sr.answers.every(a => a === null);
+}
+
+/**
  * Picks the type with the lowest accuracy from an already-aggregated
  * byType map. Types with zero attempts are ignored — there's nothing to
  * judge weakness from yet.

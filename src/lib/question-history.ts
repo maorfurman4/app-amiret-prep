@@ -176,8 +176,8 @@ export async function recordSeenQuestions(
  * Fetches RC questions from an unseen passage.
  * `usedPIds` = passage IDs already used in the current session.
  * Cross-session seen passages are also excluded.
- * Resets passage history for the user if all passages at this difficulty
- * have been seen, then retries.
+ * Once every passage at this difficulty has been seen, that level's history
+ * (and only that level's) is reset and a passage is drawn from the full level.
  */
 export async function fetchUnseenRCQuestions({
   supabase,
@@ -191,13 +191,11 @@ export async function fetchUnseenRCQuestions({
   usedPIds: string[];
 }): Promise<Question[]> {
   const plan = await planUnseenRCQuestions({ supabase, userKey, difficultyLevel, usedPIds });
-  if (plan.resetPassageHistory && userKey) {
-    await supabase.from('user_passage_history').delete().eq('user_key', userKey);
-  }
+  if (userKey) await deletePassageHistory(supabase, userKey, plan.resetPassageIds);
   return plan.questions;
 }
 
-/** Read-only RC selection plan for an atomic exam transition. */
+/** Read-only RC selection plan: the passage to serve, and which history to reset. */
 export async function planUnseenRCQuestions({
   supabase,
   userKey,
@@ -208,52 +206,76 @@ export async function planUnseenRCQuestions({
   userKey: string | null;
   difficultyLevel: number;
   usedPIds: string[];
-}): Promise<{ questions: Question[]; resetPassageHistory: boolean }> {
-  let excludePassageIds = [...usedPIds];
-
-  if (userKey) {
-    const { data: seenPassages } = await supabase
-      .from('user_passage_history')
-      .select('passage_id')
-      .eq('user_key', userKey);
-    const crossSessionIds = (seenPassages ?? []).map((r: { passage_id: string }) => r.passage_id);
-    excludePassageIds = [...new Set([...excludePassageIds, ...crossSessionIds])];
+}): Promise<{ questions: Question[]; resetPassageIds: string[] }> {
+  // Filtered in memory, like planUnseenQuestions: sending every seen
+  // passage as a `not.in` list made the request URL too long to succeed.
+  const [levelIds, seen] = await Promise.all([
+    fetchLevelPassageIds(supabase, difficultyLevel),
+    userKey ? fetchSeenPassageIds(supabase, userKey) : Promise.resolve(new Set<string>()),
+  ]);
+  const used = new Set(usedPIds);
+  const available = levelIds.filter(id => !used.has(id));
+  const unseen = available.filter(id => !seen.has(id));
+  if (unseen.length > 0) {
+    return { questions: await rcQuestionsFor(supabase, sample(unseen, 1)[0]), resetPassageIds: [] };
   }
-
-  const passage = await queryPassage(supabase, difficultyLevel, excludePassageIds);
-
-  if (!passage && userKey) {
-    // All passages seen — reset cross-session history and retry (keep in-session exclusions)
-    const freshPassage = await queryPassage(supabase, difficultyLevel, usedPIds);
-    if (freshPassage) {
-      return { questions: await buildRCQuestions(supabase, freshPassage), resetPassageHistory: true };
-    }
-    return { questions: [], resetPassageHistory: true };
-  }
-
-  if (!passage) return { questions: [], resetPassageHistory: false };
-  return { questions: await buildRCQuestions(supabase, passage), resetPassageHistory: false };
+  if (available.length === 0) return { questions: [], resetPassageIds: [] };
+  // Every passage at this level seen: reset this level only (keep in-session exclusions).
+  const resetPassageIds = levelIds.some(id => seen.has(id)) ? levelIds : [];
+  return { questions: await rcQuestionsFor(supabase, sample(available, 1)[0]), resetPassageIds };
 }
 
-async function queryPassage(
-  supabase: SupabaseClient,
-  difficultyLevel: number,
-  excludeIds: string[],
-) {
-  let q = supabase
+/** Ids of the active passages at one level (~100) — ids only, so the list stays small. */
+export async function fetchLevelPassageIds(supabase: SupabaseClient, difficultyLevel: number): Promise<string[]> {
+  const { data, error } = await supabase
     .from('passages')
-    .select('id, text, difficulty_level, b')
+    .select('id')
     .eq('difficulty_level', difficultyLevel)
-    .eq('active', true)
-    .limit(20);
-  if (excludeIds.length > 0) {
-    q = q.not('id', 'in', `(${excludeIds.join(',')})`);
-  }
-  const { data: passages, error } = await q;
+    .eq('active', true);
   // Read as "every passage seen", a failed query would reset the history.
   if (error) throw new PoolUnavailableError(error.message);
-  if (!passages || passages.length === 0) return null;
-  return passages[Math.floor(Math.random() * passages.length)];
+  return ((data ?? []) as { id: string }[]).map(r => r.id);
+}
+
+/** Every passage id this user has seen, read by user_key alone and paged. */
+export async function fetchSeenPassageIds(supabase: SupabaseClient, userKey: string): Promise<Set<string>> {
+  const seen = new Set<string>();
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from('user_passage_history')
+      .select('passage_id')
+      .eq('user_key', userKey)
+      .order('passage_id')
+      .range(from, from + PAGE - 1);
+    if (error || !data) break;
+    for (const r of data as { passage_id: string }[]) seen.add(r.passage_id);
+    if (data.length < PAGE) break;
+  }
+  return seen;
+}
+
+/** Passage rows for these ids (a handful), in no particular order. */
+export async function fetchPassageRows(supabase: SupabaseClient, ids: string[]): Promise<PassageRow[]> {
+  if (ids.length === 0) return [];
+  const { data, error } = await supabase.from('passages').select('id, text, difficulty_level, b').in('id', ids);
+  if (error) throw new PoolUnavailableError(error.message);
+  return (data ?? []) as PassageRow[];
+}
+
+/** Clears these passages from one user's history, in chunks short enough for a URL. */
+export async function deletePassageHistory(supabase: SupabaseClient, userKey: string, passageIds: string[]): Promise<void> {
+  await Promise.all(chunks(passageIds, ID_CHUNK).map(part => supabase
+    .from('user_passage_history')
+    .delete()
+    .eq('user_key', userKey)
+    .in('passage_id', part)));
+}
+
+type PassageRow = { id: string; text: string; difficulty_level: number; b: number };
+
+async function rcQuestionsFor(supabase: SupabaseClient, passageId: string): Promise<Question[]> {
+  const [passage] = await fetchPassageRows(supabase, [passageId]);
+  return passage ? buildRCQuestions(supabase, passage) : [];
 }
 
 export async function buildRCQuestions(

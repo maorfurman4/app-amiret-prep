@@ -81,6 +81,7 @@ function store(tables: Record<string, Row[]>) {
       in: (col: string, vs: unknown[]) => { inSize = Math.max(inSize, vs.length); filters.push(r => vs.includes(r[col])); return b; },
       order: () => b,
       range: (lo: number, hi: number) => { range = [lo, hi]; return b; },
+      limit: () => b,
       then: (ok: (v: unknown) => unknown, bad?: (e: unknown) => unknown) => Promise.resolve(run()).then(ok, bad),
     };
     return b;
@@ -195,5 +196,70 @@ describe('failed reads (DB down)', () => {
     await expect(fetchUnseenRCQuestions({ supabase: d.supabase, userKey: 'u1', difficultyLevel: 3, usedPIds: [] }))
       .rejects.toBeInstanceOf(PoolUnavailableError);
     expect(d.deletes).toEqual([]);
+  });
+});
+
+describe('fetchUnseenRCQuestions — per-level reset, short requests (QA M-3, L-12)', () => {
+  const passagesAt = (level: number, n: number) =>
+    Array.from({ length: n }, (_, i) => ({ id: `p${level}-${i}`, text: 'T', difficulty_level: level, b: 0, active: true }));
+  const rcFor = (ps: { id: string }[]) => ps.flatMap(p => Array.from({ length: 5 }, (_, i) => ({
+    id: `${p.id}-q${i}`, type: 'reading_comprehension', passage_id: p.id, active: true,
+  })));
+  const seenRows = (user: string, ps: { id: string }[]) => ps.map(p => ({ user_key: user, passage_id: p.id }));
+
+  it('exhausting one level resets only that level\'s passage history', async () => {
+    const l3 = passagesAt(3, 4);
+    const l5 = passagesAt(5, 3);
+    const s = store({
+      passages: [...l3, ...l5],
+      questions: rcFor([...l3, ...l5]),
+      user_passage_history: [...seenRows('u1', l3.slice(0, 2)), ...seenRows('u1', l5), ...seenRows('u2', l5)],
+    });
+    const qs = await fetchUnseenRCQuestions({ supabase: s.supabase, userKey: 'u1', difficultyLevel: 5, usedPIds: [] });
+    expect(qs).toHaveLength(5);
+    expect(qs[0].passage_id).toMatch(/^p5-/);
+    const left = s.tables.user_passage_history;
+    expect(left.filter(r => r.user_key === 'u1').map(r => r.passage_id).sort()).toEqual(['p3-0', 'p3-1']);
+    expect(left.filter(r => r.user_key === 'u2')).toHaveLength(3);
+  });
+
+  it('serves an unseen passage with no reset while one is left', async () => {
+    const l5 = passagesAt(5, 3);
+    const s = store({ passages: l5, questions: rcFor(l5), user_passage_history: seenRows('u1', l5.slice(0, 2)) });
+    const qs = await fetchUnseenRCQuestions({ supabase: s.supabase, userKey: 'u1', difficultyLevel: 5, usedPIds: [] });
+    expect(qs[0].passage_id).toBe('p5-2');
+    expect(s.tables.user_passage_history).toHaveLength(2);
+  });
+
+  it('a long history (500 seen passages) never goes into a request URL', async () => {
+    const all = [1, 2, 3, 4, 5].flatMap(l => passagesAt(l, 100));
+    const s = store({
+      passages: all,
+      questions: rcFor(all),
+      // Everything but one level-4 passage has been seen.
+      user_passage_history: seenRows('u1', all.filter(p => p.id !== 'p4-57')),
+    });
+    const qs = await fetchUnseenRCQuestions({ supabase: s.supabase, userKey: 'u1', difficultyLevel: 4, usedPIds: [] });
+    expect(qs[0].passage_id).toBe('p4-57');
+    expect(Math.max(...s.requests.map(r => r.inSize))).toBeLessThanOrEqual(1);
+    expect(s.tables.user_passage_history).toHaveLength(499);
+  });
+
+  it('draws from the whole level, not the first 20 rows in storage order', async () => {
+    const l2 = passagesAt(2, 100);
+    const picked = new Set<string>();
+    for (let i = 0; i < 60; i++) {
+      const s = store({ passages: l2, questions: rcFor(l2), user_passage_history: [] });
+      const [q] = await fetchUnseenRCQuestions({ supabase: s.supabase, userKey: 'u1', difficultyLevel: 2, usedPIds: [] });
+      picked.add(q.passage_id!);
+    }
+    expect(picked.size).toBeGreaterThan(20);
+  });
+
+  it('keeps in-session exclusions even after a reset', async () => {
+    const l1 = passagesAt(1, 2);
+    const s = store({ passages: l1, questions: rcFor(l1), user_passage_history: seenRows('u1', l1) });
+    const qs = await fetchUnseenRCQuestions({ supabase: s.supabase, userKey: 'u1', difficultyLevel: 1, usedPIds: ['p1-0'] });
+    expect(qs[0].passage_id).toBe('p1-1');
   });
 });

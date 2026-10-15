@@ -57,7 +57,12 @@ export default function ReviewQueuePage() {
   const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [showResult, setShowResult] = useState(false);
   // Logged entries by question id — the client ref lets an error-cause tag find its row.
-  const [logged, setLogged] = useState<Record<string, Pick<ResponseLogEntry, 'clientRef' | 'latencyMs'>>>({});
+  // A question is logged (= reviewed, rescheduled by FSRS) once per page
+  // visit: going over the same questions again is an untracked drill.
+  const [logged, setLogged] = useState<Record<string, Pick<ResponseLogEntry, 'clientRef' | 'latencyMs'> & { attempt: number }>>({});
+  // Bumped on every start/restart, so the error-cause tagger only shows
+  // for the answer that was actually logged, never a drill answer.
+  const [attempt, setAttempt] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [showQuestionPicker, setShowQuestionPicker] = useState(false);
 
@@ -91,6 +96,7 @@ export default function ReviewQueuePage() {
     setShowResult(false);
     setCorrectCount(0);
     setShowQuestionPicker(false);
+    setAttempt(a => a + 1);
     setStep('reviewing');
   };
 
@@ -149,11 +155,13 @@ export default function ReviewQueuePage() {
     const wasCorrect = optionIndex === questions[currentIndex].correct_answer;
     if (wasCorrect) setCorrectCount(c => c + 1);
     // Logging the answer is the review: the server grades it and updates
-    // the concept's FSRS card (src/lib/srs.ts), rescheduling it.
+    // the concept's FSRS card (src/lib/srs.ts), rescheduling it. Already
+    // logged on this visit (a repeat round) → not reviewed again.
+    if (logged[questions[currentIndex].id]) return;
     const entry = responseEntry(questions[currentIndex], optionIndex, 'review', dwellRef.current.elapsedMs(questions[currentIndex].id));
     logResponses([entry]);
-    setLogged(prev => ({ ...prev, [entry.itemId]: { clientRef: entry.clientRef, latencyMs: entry.latencyMs } }));
-  }, [showResult, currentIndex, questions]);
+    setLogged(prev => ({ ...prev, [entry.itemId]: { clientRef: entry.clientRef, latencyMs: entry.latencyMs, attempt } }));
+  }, [showResult, currentIndex, questions, logged, attempt]);
 
   const handleNext = useCallback(() => {
     if (currentIndex < questions.length - 1) {
@@ -164,13 +172,16 @@ export default function ReviewQueuePage() {
     }
   }, [currentIndex, questions.length]);
 
-  // Restart session (back to question 1, no DB change)
+  // Restart session (back to question 1, no DB change — see `logged`).
+  // Also leaves the summary screen, which the restart button there needs.
   const handleRestartSession = () => {
     setCurrentIndex(0);
     setAnswers(Array(questions.length).fill(null));
     setShowResult(false);
     setCorrectCount(0);
     setShowQuestionPicker(false);
+    setAttempt(a => a + 1);
+    setStep('reviewing');
   };
 
   const handleDeleteQuestion = async (questionId: string) => {
@@ -562,7 +573,7 @@ export default function ReviewQueuePage() {
           premium
         />
 
-        {showResult && answers[currentIndex] !== question.correct_answer && logged[question.id] && (
+        {showResult && answers[currentIndex] !== question.correct_answer && logged[question.id]?.attempt === attempt && (
           <ErrorCauseTagger
             key={question.id}
             target={{ clientRef: logged[question.id].clientRef }}

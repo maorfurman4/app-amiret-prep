@@ -13,7 +13,10 @@
 import type { createServerSupabaseClient } from '@/lib/supabase-server';
 import type { DifficultyLevel, Question, QuestionType } from '@/types/exam';
 import { pickDistinctOptions } from '@/lib/option-overlap';
-import { buildRCQuestions, chunks, fetchSeenQuestionIds, ID_CHUNK, PoolUnavailableError } from '@/lib/question-history';
+import {
+  buildRCQuestions, chunks, deletePassageHistory, fetchLevelPassageIds, fetchPassageRows, fetchSeenPassageIds,
+  fetchSeenQuestionIds, ID_CHUNK, PoolUnavailableError,
+} from '@/lib/question-history';
 
 type SupabaseClient = Awaited<ReturnType<typeof createServerSupabaseClient>>;
 
@@ -108,27 +111,12 @@ export async function fetchMixedSingles({
   return result;
 }
 
-type PassageRow = { id: string; text: string; difficulty_level: number; b: number };
-
-async function queryPassages(supabase: SupabaseClient, level: number, excludeIds: string[]): Promise<PassageRow[]> {
-  let q = supabase
-    .from('passages')
-    .select('id, text, difficulty_level, b')
-    .eq('difficulty_level', level)
-    .eq('active', true)
-    .limit(20);
-  if (excludeIds.length > 0) q = q.not('id', 'in', `(${excludeIds.join(',')})`);
-  const { data, error } = await q;
-  // Read as "every passage seen", a failed query would reset the history.
-  if (error) throw new PoolUnavailableError(error.message);
-  return (data ?? []) as PassageRow[];
-}
-
 /**
  * One distinct, unseen passage per entry of `levels` (repeat a level to get
  * several at it), each returned as its own block of questions in stored
- * order. Passage history is read once; if a level has no unseen passage
- * left, the user's passage history is reset (as fetchUnseenRCQuestions does).
+ * order. Passage history is read once; a level with too few unseen passages
+ * left has its own history reset (as fetchUnseenRCQuestions does) — never
+ * the other levels'.
  */
 export async function fetchMixedPassages({
   supabase,
@@ -141,29 +129,26 @@ export async function fetchMixedPassages({
 }): Promise<Question[][]> {
   if (levels.length === 0) return [];
 
-  let seen: string[] = [];
-  if (userKey) {
-    const { data } = await supabase.from('user_passage_history').select('passage_id').eq('user_key', userKey);
-    seen = ((data ?? []) as { passage_id: string }[]).map(r => r.passage_id);
-  }
-
   const needByLevel = new Map<DifficultyLevel, number>();
   for (const lv of levels) needByLevel.set(lv, (needByLevel.get(lv) ?? 0) + 1);
 
-  let resetHistory = false;
-  const picked = (await Promise.all([...needByLevel].map(async ([level, need]) => {
-    let pool = shuffle(await queryPassages(supabase, level, seen));
-    if (pool.length < need && userKey && seen.length > 0) {
-      resetHistory = true;
-      pool = shuffle(await queryPassages(supabase, level, []));
-    }
-    return pool.slice(0, need);
-  }))).flat();
+  const [seen, idLists] = await Promise.all([
+    userKey ? fetchSeenPassageIds(supabase, userKey) : Promise.resolve(new Set<string>()),
+    Promise.all([...needByLevel.keys()].map(level => fetchLevelPassageIds(supabase, level))),
+  ]);
 
-  if (resetHistory && userKey) {
-    await supabase.from('user_passage_history').delete().eq('user_key', userKey);
-  }
+  const resetIds: string[] = [];
+  const pickedIds = [...needByLevel.values()].flatMap((need, i) => {
+    const all = idLists[i];
+    const unseen = all.filter(id => !seen.has(id));
+    if (unseen.length >= need) return shuffle(unseen).slice(0, need);
+    if (all.some(id => seen.has(id))) resetIds.push(...all);
+    return shuffle(all).slice(0, need);
+  });
 
+  if (userKey) await deletePassageHistory(supabase, userKey, resetIds);
+
+  const picked = await fetchPassageRows(supabase, pickedIds);
   const blocks = await Promise.all(picked.map(p => buildRCQuestions(supabase, p)));
   return shuffle(blocks.filter(b => b.length > 0));
 }

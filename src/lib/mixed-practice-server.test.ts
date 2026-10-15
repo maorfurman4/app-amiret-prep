@@ -160,6 +160,28 @@ describe('fetchMixedPassages', () => {
     expect(db.tables.user_passage_history).toHaveLength(0);
   });
 
+  it('a level that runs out resets only its own passage history (QA M-3)', async () => {
+    const l3 = passages(3, 1);
+    const l1 = passages(1, 3);
+    const db = fakeSupabase({
+      passages: [...l1, ...l3], questions: [...l1, ...l3].flatMap(p => rcQuestions(p.id)),
+      user_passage_history: [{ user_key: 'u1', passage_id: 'p1-0' }, { user_key: 'u1', passage_id: 'p3-0' }],
+    });
+    const blocks = await fetchMixedPassages({ supabase: db.client, userKey: 'u1', levels: [3, 1] });
+    expect(blocks).toHaveLength(2);
+    expect(db.tables.user_passage_history).toEqual([{ user_key: 'u1', passage_id: 'p1-0' }]);
+  });
+
+  it('never sends the seen-passage list as a not-in filter', async () => {
+    const ps = passages(3, 3);
+    const db = fakeSupabase({
+      passages: ps, questions: ps.flatMap(p => rcQuestions(p.id)),
+      user_passage_history: [{ user_key: 'u1', passage_id: 'p3-0' }],
+    });
+    await fetchMixedPassages({ supabase: db.client, userKey: 'u1', levels: [3] });
+    expect(db.calls.flatMap(c => c.filters).some(([kind]) => kind === 'notin')).toBe(false);
+  });
+
   it('asks for nothing when no passages are wanted', async () => {
     const db = fakeSupabase({});
     expect(await fetchMixedPassages({ supabase: db.client, userKey: 'u1', levels: [] })).toEqual([]);

@@ -149,12 +149,14 @@ export default function TodaySessionPage() {
     } else if (phase === 'weak') {
       // These were fetched fresh (not over-fetched-and-discarded like the
       // diagnostic), so every one shown here was actually answered —
-      // mark exactly that set as seen now, not before.
+      // mark exactly that set as seen now, not before. A reading block's
+      // passage is marked too: RC dedup reads passage history.
       if (data.weakQuestions.length > 0) {
+        const passageIds = [...new Set(data.weakQuestions.map(q => q.passage_id).filter((id): id is string => !!id))];
         authFetch('/api/practice/questions/mark-seen', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ids: data.weakQuestions.map(q => q.id) }),
+          body: JSON.stringify({ ids: data.weakQuestions.map(q => q.id), passageIds }),
         }).catch(() => {});
       }
       finishSession();

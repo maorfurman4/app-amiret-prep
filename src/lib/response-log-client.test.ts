@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const authFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/auth-fetch', () => ({ authFetch }));
 
-import { DwellTimer, responseEntry, logResponses } from './response-log-client';
+import { DwellTimer, responseEntry, logResponses, responsesSettled } from './response-log-client';
 import { shuffleQuestionOptions } from './option-shuffle';
 import type { Question } from '@/types/exam';
 
@@ -80,5 +80,48 @@ describe('logResponses', () => {
     expect(sizes).toEqual([25, 5]);
     expect(authFetch.mock.calls[0][0]).toBe('/api/responses');
     expect(authFetch.mock.calls[0][1].keepalive).toBe(true);
+  });
+});
+
+describe('responsesSettled (QA M-10)', () => {
+  beforeEach(() => { authFetch.mockReset(); vi.useRealTimers(); });
+
+  it('resolves at once when nothing is in flight', async () => {
+    let done = false;
+    void responsesSettled().then(() => { done = true; });
+    await Promise.resolve();
+    expect(done).toBe(true);
+  });
+
+  it('waits for an answer still being logged before a read goes out', async () => {
+    let finish!: (r: Response) => void;
+    authFetch.mockReturnValue(new Promise<Response>(r => { finish = r; }));
+    logResponses([responseEntry(q, 0, 'review', 100)]);
+    let done = false;
+    const settled = responsesSettled().then(() => { done = true; });
+    await new Promise(r => setTimeout(r, 20));
+    expect(done).toBe(false);
+    finish(new Response('{}'));
+    await settled;
+    expect(done).toBe(true);
+  });
+
+  it('gives up after the cap, so a stuck post never blocks the screen', async () => {
+    vi.useFakeTimers();
+    authFetch.mockReturnValue(new Promise(() => {}));
+    logResponses([responseEntry(q, 0, 'review', 100)]);
+    let done = false;
+    void responsesSettled(4000).then(() => { done = true; });
+    await vi.advanceTimersByTimeAsync(3900);
+    expect(done).toBe(false);
+    await vi.advanceTimersByTimeAsync(200);
+    expect(done).toBe(true);
+    vi.useRealTimers();
+  });
+
+  it('a failed post counts as settled', async () => {
+    authFetch.mockRejectedValue(new Error('offline'));
+    logResponses([responseEntry(q, 0, 'review', 100)]);
+    await expect(responsesSettled(1000)).resolves.toBeUndefined();
   });
 });

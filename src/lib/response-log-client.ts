@@ -83,6 +83,9 @@ export function responseEntry(
   };
 }
 
+/** Posts still on their way (see responsesSettled). */
+const inFlight = new Set<Promise<unknown>>();
+
 /**
  * Fire-and-forget: logging must never block or break the study flow.
  * `keepalive` lets the final batch of a session survive the navigation
@@ -90,11 +93,30 @@ export function responseEntry(
  */
 export function logResponses(entries: ResponseLogEntry[]): void {
   for (let i = 0; i < entries.length; i += MAX_BATCH) {
-    authFetch('/api/responses', {
+    const post: Promise<unknown> = authFetch('/api/responses', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ responses: entries.slice(i, i + MAX_BATCH) }),
       keepalive: true,
-    }).catch(() => {});
+    }).catch(() => {}).finally(() => { inFlight.delete(post); });
+    inFlight.add(post);
   }
+}
+
+/** Longest a read waits for answers still being logged. */
+export const SETTLE_CAP_MS = 4000;
+
+/**
+ * Resolves once every answer logged so far has reached the server (or after
+ * `capMs`, so a slow network never blocks a screen). A read of what's due —
+ * review queue, home summary, today — awaits this first: the server
+ * reschedules a card while handling the post, and a read that overtook it
+ * showed a just-reviewed item as still due.
+ */
+export function responsesSettled(capMs: number = SETTLE_CAP_MS): Promise<void> {
+  if (inFlight.size === 0) return Promise.resolve();
+  return new Promise(resolve => {
+    const timer = setTimeout(resolve, capMs);
+    Promise.allSettled([...inFlight]).then(() => { clearTimeout(timer); resolve(); });
+  });
 }

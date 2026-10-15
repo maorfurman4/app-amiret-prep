@@ -6,7 +6,7 @@ import { BackNav } from '@/components/BackNav';
 import { FitWord } from '@/components/FitWord';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { authFetch } from '@/lib/auth-fetch';
-import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
+import { DwellTimer, logResponses, responseEntry, responsesSettled } from '@/lib/response-log-client';
 import { createClient } from '@/lib/supabase';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { nextInterval, addDays } from '@/lib/spaced-repetition';
@@ -80,7 +80,8 @@ export default function TodaySessionPage() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const load = useCallback(() => {
-    authFetch('/api/today-session')
+    // Answers still being logged first, so what was just reviewed isn't served as due.
+    responsesSettled().then(() => authFetch('/api/today-session'))
       .then(r => { if (!r.ok) throw new Error(); return r.json(); })
       .then((d: SessionData) => {
         setData(d);

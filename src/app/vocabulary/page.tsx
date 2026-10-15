@@ -22,6 +22,7 @@ import { PARTS_OF_SPEECH, PART_OF_SPEECH_LABEL, PART_OF_SPEECH_TAG, THEME_LABEL,
 import { EMPTY_FILTERS, LEVELS, activeFilterCount, applyFilters, countFor, filtersFromParams, isFiltered, toggle, type Source, type VocabFilters } from '@/lib/vocab-filter';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { reconcileLocalOwner } from '@/lib/local-learning-data';
+import { addPending, applyPending, readPending, settlePending, writePending, type PendingOp } from '@/lib/vocab-sync';
 import { Modal } from '@/components/ui/Modal';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
@@ -181,6 +182,34 @@ async function writeWithRetry(fn: () => PromiseLike<{ error: unknown }>, attempt
     if (i < attempts - 1) await new Promise(r => setTimeout(r, 500 * 2 ** i));
   }
   return false;
+}
+
+type BrowserSupabase = ReturnType<typeof createClient>;
+
+/** The account write behind one vocabulary change. */
+function accountWrite(supabase: BrowserSupabase, op: PendingOp, userId: string): () => PromiseLike<{ error: unknown }> {
+  const table = op.kind === 'known' ? 'user_vocab_known' : 'user_vocab_favorites';
+  if (op.op === 'clear') return () => supabase.from(table).delete().eq('user_id', userId);
+  if (op.op === 'delete') return () => supabase.from(table).delete().eq('user_id', userId).eq('word_id', op.wordId);
+  const row = op.kind === 'known'
+    ? { user_id: userId, word_id: op.wordId, interval_days: op.interval_days, next_review_at: op.next_review_at }
+    : { user_id: userId, word_id: op.wordId };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return () => (supabase.from(table) as any).upsert(row);
+}
+
+/**
+ * Re-sends the changes that failed earlier (src/lib/vocab-sync.ts), oldest
+ * first, stopping at the first that still fails. Returns what's left.
+ */
+async function flushPending(supabase: BrowserSupabase, userId: string): Promise<PendingOp[]> {
+  for (const op of readPending(userId)) {
+    if (!(await writeWithRetry(accountWrite(supabase, op, userId), 1))) break;
+    // Re-read: a change made meanwhile may have been queued or settled.
+    const sent = JSON.stringify(op);
+    writePending(userId, readPending(userId).filter(e => JSON.stringify(e) !== sent));
+  }
+  return readPending(userId);
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -395,34 +424,63 @@ function VocabularyContent() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ─── Sync known/favorites from DB when user logs in ───────────────────────
+  // Changes that failed to reach the account go first; any still unsent are
+  // applied on top of the account's rows, so the device keeps them (and the
+  // banner stays) instead of the account's older copy overwriting them.
   useEffect(() => {
     if (!userId) return;
-    Promise.all([
+    void flushPending(supabase, userId).then(pending => Promise.all([
       supabase.from('user_vocab_known').select('word_id, interval_days, next_review_at').eq('user_id', userId),
       supabase.from('user_vocab_favorites').select('word_id').eq('user_id', userId),
     ]).then(([knownRes, favRes]) => {
+      if (pending.length > 0) setSyncFailed(true);
       if (knownRes.data) {
         type KnownRow = { word_id: string; interval_days: number; next_review_at: string };
         const rows = knownRes.data as KnownRow[];
-        const s = new Set(rows.map(r => r.word_id));
-        setKnown(s);
-        saveSet(STORAGE_KEY, s);
-        const schedule: ScheduleMap = Object.fromEntries(
-          rows.map(r => [r.word_id, { interval_days: r.interval_days, next_review_at: r.next_review_at }])
-        );
-        setKnownSchedule(schedule);
-        saveSchedule(schedule);
+        const merged = applyPending({
+          known: new Set(rows.map(r => r.word_id)),
+          schedule: Object.fromEntries(rows.map(r => [r.word_id, { interval_days: r.interval_days, next_review_at: r.next_review_at }])),
+          favorites: new Set(),
+        }, pending.filter(op => op.kind === 'known'));
+        setKnown(merged.known);
+        saveSet(STORAGE_KEY, merged.known);
+        setKnownSchedule(merged.schedule);
+        saveSchedule(merged.schedule);
       }
       if (favRes.data) {
-        const s = new Set(favRes.data.map((r: { word_id: string }) => r.word_id));
-        setFavorites(s);
-        saveSet(FAV_KEY, s);
+        const merged = applyPending({
+          known: new Set(), schedule: {},
+          favorites: new Set(favRes.data.map((r: { word_id: string }) => r.word_id)),
+        }, pending.filter(op => op.kind === 'fav'));
+        setFavorites(merged.favorites);
+        saveSet(FAV_KEY, merged.favorites);
       }
       // Force exactly one deck rebuild now that the account's real known/
       // schedule data has landed — see knownSyncVersion's declaration.
       setKnownSyncVersion(v => v + 1);
-    });
+    }));
   }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Back online: send what's waiting, and drop the banner once it's all in.
+  useEffect(() => {
+    if (!userId) return;
+    const onOnline = () => {
+      void flushPending(supabase, userId).then(rest => { if (rest.length === 0) setSyncFailed(false); });
+    };
+    window.addEventListener('online', onOnline);
+    return () => window.removeEventListener('online', onOnline);
+  }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /** Writes one change to the account; a change that still fails waits in the outbox. */
+  const syncChange = (op: PendingOp) => {
+    if (!userId) return;
+    const uid = userId;
+    writeWithRetry(accountWrite(supabase, op, uid)).then(ok => {
+      const pending = readPending(uid);
+      writePending(uid, ok ? settlePending(pending, op) : addPending(pending, op));
+      if (!ok) setSyncFailed(true);
+    });
+  };
 
   // ─── Load from storage and DB ──────────────────────────────────────────────
   useEffect(() => {
@@ -725,13 +783,7 @@ function VocabularyContent() {
     else next.add(id);
     setFavorites(next);
     saveSet(FAV_KEY, next);
-    if (userId) {
-      const write = removing
-        ? () => supabase.from('user_vocab_favorites').delete().eq('user_id', userId).eq('word_id', id)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        : () => (supabase.from('user_vocab_favorites') as any).upsert({ user_id: userId, word_id: id });
-      writeWithRetry(write).then(ok => { if (!ok) setSyncFailed(true); });
-    }
+    syncChange(removing ? { kind: 'fav', op: 'delete', wordId: id } : { kind: 'fav', op: 'upsert', wordId: id });
   };
 
   const removeFavorite = (id: string) => {
@@ -739,19 +791,13 @@ function VocabularyContent() {
     next.delete(id);
     setFavorites(next);
     saveSet(FAV_KEY, next);
-    if (userId) {
-      writeWithRetry(() => supabase.from('user_vocab_favorites').delete().eq('user_id', userId).eq('word_id', id))
-        .then(ok => { if (!ok) setSyncFailed(true); });
-    }
+    syncChange({ kind: 'fav', op: 'delete', wordId: id });
   };
 
   const clearAllFavorites = () => {
     setFavorites(new Set());
     saveSet(FAV_KEY, new Set());
-    if (userId) {
-      writeWithRetry(() => supabase.from('user_vocab_favorites').delete().eq('user_id', userId))
-        .then(ok => { if (!ok) setSyncFailed(true); });
-    }
+    syncChange({ kind: 'fav', op: 'clear' });
   };
 
   // ─── Flashcard handlers ────────────────────────────────────────────────────
@@ -782,12 +828,7 @@ function VocabularyContent() {
       setShowHint(false);
       setDragX(0);
       setAnimating(null);
-      if (userId) {
-        writeWithRetry(() => supabase.from('user_vocab_known')
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .upsert({ user_id: userId, word_id: wordId, interval_days: newInterval, next_review_at: nextReviewAt } as any))
-          .then(ok => { if (!ok) setSyncFailed(true); });
-      }
+      syncChange({ kind: 'known', op: 'upsert', wordId, interval_days: newInterval, next_review_at: nextReviewAt });
     }, 280);
   }, [current, known, knownSchedule, userId, animating]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -812,12 +853,7 @@ function VocabularyContent() {
         const nextSchedule = { ...knownSchedule, [wordId]: { interval_days: 1, next_review_at: nextReviewAt } };
         setKnownSchedule(nextSchedule);
         saveSchedule(nextSchedule);
-        if (userId) {
-          writeWithRetry(() => supabase.from('user_vocab_known')
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .upsert({ user_id: userId, word_id: wordId, interval_days: 1, next_review_at: nextReviewAt } as any))
-            .then(ok => { if (!ok) setSyncFailed(true); });
-        }
+        syncChange({ kind: 'known', op: 'upsert', wordId, interval_days: 1, next_review_at: nextReviewAt });
       }
     }, 280);
   }, [current, known, knownSchedule, userId, animating]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -833,10 +869,7 @@ function VocabularyContent() {
       saveSchedule(rest);
       return rest;
     });
-    if (userId) {
-      writeWithRetry(() => supabase.from('user_vocab_known').delete().eq('user_id', userId).eq('word_id', wordId))
-        .then(ok => { if (!ok) setSyncFailed(true); });
-    }
+    syncChange({ kind: 'known', op: 'delete', wordId });
   };
 
   const handleResetAll = () => {
@@ -846,10 +879,7 @@ function VocabularyContent() {
     saveSchedule({});
     setShowKnownList(false);
     setDeckResetVersion(v => v + 1);
-    if (userId) {
-      writeWithRetry(() => supabase.from('user_vocab_known').delete().eq('user_id', userId))
-        .then(ok => { if (!ok) setSyncFailed(true); });
-    }
+    syncChange({ kind: 'known', op: 'clear' });
   };
 
   const onDragStart = (clientX: number) => { dragStartX.current = clientX; };
@@ -930,7 +960,7 @@ function VocabularyContent() {
         {syncFailed && (
           <div className="mb-4 flex items-center gap-2 px-3 py-2.5 bg-exam-alt-bg border border-exam-alt/40 rounded-sm text-sm text-exam-alt">
             <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
-            <span className="flex-1">השינוי האחרון נשמר במכשיר הזה, אבל עוד לא בחשבון. בדוק את החיבור לאינטרנט.</span>
+            <span className="flex-1">השינוי נשמר במכשיר הזה, אבל עוד לא בחשבון. הוא יישלח אוטומטית כשהחיבור יחזור.</span>
             <button onClick={() => setSyncFailed(false)} className="flex-shrink-0 hover:opacity-70" aria-label="סגור">
               <X className="w-4 h-4" aria-hidden />
             </button>

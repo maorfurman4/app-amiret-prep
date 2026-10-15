@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { authFetch } from '@/lib/auth-fetch';
 import { getOrCreateGuestId } from '@/lib/guest';
+import { responsesSettled } from '@/lib/response-log-client';
 import type { DashboardSummary } from '@/app/api/dashboard-summary/route';
 
 interface DashboardContextValue {
@@ -29,7 +30,9 @@ export function DashboardSummaryProvider({ children }: { children: ReactNode }) 
   useEffect(() => {
     let cancelled = false;
     const guestId = getOrCreateGuestId();
-    authFetch(`/api/dashboard-summary?guestId=${encodeURIComponent(guestId)}`)
+    // Answers still being logged first, so the due count and rings include them.
+    responsesSettled()
+      .then(() => authFetch(`/api/dashboard-summary?guestId=${encodeURIComponent(guestId)}`))
       .then(r => (r.ok ? r.json() as Promise<DashboardSummary> : null))
       .then(d => { if (!cancelled) setData(d); })
       .catch(() => { /* stays null — consumers show default copy */ })

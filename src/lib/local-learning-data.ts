@@ -27,6 +27,8 @@ export const LEARNING_KEYS = [
   'vocab_favorites',
   'vocab_known_schedule',
   'vocab_timed_history',
+  // Changes waiting to reach the account (src/lib/vocab-sync.ts).
+  'vocab_pending_sync',
   // A pending merge would otherwise run for whoever signs in next.
   'amiret_pending_guest_merge',
   'amiret_streak_celebration_seen_date',

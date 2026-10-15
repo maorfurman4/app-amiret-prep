@@ -7,7 +7,7 @@ import type { Question } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
 import { PenLine, RotateCcw, BookOpen, Languages, HelpCircle, AlertTriangle, PartyPopper, Trash2, Target, ThumbsUp, Check, X, type LucideIcon, ChevronLeft } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
-import { DwellTimer, logResponses, responseEntry, type ResponseLogEntry } from '@/lib/response-log-client';
+import { DwellTimer, logResponses, responseEntry, responsesSettled, type ResponseLogEntry } from '@/lib/response-log-client';
 import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { heCount, agree } from '@/lib/hebrew-count';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
@@ -72,7 +72,8 @@ export default function ReviewQueuePage() {
     dwellRef.current.focus(step === 'reviewing' ? questions[currentIndex]?.id ?? null : null);
   }, [step, currentIndex, questions]);
 
-  const fetchDueQuestions = useCallback((id: string) => authFetch(`/api/review-queue?guestId=${encodeURIComponent(id)}`).then(async res => {
+  // Waits for answers still being logged, so just-reviewed items don't come back as due.
+  const fetchDueQuestions = useCallback((id: string) => responsesSettled().then(() => authFetch(`/api/review-queue?guestId=${encodeURIComponent(id)}`)).then(async res => {
       if (!res.ok) throw new Error('Unable to load review questions');
       const data = await res.json() as { questions: Question[]; count: number };
       if (!data.questions || data.questions.length === 0) {

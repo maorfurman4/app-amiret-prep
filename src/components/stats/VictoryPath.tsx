@@ -5,7 +5,7 @@ import {
   Line, LineChart, XAxis, YAxis, CartesianGrid, ReferenceLine, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { TrendingUp } from 'lucide-react';
-import { computeTrend, MIN_MEANINGFUL_SLOPE, MIN_SESSIONS, type TrendSession } from '@/lib/trend';
+import { computeTrend, examDay, MIN_MEANINGFUL_SLOPE, MIN_SESSIONS, type TrendSession } from '@/lib/trend';
 import { heCount } from '@/lib/hebrew-count';
 
 interface VictoryPathProps {
@@ -71,7 +71,7 @@ export function VictoryPath({ sessions, targetScore = 134 }: VictoryPathProps) {
   }
 
   const sorted = [...sessions].sort((a, b) => a.completed_at.localeCompare(b.completed_at));
-  const data: ChartPoint[] = sorted.map(s => ({ date: s.completed_at.slice(0, 10), actual: s.score }));
+  const data: ChartPoint[] = sorted.map(s => ({ date: examDay(s.completed_at), actual: s.score }));
 
   const yMin = Math.min(50, ...sorted.map(s => s.score), targetScore) - 5;
   const yMax = Math.max(150, ...sorted.map(s => s.score), targetScore) + 5;

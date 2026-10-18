@@ -13,6 +13,7 @@ import { authFetch } from '@/lib/auth-fetch';
 import { clearExamDraft, readExamDraft, writeExamDraft } from '@/lib/exam-draft';
 import { heCount } from '@/lib/hebrew-count';
 import { loadFailure } from '@/lib/session-lookup';
+import { lockedFromAnswers } from '@/lib/practice-exam';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { ExamProgressSaver, lateNoticeText, saveResultFromStatus, type Answers } from '@/lib/exam-progress';
 
@@ -175,6 +176,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     // copy (another device, cleared storage); then a blank section.
     const restored: (number | null)[] = readDraft(section, questionCount) ?? existingAnswers ?? Array(questionCount).fill(null);
     setAnswers(restored);
+    // Practice answers lock once given; a reload must not unlock them.
+    setLockedAnswers(data.session.is_practice ? lockedFromAnswers(restored) : new Set());
     // Picks the server may not have yet (a save failed before the reload).
     if (!data.session.is_practice && restored.some(a => a !== null)) progressSaver(section).save(restored);
 

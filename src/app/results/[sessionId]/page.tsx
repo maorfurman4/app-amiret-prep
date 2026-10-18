@@ -17,6 +17,7 @@ import { ResultsScorePrompt } from '@/components/official-score/ResultsScoreProm
 import { heCount, agree } from '@/lib/hebrew-count';
 import { localDateStr, todayLocalStr } from '@/lib/date-local';
 import { loadFailure, type LoadFailure } from '@/lib/session-lookup';
+import { showPaceAnalysis } from '@/lib/practice-exam';
 import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
 
 interface SessionData {
@@ -298,8 +299,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
           </div>
         </div>
 
-        {/* Pace analysis — shown only when timings were recorded */}
-        {sectionResults.some(sr => sr.timings && sr.timings.length > 0) && (() => {
+        {/* Pace analysis — timed exams only, when timings were recorded */}
+        {showPaceAnalysis(session.is_practice, sectionResults) && (() => {
           const PER_Q_BUDGET: Record<string, number> = { sentence_completion: 60, restatement: 120, reading_comprehension: 180 };
           const STUCK_CAP: Record<string, number> = { sentence_completion: 90, restatement: 150, reading_comprehension: 180 };
           const withTimings = sectionResults.filter(sr => sr.timings && sr.timings.length > 0);

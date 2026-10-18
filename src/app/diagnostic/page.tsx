@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Stethoscope, Timer, Gauge, Sparkles, ArrowLeft, BookOpen, Target, ChevronLeft, ChevronDown, type LucideIcon } from 'lucide-react';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { BackNav } from '@/components/BackNav';
+import { ExitRunButton } from '@/components/ExitRunButton';
+import { useLeaveGuard } from '@/lib/use-leave-guard';
 import { AuthCTA } from '@/components/AuthCTA';
 import type { Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
@@ -36,6 +38,8 @@ const TYPE_LABEL: Record<DiagnosticType, string> = {
   restatement: 'ניסוח מחדש',
 };
 
+const LEAVE_MESSAGE = 'אם תצא עכשיו, האבחון לא יישמר ותצטרך להתחיל מחדש. לצאת בכל זאת?';
+
 const TACTILE_PRIMARY = 'bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold transition-[box-shadow,transform,opacity] duration-300 ease-spring will-change-transform';
 
 export default function DiagnosticPage() {
@@ -61,12 +65,16 @@ export default function DiagnosticPage() {
     return () => setInProgress(false);
   }, [phase, setInProgress]);
 
+  // No server session to resume from: Back asks first, and the header has
+  // a way out on desktop too (the bottom nav is mobile-only).
+  const { confirmExit, leave } = useLeaveGuard(phase === 'answering', LEAVE_MESSAGE);
+
   // No server session to resume from — warn before a refresh loses the run.
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (phase === 'answering') {
         e.preventDefault();
-        e.returnValue = 'אם תצא עכשיו, האבחון לא יישמר ותצטרך להתחיל מחדש. לצאת בכל זאת?';
+        e.returnValue = LEAVE_MESSAGE;
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -180,9 +188,12 @@ export default function DiagnosticPage() {
               <h1 className="text-sm font-bold text-exam-ink">אבחון חכם</h1>
               {question && <span className="text-xs text-exam-ink-soft">{TYPE_LABEL[question.type as DiagnosticType]}</span>}
             </div>
-            <span className="text-xs text-exam-ink-soft">
-              {progressPct >= 80 ? 'כמעט שם' : 'ודאות האבחון'} · {progressPct}%
-            </span>
+            <div className="flex items-center gap-4">
+              <span className="text-xs text-exam-ink-soft">
+                {progressPct >= 80 ? 'כמעט שם' : 'ודאות האבחון'} · {progressPct}%
+              </span>
+              <ExitRunButton onExit={() => { if (confirmExit()) leave('/'); }} />
+            </div>
           </div>
           <div
             className="h-1.5 bg-exam-paper-alt rounded-full overflow-hidden"

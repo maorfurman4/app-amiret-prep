@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { isCorrectAnswer, type Question, type QuestionType } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
+import { ExitRunButton } from '@/components/ExitRunButton';
+import { useLeaveGuard } from '@/lib/use-leave-guard';
 import { authFetch } from '@/lib/auth-fetch';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { useActivityGuard } from '@/lib/activity-guard';
@@ -163,6 +165,11 @@ function PracticeContent() {
     setInProgress(step === 'practicing');
     return () => setInProgress(false);
   }, [step, setInProgress]);
+
+  // Back mid-run asks first (it used to drop the run silently), and the
+  // header's "יציאה" — the only way out on desktop, where the bottom nav is
+  // hidden — returns to the practice picker after the same question.
+  const { confirmExit } = useLeaveGuard(step === 'practicing', 'לצאת מהתרגול? הסבב הזה ייעצר ולא תוכל להמשיך ממנו.');
 
   // Warn before an actual tab close/refresh/external navigation during a
   // timed section run — the in-app nav confirmation above (setInProgress)
@@ -695,6 +702,7 @@ function PracticeContent() {
                 ))}
               </div>
               )}
+              <ExitRunButton onExit={() => { if (confirmExit()) handleRestart(); }} />
             </div>
           </div>
         </header>

@@ -3,6 +3,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { BackNav } from '@/components/BackNav';
+import { ExitRunButton } from '@/components/ExitRunButton';
+import { useLeaveGuard } from '@/lib/use-leave-guard';
 import { FitWord } from '@/components/FitWord';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { authFetch } from '@/lib/auth-fetch';
@@ -112,6 +114,15 @@ export default function TodaySessionPage() {
   const finishSession = useCallback(() => {
     setPhase('done');
   }, []);
+
+  // Mid-session: Back asks first, and the header offers a way out on
+  // desktop too. Every answer is saved as it's given, so leaving loses only
+  // the rest of the session.
+  const { confirmExit, leave } = useLeaveGuard(
+    phase === 'review' || phase === 'vocab' || phase === 'weak',
+    'לצאת מהאימון היומי? מה שכבר ענית נשמר.',
+  );
+  const exitSession = () => { if (confirmExit()) leave('/'); };
 
   // ── Question phases (review + weak) ───────────────────────────────────────
   const currentQuestions = phase === 'review' ? data?.reviewQuestions ?? [] : phase === 'weak' ? data?.weakQuestions ?? [] : [];
@@ -287,7 +298,10 @@ export default function TodaySessionPage() {
         <div className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
           <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
             <span className="text-sm font-bold text-exam-ink">{phaseLabel}</span>
-            <span className="text-xs text-exam-ink-soft">{idx + 1} / {currentQuestions.length}</span>
+            <div className="flex items-center gap-4">
+              <span className="text-xs text-exam-ink-soft">{idx + 1} / {currentQuestions.length}</span>
+              <ExitRunButton onExit={exitSession} />
+            </div>
           </div>
           <div className="h-1 bg-exam-paper-alt">
             <div className="h-full bg-exam-accent transition-all" style={{ width: `${((idx) / currentQuestions.length) * 100}%` }} />
@@ -326,7 +340,10 @@ export default function TodaySessionPage() {
         <div className="sticky top-0 z-10 bg-exam-surface border-b border-exam-border">
           <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
             <span className="text-sm font-bold text-exam-ink">מילים לחזרה</span>
-            <span className="text-xs text-exam-ink-soft">{idx + 1} / {data.vocabWords.length}</span>
+            <div className="flex items-center gap-4">
+              <span className="text-xs text-exam-ink-soft">{idx + 1} / {data.vocabWords.length}</span>
+              <ExitRunButton onExit={exitSession} />
+            </div>
           </div>
           <div className="h-1 bg-exam-paper-alt">
             <div className="h-full bg-exam-accent transition-all" style={{ width: `${(idx / data.vocabWords.length) * 100}%` }} />

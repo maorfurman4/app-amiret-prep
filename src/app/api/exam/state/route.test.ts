@@ -44,4 +44,20 @@ describe('exam recovery privacy', () => {
     const data = await (await GET(request())).json();
     expect(data.session.questions_by_section[1][0]).toEqual(question);
   });
+
+  function lookup(result: { data: unknown; error: unknown }) {
+    const eq = vi.fn().mockReturnThis();
+    const from = vi.fn().mockReturnValue({ select: () => ({ eq, single: vi.fn().mockResolvedValue(result) }) });
+    mocks.getServerClients.mockResolvedValue({ supabase: { from }, user: null, guestId: 'verified-guest' });
+  }
+  it('answers 404 for a missing or malformed exam id', async () => {
+    lookup({ data: null, error: { code: 'PGRST116', message: 'no rows' } });
+    expect((await GET(request())).status).toBe(404);
+    lookup({ data: null, error: { code: '22P02', message: 'invalid input syntax for type uuid' } });
+    expect((await GET(request())).status).toBe(404);
+  });
+  it('answers 503 when the database read fails', async () => {
+    lookup({ data: null, error: { message: 'TypeError: fetch failed' } });
+    expect((await GET(request())).status).toBe(503);
+  });
 });

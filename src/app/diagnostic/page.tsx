@@ -15,6 +15,7 @@ import { ensureGuestIdentity } from '@/lib/guest';
 import { useActivityGuard } from '@/lib/activity-guard';
 import { DIAGNOSTIC, type DiagnosticState, type DiagnosticType, type StartPlan } from '@/lib/diagnostic-plan';
 import { heCount } from '@/lib/hebrew-count';
+import { DiagnosticRun } from '@/lib/diagnostic-run';
 
 /**
  * Onboarding diagnostic — a stateless, item-by-item CAT. Every step posts
@@ -50,6 +51,8 @@ export default function DiagnosticPage() {
   const [state, setState] = useState<DiagnosticState | null>(null);
   const [plan, setPlan] = useState<StartPlan | null>(null);
   const { setInProgress } = useActivityGuard();
+  // What was sent vs. accepted, so a retry re-sends the answer just given.
+  const runRef = useRef(new DiagnosticRun());
 
   // Flag mid-diagnostic activity so the bottom nav asks for a confirming
   // second tap before navigating away (same as practice).
@@ -86,6 +89,7 @@ export default function DiagnosticPage() {
       });
       if (!res.ok) throw new Error();
       const data = await res.json() as NextResponse;
+      runRef.current.accept(sent);
       setAnswers(sent);
       setState(data.state);
       setSelected(null);
@@ -111,7 +115,7 @@ export default function DiagnosticPage() {
       thetaBefore: state?.theta ?? 0,
       sectionIndex: answers.length + 1,
     })]);
-    step([...answers, { id: question.id, chosen }]);
+    step(runRef.current.send({ id: question.id, chosen }));
   };
 
   /* ── Intro ── */
@@ -133,7 +137,7 @@ export default function DiagnosticPage() {
               <div className="flex items-center gap-2"><Timer className="w-4 h-4 flex-shrink-0" aria-hidden />בלי טיימר. ענה בקצב טבעי, ונחש כשאתה לא בטוח</div>
             </div>
             <button
-              onClick={() => step([])}
+              onClick={() => step(runRef.current.send())}
               disabled={pending}
               className={`w-full py-4 text-lg disabled:opacity-60 ${TACTILE_PRIMARY}`}
             >
@@ -150,7 +154,7 @@ export default function DiagnosticPage() {
       <main id="main" className="min-h-dvh bg-exam-paper flex items-center justify-center px-4" dir="rtl">
         <div className="text-center space-y-3">
           <div className="text-exam-wrong">לא הצלחנו לטעון את השאלה הבאה</div>
-          <button onClick={() => step(answers)} disabled={pending} className="text-exam-accent underline text-sm">
+          <button onClick={() => step(runRef.current.retry())} disabled={pending} className="text-exam-accent underline text-sm">
             {pending ? 'מנסה שוב...' : 'נסה שוב'}
           </button>
         </div>

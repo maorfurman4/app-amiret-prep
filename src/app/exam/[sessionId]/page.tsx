@@ -38,6 +38,12 @@ const NAV_DOTS_STACK: Record<number, string> = {
   5: '@max-[26rem]:order-first @max-[26rem]:w-full @max-[26rem]:justify-center',
 };
 
+/** Marks the extra history entry that catches Back mid-exam (see the Back guard below). */
+const BACK_GUARD_KEY = 'amiretExamBackGuard';
+function isBackGuardEntry(state: unknown): boolean {
+  return !!state && typeof state === 'object' && (state as Record<string, unknown>)[BACK_GUARD_KEY] === true;
+}
+
 export default function ExamPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = use(params);
   const router = useRouter();
@@ -203,6 +209,54 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [session]);
 
+  // Browser/OS Back (Android back, iOS edge swipe) is a client-side
+  // navigation, which never fires beforeunload: it used to drop the student
+  // on /exam silently and leave the session behind. An extra history entry
+  // for this same URL catches it — Back pops that entry, and the exit
+  // confirmation opens instead (and the entry is re-added). Leaving on
+  // purpose (exit confirmed, exam finished) steps back over it first, so
+  // history stays clean. Next's patched pushState copies its own router
+  // state onto the entry, so the router keeps working.
+  const backGuardActive = !!session && !session.is_practice && !session.completed_at;
+  const backGuardPushedRef = useRef(false);
+  const leaveToRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!backGuardActive) return;
+    if (!backGuardPushedRef.current && !isBackGuardEntry(window.history.state)) {
+      window.history.pushState({ [BACK_GUARD_KEY]: true }, '');
+    }
+    backGuardPushedRef.current = true;
+    const onPopState = () => {
+      const target = leaveToRef.current;
+      if (target) {
+        leaveToRef.current = null;
+        backGuardPushedRef.current = false;
+        router.replace(target);
+        return;
+      }
+      window.history.pushState({ [BACK_GUARD_KEY]: true }, '');
+      setExitConfirm(true);
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, [backGuardActive, router]);
+
+  /** Leaves the exam for `href`, stepping back over the Back-guard entry first. */
+  const leaveExam = useCallback((href: string) => {
+    if (!backGuardPushedRef.current) {
+      router.push(href);
+      return;
+    }
+    leaveToRef.current = href;
+    window.history.back();
+    // If no popstate arrives (it always should), still leave.
+    setTimeout(() => {
+      if (leaveToRef.current !== href) return;
+      leaveToRef.current = null;
+      router.replace(href);
+    }, 1000);
+  }, [router]);
+
   const handleAnswer = useCallback((questionIndex: number, optionIndex: number) => {
     if (isSubmittingRef.current) return;
     setAnswers(prev => {
@@ -301,7 +355,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       setLateNotice(data.lateSubmission ? { notCounted: data.notCountedAnswers ?? 0 } : null);
 
       if (data.isComplete) {
-        router.push(`/results/${sess.id}`);
+        leaveExam(`/results/${sess.id}`);
       } else {
         // Refresh session state and reset practice tracking
         await loadSession();
@@ -314,7 +368,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       isSubmittingRef.current = false;
       setIsSubmitting(false);
     }
-  }, [loadSession, router, clearDraft, stopProgressSaver]);
+  }, [loadSession, clearDraft, stopProgressSaver, leaveExam]);
 
   const handleTimerExpire = useCallback(() => {
     if (!session) return;
@@ -356,7 +410,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       if (!response.ok) throw new Error('Discard failed');
       stopProgressSaver();
       for (let i = 1; i <= SECTION_CONFIGS.length; i++) clearDraft(i);
-      router.push('/');
+      leaveExam('/');
     } catch {
       setError('לא הצלחנו לבטל את המבחן. ההתקדמות נשמרה; נסה שוב.');
       setExitConfirm(false);

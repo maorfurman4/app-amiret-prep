@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase';
 import { fetchStatsRows } from '@/lib/stats-client';
 import { computeStatsMetrics, type StatsRow } from '@/lib/stats-metrics';
 import { BackNav } from '@/components/BackNav';
@@ -14,7 +13,6 @@ import { AlertTriangle } from 'lucide-react';
  * computeStatsMetrics (src/lib/stats-metrics.ts), computed once per load.
  */
 export default function StatsPage() {
-  const supabase = createClient();
   const [rows, setRows] = useState<StatsRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -22,31 +20,24 @@ export default function StatsPage() {
 
   useEffect(() => {
     let cancelled = false;
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (cancelled) return;
-      // Works for both logged-in users and guests — stats are computed
-      // directly from completed exam sessions, keyed by the same user_id
-      // the exam APIs write (auth id or the localStorage guest UUID).
-      const userKey = user?.id ?? localStorage.getItem('amiret_guest_id');
-      if (!userKey) {
+    // Always asks the server, which knows the owner from the session or the
+    // HttpOnly guest cookie. Gating on the localStorage guest id showed
+    // "first exam" to a returning Safari guest whose storage was purged
+    // (the cookie survives), and hung when storage was blocked. No identity
+    // at all → the server answers [] → the same empty state.
+    fetchStatsRows()
+      .then(sessions => {
+        if (cancelled) return;
+        setRows(sessions);
         setLoading(false);
-        return;
-      }
-
-      fetchStatsRows()
-        .then(sessions => {
-          if (cancelled) return;
-          setRows(sessions);
-          setLoading(false);
-        })
-        .catch(() => {
-          if (cancelled) return;
-          setError(true);
-          setLoading(false);
-        });
-    });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setError(true);
+        setLoading(false);
+      });
     return () => { cancelled = true; };
-  }, [loadToken]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loadToken]);
 
   if (error) {
     return (

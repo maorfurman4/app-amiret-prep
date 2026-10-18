@@ -15,4 +15,24 @@ describe('GET /api/today-session', () => {
 
     expect(response.status).toBe(401);
   });
+
+  /** Every query resolves to `result`; srs_cards/RPC included. */
+  function client(result: { data: unknown; error: unknown }) {
+    const b: Record<string, unknown> = {};
+    for (const m of ['select', 'eq', 'lte', 'gte', 'in', 'not', 'order', 'limit', 'range']) b[m] = () => b;
+    b.then = (ok: (v: unknown) => unknown, bad?: (e: unknown) => unknown) => Promise.resolve(result).then(ok, bad);
+    return { from: () => b, rpc: () => Promise.resolve(result) };
+  }
+
+  it('answers 503 — not "all caught up" — when the reads fail', async () => {
+    mocks.getServerClients.mockResolvedValue({ supabase: client({ data: null, error: { message: 'fetch failed' } }), user: { id: 'u1' }, guestId: null });
+    expect((await GET()).status).toBe(503);
+  });
+
+  it('still reports a genuinely empty day as zero items', async () => {
+    mocks.getServerClients.mockResolvedValue({ supabase: client({ data: [], error: null }), user: { id: 'u1' }, guestId: null });
+    const res = await GET();
+    expect(res.status).toBe(200);
+    expect((await res.json()).totalItems).toBe(0);
+  });
 });

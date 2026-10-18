@@ -6,7 +6,7 @@ import { BackNav } from '@/components/BackNav';
 import { FitWord } from '@/components/FitWord';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import { authFetch } from '@/lib/auth-fetch';
-import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
+import { DwellTimer, logResponses, responseEntry, responsesSettled } from '@/lib/response-log-client';
 import { createClient } from '@/lib/supabase';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { nextInterval, addDays } from '@/lib/spaced-repetition';
@@ -80,7 +80,8 @@ export default function TodaySessionPage() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const load = useCallback(() => {
-    authFetch('/api/today-session')
+    // Answers still being logged first, so what was just reviewed isn't served as due.
+    responsesSettled().then(() => authFetch('/api/today-session'))
       .then(r => { if (!r.ok) throw new Error(); return r.json(); })
       .then((d: SessionData) => {
         setData(d);
@@ -149,12 +150,14 @@ export default function TodaySessionPage() {
     } else if (phase === 'weak') {
       // These were fetched fresh (not over-fetched-and-discarded like the
       // diagnostic), so every one shown here was actually answered —
-      // mark exactly that set as seen now, not before.
+      // mark exactly that set as seen now, not before. A reading block's
+      // passage is marked too: RC dedup reads passage history.
       if (data.weakQuestions.length > 0) {
+        const passageIds = [...new Set(data.weakQuestions.map(q => q.passage_id).filter((id): id is string => !!id))];
         authFetch('/api/practice/questions/mark-seen', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ids: data.weakQuestions.map(q => q.id) }),
+          body: JSON.stringify({ ids: data.weakQuestions.map(q => q.id), passageIds }),
         }).catch(() => {});
       }
       finishSession();

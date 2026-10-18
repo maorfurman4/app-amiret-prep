@@ -17,6 +17,7 @@ vi.mock('@/lib/mixed-practice-server', () => ({
   fetchMixedPassages: mocks.fetchMixedPassages,
 }));
 vi.mock('@/lib/question-history', () => ({
+  PoolUnavailableError: class PoolUnavailableError extends Error {},
   fetchUnseenQuestions: mocks.fetchUnseenQuestions,
   fetchUnseenRCQuestions: mocks.fetchUnseenRCQuestions,
   recordSeenQuestions: mocks.recordSeenQuestions,
@@ -24,6 +25,7 @@ vi.mock('@/lib/question-history', () => ({
 }));
 
 import { GET } from './route';
+import { PoolUnavailableError } from '@/lib/question-history';
 
 const bank: Question[] = Array.from({ length: 5 }, (_, n) => ({
   id: `q${n}`,
@@ -147,5 +149,31 @@ describe('GET /api/practice/questions — mixed', () => {
     await get('&sc=2&rs=1&rc=1&deferSeen=1');
     expect(mocks.recordSeenQuestions).not.toHaveBeenCalled();
     expect(mocks.recordSeenPassage).not.toHaveBeenCalled();
+  });
+});
+
+describe('GET /api/practice/questions — empty pool vs. failed load', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.getServerClients.mockResolvedValue({ supabase: {}, user: null, guestId: 'guest-1' });
+  });
+  const get = (q: string) => GET(new NextRequest(`http://localhost/api/practice/questions?${q}`));
+
+  it('404s when the pool is genuinely empty', async () => {
+    mocks.fetchUnseenQuestions.mockResolvedValue([]);
+    mocks.fetchUnseenRCQuestions.mockResolvedValue([]);
+    expect((await get('type=sentence_completion&difficulty=3')).status).toBe(404);
+    expect((await get('type=reading_comprehension&difficulty=3')).status).toBe(404);
+  });
+
+  it('503s when the pool could not be read', async () => {
+    mocks.fetchUnseenQuestions.mockRejectedValue(new PoolUnavailableError('down'));
+    mocks.fetchUnseenRCQuestions.mockRejectedValue(new PoolUnavailableError('down'));
+    mocks.fetchMixedSingles.mockRejectedValue(new PoolUnavailableError('down'));
+    mocks.fetchMixedPassages.mockResolvedValue([]);
+    expect((await get('type=sentence_completion&difficulty=3')).status).toBe(503);
+    expect((await get('type=restatement&difficulty=random')).status).toBe(503);
+    expect((await get('type=reading_comprehension&difficulty=3')).status).toBe(503);
+    expect((await get('type=mixed&difficulty=3&sc=2&rs=0&rc=0')).status).toBe(503);
   });
 });

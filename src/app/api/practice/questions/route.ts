@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import type { Question, QuestionType, DifficultyLevel } from '@/types/exam';
 import { pickDistinctOptions } from '@/lib/option-overlap';
-import { fetchUnseenQuestions, recordSeenQuestions, fetchUnseenRCQuestions, recordSeenPassage } from '@/lib/question-history';
+import { fetchUnseenQuestions, recordSeenQuestions, fetchUnseenRCQuestions, recordSeenPassage, PoolUnavailableError } from '@/lib/question-history';
 import { shuffleAllOptions } from '@/lib/option-shuffle';
 import { interleaveMixed, parseMixedPlan, MIXED_TYPE, type MixedPlan } from '@/lib/mixed-practice';
 import { fetchMixedSingles, fetchMixedPassages } from '@/lib/mixed-practice-server';
@@ -48,8 +48,22 @@ function fisherYates<T>(arr: T[]): T[] {
  * Every returned question has its options freshly shuffled (see
  * src/lib/option-shuffle.ts) — `option_order` maps each displayed option
  * back to its stored index for response logging.
+ *
+ * 404 means the pool really is empty; a failed pool read is a 503, so the
+ * client can tell "try another difficulty" from "try again".
  */
 export async function GET(req: NextRequest) {
+  try {
+    return await serve(req);
+  } catch (e) {
+    if (e instanceof PoolUnavailableError) {
+      return NextResponse.json({ error: 'Questions unavailable' }, { status: 503 });
+    }
+    throw e;
+  }
+}
+
+async function serve(req: NextRequest) {
   const { supabase, user, guestId } = await getServerClients();
 
   const { searchParams } = req.nextUrl;

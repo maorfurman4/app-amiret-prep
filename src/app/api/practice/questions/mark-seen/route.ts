@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getServerClients } from '@/lib/supabase-server';
-import { recordSeenQuestions } from '@/lib/question-history';
+import { recordSeenPassage, recordSeenQuestions } from '@/lib/question-history';
 
 const MAX_IDS = 50;
+const MAX_PASSAGE_IDS = 5;
 const bodySchema = z.object({
   ids: z.array(z.uuid()).max(MAX_IDS),
+  passageIds: z.array(z.uuid()).max(MAX_PASSAGE_IDS).optional(),
 });
 
 /**
@@ -15,6 +17,9 @@ const bodySchema = z.object({
  * survive same-run overlap filtering, but only ever shows 3) calls this with
  * just the ids it actually displayed, so the rest stay available in the
  * shared pool instead of being burned for questions the user never saw.
+ *
+ * `passageIds` marks reading passages seen too — RC dedup reads passage
+ * history, not question history (e.g. today's weak-area passage).
  */
 export async function POST(req: Request) {
   const { supabase, user, guestId } = await getServerClients();
@@ -28,6 +33,9 @@ export async function POST(req: Request) {
   }
   const ids = [...new Set(parsed.data.ids)];
 
+  const passageIds = [...new Set(parsed.data.passageIds ?? [])];
+
   await recordSeenQuestions(supabase, userKey, ids);
-  return NextResponse.json({ ok: true, marked: ids.length });
+  for (const passageId of passageIds) await recordSeenPassage(supabase, userKey, passageId);
+  return NextResponse.json({ ok: true, marked: ids.length, passagesMarked: passageIds.length });
 }

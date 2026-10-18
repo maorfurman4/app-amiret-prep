@@ -12,6 +12,7 @@ import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { heCount, agree } from '@/lib/hebrew-count';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { Modal } from '@/components/ui/Modal';
+import { countCorrect, restoreQuestion } from '@/lib/review-session';
 
 type Step = 'loading' | 'empty' | 'error' | 'overview' | 'reviewing' | 'done';
 
@@ -63,7 +64,8 @@ export default function ReviewQueuePage() {
   // Bumped on every start/restart, so the error-cause tagger only shows
   // for the answer that was actually logged, never a drill answer.
   const [attempt, setAttempt] = useState(0);
-  const [correctCount, setCorrectCount] = useState(0);
+  // A removal the server refused; the question is back in the list.
+  const [removeError, setRemoveError] = useState<string | null>(null);
   const [showQuestionPicker, setShowQuestionPicker] = useState(false);
 
   // Per-question time on screen, for the responses log's latency.
@@ -95,7 +97,6 @@ export default function ReviewQueuePage() {
     setAnswers(Array(subset.length).fill(null));
     setCurrentIndex(0);
     setShowResult(false);
-    setCorrectCount(0);
     setShowQuestionPicker(false);
     setAttempt(a => a + 1);
     setStep('reviewing');
@@ -153,8 +154,6 @@ export default function ReviewQueuePage() {
     });
     setShowResult(true);
 
-    const wasCorrect = optionIndex === questions[currentIndex].correct_answer;
-    if (wasCorrect) setCorrectCount(c => c + 1);
     // Logging the answer is the review: the server grades it and updates
     // the concept's FSRS card (src/lib/srs.ts), rescheduling it. Already
     // logged on this visit (a repeat round) → not reviewed again.
@@ -179,17 +178,26 @@ export default function ReviewQueuePage() {
     setCurrentIndex(0);
     setAnswers(Array(questions.length).fill(null));
     setShowResult(false);
-    setCorrectCount(0);
     setShowQuestionPicker(false);
     setAttempt(a => a + 1);
     setStep('reviewing');
   };
 
+  // Removes the concept's whole review card, so it asks first (like the
+  // category and clear-all deletes). If the server refuses, the question
+  // goes back into the list — it would return on the next load anyway.
   const handleDeleteQuestion = async (questionId: string) => {
+    if (!window.confirm('להסיר את השאלה מרשימת החזרה?')) return;
+    const before = allQuestions;
+    setRemoveError(null);
     removeQuestionLocally(questionId);
-    authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}&questionId=${encodeURIComponent(questionId)}`, {
+    const ok = await authFetch(`/api/review-queue?guestId=${encodeURIComponent(guestId)}&questionId=${encodeURIComponent(questionId)}`, {
       method: 'DELETE',
-    }).catch(() => {});
+    }).then(r => r.ok, () => false);
+    if (ok) return;
+    setAllQuestions(cur => restoreQuestion(cur, before, questionId));
+    setStep(s => (s === 'empty' ? 'overview' : s));
+    setRemoveError('ההסרה נכשלה, והשאלה נשארה ברשימה. בדוק את החיבור ונסה שוב.');
   };
 
   // Clear ALL questions
@@ -328,6 +336,9 @@ export default function ReviewQueuePage() {
               <h1 className="text-2xl font-bold text-exam-ink">חזרה על טעויות</h1>
               <p className="text-exam-ink-soft mt-1">{heCount(allQuestions.length, 'question')} {agree(allQuestions.length, 'מחכה', 'מחכות')} לך, לפי סוג</p>
             </div>
+            {removeError && (
+              <div role="alert" className="p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm">{removeError}</div>
+            )}
 
             <div className="space-y-3">
               {order.map((type, i) => (
@@ -379,6 +390,7 @@ export default function ReviewQueuePage() {
   }
 
   if (step === 'done') {
+    const correctCount = countCorrect(questions, answers);
     const pct = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
     const color = pct >= 80 ? 'text-exam-sage-strong' : pct >= 60 ? 'text-exam-alt' : 'text-exam-wrong';
 
@@ -562,6 +574,9 @@ export default function ReviewQueuePage() {
       </header>
 
       <main id="main" className="max-w-2xl mx-auto px-4 py-8">
+        {removeError && (
+          <div role="alert" className="mb-4 p-3 bg-exam-wrong-bg border border-exam-wrong/40 rounded-sm text-exam-wrong text-sm">{removeError}</div>
+        )}
         <QuestionCard
           question={question}
           questionNumber={currentIndex + 1}

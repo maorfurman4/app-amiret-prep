@@ -10,6 +10,7 @@ import { DwellTimer, logResponses, responseEntry, responsesSettled } from '@/lib
 import { createClient } from '@/lib/supabase';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { nextInterval, addDays } from '@/lib/spaced-repetition';
+import { sendOrQueue } from '@/lib/vocab-sync';
 import { isCorrectAnswer, type Question } from '@/types/exam';
 import {
   Sparkles, RotateCcw, BookOpen, Target, Volume2, Check, X,
@@ -35,6 +36,8 @@ interface SessionData {
   weakType: string | null;
   weakLevel: number | null;
   totalItems: number;
+  /** The signed-in user the vocab words belong to (null for a guest). */
+  vocabOwnerId: string | null;
 }
 
 type Phase = 'loading' | 'error' | 'empty' | 'intro' | 'review' | 'vocab' | 'weak' | 'done';
@@ -61,7 +64,6 @@ export default function TodaySessionPage() {
 
   const [phase, setPhase] = useState<Phase>('loading');
   const [data, setData] = useState<SessionData | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
 
   // Shared per-phase progress
   const [idx, setIdx] = useState(0);
@@ -76,8 +78,7 @@ export default function TodaySessionPage() {
 
   useEffect(() => {
     ensureGuestIdentity().catch(() => {});
-    supabase.auth.getUser().then(({ data: { user } }) => setUserId(user?.id ?? null));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const load = useCallback(() => {
     // Answers still being logged first, so what was just reviewed isn't served as due.
@@ -168,7 +169,7 @@ export default function TodaySessionPage() {
   const currentWord = data?.vocabWords[idx] ?? null;
 
   const markVocab = (knewIt: boolean) => {
-    if (!currentWord || !userId) return;
+    if (!currentWord || !data) return;
     // A word only reaches this screen because it was already "known" and
     // due for review — confirming it again doubles its actual current
     // interval (not a fixed step), same reset-on-failure the review queue
@@ -176,12 +177,17 @@ export default function TodaySessionPage() {
     const newInterval = knewIt ? nextInterval(currentWord.interval_days, VOCAB_MAX_INTERVAL_DAYS) : 1;
     const nextReviewAt = addDays(new Date(), newInterval).toISOString();
     if (knewIt) setVocabKnownCount(c => c + 1);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (supabase.from('user_vocab_known') as any)
-      .upsert({ user_id: userId, word_id: currentWord.id, interval_days: newInterval, next_review_at: nextReviewAt })
-      .then(() => {});
+    // Under the id the server served these words for (no separate client
+    // getUser() that a blip could leave unset, killing these buttons). A
+    // write that fails waits in the vocab outbox; /vocabulary re-sends it.
+    const ownerId = data.vocabOwnerId;
+    if (ownerId) {
+      const row = { user_id: ownerId, word_id: currentWord.id, interval_days: newInterval, next_review_at: nextReviewAt };
+      void sendOrQueue(ownerId, { kind: 'known', op: 'upsert', wordId: currentWord.id, interval_days: newInterval, next_review_at: nextReviewAt },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        () => (supabase.from('user_vocab_known') as any).upsert(row));
+    }
     setFlipped(false);
-    if (!data) return;
     if (idx + 1 < data.vocabWords.length) {
       setIdx(i => i + 1);
     } else {

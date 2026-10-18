@@ -123,6 +123,9 @@ async function buildSession() {
     // reshuffled per serve (see src/lib/option-shuffle.ts).
     reviewQuestions: shuffleAllOptions(reviewQuestions),
     vocabWords,
+    // Whose words these are: the page writes the reviews under this id, so
+    // it never waits on (or fails with) a separate client-side getUser().
+    vocabOwnerId: user?.id ?? null,
     weakQuestions: shuffleAllOptions(weakQuestions),
     weakType: weakness?.type ?? null,
     weakLevel: weakness?.level ?? null,

@@ -99,3 +99,21 @@ export function writePending(userId: string, ops: PendingOp[], store: Store | nu
     else store?.setItem(PENDING_SYNC_KEY, JSON.stringify({ userId, ops }));
   } catch { /* Storage disabled or full. */ }
 }
+
+/**
+ * Sends one change made outside /vocabulary (the /today review) and records
+ * the outcome in the outbox: settled when it reached the account, queued for
+ * /vocabulary to re-send when it didn't — never silently dropped.
+ */
+export async function sendOrQueue(
+  userId: string,
+  op: PendingOp,
+  write: () => PromiseLike<{ error: unknown }>,
+  store: Store | null = defaultStore(),
+): Promise<boolean> {
+  let ok = false;
+  try { ok = !(await write()).error; } catch { ok = false; }
+  const pending = readPending(userId, store);
+  writePending(userId, ok ? settlePending(pending, op) : addPending(pending, op), store);
+  return ok;
+}

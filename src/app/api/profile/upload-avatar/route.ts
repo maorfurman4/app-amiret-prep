@@ -9,6 +9,11 @@ const ALLOWED_TYPES: Record<string, string> = {
   'image/gif': 'gif',
 };
 
+/** Every path an avatar can live at — one per allowed format. */
+function avatarPaths(userId: string): string[] {
+  return Object.values(ALLOWED_TYPES).map(ext => `${userId}/avatar.${ext}`);
+}
+
 /**
  * POST /api/profile/upload-avatar  (multipart/form-data, field "file")
  * Uploads to the public "avatars" bucket at {user.id}/avatar.{ext} (upsert),
@@ -56,6 +61,10 @@ export async function POST(req: NextRequest) {
 
   await supabase.from('user_stats').upsert({ user_id: user.id, avatar_url: avatarUrl }, { onConflict: 'user_id' });
 
+  // A photo in another format (a .png replaced by a .jpg) would otherwise
+  // stay in the public bucket. Best-effort: the new photo is already live.
+  await supabase.storage.from('avatars').remove(avatarPaths(user.id).filter(p => p !== path)).catch(() => {});
+
   return NextResponse.json({ ok: true, avatarUrl });
 }
 
@@ -63,6 +72,8 @@ export async function POST(req: NextRequest) {
  * DELETE /api/profile/upload-avatar
  * Clears the custom avatar. The menu then shows the provider photo if there
  * is one (a Google sign-in puts it back in user_metadata anyway), else initials.
+ * The file itself is deleted too: the bucket is public, so a nulled URL alone
+ * left the photo reachable at its old address.
  */
 export async function DELETE() {
   const { supabase, user } = await getServerClients();
@@ -74,6 +85,10 @@ export async function DELETE() {
   if (authErr) return NextResponse.json({ error: authErr.message }, { status: 500 });
 
   await supabase.from('user_stats').update({ avatar_url: null }).eq('user_id', user.id);
+
+  const { error: removeErr } = await supabase.storage.from('avatars').remove(avatarPaths(user.id));
+  // Retrying is safe: the URL is already cleared and removing is idempotent.
+  if (removeErr) return NextResponse.json({ error: 'לא הצלחנו למחוק את התמונה. נסה שוב.' }, { status: 500 });
 
   return NextResponse.json({ ok: true });
 }

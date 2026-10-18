@@ -20,6 +20,7 @@ import type { ResponseLogEntry } from '@/lib/response-log-client';
 import { PenLine, RotateCcw, BookOpen, Dices, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, Clock, FileText, ChevronRight, ArrowRight, Plus, Minus, Info } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
+import { blankLabel } from '@/lib/section-practice';
 import {
   MIXED_DEFAULT, MIXED_LIMITS, MIXED_PRESETS, RC_PER_PASSAGE,
   interleaveMixed, planIsValid, planMinutes, planQuestionCount, samePlan,
@@ -115,6 +116,8 @@ function PracticeContent() {
   // conditions" mode actually behaves like the real one (accurate across a
   // backgrounded tab) instead of a naive per-second decrement.
   const [sectionExpiresAt, setSectionExpiresAt] = useState<number | null>(null);
+  // Did the timer end the section (vs. "סיים מקבץ")? Labels the blanks.
+  const [sectionTimedOut, setSectionTimedOut] = useState(false);
 
   const [loading, setLoading]         = useState(autoStart);
   const [error, setError]             = useState<string | null>(null);
@@ -248,6 +251,7 @@ function PracticeContent() {
       setShowResult(false);
       if (selectedType) {
         setSectionExpiresAt(Date.now() + SECTION_FORMAT[selectedType].seconds * 1000);
+        setSectionTimedOut(false);
         setQuestionExpiresAt(Date.now() + questionSeconds(selectedType, qs[0]) * 1000);
       }
       setStep('practicing');
@@ -309,7 +313,8 @@ function PracticeContent() {
   }, [showResult, sectionMode, examMode, answers, currentIndex, questions, logAnswers]);
 
   // Section mode: submit the whole section (manually or on timeout)
-  const finishSection = useCallback(() => {
+  const finishSection = useCallback((byTimer: boolean) => {
+    setSectionTimedOut(byTimer);
     // Every question in the section is logged, blanks included — same as a
     // real exam section, where an unanswered item was still presented.
     // Logging also feeds spaced repetition (server-side).
@@ -323,7 +328,7 @@ function PracticeContent() {
   // hook the real exam's ExamTimer uses.
   const sectionRemainingMs = useCountdown({
     expiresAt: step === 'practicing' && sectionMode && selectedType ? sectionExpiresAt : null,
-    onExpire: finishSection,
+    onExpire: () => finishSection(true),
   });
   const sectionTimeLeft = sectionRemainingMs === null ? (selectedType ? SECTION_FORMAT[selectedType].seconds : 0) : Math.round(sectionRemainingMs / 1000);
 
@@ -768,7 +773,7 @@ function PracticeContent() {
                 </button>
               ) : (
                 <button
-                  onClick={finishSection}
+                  onClick={() => finishSection(false)}
                   className="px-5 py-2 rounded-xl bg-exam-sage-strong text-on-emerald shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform text-sm font-bold"
                 >
                   <span className="inline-flex items-center gap-1.5">סיים מקבץ <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span>
@@ -812,7 +817,7 @@ function PracticeContent() {
               {typeOption && <><span>{typeOption.label}</span><span>·</span></>}
               <span>שאלה {i + 1} מתוך {questions.length}</span>
               {answers[i] === null ? (
-                <><span>·</span><span>לא ענית, הזמן נגמר</span></>
+                <><span>·</span><span>{blankLabel(sectionTimedOut)}</span></>
               ) : latencyMs != null && selectedType ? (
                 <>
                   <span>·</span>
@@ -933,7 +938,7 @@ function PracticeContent() {
                       {isCorrect ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-hidden /> : <X className="w-3.5 h-3.5" strokeWidth={3} aria-hidden />}
                       <span>שאלה {i + 1}</span>
                       {answers[i] === null && (
-                        <span className="text-exam-ink-soft font-normal">(לא ענית, הזמן נגמר)</span>
+                        <span className="text-exam-ink-soft font-normal">({blankLabel(sectionTimedOut)})</span>
                       )}
                     </div>
                     <div className="bg-exam-surface">

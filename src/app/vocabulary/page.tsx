@@ -396,12 +396,17 @@ function VocabularyContent() {
 
   // ─── Personal pack: words from the user's own SC mistakes ─────────────────
   const [myWords, setMyWords] = useState<VocabWord[]>([]);
-  useEffect(() => {
+  // A failed load is retried when the filter drawer opens, so the pack
+  // isn't left looking empty ("no mistakes") for the whole visit.
+  const [myWordsFailed, setMyWordsFailed] = useState(false);
+  const loadMyWords = useCallback(() => {
     authFetch('/api/my-words')
-      .then(r => (r.ok ? r.json() : { words: [] }))
-      .then((d: { words: VocabWord[] }) => setMyWords(d.words ?? []))
-      .catch(() => {});
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((d: { words: VocabWord[] }) => { setMyWords(d.words ?? []); setMyWordsFailed(false); })
+      .catch(() => setMyWordsFailed(true));
   }, []);
+  useEffect(() => { loadMyWords(); }, [loadMyWords]);
+  useEffect(() => { if (showFilterDrawer && myWordsFailed) loadMyWords(); }, [showFilterDrawer, myWordsFailed, loadMyWords]);
 
   // ─── Load auth user ────────────────────────────────────────────────────────
   useEffect(() => {

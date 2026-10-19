@@ -35,4 +35,11 @@ describe('GET /api/today-session', () => {
     expect(res.status).toBe(200);
     expect((await res.json()).totalItems).toBe(0);
   });
+
+  it('says whose vocab words these are (signed-in user), and none for a guest', async () => {
+    mocks.getServerClients.mockResolvedValue({ supabase: client({ data: [], error: null }), user: { id: 'u1' }, guestId: null });
+    expect((await (await GET()).json()).vocabOwnerId).toBe('u1');
+    mocks.getServerClients.mockResolvedValue({ supabase: client({ data: [], error: null }), user: null, guestId: 'g1' });
+    expect((await (await GET()).json()).vocabOwnerId).toBeNull();
+  });
 });

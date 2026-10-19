@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeTrend } from './trend';
+import { computeTrend, examDay } from './trend';
 
 function session(daysFromEpoch: number, score: number) {
   return { score, completed_at: new Date(daysFromEpoch * 86_400_000).toISOString() };
@@ -38,5 +38,24 @@ describe('computeTrend', () => {
   it('projects nothing: the result carries no target date', () => {
     const trend = computeTrend([session(0, 100), session(1, 102), session(2, 104), session(3, 106)])!;
     expect(Object.keys(trend).sort()).toEqual(['currentScore', 'slopePerDay']);
+  });
+
+  it('counts days by the Israel calendar, not UTC', () => {
+    // Late-night exams: 22:30Z and 23:30Z are already the next day in Israel.
+    // By UTC date these span 3 days (Oct 2, 3, 4); in Israel, only 2 (Oct 3, 4).
+    const sessions = [
+      { score: 90, completed_at: '2026-10-02T22:30:00Z' },
+      { score: 95, completed_at: '2026-10-03T10:00:00Z' },
+      { score: 100, completed_at: '2026-10-03T23:30:00Z' },
+      { score: 105, completed_at: '2026-10-04T12:00:00Z' },
+    ];
+    expect(computeTrend(sessions)).toBeNull();
+  });
+});
+
+describe('examDay', () => {
+  it('is the Israel date the exam finished on', () => {
+    expect(examDay('2026-10-02T22:30:00Z')).toBe('2026-10-03');
+    expect(examDay('2026-10-03T10:00:00Z')).toBe('2026-10-03');
   });
 });

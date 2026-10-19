@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies, headers } from 'next/headers';
 import { createClient, type User } from '@supabase/supabase-js';
 import { GUEST_COOKIE, guestSigningKey, verifyGuestToken } from './guest-token';
+import { boundedFetch } from './supabase-fetch';
 
 /**
  * Returns both an auth client (reads user session from cookies)
@@ -56,6 +57,8 @@ export async function createServerSupabaseClient() {
           } catch {}
         },
       },
+      // A dead DB fails in ~1 s, not 5–7 s (see supabase-fetch.ts).
+      global: { fetch: boundedFetch() },
     }
   );
 }
@@ -66,6 +69,7 @@ export async function createAdminSupabaseClient() {
     process.env.SUPABASE_SERVICE_ROLE_KEY ?? 'placeholder-service-key',
     {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+      global: { fetch: boundedFetch() },
     }
   );
 }

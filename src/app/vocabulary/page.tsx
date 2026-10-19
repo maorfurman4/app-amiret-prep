@@ -23,6 +23,7 @@ import { EMPTY_FILTERS, LEVELS, activeFilterCount, applyFilters, countFor, filte
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { reconcileLocalOwner } from '@/lib/local-learning-data';
 import { addPending, applyPending, readPending, settlePending, writePending, type PendingOp } from '@/lib/vocab-sync';
+import { timedAdvanceDelay } from '@/lib/vocab-timed';
 import { Modal } from '@/components/ui/Modal';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
@@ -395,12 +396,17 @@ function VocabularyContent() {
 
   // ─── Personal pack: words from the user's own SC mistakes ─────────────────
   const [myWords, setMyWords] = useState<VocabWord[]>([]);
-  useEffect(() => {
+  // A failed load is retried when the filter drawer opens, so the pack
+  // isn't left looking empty ("no mistakes") for the whole visit.
+  const [myWordsFailed, setMyWordsFailed] = useState(false);
+  const loadMyWords = useCallback(() => {
     authFetch('/api/my-words')
-      .then(r => (r.ok ? r.json() : { words: [] }))
-      .then((d: { words: VocabWord[] }) => setMyWords(d.words ?? []))
-      .catch(() => {});
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((d: { words: VocabWord[] }) => { setMyWords(d.words ?? []); setMyWordsFailed(false); })
+      .catch(() => setMyWordsFailed(true));
   }, []);
+  useEffect(() => { loadMyWords(); }, [loadMyWords]);
+  useEffect(() => { if (showFilterDrawer && myWordsFailed) loadMyWords(); }, [showFilterDrawer, myWordsFailed, loadMyWords]);
 
   // ─── Load auth user ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -701,6 +707,17 @@ function VocabularyContent() {
     setTimedOptions(buildQuizOptions(timedDeck[nextIndex], filteredWords.length > 0 ? filteredWords : timedDeck));
   }, [timedDeck, filteredWords, buildQuizOptions, timedTimePerWord, filters]);
 
+  // After an answer or a timeout, move on — from an effect, so switching
+  // modes or leaving the page cancels it (src/lib/vocab-timed.ts).
+  const advanceTimedRef = useRef(advanceTimed);
+  useEffect(() => { advanceTimedRef.current = advanceTimed; }, [advanceTimed]);
+  useEffect(() => {
+    const delay = timedAdvanceDelay({ mode, selected: timedSelected, done: timedDone });
+    if (delay === null) return;
+    const t = setTimeout(() => advanceTimedRef.current(timedResults), delay);
+    return () => clearTimeout(t);
+  }, [mode, timedSelected, timedDone, timedResults]);
+
   // ─── Timed quiz timer ──────────────────────────────────────────────────────
   useEffect(() => {
     if (mode !== 'timed' || timedDone || timedSelected !== null) return;
@@ -724,7 +741,6 @@ function VocabularyContent() {
         setTimedResults(newResults);
         setTimedCorrect(false);
         setTimedSelected(-1);
-        setTimeout(() => advanceTimed(newResults), 1000);
         return;
       }
       timeLeftRef.current -= 1;
@@ -747,8 +763,7 @@ function VocabularyContent() {
     setTimedSelected(optionIndex);
     setTimedCorrect(isCorrect);
     if (isCorrect) setTimedScore(prev => prev + 1);
-
-    setTimeout(() => advanceTimed(newResults), 1200);
+    // The advance itself is scheduled by the effect above.
   };
 
   // ─── Quiz advance ──────────────────────────────────────────────────────────
@@ -1709,7 +1724,7 @@ function VocabularyContent() {
                     className="flex-1 py-3 bg-exam-accent text-exam-accent-ink rounded-sm font-semibold hover:opacity-90 transition-opacity text-sm flex items-center justify-center gap-1.5"
                   ><RotateCcw className="w-4 h-4" aria-hidden />שחק שוב</button>
                   <button
-                    onClick={() => { setTimedDone(false); setTimedDeck([]); setShowTimedConfig(true); }}
+                    onClick={() => { setTimedSelected(null); setTimedDone(false); setTimedDeck([]); setShowTimedConfig(true); }}
                     className="flex-1 py-3 bg-exam-surface border border-exam-border text-exam-ink rounded-sm font-semibold hover:bg-exam-paper-alt transition-colors text-sm flex items-center justify-center gap-1.5"
                   ><Settings className="w-4 h-4" aria-hidden />הגדרות</button>
                 </div>

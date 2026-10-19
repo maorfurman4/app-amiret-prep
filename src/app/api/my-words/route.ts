@@ -19,21 +19,24 @@ export async function GET() {
   const ownerId = user?.id ?? guestId;
   if (!ownerId) return NextResponse.json({ words: [] });
 
-  const { data: cards } = await supabase
+  const { data: cards, error: cardsErr } = await supabase
     .from('srs_cards')
     .select('anchor_question_id, lapses')
     .eq('owner_type', user ? 'user' : 'guest')
     .eq('owner_id', ownerId)
     .eq('item_type', 'sentence_completion')
     .lt('stability', MASTERED_STABILITY_DAYS);
+  // A failed read is not "no mistakes": the page would show the pack as empty.
+  if (cardsErr) return NextResponse.json({ error: 'words unavailable' }, { status: 503 });
   if (!cards || cards.length === 0) return NextResponse.json({ words: [] });
 
   const wrongCount = Object.fromEntries(cards.map(r => [r.anchor_question_id as string, r.lapses as number]));
-  const { data: questions } = await supabase
+  const { data: questions, error: questionsErr } = await supabase
     .from('questions')
     .select('id, text, options, correct_answer, explanation, difficulty_level')
     .in('id', Object.keys(wrongCount))
     .eq('type', 'sentence_completion');
+  if (questionsErr) return NextResponse.json({ error: 'words unavailable' }, { status: 503 });
 
   const words = (questions ?? []).map(qu => {
     const opts = qu.options as { text: string }[];

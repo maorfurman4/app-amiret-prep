@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef, use } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { X, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ExamTimer } from '@/components/exam/ExamTimer';
 import { PaceGauge } from '@/components/exam/PaceGauge';
@@ -11,6 +12,8 @@ import { SECTION_CONFIGS, type Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
 import { clearExamDraft, readExamDraft, writeExamDraft } from '@/lib/exam-draft';
 import { heCount } from '@/lib/hebrew-count';
+import { loadFailure } from '@/lib/session-lookup';
+import { lockedFromAnswers } from '@/lib/practice-exam';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { ExamProgressSaver, lateNoticeText, saveResultFromStatus, type Answers } from '@/lib/exam-progress';
 
@@ -57,6 +60,9 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isSubmittingRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
+  // The exam doesn't exist (bad link, another account's, or deleted):
+  // retrying can't help, so that screen offers only the way out.
+  const [missing, setMissing] = useState(false);
   const [submitWarning, setSubmitWarning] = useState<string | null>(null);
   // Set when the previous section reached the server after its deadline:
   // how many of the answers sent then didn't count (they weren't saved in time).
@@ -136,8 +142,14 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
   const loadSession = useCallback(() => {
     const requestStartedAt = Date.now();
     return authFetch(`/api/exam/state?sessionId=${sessionId}`).then(async res => {
-    if (res.status === 429) { setError('יותר מדי בקשות בזמן קצר. חכה כדקה ולחץ "נסה שוב".'); return; }
-    if (!res.ok) { setError('לא הצלחנו לטעון את המבחן'); return; }
+    if (!res.ok) {
+      const failure = loadFailure(res.status);
+      setMissing(failure === 'missing');
+      setError(failure === 'missing' ? 'לא מצאנו את המבחן הזה. ייתכן שהקישור שגוי, שהמבחן בוטל או שהוא שייך לחשבון אחר.'
+        : failure === 'busy' ? 'יותר מדי בקשות בזמן קצר. חכה כדקה ולחץ "נסה שוב".'
+        : 'לא הצלחנו לטעון את המבחן');
+      return;
+    }
     const data = await res.json() as { session: SessionState; serverNow?: string };
 
     if (data.serverNow) {
@@ -164,6 +176,8 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
     // copy (another device, cleared storage); then a blank section.
     const restored: (number | null)[] = readDraft(section, questionCount) ?? existingAnswers ?? Array(questionCount).fill(null);
     setAnswers(restored);
+    // Practice answers lock once given; a reload must not unlock them.
+    setLockedAnswers(data.session.is_practice ? lockedFromAnswers(restored) : new Set());
     // Picks the server may not have yet (a save failed before the reload).
     if (!data.session.is_practice && restored.some(a => a !== null)) progressSaver(section).save(restored);
 
@@ -424,7 +438,11 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
       <main id="main" className="min-h-dvh flex items-center justify-center bg-exam-paper" dir="rtl">
         <div className="text-center">
           <div role="alert" className="text-exam-wrong text-xl mb-4 font-sans">{error}</div>
-          <button onClick={loadSession} className="text-exam-ink underline font-sans">נסה שוב</button>
+          <div className="flex items-center justify-center gap-6">
+            {!missing && <button onClick={loadSession} className="text-exam-ink underline font-sans">נסה שוב</button>}
+            {/* Leaving doesn't discard anything: the exam stays saved and this link resumes it. */}
+            <Link href="/" className="text-exam-accent underline font-sans">לדף הבית</Link>
+          </div>
         </div>
       </main>
     );

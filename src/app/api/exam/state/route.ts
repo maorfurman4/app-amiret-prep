@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
+import { isMissingRow } from '@/lib/session-lookup';
 
 /**
  * GET /api/exam/state?sessionId=xxx
@@ -18,13 +19,14 @@ export async function GET(req: NextRequest) {
   const sessionOwner = user?.id ?? guestId;
   if (!sessionOwner) return NextResponse.json({ error: 'auth required' }, { status: 401 });
 
-  const { data: session } = await supabase
+  const { data: session, error } = await supabase
     .from('exam_sessions')
     .select('*')
     .eq('id', sessionId)
     .eq('user_id', sessionOwner)
     .single();
 
+  if (error && !isMissingRow(error)) return NextResponse.json({ error: 'exam unavailable' }, { status: 503 });
   if (!session) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
   // Real exam: strip correct_answer AND explanation (its options_analysis marks

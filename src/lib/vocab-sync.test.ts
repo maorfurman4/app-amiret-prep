@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addPending, applyPending, PENDING_SYNC_KEY, readPending, settlePending, writePending, type PendingOp } from './vocab-sync';
+import { addPending, applyPending, PENDING_SYNC_KEY, readPending, sendOrQueue, settlePending, writePending, type PendingOp } from './vocab-sync';
 
 const knew = (wordId: string, interval_days = 1): PendingOp =>
   ({ kind: 'known', op: 'upsert', wordId, interval_days, next_review_at: `2026-10-${10 + interval_days}T00:00:00Z` });
@@ -64,3 +64,27 @@ describe('vocab outbox (QA M-7)', () => {
     expect(readPending('u1', null)).toEqual([]);
   });
 });
+
+describe('sendOrQueue', () => {
+  it('queues a review the account did not get, for /vocabulary to re-send', async () => {
+    const store = memoryStore();
+    const ok = await sendOrQueue('u1', knew('w1', 4), () => Promise.resolve({ error: { message: 'fetch failed' } }), store);
+    expect(ok).toBe(false);
+    expect(readPending('u1', store)).toEqual([knew('w1', 4)]);
+  });
+
+  it('queues a write that throws', async () => {
+    const store = memoryStore();
+    await sendOrQueue('u1', knew('w1'), () => Promise.reject(new Error('offline')), store);
+    expect(readPending('u1', store)).toEqual([knew('w1')]);
+  });
+
+  it('settles an older queued change for the same word once one gets through', async () => {
+    const store = memoryStore();
+    writePending('u1', [knew('w1', 1), knew('w2', 1)], store);
+    const ok = await sendOrQueue('u1', knew('w1', 2), () => Promise.resolve({ error: null }), store);
+    expect(ok).toBe(true);
+    expect(readPending('u1', store)).toEqual([knew('w2', 1)]);
+  });
+});
+

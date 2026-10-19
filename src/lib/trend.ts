@@ -1,3 +1,5 @@
+import { localDateStr } from './date-local';
+
 export interface TrendSession {
   score: number;
   completed_at: string;
@@ -12,6 +14,12 @@ export interface Trend {
 }
 
 const MS_PER_DAY = 86_400_000;
+
+/** The Israel calendar day an exam finished on (not the UTC day
+ * `completed_at.slice(0, 10)` gives: 01:30 on Oct 3 is still Oct 3). */
+export function examDay(completedAt: string): string {
+  return localDateStr(new Date(completedAt));
+}
 
 /** Below this, a trend line is fit to noise, not signal. */
 export const MIN_SESSIONS = 4;
@@ -36,7 +44,7 @@ export function computeTrend(sessions: TrendSession[]): Trend | null {
   if (sessions.length < MIN_SESSIONS) return null;
 
   const sorted = [...sessions].sort((a, b) => a.completed_at.localeCompare(b.completed_at));
-  const distinctDays = new Set(sorted.map(s => s.completed_at.slice(0, 10)));
+  const distinctDays = new Set(sorted.map(s => examDay(s.completed_at)));
   if (distinctDays.size < MIN_DISTINCT_DAYS) return null;
 
   const firstMs = new Date(sorted[0].completed_at).getTime();

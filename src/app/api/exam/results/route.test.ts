@@ -34,7 +34,7 @@ describe('GET /api/exam/results', () => {
   });
 
   it('uses the authenticated user even when an attacker supplies another guest id', async () => {
-    const db = createSupabase({ data: null, error: { message: 'not found' } });
+    const db = createSupabase({ data: null, error: { code: 'PGRST116', message: 'no rows' } });
     mocks.getServerClients.mockResolvedValue({
       supabase: db.supabase,
       user: { id: 'authenticated-user' },
@@ -71,5 +71,20 @@ describe('GET /api/exam/results', () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ session });
+  });
+
+  it.each([
+    { label: 'missing or foreign session', code: 'PGRST116' },
+    { label: 'malformed session id', code: '22P02' },
+  ])('answers 404 for a $label', async ({ code }) => {
+    const db = createSupabase({ data: null, error: { code, message: 'x' } });
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: 'owner' } });
+    expect((await GET(request('?sessionId=nope'))).status).toBe(404);
+  });
+
+  it('answers 503 — not "not found" — when the database read fails', async () => {
+    const db = createSupabase({ data: null, error: { message: 'TypeError: fetch failed' } });
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: { id: 'owner' } });
+    expect((await GET(request('?sessionId=session'))).status).toBe(503);
   });
 });

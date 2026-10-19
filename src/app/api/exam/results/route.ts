@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
+import { isMissingRow } from '@/lib/session-lookup';
 
 /**
  * GET /api/exam/results?sessionId=xxx&guestId=yyy
@@ -23,7 +24,8 @@ export async function GET(req: NextRequest) {
     .eq('user_id', owner)
     .single();
 
-  if (error || !session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
+  if (error && !isMissingRow(error)) return NextResponse.json({ error: 'results unavailable' }, { status: 503 });
+  if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
 
   // questions_by_section carries correct_answer for every section. For a
   // real (non-practice) exam that isn't finished yet, that is an answer key

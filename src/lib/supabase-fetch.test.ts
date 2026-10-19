@@ -14,6 +14,9 @@ async function readWith(fetchImpl: typeof fetch) {
   const supabase = createClient('http://127.0.0.1:9', 'anon-key', {
     auth: { persistSession: false, autoRefreshToken: false },
     global: { fetch: fetchImpl },
+    // Never connects; without it the Realtime client needs a native
+    // WebSocket, which Node 20 (CI) doesn't have.
+    realtime: { transport: class {} as never },
   });
   // The query builder only runs once awaited: start it, then let the
   // library's retry back-off (setTimeout) elapse.

@@ -1,0 +1,40 @@
+{"id":"1f12e1c0-7c70-433f-bfa4-fb9fb0731b2b","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer copies passage phrase verbatim; distractors absurd (workers paid too much, no factories left)."}
+{"id":"2ad9708d-31ca-416f-8d0a-db2cf97e9198","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"a94d4942-6b8b-4549-9d6b-569a43e14506","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer is verbatim passage phrase; distractors are implausible."}
+{"id":"e68dc031-477f-4060-a597-70bfc9bafdf1","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer copies 'remain small compared to the overall scale of production' verbatim; weak distractors."}
+{"id":"f78a72b8-2060-479d-8430-5826ead2c683","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":"","stem_generic":true}
+{"id":"2014f45e-40dd-41cf-9768-6a35118856ee","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Answer verbatim from passage; distractors are absurd absolutes ('always identical', 'no patent ever granted')."}
+{"id":"3db3e6c8-438e-46c4-a679-ecea22ec1920","your_answer":1,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Distractors (judge biography, technical manual, programming languages) are off-topic; cannot discriminate.","stem_generic":true}
+{"id":"5c4528ed-9e61-4038-b31a-757962e216ad","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key paraphrases final paragraph; all distractors are absurd absolutes ('always immediately and perfectly', 'never')."}
+{"id":"5d2546e0-b844-4d56-9dd3-0d5eafe0c94e","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"c31cac5d-ef93-4314-acc2-9c51d60f2280","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Answer restates passage verbatim; distractors are absurd absolutes."}
+{"id":"2b1f9924-8354-43f4-87f3-9f7f81990fd2","your_answer":0,"confidence":"high","flags":["passage_error"],"difficulty":"ok","est_level":2,"reason":"Passage claims English distinguishes maternal from paternal relatives via \"aunt\" versus \"uncle\"; those terms mark sex, not lineage."}
+{"id":"3b360876-ae7e-4485-ac96-528c4356236f","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key matches passage wording; distractors absurd ('no terms whatsoever', 'identical in every respect')."}
+{"id":"65b0802e-164c-4b19-b8e9-204ec929b687","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key restates final paragraph; distractors are absurd absolutes."}
+{"id":"d02d6118-738e-4020-869a-6d6928f4bec1","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer copied verbatim from passage; distractors implausible."}
+{"id":"f8dd7df3-444a-46fe-a113-d580924a1edc","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":"","stem_generic":true}
+{"id":"07cec028-07d8-403a-8477-03a4f4db1336","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Labeled inference but answer is stated verbatim; distractors absurd (infections disappear on their own)."}
+{"id":"110b5a87-0e86-4c40-91f2-e6064cb8cf4c","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"1a266c9d-4a47-410f-b43f-c8073e870cb9","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":"","stem_generic":true}
+{"id":"27ed8025-1385-4118-9bd0-a68753c87cfc","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Stem echoes passage; answer verbatim; distractors absurd (convert into viruses, develop organs)."}
+{"id":"721dfae4-1f9c-4279-8634-7d3bc5e5cd63","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"3fdbcca1-34b6-4313-a948-ee197b9331e9","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key restates final paragraph; distractors are absurd absolutes ('never any error whatsoever')."}
+{"id":"4cca0a67-15f7-4e50-b1b7-0d29931b30cb","your_answer":1,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Distractors (biography, medical treatments, technical manual) are off-topic; cannot discriminate.","stem_generic":true}
+{"id":"53a3eb20-a3c5-4542-b6f3-3eb3f0aee462","your_answer":1,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key copies passage clause verbatim; two distractors absurd."}
+{"id":"5f8ce129-955b-407d-b626-b738b9071f91","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key copies passage clause verbatim; distractors 2-3 are absurd absolutes."}
+{"id":"b4828129-dcf6-4c4a-92d9-7f621881799f","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":3,"reason":""}
+{"id":"40ff0818-46e2-48fe-a029-0e7837549e65","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"44f319c1-a649-4a4c-88fa-6340a52e6016","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":"","stem_generic":true}
+{"id":"4e7310b0-0540-4270-b30a-c50b31fd5476","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":3,"reason":""}
+{"id":"5567f902-11bd-44bc-b2b7-c2268404eb11","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":3,"reason":""}
+{"id":"9b6ef940-e38f-483c-a518-dfae9ff141f9","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Answer copies 'has no rational incentive to trade at all' verbatim; found by phrase matching."}
+{"id":"39d58c54-fdb7-4cb2-97a8-da74e294aedf","your_answer":2,"confidence":"high","flags":["passage_error"],"difficulty":"ok","est_level":2,"reason":"Passage redundancy: \"amplified and accelerated existing preexisting social trends\"."}
+{"id":"571775f2-b535-40c9-aa52-a91034a99cb1","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key restates passage; distractors absurd ('no connection whatsoever', 'completely irrelevant')."}
+{"id":"b6e5d202-4acf-4942-a3d5-b9de1495119e","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":"","stem_generic":true}
+{"id":"e1419a2f-2d10-4229-830b-96c308048f3a","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key restates final paragraph; distractors are absurd absolutes ('always fully explains', 'never relevant')."}
+{"id":"fc6ff855-4143-4f3e-b07a-33b83715cfde","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key copies passage verbatim; distractors contradict obvious text."}
+{"id":"146fb008-78c9-4b52-baae-7313b22f1f1b","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Distractors absurd (painted only with feet, refused brush); answer near-verbatim."}
+{"id":"3bd9db31-dc91-4b69-9764-14eb1d57956b","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer verbatim from passage; distractors implausible."}
+{"id":"8d801722-03fa-4fcb-b793-31bde8a91105","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Passage glosses the word ('keeps their minds active') right after it; key copies that gloss; weak distractors."}
+{"id":"b15e621c-259d-4c77-a352-dd8d476408ca","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":"","stem_generic":true}
+{"id":"fa0f0f09-6e09-490b-9f72-73ab718cac2a","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":""}

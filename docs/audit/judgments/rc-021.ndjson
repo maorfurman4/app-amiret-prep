@@ -1,0 +1,40 @@
+{"id":"018e7646-e666-4218-8c98-f3f505a94f46","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer lifts passage list verbatim; all distractors are absurd absolutes (never/no relevance/exclusively), so item cannot discriminate."}
+{"id":"0f88d638-4094-4f4f-b08f-fb8c8dee9bb6","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"2d74dabb-5487-4b11-8720-69b77275443a","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Direct lookup of the only example; distractors (always align, never state values, vacations) are absurd."}
+{"id":"b1d34fd0-cb83-433d-ac66-1ac308dbee02","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":"","stem_generic":true}
+{"id":"d2c0a76b-afe2-477a-9069-8a5e05b481c7","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"39a9643e-7c73-4cc8-81f1-b3ef61446ca5","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":"","stem_generic":true}
+{"id":"438acae8-177b-4a10-8f22-206e8d155ed7","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Distractors (slaves got voting rights, no connection, no slavery) flatly contradict the passage; answer is close paraphrase."}
+{"id":"8c60af12-b3d1-44e2-8d3e-ba22060de39b","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":""}
+{"id":"957ad001-4e83-4134-96f7-a1da33cb9644","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"9c88d3b9-2d98-4702-8d67-4a077cb27d04","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"179e659c-e332-4970-bfb9-03d5a95e5ffd","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":""}
+{"id":"66b317fd-1888-48a1-a7bc-5b6f69cb92ea","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":""}
+{"id":"9c1fce13-10d6-49b6-81b9-9faeca6992c8","your_answer":0,"confidence":"high","flags":["grammar"],"difficulty":"ok","est_level":1,"reason":"Option 3 \"A yellow dust on the bee body\" should be \"the bee's body\"."}
+{"id":"9db5d477-2dd2-4830-858f-aa2ecbd9529d","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Correct option copies the passage sentence verbatim; other options are unmentioned, so pure word-matching suffices."}
+{"id":"e3bb91d6-80cc-4899-aafc-34c09c8290cb","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":"","stem_generic":true}
+{"id":"4bb9ec2b-6344-44a8-aa62-3dcc52a47cd2","your_answer":0,"confidence":"high","flags":["passage_error"],"difficulty":"ok","est_level":2,"reason":"Faulty parallelism in passage: \"an event widely condemned by the scientific community and which prompted calls\" (\"and which\" lacks a preceding which-clause)."}
+{"id":"69191915-96fe-4fd1-96c7-9695ad0db49b","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"747bed44-1dbe-497e-a3fc-8efdd0b0dca1","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"a1ef5cfb-faf7-4851-bb08-729b53267854","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":"","stem_generic":true}
+{"id":"cd8293e4-755d-41c0-85ff-37e70a710fe0","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"08c74874-63e2-4ab3-bf42-0414dab149f9","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":"","stem_generic":true}
+{"id":"09b543fb-4754-421e-923d-e7a7efba7e4c","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer restates final paragraph verbatim; distractors are absurd absolutes (never, always fully, complete unanimous consensus)."}
+{"id":"2275856e-fb18-472d-a277-3e7a0dd58c14","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"420c3df3-bb4d-41bb-91e6-fccc406fe1ca","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"8eed9f73-288d-4645-be37-3239dc62944c","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer copied verbatim from passage; distractors (never discussed, needs no justification) are absurd."}
+{"id":"0aac7e4b-1f56-4b54-8297-01487d0c0990","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":""}
+{"id":"0fa5a9c7-6083-43ab-87f3-bb25acf8835d","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":""}
+{"id":"175c6f4d-5648-49f9-ab2a-d864757b4cbb","your_answer":0,"confidence":"med","flags":[],"difficulty":"ok","est_level":2,"reason":"","stem_generic":true}
+{"id":"21ae53a3-a128-43b7-adf1-8a7914135feb","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Stem itself gives away answer (\"in the order that events happen\"); distractors (countries, birds) are absurd."}
+{"id":"b126ef03-7103-441d-a50a-f864097a9718","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":""}
+{"id":"23bc4016-fa95-4628-8deb-cd10a221105a","your_answer":1,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Distractors (rivers, too small to see, not found in nature) are absurd; answer is direct lookup."}
+{"id":"2611d297-ae82-4048-9573-9d386464c075","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"46db27d1-b72d-4b20-8dd3-b3809e27e4e9","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":"","stem_generic":true}
+{"id":"d807415f-bdec-4c25-9f8c-757841406ecb","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Distractors (ended all interest, proved squids don't exist, shallow water) are absurd or flatly contradicted."}
+{"id":"e0cb5ee8-dad3-4527-93cb-e49c46aa856c","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"reason":""}
+{"id":"0c4931e3-5c5f-4f9c-895b-56bd8e7ed665","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":"","stem_generic":true}
+{"id":"c12a6c41-f985-4bc4-8a45-d664b3688671","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"cab5828e-3f76-46af-b633-02ea88acda52","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"reason":""}
+{"id":"e9c0b9f0-ccb8-4b45-82db-eacd6d60da9b","your_answer":1,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer copied verbatim; distractors (every event causes every other, never causes, no relationship) are absurd."}
+{"id":"ea45740c-7349-4b2c-9612-81f5b07b3ba1","your_answer":1,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Answer restates final paragraph verbatim; distractors are absurd absolutes (never, exclusively, always free of counterexamples)."}

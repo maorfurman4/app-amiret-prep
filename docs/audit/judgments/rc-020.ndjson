@@ -1,0 +1,40 @@
+{"id":"8951e225-3c4c-4e15-848b-2cc450e43d01","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Key copies passage phrase 'assembled from parts... hoax'; distractors absurd (never heard of Australia)."}
+{"id":"9f888e45-9b0b-4799-abbd-27386b4a5d32","your_answer":1,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Key lifted near-verbatim from paragraph 3; distractors (bird, reptiles, no fur) contradict the text outright."}
+{"id":"b8e0cd88-6181-4b20-9013-20881e614a8b","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"stem_generic":true}
+{"id":"c1bffd39-6c4f-45cf-b88e-41248c0b98d7","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":2}
+{"id":"ec63cb66-cca7-40a9-897d-3bbd33eab317","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"'Infer' item whose key is copied verbatim from the last paragraph; no inference needed."}
+{"id":"28b36c85-2b51-4329-8229-2d5269adbf4d","your_answer":0,"confidence":"high","flags":["passage_error"],"difficulty":"ok","est_level":3,"stem_generic":true,"reason":"Passage: 'Not without considerable subsequent theoretical elaboration have welfare economists attempted to circumvent... since researchers have proposed' is logically incoherent."}
+{"id":"326f2d99-04ed-4db8-b991-2645295b64b5","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":3}
+{"id":"400c4f28-7816-46f1-b833-39775b081c1e","your_answer":1,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key copied verbatim from paragraph 2; distractors absurd (legally prohibited, never attempted)."}
+{"id":"ddf45fa0-156e-438c-b98a-3088a15c867c","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"'Infer' key is a verbatim restatement of the final paragraph; distractors are absolute and easily rejected."}
+{"id":"df541200-0672-4b4b-9eba-b2ed6786eee9","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":2,"reason":"Key copied verbatim from paragraph 3; distractors absurd (never proposed, complete guidance)."}
+{"id":"14a0e78b-f3c1-45e2-86bd-99ce1b5ddb0a","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"stem_generic":true}
+{"id":"29a5c202-0321-4a5c-817c-be0adea74bf0","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":2}
+{"id":"63bca51a-1eb0-45e9-88be-b663c45e11a6","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2}
+{"id":"65f763ce-53b9-4c7c-8e5e-43f7b86c9ded","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Key restates the theorem sentence nearly verbatim; distractors absurd (at least ten colors, must share color)."}
+{"id":"bc09bbce-ebee-47eb-86b4-29b4a1009dd3","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2}
+{"id":"0b941218-68d1-4a5e-98b3-9e938727411f","your_answer":2,"confidence":"high","flags":["passage_error"],"difficulty":"ok","est_level":2,"reason":"Passage: 'a small fraction of total royalties flows disproportionately to a handful of... artists' is self-contradictory; should be a large share."}
+{"id":"2e8c6aa9-5baa-4d9d-83ef-2ad5443280d4","your_answer":2,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Key copies 'promotional exposure rather than a revenue source' verbatim; distractors trivially wrong."}
+{"id":"40564dea-b5b5-4a2d-9a73-007a2b1ff077","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":3}
+{"id":"549c95aa-46e3-4b0c-8821-599d1e383a19","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":3}
+{"id":"d57507f7-00d7-4ef7-b7d6-b5e36a1a809a","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"stem_generic":true}
+{"id":"05e97963-fe34-4c29-9f8e-cbd94f80681c","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":1}
+{"id":"66997983-ca61-4139-b6da-fa854b51c77a","your_answer":0,"confidence":"med","flags":["unsupported"],"difficulty":"ok","est_level":2,"reason":"Passage says both parents care for the egg, not chicks after hatching; key extends beyond the text."}
+{"id":"7d7fb8b3-02cf-4912-96bc-e0302602bd1c","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":1}
+{"id":"83101130-3a57-4b5c-8997-25a71cccc7b3","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":1}
+{"id":"cc972b2f-ca27-44ef-a22b-30870d790e6e","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Key copied verbatim from simple text; distractors absurd (rainforests, deserts near equator)."}
+{"id":"3784276f-d9ee-4b2f-a7df-0a1859e1c8ed","your_answer":1,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Key is the passage's exact list; all distractors begin with 'Only' and are plainly wrong."}
+{"id":"505120f6-95d4-4aa4-8c19-587618161c9f","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"stem_generic":true}
+{"id":"96c80591-ce0d-4c97-848a-91c056f78c19","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":3}
+{"id":"e82ec7f3-31c4-4fa4-95e9-7f7aab2291f3","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":3}
+{"id":"e9242780-8869-468d-9e3d-9c30fd54e43d","your_answer":0,"confidence":"high","flags":[],"difficulty":"ok","est_level":2}
+{"id":"13f18b6f-7579-40d7-b266-6f733770f742","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Key copied verbatim ('rated cartoons as funnier than people who did not'); pure phrase matching."}
+{"id":"19fe4daf-be9d-4867-b015-8f9cc34e8284","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2,"stem_generic":true}
+{"id":"29f44644-efb5-454d-b662-25df6d8bc14a","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":1}
+{"id":"479e521e-0584-4d23-bc50-aab401d71151","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":2}
+{"id":"9093542a-afa2-4d55-95d6-3d715872575d","your_answer":0,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"'Infer' key copies 'Trying to smile... might genuinely help' verbatim; distractors absurd."}
+{"id":"227fc81f-ba2b-4229-951a-987fe1c5d7b3","your_answer":3,"confidence":"high","flags":[],"difficulty":"ok","est_level":1,"stem_generic":true}
+{"id":"64a266d7-ca24-4b13-9464-ced3302ae968","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Key copied verbatim from paragraph 3; distractors absurd (completely smooth, no seeds)."}
+{"id":"7e97862d-49f0-4754-8e19-cccb9ef70fd3","your_answer":2,"confidence":"high","flags":[],"difficulty":"ok","est_level":3}
+{"id":"96d9e12f-5585-48aa-9f58-e8adca822d42","your_answer":3,"confidence":"high","flags":[],"difficulty":"too_easy","est_level":1,"reason":"Key copied verbatim from paragraph 4; distractors absurd (metal buttons, glue strip)."}
+{"id":"b4dc6b7e-d075-4215-8067-10ac2c6a6149","your_answer":1,"confidence":"high","flags":[],"difficulty":"ok","est_level":2}

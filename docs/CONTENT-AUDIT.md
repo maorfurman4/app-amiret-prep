@@ -118,10 +118,10 @@ stored level, because RC levels describe the passage, not the questions.
 An item counts as confirmed only with two signals: **judged items** need both the LLM tag and the cheap tag;
 **unjudged items** need a cheap score past a stricter threshold with ≥ 0.85 held-out precision.
 
-| Type | Confirmed too-easy | Acted on in dry-run |
+| Type | Confirmed too-easy | Acted on in dry-run (reviewed 2026-10-19) |
 |---|---|---|
-| Restatement | 251 | `exam_eligible = false` |
-| SC | 72 (judged only; no cheap threshold reaches 0.85 precision for SC) | `exam_eligible = false` |
+| Restatement | 251 (120 judged + 131 cheap-score-only) | **120** judged items → `exam_eligible = false`. The 131 cheap-score-only items stay eligible |
+| SC | 72 (judged only; no cheap threshold reaches 0.85 precision for SC) | 66 → `exam_eligible = false` (the other 6 are already in step 2 or 3) |
 | Reading | 867 | **no**, see below |
 
 **Why reading is excluded.** `pick_informative_passage` only serves passages with all 5 questions
@@ -130,8 +130,10 @@ passages from **500 to 95** (level 5: 100 → 9). Fix reading by rewriting distr
 paraphrased keys), not by filtering.
 
 Exam pools after the dry-run (eligible items per level 1–5):
-- Restatement: 440 / 496 / 494 / 488 / 497 → **279 / 455 / 473 / 484 / 496**
-- SC: 353 / 456 / 453 / 433 / 472 → **292 / 450 / 452 / 433 / 472**
+- Restatement: 440 / 496 / 494 / 488 / 497 → **368 / 472 / 480 / 487 / 497**
+- SC: 353 / 456 / 453 / 433 / 472 → **287 / 443 / 444 / 429 / 471**
+
+(Both include step 3's correctness candidates.)
 
 All stay well above what an exam draws.
 
@@ -170,12 +172,50 @@ regardless of set building.
 The pool is **not** concentrated enough to force repeats within one set: 0 in 12,000 simulated sets
 ([`scripts/audit/sim-option-repeats.py`](../scripts/audit/sim-option-repeats.py)).
 
+## Applied to production: 2026-10-19
+
+Reviewed section by section with the owner:
+- §1: steps 2–3 as written.
+- §2: step 1 as written.
+- §3: step 4 limited to the 186 items both signals agree on.
+- §4–5: no SQL; they go to a distractor-rewrite project, level 5 first.
+
+**How it was run**
+1. The backups were created and checked first: `audit_backup_questions_20261019` (248 rows) and
+   `audit_backup_passages_20261019` (2 rows). Both have RLS on and API grants revoked, and they are **kept** for restores.
+2. One `BEGIN … COMMIT` ran every update. It re-checked the backup counts first, and each update had to hit its
+   exact expected row count or the transaction would roll back.
+
+| Step | Rows changed |
+|---|---|
+| 1. Text fixes (2 passages, umami stem, 1 option, 7 stray spaces) | 1 + 1 + 1 + 1 + 7 |
+| 2. Deactivated (no single correct answer) | 4 |
+| 3. LLM-flagged SC/restatement → `exam_eligible = false` | 31 (18 were already ineligible) |
+| 4. Too-easy, both signals → `exam_eligible = false` | 173 (13 were already ineligible) |
+
+Exam-eligible pool per level after the change (level 1 → 5):
+
+| Type | Before | After |
+|---|---|---|
+| Reading | 500 each | **500 each** (all 500 passages still have 5 eligible questions) |
+| Restatement | 440 / 496 / 494 / 488 / 497 | **368 / 472 / 480 / 487 / 497** |
+| Sentence completion | 353 / 456 / 453 / 433 / 472 | **286 / 443 / 442 / 429 / 471** |
+
+The smallest pool is SC level 1 with 286 items. No pool was gutted.
+
+**Restore** (one item, or all of them):
+```sql
+UPDATE public.questions q SET text = b.text, options = b.options, active = b.active, exam_eligible = b.exam_eligible
+  FROM public.audit_backup_questions_20261019 b WHERE q.id = b.id;   -- add AND q.id = '<id>' for one item
+UPDATE public.passages p SET text = b.text FROM public.audit_backup_passages_20261019 b WHERE p.id = b.id;
+```
+
 ## Deliverables
 
 - [`audit/dry-run-fixes.sql`](audit/dry-run-fixes.sql): BEGIN … ROLLBACK, with backups first (RLS on, API
   grants revoked). Every guard was checked against a fresh read-only export on 2026-10-19: all text
   guards match 1 row, stray-space 7/7, deactivations 4/4, exam-ineligible 31/49 (LLM-flagged) +
-  290/317 (too-easy). The others are already ineligible, and the `WHERE exam_eligible` guard skips them.
+  173/186 (too-easy). The others are already ineligible, and the `WHERE exam_eligible` guard skips them.
 - [`audit/flagged-items.md`](audit/flagged-items.md): every LLM flag with its reason.
 - [`audit/progress.ndjson`](audit/progress.ndjson), [`audit/cheap-difficulty.ndjson`](audit/cheap-difficulty.ndjson),
   [`audit/lint-wording.ndjson`](audit/lint-wording.ndjson), [`audit/confirmed-too-easy.json`](audit/confirmed-too-easy.json): raw outputs.

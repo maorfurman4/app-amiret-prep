@@ -27,6 +27,16 @@ export function usedOptionWords(questions: WithOptions[]): Set<string> {
 }
 
 /**
+ * Questions to take from each of the 5 levels for a random-level practice set
+ * of `count`: enough that the final cross-level pick chooses from ~6× the set
+ * size. At 2× it fell back to overlapping questions once a pool thinned out
+ * (a dense or mostly-seen pool) and served repeated choices.
+ */
+export function perLevelForRandomSet(count: number): number {
+  return Math.ceil((count * 6) / 5);
+}
+
+/**
  * Takes `needed` questions from `candidates` (kept in their given order, so
  * the caller's ranking and randomness still decide) such that no two chosen
  * questions — and no chosen question and `avoid` — share an option. When the

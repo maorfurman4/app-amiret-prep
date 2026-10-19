@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerClients } from '@/lib/supabase-server';
 import type { Question, QuestionType, DifficultyLevel } from '@/types/exam';
-import { pickDistinctOptions } from '@/lib/option-overlap';
+import { pickDistinctOptions, perLevelForRandomSet } from '@/lib/option-overlap';
 import { fetchUnseenQuestions, recordSeenQuestions, fetchUnseenRCQuestions, recordSeenPassage, PoolUnavailableError } from '@/lib/question-history';
 import { shuffleAllOptions } from '@/lib/option-shuffle';
 import { interleaveMixed, parseMixedPlan, MIXED_TYPE, type MixedPlan } from '@/lib/mixed-practice';
@@ -146,7 +146,7 @@ async function serve(req: NextRequest) {
   if (diffParam === 'random') {
     // Random mode: fetch unseen questions from ALL difficulty levels and mix them
     const LEVELS: DifficultyLevel[] = [1, 2, 3, 4, 5];
-    const perLevel = Math.ceil((count * 2) / 5); // fetch extra per level then trim
+    const perLevel = perLevelForRandomSet(count); // fetch extra per level then trim
     const fetches = await Promise.all(
       LEVELS.map(lv => userKey
         ? fetchUnseenQuestions({ supabase, userKey, type, difficultyLevel: lv, needed: perLevel })

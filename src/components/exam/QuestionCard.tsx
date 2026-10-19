@@ -127,7 +127,11 @@ export function QuestionCard({
 
           return (
             <button
-              key={option.id ?? i}
+              // Per-question key: every question gets fresh buttons. Keyed by
+              // option id alone (a–d in every question), React re-ordered the
+              // previous question's buttons, which (with will-change layers) could
+              // show their old word and letter until a tap repainted them.
+              key={`${question.id}:${option.id ?? i}`}
               type="button"
               // aria-disabled, not disabled, once the result shows: a disabled
               // button drops keyboard focus to the page body (WCAG 2.4.3).
@@ -136,7 +140,7 @@ export function QuestionCard({
               aria-pressed={showResult ? undefined : isSelected}
               className={`w-full text-left px-4 py-3 border flex items-center gap-3 ${
                 premium
-                  ? `rounded-2xl shadow-surface transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform ${
+                  ? `rounded-2xl shadow-surface transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring ${
                       !showResult ? 'hover:-translate-y-0.5 hover:shadow-raised active:translate-y-0 active:scale-[0.98] active:shadow-pressed' : ''
                     }`
                   : 'rounded-sm transition-colors'

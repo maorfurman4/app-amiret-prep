@@ -48,3 +48,7 @@ next-env.d.ts
 /public/worker-*.js
 /public/worker-*.js.map
 /public/fallback-*.js
+
+# content-audit raw export (regenerate with scripts/audit/export-items.mjs)
+docs/audit/data/
+docs/audit/batches/

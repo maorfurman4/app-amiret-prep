@@ -1,11 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="title">
   <title id="title">134+</title>
-  <!-- Simplified mark for favicons (16–48px): the cap and its "+" tassel, without the numerals. -->
+  <!-- Favicon form (16–48px): the same mark, filling more of the tile. -->
   <rect width="512" height="512" rx="112" fill="#283F5A"/>
-  <g transform="rotate(-12 250 190)">
-    <path d="M140.8 219.4 V295 Q250 345.4 359.2 295 V219.4" fill="#C9CEC8"/>
-    <path d="M250 106 L460 190 L250 274 L40 190 Z" fill="#FAF8F2"/>
-  </g>
-  <path d="M250 190 L404 156 V296" fill="none" stroke="#F1C779" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M404 304 V416 M348 360 H460" fill="none" stroke="#F1C779" stroke-width="60" stroke-linecap="round"/>
+  <path fill="#FAF8F2" d="M49.04 197.71L182.11 64.64A10.4 10.4 0 0 1 189.47 61.59L189.47 61.59L455.6 61.59A10.4 10.4 0 0 1 462.96 79.34L462.96 79.34L329.89 212.41A10.4 10.4 0 0 1 322.53 215.46L322.53 215.46L56.4 215.46A10.4 10.4 0 0 1 49.04 197.71Z M97.98 227.93H280.95V300.7A133.07 133.07 0 0 1 97.98 300.7Z"/>
+  <path fill="#79D8AF" d="M335.01 205.06L335.01 371.4A12.48 12.48 0 0 1 310.06 371.4L310.06 205.06A12.48 12.48 0 0 1 335.01 205.06Z M347.49 317.34L347.49 425.46A24.95 24.95 0 0 1 297.58 425.46L297.58 317.34A24.95 24.95 0 0 1 347.49 317.34Z M268.48 346.45L376.59 346.45A24.95 24.95 0 0 1 376.59 396.35L268.48 396.35A24.95 24.95 0 0 1 268.48 346.45Z"/>
 </svg>

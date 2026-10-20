@@ -46,10 +46,10 @@ function ico(images) {
   return Buffer.concat([header, ...images.map((i) => i.data)]);
 }
 
-// Maskable safe zone is a circle of radius 40% of the icon; the furthest art
-// (cap tip and "+" tassel) sits at ~47% in logo.svg, so 0.8 brings it to ~37%.
+// Maskable safe zone is a circle of radius 40% of the icon; the cap's furthest
+// corner reaches ~44% in logo.svg, so 0.8 brings it to ~35%.
 const MASKABLE_SCALE = 0.8;
-// iOS rounds its own corners; a little inset keeps the "+" clear of them.
+// iOS rounds its own corners; a little inset keeps the cap clear of them.
 const APPLE_SCALE = 0.9;
 
 const outputs = {
@@ -62,6 +62,13 @@ const outputs = {
 };
 const favicon = ico(await Promise.all([16, 32, 48].map(async (size) => ({ size, data: await png(simple, size) }))));
 outputs['favicon.ico'] = favicon;
+
+// Auth-email logo: the stacked lockup at 3× its 96px email width, on the paper colour.
+outputs['email/brand-mark.png'] = await sharp(readFileSync(pub('brand/134plus-stacked.svg')), { density: 216 })
+  .resize({ width: 288 })
+  .flatten({ background: '#FAF8F2' })
+  .png({ compressionLevel: 9 })
+  .toBuffer();
 
 for (const [file, data] of Object.entries(outputs)) writeFileSync(pub(file), data);
 // App Router serves src/app/favicon.ico at /favicon.ico; keep it identical.

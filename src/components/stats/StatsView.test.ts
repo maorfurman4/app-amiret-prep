@@ -65,7 +65,7 @@ describe('StatsView renders each metric once, from computeStatsMetrics', () => {
     expect(html).not.toContain(`מתוך ${m.allTime.byType.sentence_completion.total}`);
     expect(html).not.toContain('מתוך 160');
     // One per-type list, not two.
-    expect(html.match(/ביצועים לפי סוג שאלה/g)).toHaveLength(1);
+    expect(html.match(/חוזקות וחולשות/g)).toHaveLength(1);
     expect(html).not.toContain('ניתוח חולשות');
   });
 
@@ -78,7 +78,7 @@ describe('StatsView renders each metric once, from computeStatsMetrics', () => {
   });
 
   it('the view does no aggregation of its own', () => {
-    for (const f of ['src/app/stats/page.tsx', 'src/components/stats/StatsView.tsx', 'src/components/stats/StatsHero.tsx', 'src/components/stats/TypePerformanceCard.tsx']) {
+    for (const f of ['src/app/stats/page.tsx', 'src/components/stats/StatsView.tsx', 'src/components/stats/StatsHero.tsx', 'src/components/stats/TypePerformanceCard.tsx', 'src/components/stats/ReadinessSection.tsx']) {
       const src = readFileSync(path.resolve(__dirname, '../../..', f), 'utf8');
       expect(src, f).not.toMatch(/aggregateAccuracyByType|currentEstimate|\.reduce\(|Math\.max\(|slice\(-/);
     }

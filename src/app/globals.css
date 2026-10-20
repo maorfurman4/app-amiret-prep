@@ -56,6 +56,15 @@
   --color-exam-alt-bg: var(--exam-alt-bg);
   --color-exam-accent: var(--exam-accent);
   --color-exam-accent-ink: var(--exam-accent-ink);
+  /* /stats only: the navy score panel (the logo's navy and "+" green) and its chart tints. */
+  --color-stats-hero: var(--stats-hero);
+  --color-stats-hero-ink: var(--stats-hero-ink);
+  --color-stats-hero-soft: var(--stats-hero-soft);
+  --color-stats-fill: var(--stats-fill);
+  --color-stats-gate: var(--stats-gate);
+  --color-stats-best: var(--stats-best);
+  --color-stats-line: var(--stats-line);
+  --shadow-stats-hero: var(--stats-hero-depth);
   /* Popover menus: a solid white sheet in BOTH themes, so a menu always
      stands clear of the page (see UserMenu). */
   --color-menu-surface: var(--menu-surface);
@@ -282,6 +291,17 @@
   --menu-danger: #9C3E36;
   --menu-danger-bg: #FBECE7;
   --menu-success: #14563E;
+  /* /stats score panel: navy in both themes, checked as a set in design-contrast.test.ts. */
+  --stats-hero: #283F5A;
+  --stats-hero-ink: #F4F1E8;
+  --stats-hero-soft: #B9C6D6;
+  --stats-fill: #B7C9F1;
+  --stats-gate: #79D8AF;
+  --stats-best: #F1C779;
+  --stats-line: #3E5C86;
+  --stats-area: rgb(183 201 241 / 0.5);
+  --stats-zone: rgb(23 102 72 / 0.08);
+  --stats-hero-depth: 0 2px 4px rgb(40 63 90 / 0.1), 0 22px 44px -18px rgb(40 63 90 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.1);
 }
 
 .dark {
@@ -324,6 +344,16 @@
   --menu-danger: #FFB4A7;
   --menu-danger-bg: #402923;
   --menu-success: #96E5C1;
+  --stats-hero: #22344C;
+  --stats-hero-ink: #F4F1E8;
+  --stats-hero-soft: #A9B8CB;
+  --stats-fill: #B7C9F1;
+  --stats-gate: #79D8AF;
+  --stats-best: #F1C779;
+  --stats-line: #B7C9F1;
+  --stats-area: rgb(183 201 241 / 0.18);
+  --stats-zone: rgb(121 216 175 / 0.08);
+  --stats-hero-depth: 0 2px 6px rgb(0 0 0 / 0.25), 0 24px 48px -18px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(183 201 241 / 0.14);
 }
 
 /* Resolve aliases on both theme roots so primitives and legacy screens agree. */
@@ -446,6 +476,9 @@
 .achievement-glow-sage { background: radial-gradient(ellipse, color-mix(in srgb, var(--exam-sage) 28%, transparent), color-mix(in srgb, var(--exam-accent) 12%, transparent) 40%, transparent 70%); }
 .achievement-glow-amber { background: radial-gradient(ellipse, color-mix(in srgb, var(--exam-alt) 30%, transparent), color-mix(in srgb, var(--exam-alt) 10%, transparent) 45%, transparent 70%); }
 .ring-closure-check { animation: closure-arrive 560ms var(--ease-spring) 720ms both; }
+/* /stats load moment: the hatched "still to go" stretch appears once the score has counted up. */
+.stats-togo { transition: opacity 500ms var(--ease-spring-soft); }
+[data-counting] .stats-togo { opacity: 0; transition: none; }
 .streak-reward { animation: reward-arrive 500ms var(--ease-spring-soft) both, reward-leave 350ms var(--ease-spring-soft) 3850ms forwards; }
 /* Flame-local impact: bright center at the bounce peak, then a single wave. */
 .streak-impact { position: absolute; inset: -12px; z-index: -1; pointer-events: none; }

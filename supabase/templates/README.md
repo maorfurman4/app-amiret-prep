@@ -22,7 +22,7 @@ Both templates use `{{ .ConfirmationURL }}` (and the confirm email
 ## Email-safety rules these follow
 - Table layout, every style inline (Gmail drops `<style>`), no SVG.
 - Logo: `https://amiret-prep.vercel.app/email/brand-mark.png` (the BrandLogo
-  mark rendered at 3x on the paper color, `public/email/brand-mark.png`).
+  stacked lockup rendered at 3x on the paper color by `scripts/generate-icons.mjs`, `public/email/brand-mark.png`).
   **Deploy it before pasting the templates**, or the logo will 404.
 - Heebo is linked for clients that load web fonts (Apple Mail/iOS); others
   fall back to Arial.

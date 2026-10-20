@@ -4,6 +4,7 @@ import { computeStreakInfo } from '@/lib/streak-server';
 import { computeRings, DEFAULT_EFFORT_TARGET, type Rings } from '@/lib/rings';
 import { shouldPromptForScore } from '@/lib/official-score';
 import { todayLocalStr } from '@/lib/date-local';
+import { EMPTY_TODAY, fetchTodayActivity, type TodayActivity } from '@/lib/today-activity';
 
 export interface DashboardSummary {
   streak: number;
@@ -21,6 +22,10 @@ export interface DashboardSummary {
   /** Set when the student's exam date has passed and its official score
    * hasn't been reported or declined — the dashboard asks for it. */
   officialScorePrompt: { testDate: string } | null;
+  /** First name for the home greeting; null for a guest or an account without one. */
+  displayName: string | null;
+  /** What was answered today (src/lib/today-activity.ts). */
+  today: TodayActivity;
 }
 
 const EMPTY: DashboardSummary = {
@@ -38,6 +43,8 @@ const EMPTY: DashboardSummary = {
   examDate: null,
   canSetExamDate: false,
   officialScorePrompt: null,
+  displayName: null,
+  today: EMPTY_TODAY,
 };
 
 /**
@@ -80,7 +87,13 @@ export async function GET() {
     ? supabase.from('user_goals').select('daily_activity_target, exam_date, score_prompt_dismissed_for').eq('user_id', user.id).maybeSingle()
     : null;
 
-  const [streakInfo, lastScoreRes, examCountRes, reviewCountRes, vocabDueRes, goalRes] = await Promise.all([
+  // The profile name the user set wins over the one Google sent (same order as UserMenu).
+  const nameQuery = user
+    ? supabase.from('user_stats').select('display_name').eq('user_id', user.id).maybeSingle()
+    : null;
+  const ownerRef = { id: owner, type: user ? 'user' as const : 'guest' as const };
+
+  const [streakInfo, lastScoreRes, examCountRes, reviewCountRes, vocabDueRes, goalRes, nameRes, today] = await Promise.all([
     computeStreakInfo(supabase, owner),
     supabase
       .from('exam_sessions')
@@ -102,6 +115,8 @@ export async function GET() {
     reviewQuery,
     vocabDueQuery,
     goalQuery,
+    nameQuery,
+    fetchTodayActivity(supabase, ownerRef),
   ]);
 
   const reviewDueCount = reviewCountRes.count ?? 0;
@@ -129,7 +144,7 @@ export async function GET() {
     })) officialScorePrompt = { testDate: examDate };
   }
 
-  const rings = await computeRings(supabase, { id: owner, type: user ? 'user' : 'guest' }, {
+  const rings = await computeRings(supabase, ownerRef, {
     effortTarget: goal?.daily_activity_target ?? DEFAULT_EFFORT_TARGET,
     dueNow: reviewDueCount,
   });
@@ -145,5 +160,13 @@ export async function GET() {
     examDate: goal?.exam_date ?? null,
     canSetExamDate: !!user,
     officialScorePrompt,
+    displayName: firstName((nameRes?.data as { display_name?: string | null } | null)?.display_name
+      ?? (user?.user_metadata?.full_name as string | undefined)
+      ?? (user?.user_metadata?.name as string | undefined)),
+    today,
   } satisfies DashboardSummary);
+}
+
+function firstName(name: string | null | undefined): string | null {
+  return name?.trim().split(/\s+/)[0] || null;
 }

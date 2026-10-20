@@ -21,6 +21,8 @@ for (const selector of [':root', '.dark']) {
     ['exam-accent-ink', 'exam-accent'],
     ['on-emerald', 'exam-sage'], ['on-emerald', 'exam-sage-strong'],
     ['on-amber', 'exam-alt'], ['on-danger', 'exam-wrong'],
+    // Home "היום שלך": the due count in the review nudge sits on the green card.
+    ['exam-wrong', 'exam-sage-bg'],
   ];
   // Account popover: text, plus its focus ring (menu-accent) and field outline at 3:1.
   const menuPairs = [

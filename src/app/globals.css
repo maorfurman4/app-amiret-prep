@@ -479,6 +479,9 @@
 /* /stats load moment: the hatched "still to go" stretch appears once the score has counted up. */
 .stats-togo { transition: opacity 500ms var(--ease-spring-soft); }
 [data-counting] .stats-togo { opacity: 0; transition: none; }
+/* Home "היום שלך" load moment: the accuracy bars grow from the start edge while the numbers count up. */
+.today-bar { transform-origin: right; animation: today-bar 900ms var(--ease-spring-soft) both; }
+@keyframes today-bar { from { transform: scaleX(0); } }
 .streak-reward { animation: reward-arrive 500ms var(--ease-spring-soft) both, reward-leave 350ms var(--ease-spring-soft) 3850ms forwards; }
 /* Flame-local impact: bright center at the bounce peak, then a single wave. */
 .streak-impact { position: absolute; inset: -12px; z-index: -1; pointer-events: none; }

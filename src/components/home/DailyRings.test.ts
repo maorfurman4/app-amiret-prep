@@ -28,7 +28,7 @@ describe('three learning rings', () => {
 
   it('an empty queue is caught up, with an honest count of what was done', () => {
     expect(render({ done: 0, due: 0 })).toContain('אין חזרות להיום');
-    expect(render({ done: 4, due: 0 })).toContain('הכול מעודכן · סיימת 4');
+    expect(render({ done: 4, due: 0 })).toContain('הכול מעודכן, סיימת 4');
   });
 
   it('marks the weekly simulation', () => {

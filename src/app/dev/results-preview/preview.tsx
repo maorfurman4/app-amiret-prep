@@ -4,7 +4,7 @@
  * Dev-only results screen with a generated finished exam, for design review:
  * the real ResultsView, with no network reads or writes (the streak,
  * official-score prompt and sign-in slot is left empty).
- * ?state=below (default) | near | pass | low | practice | legacy.
+ * ?state=below (default) | near | pass | practice | legacy.
  */
 
 import { useSearchParams } from 'next/navigation';
@@ -16,7 +16,7 @@ interface Seed {
   score: number;
   /** Share answered right in each scored section. */
   rate: number;
-  /** Seconds per question; low numbers read as rapid guessing. */
+  /** Seconds per question. */
   seconds: number;
   isPractice?: boolean;
   /** Old exams: no stored SE, no routing targets, no timings. */
@@ -29,7 +29,6 @@ const SEEDS: Record<string, Seed> = {
   below: { score: 118, rate: 0.62, seconds: 70 },
   near: { score: 133, rate: 0.74, seconds: 80, cut: true },
   pass: { score: 138, rate: 0.82, seconds: 75 },
-  low: { score: 74, rate: 0.22, seconds: 2 },
   practice: { score: 104, rate: 0.5, seconds: 60, isPractice: true },
   legacy: { score: 96, rate: 0.48, seconds: 0, legacy: true },
 };
@@ -42,10 +41,8 @@ function session(seed: Seed): ResultsSession {
     }));
     // Deterministic spread: question q is right when its slot falls under the rate.
     const answers = questions.map((_, q) => (((q * 7 + cfg.index * 3) % 10) / 10 < seed.rate ? 0 : 1));
-    // Steady rapid guesses for the low-effort seed; otherwise a little spread,
-    // with one slow question in section 3 so the pace panel has something to say.
-    const timings = questions.map((_, q) =>
-      seed.seconds <= 10 ? seed.seconds : cfg.index === 3 && q === 1 ? 240 : seed.seconds + q * 4);
+    // A little spread, with one slow question in section 3 so the pace panel has something to say.
+    const timings = questions.map((_, q) => (cfg.index === 3 && q === 1 ? 240 : seed.seconds + q * 4));
     return {
       sectionIndex: cfg.index, type: cfg.type, questions, answers,
       thetaBefore: theta, thetaAfter: theta,

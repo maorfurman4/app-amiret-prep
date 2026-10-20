@@ -11,7 +11,6 @@ import { isExperimentalSection, SECTION_CONFIGS, type Question, type SectionResu
 import { thetaToScore } from '@/lib/adaptive';
 import { scoreInterval, sessionMeasurement } from '@/lib/exemption';
 import { sectionLevelTag, type ThetaHistoryEntry } from '@/lib/routed-level';
-import { examEffort } from '@/lib/exam-effort';
 import { aggregateAccuracyByType, isSkippedSection, scoredTotals } from '@/lib/weakness';
 import { heCount, agree } from '@/lib/hebrew-count';
 import { showPaceAnalysis } from '@/lib/practice-exam';
@@ -85,9 +84,6 @@ export function ResultsView({ session, sessionId, between }: { session: ResultsS
   // Scored sections only — the same basis as the score and /stats; the
   // experimental section is listed on its own below.
   const { correct: totalCorrect, total: totalQuestions } = scoredTotals(sectionResults);
-  // Clicked through at random? Then the score describes the clicking, not
-  // the student (src/lib/exam-effort.ts) — said plainly.
-  const effort = examEffort(sectionResults);
   // How hard the scored questions were, by their own level: the context
   // that makes "x of y correct" readable next to an adaptive score.
   const scoredLevels = sectionResults
@@ -115,7 +111,6 @@ export function ResultsView({ session, sessionId, between }: { session: ResultsS
           total={totalQuestions}
           meanLevel={meanLevel}
           hasExperimental={hasExperimental}
-          effort={effort}
         />
 
         {between}

@@ -51,14 +51,6 @@ describe('ResultsView hero', () => {
     expect(render(session(118, () => true))).not.toContain('data-passed');
   });
 
-  it('a low-effort exam gets the notice and no "on your way"', () => {
-    // 2s per answer is a rapid guess for every type; one right per section is chance level.
-    const html = render(session(74, (_, q) => q === 0, 2));
-    expect(html).toContain('data-testid="low-effort-notice"');
-    expect(html).toContain('המבחן הזה לא מדד את הרמה שלך');
-    expect(html).not.toContain('אתה בדרך');
-  });
-
   it('keeps the adaptive-scoring note, and the experimental note only when that section exists', () => {
     const html = render(session(118, () => true));
     expect(html).toContain('data-testid="adaptive-scoring-note"');

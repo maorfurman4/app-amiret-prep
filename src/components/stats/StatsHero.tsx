@@ -5,24 +5,22 @@ import { useId, useLayoutEffect, useRef } from 'react';
 import { PenLine } from 'lucide-react';
 import { EXEMPTION_SCORE } from '@/lib/calibration';
 import { typeLabel, windowLabel, type StatsMetrics } from '@/lib/stats-metrics';
-import { heCount, agree } from '@/lib/hebrew-count';
 import { ScoreTrack, trackPct } from './ScoreTrack';
 
 const COUNT_MS = 1100;
 
 /**
  * The top of /stats, on the navy panel: where the student is now (the
- * score of the latest exam that measured them — an actual result, not a
- * modelled estimate), how far 134 is on the 50–150 scale, exams taken and
+ * score of the latest exam — an actual result, not a modelled estimate), how far 134 is on the 50–150 scale, exams taken and
  * the best score; tucked under it, the single next step. Everything is
  * read from StatsMetrics, never recomputed.
  */
 export function StatsHero({ metrics }: { metrics: StatsMetrics }) {
-  const { measured, examCount, bestScore, weakest, recent, excludedLowEffort } = metrics;
+  const { measured, examCount, bestScore, weakest, recent } = metrics;
   const headingId = useId();
   const panel = useRef<HTMLElement>(null);
   const fill = useRef<HTMLDivElement>(null);
-  const score = measured?.score ?? null;
+  const score = measured.score;
 
   /**
    * The page's one load moment: every [data-count] number on the panel rises
@@ -42,7 +40,7 @@ export function StatsHero({ metrics }: { metrics: StatsMetrics }) {
     }));
     const paint = (k: number) => {
       for (const n of nums) n.text.nodeValue = String(Math.round(n.from + (n.to - n.from) * k));
-      if (fill.current && score !== null) fill.current.style.width = `${trackPct(50 + (score - 50) * k)}%`;
+      if (fill.current) fill.current.style.width = `${trackPct(50 + (score - 50) * k)}%`;
     };
     el.dataset.counting = '';
     const start = performance.now();
@@ -68,33 +66,20 @@ export function StatsHero({ metrics }: { metrics: StatsMetrics }) {
         aria-labelledby={headingId}
         className="relative z-10 rounded-[28px] bg-stats-hero text-stats-hero-ink shadow-stats-hero px-5 pt-5 pb-[18px]"
       >
-        <h2 id={headingId} className="text-sm text-stats-hero-soft">
-          {!measured || measured.isLatestExam ? 'הציון במבחן האחרון' : 'הציון במבחן האחרון שמדד אותך'}
-        </h2>
+        <h2 id={headingId} className="text-sm text-stats-hero-soft">הציון במבחן האחרון</h2>
 
-        {measured ? (
-          <>
-            <p
-              className="mt-1.5 text-[clamp(4.75rem,24vw,6.5rem)] font-extrabold leading-[0.95] tracking-[-0.045em] tabular-nums"
-              data-metric="headline-score"
-              data-count={measured.score}
-              data-count-from={50}
-            >{measured.score}</p>
-            <p className="mt-2 text-base text-stats-hero-soft" data-metric="points-to-target">
-              {measured.pointsToTarget > 0
-                ? <>עוד <span className="font-bold text-stats-hero-ink tabular-nums">{measured.pointsToTarget}</span> נקודות ל-<bdi dir="ltr" className="font-bold text-stats-gate">{EXEMPTION_SCORE}+</bdi></>
-                : <>הגעת ל-<bdi dir="ltr" className="font-bold text-stats-gate">{EXEMPTION_SCORE}+</bdi> במבחן הזה.</>}
-            </p>
-            <ScoreTrack score={measured.score} best={bestScore} fillRef={fill} />
-          </>
-        ) : (
-          <p className="mt-2 text-sm text-stats-hero-soft">עוד אין מבחן שמדד את הרמה שלך. במבחן הבא ענה בקצב רגיל, והציון יופיע כאן.</p>
-        )}
-        {excludedLowEffort > 0 && (
-          <p className="mt-3 text-xs text-stats-hero-soft" data-metric="excluded-low-effort">
-            לא כללנו כאן, במגמה ובמדד המוכנות {heCount(excludedLowEffort, 'exam')} {agree(excludedLowEffort, 'שנענה', 'שנענו')} בשניות בודדות לשאלה, ברמת הצלחה של ניחוש אקראי.
-          </p>
-        )}
+        <p
+          className="mt-1.5 text-[clamp(4.75rem,24vw,6.5rem)] font-extrabold leading-[0.95] tracking-[-0.045em] tabular-nums"
+          data-metric="headline-score"
+          data-count={measured.score}
+          data-count-from={50}
+        >{measured.score}</p>
+        <p className="mt-2 text-base text-stats-hero-soft" data-metric="points-to-target">
+          {measured.pointsToTarget > 0
+            ? <>עוד <span className="font-bold text-stats-hero-ink tabular-nums">{measured.pointsToTarget}</span> נקודות ל-<bdi dir="ltr" className="font-bold text-stats-gate">{EXEMPTION_SCORE}+</bdi></>
+            : <>הגעת ל-<bdi dir="ltr" className="font-bold text-stats-gate">{EXEMPTION_SCORE}+</bdi> במבחן הזה.</>}
+        </p>
+        <ScoreTrack score={measured.score} best={bestScore} fillRef={fill} />
 
         <dl className="mt-4 pt-4 border-t border-white/10 flex gap-6">
           <div className="flex flex-col-reverse">

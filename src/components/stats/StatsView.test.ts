@@ -85,25 +85,26 @@ describe('StatsView renders each metric once, from computeStatsMetrics', () => {
   });
 });
 
-describe('exams clicked through at random', () => {
+describe('response time never matters', () => {
   const timed = (row: StatsRow, seconds: number): StatsRow => ({
     ...row,
     section_results: (row.section_results as { answers: unknown[] }[]).map(sr => ({ ...sr, timings: sr.answers.map(() => seconds) })),
   });
 
+  // One steady exam, then two answered in a second per question at chance accuracy.
   const r = () => [timed(exam(0, (_, q) => q < 3, 122), 30), timed(exam(1, () => false, 50), 1), timed(exam(2, () => false, 50), 1)];
 
-  it('says how many were left out', () => {
-    expect(metric(render(r()), 'excluded-low-effort')).toEqual(['לא כללנו כאן, במגמה ובמדד המוכנות שני מבחנים שנענו בשניות בודדות לשאלה, ברמת הצלחה של ניחוש אקראי.']);
-  });
-
-  it('headlines the latest exam that measured the student, and says so', () => {
+  it('headlines the latest exam, however fast it was answered', () => {
     const html = render(r());
-    expect(metric(html, 'headline-score')).toEqual(['122']);
-    expect(html).toContain('הציון במבחן האחרון שמדד אותך');
+    expect(metric(html, 'headline-score')).toEqual(['50']);
+    expect(html).toContain('הציון במבחן האחרון');
+    expect(html).not.toContain('שמדד אותך');
   });
 
-  it('says nothing when every exam measured the student', () => {
-    expect(render(rows)).not.toContain('excluded-low-effort');
+  it('the trend uses every exam, and nothing is reported as left out', () => {
+    const html = render(r());
+    expect(html).toContain('כל 3 המבחנים. הקצב');
+    expect(html).not.toContain('excluded-low-effort');
+    expect(html).not.toContain('ניחוש אקראי');
   });
 });

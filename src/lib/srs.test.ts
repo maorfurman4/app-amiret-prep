@@ -112,22 +112,22 @@ const GUEST = { id: 'guest-1', type: 'guest' as const };
 
 describe('foldEvents', () => {
   it('ignores correct answers on a concept with no card', () => {
-    expect(foldEvents(null, 'sentence_completion', [{ itemId: 'x', correct: true, latencyMs: 20_000 }], NOW).state).toBeNull();
+    expect(foldEvents(null, [{ itemId: 'x', correct: true }], NOW).state).toBeNull();
   });
 
   it('creates a card from the first mistake', () => {
-    const r = foldEvents(null, 'sentence_completion', [
-      { itemId: 'ok', correct: true, latencyMs: 20_000 },
-      { itemId: 'miss', correct: false, latencyMs: 20_000 },
+    const r = foldEvents(null, [
+      { itemId: 'ok', correct: true },
+      { itemId: 'miss', correct: false },
     ], NOW);
     expect(r.createdBy?.itemId).toBe('miss');
     expect(r.state).toMatchObject({ stability: FSRS_WEIGHTS[0], lapses: 1 });
   });
 
   it('a right answer moments after the mistake does not inflate the memory', () => {
-    const r = foldEvents(null, 'sentence_completion', [
-      { itemId: 'miss', correct: false, latencyMs: 20_000, at: NOW },
-      { itemId: 'sib', correct: true, latencyMs: 20_000, at: new Date(NOW.getTime() + 60_000) },
+    const r = foldEvents(null, [
+      { itemId: 'miss', correct: false, at: NOW },
+      { itemId: 'sib', correct: true, at: new Date(NOW.getTime() + 60_000) },
     ], NOW);
     expect(r.state!.stability / FSRS_WEIGHTS[0]).toBeLessThan(1.05);
   });
@@ -135,19 +135,19 @@ describe('foldEvents', () => {
   it('Ring B: an answered review of a DUE card counts (right or wrong); not-due or blank never does', () => {
     const due = card() as never;
     const notDue = card({ due_at: iso(daysFrom(3)) }) as never;
-    const right = [{ itemId: 'q', correct: true, latencyMs: 30_000 }];
-    const wrong = [{ itemId: 'q', correct: false, latencyMs: 30_000 }];
-    const blank = [{ itemId: 'q', correct: false, answered: false, latencyMs: 30_000 }];
-    expect(foldEvents(due, 'sentence_completion', right, NOW).cleared).toBe(true);
-    expect(foldEvents(due, 'sentence_completion', wrong, NOW).cleared).toBe(true);
-    expect(foldEvents(due, 'sentence_completion', blank, NOW).cleared).toBe(false);
-    expect(foldEvents(notDue, 'sentence_completion', right, NOW).cleared).toBe(false);
+    const right = [{ itemId: 'q', correct: true }];
+    const wrong = [{ itemId: 'q', correct: false }];
+    const blank = [{ itemId: 'q', correct: false, answered: false }];
+    expect(foldEvents(due, right, NOW).cleared).toBe(true);
+    expect(foldEvents(due, wrong, NOW).cleared).toBe(true);
+    expect(foldEvents(due, blank, NOW).cleared).toBe(false);
+    expect(foldEvents(notDue, right, NOW).cleared).toBe(false);
   });
 
   it('closes the old loophole: wrong → immediately right is never a due review', () => {
-    const r = foldEvents(null, 'sentence_completion', [
-      { itemId: 'miss', correct: false, latencyMs: 20_000, at: NOW },
-      { itemId: 'sib', correct: true, latencyMs: 20_000, at: new Date(NOW.getTime() + 60_000) },
+    const r = foldEvents(null, [
+      { itemId: 'miss', correct: false, at: NOW },
+      { itemId: 'sib', correct: true, at: new Date(NOW.getTime() + 60_000) },
     ], NOW);
     expect(r.cleared).toBe(false);
     expect(r.logs.map(l => l.wasDue)).toEqual([false, false]);
@@ -155,9 +155,9 @@ describe('foldEvents', () => {
 
   it('logs every state change with before/after state and real elapsed time', () => {
     const due = card({ stability: 2, difficulty: 6, last_review_at: iso(daysFrom(-3)) }) as never;
-    const { logs } = foldEvents(due, 'sentence_completion', [
-      { itemId: 'a', correct: true, latencyMs: 30_000 },
-      { itemId: 'b', correct: true, latencyMs: 30_000 },
+    const { logs } = foldEvents(due, [
+      { itemId: 'a', correct: true },
+      { itemId: 'b', correct: true },
     ], NOW);
     expect(logs).toHaveLength(2);
     expect(logs[0]).toMatchObject({ itemId: 'a', grade: 3, answered: true, wasDue: true, stabilityBefore: 2, difficultyBefore: 6 });
@@ -182,7 +182,7 @@ describe('applyResponsesToSrs', () => {
 
   it('a mistake creates one concept card anchored on the missed question, and logs its creation', async () => {
     const { client } = fakeSupabase(db);
-    const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-raise', correct: false, latencyMs: 30_000 }], NOW);
+    const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-raise', correct: false }], NOW);
     expect(res).toMatchObject({ created: 1, reviewed: 0, error: null });
     const [c] = db.srs_cards;
     expect(c).toMatchObject({ concept_key: 'sc.vocab/raise', anchor_question_id: 'q-raise', item_type: 'sentence_completion', skill: 'sc.vocab', target_lemma: 'raise', lapses: 1 });
@@ -199,7 +199,7 @@ describe('applyResponsesToSrs', () => {
   it('a sibling answered correctly reviews the SAME concept card; the log marks it a due review', async () => {
     db.srs_cards.push(card());
     const { client, rpc } = fakeSupabase(db);
-    const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-replace-2', correct: true, latencyMs: 30_000 }], NOW);
+    const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-replace-2', correct: true }], NOW);
     expect(res).toMatchObject({ created: 0, reviewed: 1, cleared: 1 });
     expect(db.srs_cards).toHaveLength(1);
     expect(db.srs_cards[0]).toMatchObject({ version: 5, reps: 3 });
@@ -213,7 +213,7 @@ describe('applyResponsesToSrs', () => {
 
   it('correct answers on concepts without a card write nothing', async () => {
     const { client, rpc } = fakeSupabase(db);
-    const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-raise', correct: true, latencyMs: 30_000 }], NOW);
+    const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-raise', correct: true }], NOW);
     expect(res).toMatchObject({ created: 0, reviewed: 0 });
     expect(db.srs_cards).toHaveLength(0);
     expect(rpc).not.toHaveBeenCalled();
@@ -228,7 +228,7 @@ describe('applyResponsesToSrs', () => {
         if (table === 'srs_cards' && !raced) { raced = true; Object.assign(db.srs_cards[0], { version: 5, reps: 3 }); }
       },
     });
-    const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-replace-1', correct: true, latencyMs: 30_000 }], NOW);
+    const res = await applyResponsesToSrs(client, GUEST, [{ itemId: 'q-replace-1', correct: true }], NOW);
     expect(res.reviewed).toBe(1);
     // Built on top of the winner's write (reps 3 → 4, version 5 → 6), not the stale read.
     expect(db.srs_cards[0]).toMatchObject({ version: 6, reps: 4 });
@@ -238,7 +238,7 @@ describe('applyResponsesToSrs', () => {
     db.user_goals.push({ user_id: 'user-1', exam_date: '2026-10-10' });
     db.srs_cards.push(card({ owner_id: 'user-1', owner_type: 'user', stability: 30, last_review_at: iso(daysFrom(-25)) }));
     const { client } = fakeSupabase(db);
-    await applyResponsesToSrs(client, { id: 'user-1', type: 'user' }, [{ itemId: 'q-replace-1', correct: true, latencyMs: 30_000 }], NOW);
+    await applyResponsesToSrs(client, { id: 'user-1', type: 'user' }, [{ itemId: 'q-replace-1', correct: true }], NOW);
     // Without an exam this would be months out; with it, 2 days before the 06:00 UTC sitting.
     expect(db.srs_cards[0].due_at).toBe('2026-10-08T06:00:00.000Z');
   });

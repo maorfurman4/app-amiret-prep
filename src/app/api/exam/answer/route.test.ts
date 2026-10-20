@@ -306,8 +306,8 @@ describe('POST /api/exam/answer', () => {
     expect((await response.json()).isComplete).toBe(true);
     expect(db.spies.responsesEq).toHaveBeenCalledWith('session_id', 'session-id');
     expect(mocks.applyResponsesToSrs).toHaveBeenCalledWith(db.supabase, { id: 'account-id', type: 'user' }, [
-      { itemId: 'question-1', correct: true, answered: true, latencyMs: 21000, at: new Date('2026-09-23T10:00:00.000Z') },
-      { itemId: 'question-2', correct: false, answered: false, latencyMs: 64000, at: new Date('2026-09-23T10:00:00.000Z') },
+      { itemId: 'question-1', correct: true, answered: true, at: new Date('2026-09-23T10:00:00.000Z') },
+      { itemId: 'question-2', correct: false, answered: false, at: new Date('2026-09-23T10:00:00.000Z') },
     ]);
   });
 

@@ -1,10 +1,27 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { BASELINE_A } from '@/lib/adaptive';
 import { ELO_K0, ELO_N0, MIN_CALIBRATION_HISTORY } from '@/lib/calibration';
-import { isRapidGuess } from '@/lib/exam-effort';
 
-// One definition of a rapid guess, shared with exam-level effort checks.
-export { isRapidGuess };
+/** Per-question time budget in the real exam (seconds): SC 4 min / 4,
+ * restatement 6 min / 3, reading 15 min / 5. */
+const TIME_BUDGET_SECONDS: Record<string, number> = {
+  sentence_completion: 60,
+  restatement: 120,
+  reading_comprehension: 180,
+};
+
+/** Answered faster than this share of the time budget → too fast to have read the item. */
+export const RAPID_GUESS_SHARE = 0.05;
+
+/**
+ * A rapid guess says nothing about the item, so it is kept out of item
+ * calibration — the only place response time is used. It never touches a
+ * score, the stats, or review scheduling.
+ */
+export function isRapidGuess(type: string, latencyMs: number | null): boolean {
+  if (latencyMs === null || !Number.isFinite(latencyMs)) return false;
+  return latencyMs < (TIME_BUDGET_SECONDS[type] ?? 90) * 1000 * RAPID_GUESS_SHARE;
+}
 
 export interface CalibrationCandidate {
   responseId: number;

@@ -176,52 +176,18 @@ export function scheduleDue(stability: number, now: Date, examAt: Date | null): 
 
 // ── Implicit grading ─────────────────────────────────────────────────────────
 
-/** Per-question time budget in the real exam (seconds): SC 4 min / 4,
- * restatement 6 min / 3, reading 15 min / 5. */
-export const TIME_BUDGET_SECONDS: Record<string, number> = {
-  sentence_completion: 60,
-  restatement: 120,
-  reading_comprehension: 180,
-};
-const DEFAULT_BUDGET_SECONDS = 90;
-
-/** Correct in under this share of the budget → fluent (Easy). */
-export const EASY_SHARE = 1 / 3;
-/** Correct in under this share of the budget → too fast to have read the
- * item; likely a guess, so it counts as weak evidence (Hard). */
-export const RAPID_GUESS_SHARE = 0.05;
-
 export interface GradeInput {
   correct: boolean;
-  latencyMs: number | null | undefined;
-  type: string;
   /** Self-reported 1 (guess) .. 3 (sure), when the surface asked. */
   confidence?: number | null;
 }
 
 /**
- * Derives an FSRS grade from a multiple-choice response — there is no
- * "how well did you know it" button, so speed stands in for fluency:
- *   wrong                               → Again
- *   correct, implausibly fast           → Hard  (probable guess)
- *   correct, within a third of budget   → Easy
- *   correct, within budget              → Good
- *   correct, over budget                → Hard  (knew it, but not fluently)
- *   correct, no latency recorded        → Good
- * Self-reported confidence can only lower the grade: "guessed" caps at
- * Hard, "unsure" caps at Good.
+ * Derives an FSRS grade from a multiple-choice response, from correctness
+ * alone — response time never counts: wrong → Again, right → Good.
+ * Self-reported confidence can only lower it: "guessed" → Hard.
  */
-export function gradeResponse({ correct, latencyMs, type, confidence }: GradeInput): Grade {
+export function gradeResponse({ correct, confidence }: GradeInput): Grade {
   if (!correct) return Again;
-  let grade: Grade = Good;
-  if (typeof latencyMs === 'number' && Number.isFinite(latencyMs) && latencyMs >= 0) {
-    const budgetMs = (TIME_BUDGET_SECONDS[type] ?? DEFAULT_BUDGET_SECONDS) * 1000;
-    if (latencyMs < budgetMs * RAPID_GUESS_SHARE) grade = Hard;
-    else if (latencyMs <= budgetMs * EASY_SHARE) grade = Easy;
-    else if (latencyMs <= budgetMs) grade = Good;
-    else grade = Hard;
-  }
-  if (confidence === 1) grade = Math.min(grade, Hard) as Grade;
-  else if (confidence === 2) grade = Math.min(grade, Good) as Grade;
-  return grade;
+  return confidence === 1 ? Hard : Good;
 }

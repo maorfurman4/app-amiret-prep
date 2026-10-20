@@ -65,20 +65,17 @@ export async function GET(req: NextRequest) {
     offset += count;
   }
 
-  // Per-item latency and any error-cause tag already given, from the
-  // responses log. Before the 20260924120000 migration error_cause does not
-  // exist yet — fall back to latency only rather than fail the review.
-  type ResponseRow = { item_id: string; latency_ms: number | null; error_cause?: string | null };
-  const readResponses = (columns: string) => supabase
+  // Any error-cause tag already given, from the responses log. A failed
+  // read only leaves the tags blank; the review itself still loads.
+  type ResponseRow = { item_id: string; error_cause: string | null };
+  const { data: rows } = await supabase
     .from('responses')
-    .select(columns)
+    .select('item_id, error_cause')
     .eq('session_id', sessionId)
     .eq('owner_id', sessionOwner);
-  const withCause = await readResponses('item_id, latency_ms, error_cause');
-  const rows = withCause.error ? (await readResponses('item_id, latency_ms')).data : withCause.data;
-  const responses = Object.fromEntries(((rows ?? []) as unknown as ResponseRow[]).map(r => [
+  const responses = Object.fromEntries(((rows ?? []) as ResponseRow[]).map(r => [
     r.item_id,
-    { latencyMs: r.latency_ms, errorCause: r.error_cause ?? null },
+    { errorCause: r.error_cause },
   ]));
 
   return NextResponse.json({ questions, selectedAnswers, sectionBreaks, sectionResults, responses });

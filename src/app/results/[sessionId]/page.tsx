@@ -11,7 +11,6 @@ import { classifyScore, isExperimentalSection, SECTION_CONFIGS, type SectionResu
 import { thetaToScore } from '@/lib/adaptive';
 import { scoreInterval, sessionMeasurement } from '@/lib/exemption';
 import { sectionLevelTag, type ThetaHistoryEntry } from '@/lib/routed-level';
-import { examEffort } from '@/lib/exam-effort';
 import { aggregateAccuracyByType, isSkippedSection, scoredTotals } from '@/lib/weakness';
 import { ResultsScorePrompt } from '@/components/official-score/ResultsScorePrompt';
 import { heCount, agree } from '@/lib/hebrew-count';
@@ -102,9 +101,6 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
   // Scored sections only — the same basis as the score and /stats; the
   // experimental section is listed on its own below.
   const { correct: totalCorrect, total: totalQuestions } = scoredTotals(sectionResults);
-  // Clicked through at random? Then the score describes the clicking, not
-  // the student (src/lib/exam-effort.ts) — said plainly.
-  const effort = examEffort(sectionResults);
   // How hard the scored questions were, by their own level: the context
   // that makes "x of y correct" readable next to an adaptive score.
   const scoredLevels = sectionResults
@@ -172,16 +168,6 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
             {sectionResults.some(sr => SECTION_CONFIGS[sr.sectionIndex - 1]?.experimental) && (
               <div className="text-xs text-exam-ink-soft mt-1 animate-fade-up [animation-delay:460ms]">
                 התרגול החלופי מוצג בנפרד למטה: הוא לא נספר כאן, וטעויות בו לא הורידו לך את האומדן
-              </div>
-            )}
-            {effort.lowEffort && (
-              <div role="note" data-testid="low-effort-notice" className="mt-4 p-3 bg-exam-alt-bg border border-exam-alt/40 rounded-xl text-start text-sm text-exam-alt leading-relaxed">
-                <div className="font-semibold mb-1 flex items-center gap-1.5">
-                  <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden />
-                  המבחן הזה לא מדד את הרמה שלך
-                </div>
-                {effort.rapid} מתוך {effort.answered} התשובות ניתנו תוך שניות בודדות, ושיעור ההצלחה ({effort.correct} מתוך {effort.answered}) לא גבוה מניחוש אקראי.
-                {' '}לכן הציון לא נכלל בציון המוביל בסטטיסטיקה, במגמה ובמדד המוכנות. כדי למדוד את הרמה, ענה על המבחן הבא בקצב רגיל.
               </div>
             )}
           </div>

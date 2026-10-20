@@ -68,30 +68,15 @@ describe('FSRS-4.5 state transitions', () => {
   });
 });
 
-describe('implicit grading from correctness + latency', () => {
-  const sc = (latencyMs: number | null, extra: object = {}) =>
-    gradeResponse({ correct: true, latencyMs, type: 'sentence_completion', ...extra });
-
+describe('grading from correctness only', () => {
   it.each([
-    ['wrong is always Again', gradeResponse({ correct: false, latencyMs: 10_000, type: 'restatement' }), Again],
-    ['implausibly fast (guess) is Hard', sc(2_000), Hard],
-    ['within a third of the 60s budget is Easy', sc(15_000), Easy],
-    ['within budget is Good', sc(45_000), Good],
-    ['over budget is Hard', sc(95_000), Hard],
-    ['no latency is Good', sc(null), Good],
+    ['wrong is always Again', gradeResponse({ correct: false }), Again],
+    ['right is Good', gradeResponse({ correct: true }), Good],
+    ['right but self-reported as a guess is Hard', gradeResponse({ correct: true, confidence: 1 }), Hard],
+    ['right and unsure stays Good', gradeResponse({ correct: true, confidence: 2 }), Good],
+    ['right and sure stays Good', gradeResponse({ correct: true, confidence: 3 }), Good],
+    ['wrong stays Again whatever the confidence', gradeResponse({ correct: false, confidence: 3 }), Again],
   ])('%s', (_label, grade, expected) => expect(grade).toBe(expected));
-
-  it('uses each type’s own budget', () => {
-    // 50s: over a third of SC's 60s (Good) but under a third of RC's 180s (Easy).
-    expect(gradeResponse({ correct: true, latencyMs: 50_000, type: 'sentence_completion' })).toBe(Good);
-    expect(gradeResponse({ correct: true, latencyMs: 50_000, type: 'reading_comprehension' })).toBe(Easy);
-  });
-
-  it('self-reported confidence can only lower the grade', () => {
-    expect(sc(15_000, { confidence: 1 })).toBe(Hard);
-    expect(sc(15_000, { confidence: 2 })).toBe(Good);
-    expect(sc(95_000, { confidence: 3 })).toBe(Hard);
-  });
 });
 
 describe('exam-date awareness', () => {

@@ -10,6 +10,8 @@ import { TOPICS, TOPIC_GROUPS, type TopicId } from '@/data/strategies';
 /** Reading order = the grouped index order. */
 const ORDER: TopicId[] = TOPIC_GROUPS.flatMap(g => g.ids);
 const TOPIC_BY_ID = Object.fromEntries(TOPICS.map(t => [t.id, t])) as Record<TopicId, (typeof TOPICS)[number]>;
+// The topics can be read in any order, so an open topic shows its group, not a position.
+const GROUP_OF = Object.fromEntries(TOPIC_GROUPS.flatMap(g => g.ids.map(id => [id, g.title]))) as Record<TopicId, string>;
 
 export default function StrategiesPage() {
   const [topic, setTopic] = useState<TopicId | null>(null);
@@ -62,10 +64,7 @@ export default function StrategiesPage() {
                             <t.icon className="w-6 h-6 text-exam-ink-soft" strokeWidth={1.5} aria-hidden />
                           </span>
                           <span className="min-w-0 flex-1">
-                            <span className="flex items-center gap-1.5">
-                              <span className="text-[11px] font-bold text-exam-ink-soft tabular-nums" aria-hidden>{ORDER.indexOf(id) + 1}.</span>
-                              <span className="font-bold text-exam-ink text-sm leading-tight">{t.title}</span>
-                            </span>
+                            <span className="block font-bold text-exam-ink text-sm leading-tight">{t.title}</span>
                             <span className="block text-xs text-exam-ink-soft leading-snug mt-0.5">{t.desc}</span>
                           </span>
                           <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0 sm:hidden" aria-hidden />
@@ -87,7 +86,7 @@ export default function StrategiesPage() {
               >
                 <ArrowRight className="w-4 h-4" aria-hidden />כל הנושאים
               </button>
-              <span className="text-xs text-exam-ink-soft tabular-nums">נושא {at + 1} מתוך {ORDER.length}</span>
+              <span className="text-xs text-exam-ink-soft">{GROUP_OF[topic]}</span>
             </div>
 
             <div ref={topicRef} tabIndex={-1} className="outline-none">

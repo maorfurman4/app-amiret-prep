@@ -1487,11 +1487,12 @@ function VocabularyContent() {
                             <div lang="en" className="font-semibold text-exam-ink text-sm" dir="ltr">{w.word}</div>
                             <div className="text-exam-ink-soft text-xs">{w.hebrew_translation}</div>
                           </div>
-                          <div className="flex items-center gap-2 mr-2">
-                            <button onClick={() => speak(w.word)} className="text-exam-ink-soft hover:text-exam-ink transition-colors" aria-label={`השמע הגייה של ${w.word}`}><Volume2 className="w-4 h-4" aria-hidden /></button>
+                          {/* gap-7: the two 44px tap areas meet without overlapping. */}
+                          <div className="flex items-center gap-7 mr-2">
+                            <button onClick={() => speak(w.word)} className="hit-44 text-exam-ink-soft hover:text-exam-ink transition-colors" aria-label={`השמע הגייה של ${w.word}`}><Volume2 className="w-4 h-4" aria-hidden /></button>
                             <button
                               onClick={e => toggleFavorite(w.id, e)}
-                              className={favorites.has(w.id) ? 'text-exam-wrong' : 'text-exam-ink-soft'}
+                              className={`hit-44 ${favorites.has(w.id) ? 'text-exam-wrong' : 'text-exam-ink-soft'}`}
                               aria-label={favorites.has(w.id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
                               aria-pressed={favorites.has(w.id)}
                             ><Heart className="w-4 h-4" fill={favorites.has(w.id) ? 'currentColor' : 'none'} aria-hidden /></button>
@@ -1540,7 +1541,7 @@ function VocabularyContent() {
                   <div className="flex items-start justify-between mb-3">
                     <button
                       onClick={e => toggleFavorite(quizDeck[quizIndex].id, e)}
-                      className={favorites.has(quizDeck[quizIndex].id) ? 'text-exam-wrong' : 'text-exam-ink-soft'}
+                      className={`hit-44 ${favorites.has(quizDeck[quizIndex].id) ? 'text-exam-wrong' : 'text-exam-ink-soft'}`}
                       aria-label={favorites.has(quizDeck[quizIndex].id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
                       aria-pressed={favorites.has(quizDeck[quizIndex].id)}
                     ><Heart className="w-5 h-5" fill={favorites.has(quizDeck[quizIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>
@@ -1756,7 +1757,7 @@ function VocabularyContent() {
                   <div className="flex items-start justify-between mb-3">
                     <button
                       onClick={e => toggleFavorite(timedDeck[timedIndex].id, e)}
-                      className={favorites.has(timedDeck[timedIndex].id) ? 'text-exam-wrong' : 'text-exam-ink-soft'}
+                      className={`hit-44 ${favorites.has(timedDeck[timedIndex].id) ? 'text-exam-wrong' : 'text-exam-ink-soft'}`}
                       aria-label={favorites.has(timedDeck[timedIndex].id) ? 'הסר ממועדפים' : 'הוסף למועדפים'}
                       aria-pressed={favorites.has(timedDeck[timedIndex].id)}
                     ><Heart className="w-5 h-5" fill={favorites.has(timedDeck[timedIndex].id) ? 'currentColor' : 'none'} aria-hidden /></button>

@@ -503,7 +503,7 @@ function PracticeContent() {
               setSectionMode(false);
               setStep('pick-type');
             }}
-            className="text-exam-ink-soft text-sm mb-6 hover:text-exam-ink"
+            className="hit-44 text-exam-ink-soft text-sm mb-6 hover:text-exam-ink"
           >
             <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה</span>
           </button>
@@ -542,7 +542,7 @@ function PracticeContent() {
     return (
       <main id="main" className="min-h-dvh bg-exam-paper flex flex-col items-center justify-center px-4 py-12" dir="rtl">
         <div className="w-full max-w-lg">
-          <button onClick={() => setStep('pick-difficulty')} className="text-exam-ink-soft text-sm mb-6 hover:text-exam-ink">
+          <button onClick={() => setStep('pick-difficulty')} className="hit-44 text-exam-ink-soft text-sm mb-6 hover:text-exam-ink">
             <span className="inline-flex items-center gap-1"><ArrowRight className="w-4 h-4" aria-hidden />חזרה</span>
           </button>
           <h1 className="text-2xl font-bold text-exam-ink mb-1">{selectedType === 'mixed' ? 'הרכב התרגול' : 'כמות שאלות'}</h1>
@@ -608,7 +608,7 @@ function PracticeContent() {
             aria-busy={loading}
             className="mt-8 w-full py-4 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] font-bold text-lg transition-[opacity,box-shadow,transform] duration-300 ease-spring will-change-transform disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-raised"
           >
-            {loading ? 'טוען...' : sectionMode ? 'התחל מקבץ אמיתי' : examMode ? 'התחל בחינה' : 'התחל תרגול'}
+            {loading ? 'טוען...' : sectionMode ? 'התחל מקבץ' : examMode ? 'התחל אימון מהירות' : 'התחל תרגול'}
           </button>
         </div>
       </main>
@@ -629,7 +629,7 @@ function PracticeContent() {
                 <h1 className="whitespace-nowrap">{TYPE_OPTIONS.find(t => t.type === selectedType)?.label}</h1>
                 {examMode && (
                   <span className="text-xs bg-exam-alt-bg text-exam-alt px-2 py-0.5 rounded-sm font-semibold whitespace-nowrap flex-shrink-0">
-                    מצב בחינה
+                    אימון מהירות
                   </span>
                 )}
                 {sectionMode && (
@@ -766,7 +766,7 @@ function PracticeContent() {
               <button
                 onClick={() => setCurrentIndex(i => Math.max(0, i - 1))}
                 disabled={currentIndex === 0}
-                className="px-4 py-2 rounded-xl border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,transform] duration-300 ease-spring will-change-transform text-sm"
+                className="hit-44 px-4 py-2 rounded-xl border border-exam-border text-exam-ink-soft disabled:opacity-40 hover:bg-exam-paper-alt hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] transition-[background-color,transform] duration-300 ease-spring will-change-transform text-sm"
               >
                 <span className="inline-flex items-center gap-1"><ChevronRight className="w-4 h-4" aria-hidden />קודם</span>
               </button>
@@ -795,7 +795,7 @@ function PracticeContent() {
                 onClick={handleNext}
                 className="px-6 py-3 bg-exam-accent text-exam-accent-ink rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] font-bold transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
               >
-                {isLast ? <span className="inline-flex items-center gap-1.5">סיים בחינה <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : <span className="inline-flex items-center gap-1">שאלה הבאה<ChevronLeft className="w-4 h-4" aria-hidden /></span>}
+                {isLast ? <span className="inline-flex items-center gap-1.5">סיים אימון <Check className="w-4 h-4" strokeWidth={3} aria-hidden /></span> : <span className="inline-flex items-center gap-1">שאלה הבאה<ChevronLeft className="w-4 h-4" aria-hidden /></span>}
               </button>
             </div>
           )}
@@ -866,7 +866,7 @@ function PracticeContent() {
             {pct >= 80 ? <PartyPopper className="w-14 h-14 mx-auto text-exam-sage-strong" strokeWidth={1.5} aria-hidden /> : pct >= 60 ? <ThumbsUp className="w-14 h-14 mx-auto text-exam-alt" strokeWidth={1.5} aria-hidden /> : <BookOpen className="w-14 h-14 mx-auto text-exam-ink-soft" strokeWidth={1.5} aria-hidden />}
             {(examMode || sectionMode) && (
               <div className="inline-block bg-exam-alt-bg text-exam-alt text-sm font-bold px-3 py-1 rounded-sm">
-                {sectionMode ? 'תוצאת מקבץ בתנאי אמת' : 'תוצאת מצב בחינה'}
+                {sectionMode ? 'תוצאת מקבץ בתנאי אמת' : 'תוצאת אימון מהירות'}
               </div>
             )}
             <div>
@@ -1012,7 +1012,7 @@ const PASSAGE_NOUN = { one: 'קטע', many: 'קטעים', gender: 'm' } as const
 const MIX_ROWS: { key: MixedTypeKey; label: string; unit: string }[] = [
   { key: 'sc', label: 'השלמת משפטים', unit: 'שאלות' },
   { key: 'rs', label: 'ניסוח מחדש', unit: 'שאלות' },
-  { key: 'rc', label: 'הבנת הנקרא', unit: `קטעים · ${RC_PER_PASSAGE} שאלות לקטע` },
+  { key: 'rc', label: 'הבנת הנקרא', unit: `קטעים, ${RC_PER_PASSAGE} שאלות בכל קטע` },
 ];
 
 // Swatches for the sample-order strip, one per type.
@@ -1065,7 +1065,7 @@ function MixedPlanPicker({ plan, onChange }: { plan: MixedPlan; onChange: (plan:
                 active ? 'border-exam-accent bg-exam-accent/10 text-exam-accent font-semibold' : 'border-exam-border bg-exam-surface text-exam-ink-soft hover:border-exam-border-strong'
               }`}
             >
-              {p.label} <bdi dir="ltr" className="tabular-nums">{p.plan.sc}·{p.plan.rs}·{p.plan.rc}</bdi>
+              {p.label} ({heCount(planQuestionCount(p.plan), 'question')})
             </button>
           );
         })}

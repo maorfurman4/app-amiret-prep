@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { QuestionCard } from '@/components/exam/QuestionCard';
 import type { Question } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
+import { ExitRunButton } from '@/components/ExitRunButton';
 import { PenLine, RotateCcw, BookOpen, Languages, HelpCircle, AlertTriangle, PartyPopper, Trash2, Target, ThumbsUp, Check, X, type LucideIcon, ChevronLeft } from 'lucide-react';
 import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry, responsesSettled, type ResponseLogEntry } from '@/lib/response-log-client';
@@ -361,7 +362,8 @@ export default function ReviewQueuePage() {
                   <button
                     onClick={() => handleDeleteCategory(type)}
                     className="hit-44 w-9 h-9 flex items-center justify-center rounded-xl text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg active:scale-90 transition-[background-color,color,transform] duration-300 ease-spring text-base flex-shrink-0"
-                    title={`מחק את כל שאלות ${CATEGORY_LABELS[type] ?? type}`}
+                    title={`מחק את כל השאלות מסוג ${CATEGORY_LABELS[type] ?? type}`}
+                    aria-label={`מחק את כל השאלות מסוג ${CATEGORY_LABELS[type] ?? type}`}
                   >
                     <Trash2 className="w-4 h-4 mx-auto" aria-hidden />
                   </button>
@@ -466,7 +468,7 @@ export default function ReviewQueuePage() {
             <div key={type}>
               <div className="flex items-center justify-between mb-2 px-1">
                 <span className="text-xs font-bold text-exam-ink-soft">
-                  {CATEGORY_LABELS[type] ?? type} · {pickerGroups[type].length}
+                  {CATEGORY_LABELS[type] ?? type} ({pickerGroups[type].length})
                 </span>
                 <button
                   onClick={() => handleDeleteCategory(type)}
@@ -506,8 +508,9 @@ export default function ReviewQueuePage() {
                       </button>
                       <button
                         onClick={() => handleDeleteQuestion(q.id)}
-                        className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-sm text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg transition-colors text-base"
+                        className="hit-44 flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-sm text-exam-ink-soft hover:text-exam-wrong hover:bg-exam-wrong-bg transition-colors text-base"
                         title="הסר מהרשימה"
+                        aria-label={`הסר את שאלה ${i + 1} מהרשימה`}
                       >
                         <Trash2 className="w-4 h-4 mx-auto" aria-hidden />
                       </button>
@@ -548,6 +551,7 @@ export default function ReviewQueuePage() {
               onClick={() => setShowQuestionPicker(true)}
               className="flex gap-1 items-center p-1 rounded-sm hover:bg-exam-paper-alt transition-colors"
               title="בחר שאלה"
+              aria-label="פתח את רשימת השאלות"
             >
               {questions.map((_, i) => (
                 <div
@@ -569,6 +573,12 @@ export default function ReviewQueuePage() {
             >
               <RotateCcw className="w-4 h-4 mx-auto" aria-hidden />
             </button>
+            {/* Desktop only: the bottom nav (hidden there) is the way out on
+                mobile. No confirm needed, every answer is saved as it's given. */}
+            <div className="hidden md:block">
+              {/* Back to the list at once; the refetch then drops what's no longer due. */}
+              <ExitRunButton onExit={() => { setStep('overview'); void fetchDueQuestions(guestId); }} />
+            </div>
           </div>
         </div>
       </header>

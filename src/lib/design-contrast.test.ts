@@ -23,6 +23,8 @@ for (const selector of [':root', '.dark']) {
     ['on-amber', 'exam-alt'], ['on-danger', 'exam-wrong'],
     // Home "היום שלך": the due count in the review nudge sits on the green card.
     ['exam-wrong', 'exam-sage-bg'],
+    // Recessed panels (results breakdown by type, /stats types): the accuracy colors on paper-alt.
+    ...['exam-sage-strong', 'exam-alt', 'exam-wrong'].map(fg => [fg, 'exam-paper-alt']),
   ];
   // Account popover: text, plus its focus ring (menu-accent) and field outline at 3:1.
   const menuPairs = [

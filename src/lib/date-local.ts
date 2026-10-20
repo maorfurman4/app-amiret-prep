@@ -21,10 +21,14 @@ export function addLocalDays(dateStr: string, delta: number): string {
   return d.toISOString().slice(0, 10);
 }
 
+/** The hour (0-23) in the app's timezone. */
+export function localHour(at: Date = new Date()): number {
+  return Number(new Intl.DateTimeFormat('en-US', { timeZone: APP_TZ, hour: 'numeric', hourCycle: 'h23' }).format(at));
+}
+
 /** True after ~18:00 in the app's timezone — used for the streak-at-risk UI. */
 export function isEveningLocal(): boolean {
-  const hour = Number(new Intl.DateTimeFormat('en-US', { timeZone: APP_TZ, hour: 'numeric', hour12: false }).format(new Date()));
-  return hour >= 18;
+  return localHour() >= 18;
 }
 
 /** The app timezone's UTC offset at `at`, in ms (positive east of UTC). */

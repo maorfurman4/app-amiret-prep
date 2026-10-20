@@ -7,12 +7,15 @@ import { useDashboardSummary } from '@/lib/dashboard-context';
 import { authFetch } from '@/lib/auth-fetch';
 import { addLocalDays, localDaysBetween, todayLocalStr } from '@/lib/date-local';
 import { heCount } from '@/lib/hebrew-count';
+import { CARD, CARD_LINK, ICON_TILE } from './surfaces';
 
 /** Same window PUT /api/goals enforces. */
 const MAX_DAYS_AHEAD = 730;
 
 const TACTILE = 'transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform';
-const BANNER_CLASSES = `w-full flex items-center gap-3 p-4 bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] text-right ${TACTILE}`;
+const BANNER_CLASSES = `w-full flex items-center gap-3 p-3.5 text-right ${CARD_LINK}`;
+const TITLE = 'block font-bold text-[15px] tracking-[-0.01em]';
+const SUB = 'block mt-0.5 text-[12.5px] leading-snug text-exam-ink-soft';
 
 /** "24 בנובמבר 2026". */
 export function formatExamDate(dateStr: string): string {
@@ -62,11 +65,11 @@ export function ExamDateCard() {
   if (!data.canSetExamDate) {
     return (
       <Link href="/auth/login?next=/" className={BANNER_CLASSES}>
-        <CalendarClock className="w-6 h-6 text-exam-accent flex-shrink-0" strokeWidth={1.75} aria-hidden />
-        <div className="flex-1">
-          <div className="font-semibold text-sm">מתי המבחן שלך?</div>
-          <div className="text-exam-ink-soft text-xs">התחבר כדי לקבוע תאריך, ונתזמן את החזרות כך שהזיכרון שלך יהיה בשיא ביום המבחן</div>
-        </div>
+        <span className={`${ICON_TILE} size-10`}><CalendarClock className="w-5 h-5" strokeWidth={1.75} aria-hidden /></span>
+        <span className="flex-1 min-w-0">
+          <span className={TITLE}>מתי המבחן שלך?</span>
+          <span className={SUB}>התחבר כדי לקבוע תאריך, ונתזמן את החזרות כך שהזיכרון שלך יהיה בשיא ביום המבחן</span>
+        </span>
         <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
       </Link>
     );
@@ -103,7 +106,7 @@ export function ExamDateCard() {
   if (editing) {
     return (
       <form
-        className="w-full p-4 bg-exam-surface border border-exam-border rounded-2xl shadow-raised space-y-3 animate-fade-up"
+        className={`w-full p-4 space-y-3 animate-fade-up ${CARD}`}
         onSubmit={e => { e.preventDefault(); if (draft) void save(draft); }}
       >
         <label htmlFor={inputId} className="flex items-center gap-2 font-semibold text-sm">
@@ -159,15 +162,15 @@ export function ExamDateCard() {
 
   if (isUpcoming && examDate) {
     return (
-      <div className="w-full flex items-center gap-3 px-4 py-3 bg-exam-surface border border-exam-border rounded-2xl shadow-surface">
-        <CalendarCheck className="w-5 h-5 text-exam-sage-strong flex-shrink-0" strokeWidth={1.75} aria-hidden />
+      <div className={`w-full flex items-center gap-3 p-3.5 ${CARD}`}>
+        <span className="grid place-items-center shrink-0 size-10 rounded-xl bg-exam-sage-bg text-exam-sage-strong"><CalendarCheck className="w-5 h-5" strokeWidth={1.75} aria-hidden /></span>
         <div className="flex-1 min-w-0">
-          <div className="font-bold text-sm">
+          <div className="font-extrabold text-[15px] tracking-[-0.01em]">
             {countdownCopy(daysLeft!)}
           </div>
-          <div className="text-exam-ink-soft text-xs">
+          <div className="mt-0.5 text-[12.5px] leading-snug text-exam-ink-soft">
             {formatExamDate(examDate)}
-            {daysLeft! <= 14 && daysLeft! > 0 && ' · המרווחים בין החזרות מתקצרים לקראת המבחן'}
+            {daysLeft! <= 14 && daysLeft! > 0 && '. המרווחים בין החזרות מתקצרים לקראת המבחן.'}
           </div>
           {error && <div role="alert" className="text-xs font-semibold text-exam-wrong mt-0.5">{error}</div>}
         </div>
@@ -196,11 +199,11 @@ export function ExamDateCard() {
 
   return (
     <button type="button" onClick={openEditor} className={BANNER_CLASSES}>
-      <CalendarClock className="w-6 h-6 text-exam-accent flex-shrink-0" strokeWidth={1.75} aria-hidden />
-      <div className="flex-1">
-        <div className="font-semibold text-sm">{hadPastDate ? 'תאריך המבחן עבר. מתי המבחן הבא?' : 'מתי המבחן שלך?'}</div>
-        <div className="text-exam-ink-soft text-xs">קבע תאריך, ונתזמן את החזרות כך שהזיכרון שלך יהיה בשיא ביום המבחן</div>
-      </div>
+      <span className={`${ICON_TILE} size-10`}><CalendarClock className="w-5 h-5" strokeWidth={1.75} aria-hidden /></span>
+      <span className="flex-1 min-w-0">
+        <span className={TITLE}>{hadPastDate ? 'תאריך המבחן עבר. מתי המבחן הבא?' : 'מתי המבחן שלך?'}</span>
+        <span className={SUB}>קבע תאריך, ונתזמן את החזרות כך שהזיכרון שלך יהיה בשיא ביום המבחן</span>
+      </span>
       <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
     </button>
   );

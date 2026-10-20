@@ -113,7 +113,7 @@ export function OfficialScorePrompt() {
         {result.prediction && (
           <p className="mt-2 text-sm text-exam-ink-soft">
             האומדן של האתר לפני המבחן: <span className="font-bold text-exam-ink tabular-nums">{result.prediction.score}</span>
-            {' · '}הציון הרשמי שלך: <span className="font-bold text-exam-ink tabular-nums">{result.score}</span>
+            {'. '}הציון הרשמי שלך: <span className="font-bold text-exam-ink tabular-nums">{result.score}</span>
           </p>
         )}
         <p className="mt-2 text-xs text-exam-ink-soft">

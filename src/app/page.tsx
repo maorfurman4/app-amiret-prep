@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { BrandLogo } from '@/components/BrandLogo';
-import { Target, PenLine, BookOpen, Brain, Ruler, ChevronLeft, Sparkles } from 'lucide-react';
+import { Target, PenLine, BookOpen, Brain, Sparkles } from 'lucide-react';
 import { UserMenu } from '@/components/UserMenu';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { DashboardSummaryProvider } from '@/lib/dashboard-context';
 import { StreakBadge } from '@/components/home/StreakBadge';
-import { HeroTagline } from '@/components/home/HeroTagline';
+import { Greeting } from '@/components/home/Greeting';
 import { DiagnosticBanner } from '@/components/home/DiagnosticBanner';
 import { ReviewQueueCard } from '@/components/home/ReviewQueueCard';
 import { StatsCard } from '@/components/home/StatsCard';
@@ -13,6 +13,7 @@ import { StreakCelebration } from '@/components/home/StreakCelebration';
 import { TodaySessionCta } from '@/components/home/TodaySessionCta';
 import { ExamDateCard } from '@/components/home/ExamDateCard';
 import { OfficialScorePrompt } from '@/components/home/OfficialScorePrompt';
+import { ICON_TILE, SQUARE_LINK } from '@/components/home/surfaces';
 
 const LEARN_LINKS_BEFORE = [
   { href: '/practice',   icon: PenLine,  title: 'תרגול ממוקד', sub: 'לפי סוג שאלה' },
@@ -22,116 +23,84 @@ const LEARN_LINKS_AFTER = [
   { href: '/strategies', icon: Brain, title: 'אסטרטגיות', sub: 'איך לגשת למבחן' },
 ];
 
-// Classic square tile — same tactile lifecycle (hover lift + expanding
-// shadow, press settles with an inset shadow) as every other interactive
-// element on the page, just in the original 2x2 grid shape rather than a
-// full-width row.
-const CARD_CLASSES = 'flex flex-col items-center gap-1.5 py-5 min-h-[112px] bg-exam-surface border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong rounded-2xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] text-center transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform';
+const HEADING = 'mt-[30px] mb-2.5 px-0.5 flex items-center gap-1.5 text-lg font-extrabold tracking-[-0.015em] text-exam-ink';
+
+function LearnTile({ href, icon: Icon, title, sub }: (typeof LEARN_LINKS_BEFORE)[number]) {
+  return (
+    <Link href={href} className={SQUARE_LINK}>
+      <span className={`${ICON_TILE} size-11 mb-1.5`}><Icon className="w-[22px] h-[22px]" strokeWidth={1.75} aria-hidden /></span>
+      <span className="font-bold text-[15px] tracking-[-0.01em]">{title}</span>
+      <span className="text-exam-ink-soft text-xs">{sub}</span>
+    </Link>
+  );
+}
 
 export default function HomePage() {
   return (
-    <main id="main" className="min-h-dvh overflow-x-clip bg-exam-paper flex flex-col items-center px-4 pt-4 pb-8 text-exam-ink" dir="rtl">
+    <main id="main" className="min-h-dvh overflow-x-clip bg-exam-paper flex flex-col items-center px-4 pt-3.5 pb-8 text-exam-ink" dir="rtl">
       <DashboardSummaryProvider>
         <StreakCelebration />
-        <div className="w-full max-w-lg space-y-7">
+        <div className="w-full max-w-lg">
           {/* Top bar: account + theme, in-flow (not floating) */}
-          <div className="flex items-center justify-end gap-2 animate-fade-up [&_a]:text-exam-ink-soft [&_a:hover]:text-exam-ink [&_a:hover]:bg-exam-paper-alt">
+          <div className="flex items-center justify-end gap-2 [&_a]:text-exam-ink-soft [&_a:hover]:text-exam-ink [&_a:hover]:bg-exam-paper-alt">
             <div className="ml-auto"><StreakBadge /></div>
             <UserMenu />
             <ThemeToggle />
           </div>
 
-          {/* Hero — the big score mark anchors the page again */}
-          <div className="text-center animate-fade-up [animation-delay:60ms]">
-            <h1 className="mb-3">
-              <BrandLogo className="w-40 h-auto mx-auto" />
+          {/* Hero: the mark, then a greeting by name */}
+          <div className="mt-[18px] text-center">
+            <h1>
+              <BrandLogo className="w-[136px] h-auto mx-auto" />
               <span className="sr-only">: הכנה לאמירנ&quot;ט</span>
             </h1>
-            <HeroTagline />
+            <Greeting />
           </div>
 
-          {/* Exam date — prompts for it while unset (the spaced-repetition
-              scheduler times every review to it), then a quiet countdown.
-              Once the date has passed, the same slot asks for the official
-              score instead (the two never show together). */}
-          <div className="animate-fade-up [animation-delay:90ms] empty:hidden"><ExamDateCard /><OfficialScorePrompt /></div>
+          <div className="mt-[26px] flex flex-col gap-3.5">
+            {/* Exam date — prompts for it while unset (the spaced-repetition
+                scheduler times every review to it), then a quiet countdown.
+                Once the date has passed, the same slot asks for the official
+                score instead (the two never show together). */}
+            <div className="empty:hidden"><ExamDateCard /><OfficialScorePrompt /></div>
 
-          {/* Primary action */}
-          <Link
-            href="/exam"
-            className="w-full py-4 bg-exam-accent hover:opacity-90 rounded-2xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.97] text-xl font-bold text-center text-exam-accent-ink transition-[opacity,box-shadow,transform] duration-300 ease-spring will-change-transform flex items-center justify-center gap-2 animate-fade-up [animation-delay:120ms]"
-          >
-            <Target className="w-5 h-5" aria-hidden />
-            התחל מבחן
-          </Link>
+            {/* Primary action — the one raised, navy-shadowed control on the page */}
+            <Link
+              href="/exam"
+              className="w-full h-[60px] bg-exam-accent text-exam-accent-ink rounded-[20px] shadow-stats-hero hover:brightness-110 active:shadow-pressed active:scale-[0.98] text-xl font-extrabold tracking-[-0.01em] flex items-center justify-center gap-2.5 transition-[filter,box-shadow,transform] duration-300 ease-spring will-change-transform"
+            >
+              <Target className="w-[22px] h-[22px]" strokeWidth={2.25} aria-hidden />
+              התחל מבחן
+            </Link>
+          </div>
 
-          {/* Today's session — spaced-repetition vocab + due review + weak-area
-              practice. Right under the primary exam CTA, ahead of everything
-              else, so it's the first thing after "start a full exam". */}
-          <section className="animate-fade-up [animation-delay:180ms]">
-            <h2 className="text-label text-exam-ink-soft mb-2 pr-1 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" aria-hidden />
+          {/* Today: what was done today, what's left of the plan, and the way into it. */}
+          <section>
+            <h2 className={HEADING}>
+              <Sparkles className="w-4 h-4 text-exam-sage" aria-hidden />
               היום שלך
             </h2>
             <TodaySessionCta />
           </section>
 
-          {/* Quick diagnostic */}
-          <div className="animate-fade-up [animation-delay:240ms]"><DiagnosticBanner /></div>
+          {/* Quick diagnostic, until a first exam has measured the student */}
+          <div className="mt-4 empty:hidden"><DiagnosticBanner /></div>
 
           {/* Learning & practice — classic 2x2 grid */}
-          <section className="animate-fade-up [animation-delay:300ms]">
-            <h2 className="text-label text-exam-ink-soft mb-2 pr-1">לימוד ותרגול</h2>
+          <section>
+            <h2 className={HEADING}>לימוד ותרגול</h2>
             <div className="grid grid-cols-2 gap-3">
-              {LEARN_LINKS_BEFORE.map(l => (
-                <Link key={l.href} href={l.href} className={CARD_CLASSES}>
-                  <l.icon className="w-7 h-7 text-exam-ink-soft" strokeWidth={1.75} aria-hidden />
-                  <span className="font-semibold text-sm">{l.title}</span>
-                  <span className="text-exam-ink-soft text-xs">{l.sub}</span>
-                </Link>
-              ))}
+              {LEARN_LINKS_BEFORE.map(l => <LearnTile key={l.href} {...l} />)}
               <ReviewQueueCard />
-              {LEARN_LINKS_AFTER.map(l => (
-                <Link key={l.href} href={l.href} className={CARD_CLASSES}>
-                  <l.icon className="w-7 h-7 text-exam-ink-soft" strokeWidth={1.75} aria-hidden />
-                  <span className="font-semibold text-sm">{l.title}</span>
-                  <span className="text-exam-ink-soft text-xs">{l.sub}</span>
-                </Link>
-              ))}
+              {LEARN_LINKS_AFTER.map(l => <LearnTile key={l.href} {...l} />)}
             </div>
           </section>
 
           {/* Progress */}
-          <section className="animate-fade-up [animation-delay:360ms]">
-            <h2 className="text-label text-exam-ink-soft mb-2 pr-1">מעקב והתקדמות</h2>
+          <section>
+            <h2 className={HEADING}>מעקב והתקדמות</h2>
             <StatsCard />
           </section>
-
-          {/* Score scale — collapsed by default to keep the page short on mobile */}
-          <details className="bg-exam-surface border border-exam-border rounded-2xl shadow-surface group animate-fade-up [animation-delay:420ms]">
-            <summary className="p-4 text-sm font-semibold text-exam-ink-soft cursor-pointer select-none list-none flex items-center justify-between rounded-2xl hover:bg-exam-paper-alt transition-colors duration-300 ease-spring">
-              <span className="flex items-center gap-2">
-                <Ruler className="w-4 h-4" aria-hidden />
-                סקאלת הציונים (50–150)
-              </span>
-              <ChevronLeft className="w-4 h-4 text-exam-ink-soft transition-transform group-open:-rotate-90" aria-hidden />
-            </summary>
-            <div className="px-5 pb-5 space-y-1.5 text-sm">
-              {[
-                { range: '134+', label: 'פטור מלא מאנגלית', color: 'text-exam-sage-strong' },
-                { range: '120–133', label: "מתקדמים ב'", color: 'text-exam-accent' },
-                { range: '100–119', label: "מתקדמים א'", color: 'text-exam-alt' },
-                { range: '85–99', label: 'קורס בסיסי', color: 'text-exam-alt' },
-                { range: '70–84', label: "טרום-בסיסי ב'", color: 'text-exam-wrong' },
-                { range: '50–69', label: "טרום-בסיסי א'", color: 'text-exam-wrong' },
-              ].map(row => (
-                <div key={row.range} className="flex items-center gap-2">
-                  <span className={`font-mono font-bold w-20 ${row.color}`}><bdi dir="ltr">{row.range}</bdi></span>
-                  <span className="text-exam-ink-soft">{row.label}</span>
-                </div>
-              ))}
-            </div>
-          </details>
         </div>
       </DashboardSummaryProvider>
     </main>

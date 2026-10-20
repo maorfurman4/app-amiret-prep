@@ -32,12 +32,14 @@ for (const selector of [':root', '.dark']) {
     ['menu-accent', 'menu-surface'], ['menu-accent', 'menu-hover'], ['menu-accent', 'menu-danger-bg'],
     ['menu-border-input', 'menu-surface'],
   ];
+  // /stats score panel: every label on the navy, incl. the green 134 and amber best-score text.
+  const statsPairs = ['stats-hero-ink', 'stats-hero-soft', 'stats-gate', 'stats-best', 'stats-fill'].map(fg => [fg, 'stats-hero']);
   const ratio = (fg: string, bg: string) => {
     const a = luminance(tokens[fg]), b = luminance(tokens[bg]);
     return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
   };
   describe(`${selector} text contrast`, () => {
-    it.each([...pairs, ...menuPairs])('%s on %s meets 4.5:1', (fg, bg) => {
+    it.each([...pairs, ...menuPairs, ...statsPairs, ['stats-line', 'exam-paper']])('%s on %s meets 4.5:1', (fg, bg) => {
       expect(ratio(fg, bg)).toBeGreaterThanOrEqual(4.5);
     });
   });

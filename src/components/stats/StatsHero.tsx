@@ -1,125 +1,130 @@
 'use client';
 
 import Link from 'next/link';
-import { useId, useState } from 'react';
-import { Check, ChevronDown, ChevronLeft } from 'lucide-react';
+import { useId, useLayoutEffect, useRef } from 'react';
+import { PenLine } from 'lucide-react';
 import { EXEMPTION_SCORE } from '@/lib/calibration';
 import { typeLabel, windowLabel, type StatsMetrics } from '@/lib/stats-metrics';
 import { heCount, agree } from '@/lib/hebrew-count';
-import { Reveal } from '@/components/strategies/Reveal';
-import { ScoreTrack } from './ScoreTrack';
+import { ScoreTrack, trackPct } from './ScoreTrack';
 
-const VERDICT = {
-  ready: { label: 'מוכנות גבוהה לפי מדדי האתר', cls: 'bg-exam-sage-strong text-on-emerald', desc: 'הביצועים יציבים והמבחנים האחרונים כולם 134 ומעלה. זו אינה תחזית ציון רשמית.' },
-  almost: { label: 'כמעט שם', cls: 'bg-exam-alt text-on-amber', desc: 'הבסיס חזק. עכשיו סגור את הפערים שמסומנים כאן.' },
-  not_yet: { label: 'עוד לא, ממשיכים לעבוד', cls: 'bg-exam-paper-alt text-exam-ink', desc: 'תוכנית: סימולציית פרקי הליבה + תרגול חולשה ממוקד כל יום.' },
-} as const;
+const COUNT_MS = 1100;
 
 /**
- * The top of /stats: where the student is now (the score of the latest
- * exam that measured them — an actual result, not a modelled estimate),
- * how far 134 is, and the single next step. The readiness checklist is
- * secondary; everything here is read from StatsMetrics, never recomputed.
+ * The top of /stats, on the navy panel: where the student is now (the
+ * score of the latest exam that measured them — an actual result, not a
+ * modelled estimate), how far 134 is on the 50–150 scale, exams taken and
+ * the best score; tucked under it, the single next step. Everything is
+ * read from StatsMetrics, never recomputed.
  */
 export function StatsHero({ metrics }: { metrics: StatsMetrics }) {
-  const { measured, examCount, bestScore, bestClassification, weakest, readiness, recent, excludedLowEffort } = metrics;
+  const { measured, examCount, bestScore, weakest, recent, excludedLowEffort } = metrics;
   const headingId = useId();
-  const readinessId = useId();
-  const [open, setOpen] = useState(false);
-  const verdict = VERDICT[readiness.verdict];
+  const panel = useRef<HTMLElement>(null);
+  const fill = useRef<HTMLDivElement>(null);
+  const score = measured?.score ?? null;
+
+  /**
+   * The page's one load moment: every [data-count] number on the panel rises
+   * from its data-count-from to its value while the track fills to the
+   * score, then the hatched "still to go" stretch fades in (CSS, keyed on
+   * data-counting). The markup always holds the final values, so server
+   * render, screen readers and reduced motion all get them as is.
+   */
+  useLayoutEffect(() => {
+    const el = panel.current;
+    if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Write into React's own text node, so a later render still finds it.
+    const nums = [...el.querySelectorAll<HTMLElement>('[data-count]')].map(n => ({
+      text: n.firstChild as Text,
+      from: Number(n.dataset.countFrom ?? 0),
+      to: Number(n.dataset.count),
+    }));
+    const paint = (k: number) => {
+      for (const n of nums) n.text.nodeValue = String(Math.round(n.from + (n.to - n.from) * k));
+      if (fill.current && score !== null) fill.current.style.width = `${trackPct(50 + (score - 50) * k)}%`;
+    };
+    el.dataset.counting = '';
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / COUNT_MS);
+      paint(1 - (1 - t) ** 3);
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else delete el.dataset.counting;
+    };
+    tick(start);
+    return () => {
+      cancelAnimationFrame(raf);
+      paint(1);
+      delete el.dataset.counting;
+    };
+  }, [score]);
 
   return (
-    <section
-      aria-labelledby={headingId}
-      className="bg-exam-surface rounded-2xl shadow-raised border border-exam-border dark:border-white/10 p-5 animate-fade-up"
-    >
-      <h2 id={headingId} className="text-sm text-exam-ink-soft">
-        {!measured || measured.isLatestExam ? 'הציון במבחן האחרון' : 'הציון במבחן האחרון שמדד אותך'}
-      </h2>
+    <div className="flex flex-col">
+      <section
+        ref={panel}
+        aria-labelledby={headingId}
+        className="relative z-10 rounded-[28px] bg-stats-hero text-stats-hero-ink shadow-stats-hero px-5 pt-5 pb-[18px]"
+      >
+        <h2 id={headingId} className="text-sm text-stats-hero-soft">
+          {!measured || measured.isLatestExam ? 'הציון במבחן האחרון' : 'הציון במבחן האחרון שמדד אותך'}
+        </h2>
 
-      {measured ? (
-        <>
-          <p className="mt-1 text-4xl font-black text-exam-ink tabular-nums" data-metric="headline-score">{measured.score}</p>
-          <p className="mt-2 text-sm text-exam-ink-soft" data-metric="points-to-target">
-            {measured.pointsToTarget > 0
-              ? <>עוד <span className="font-bold text-exam-ink tabular-nums">{measured.pointsToTarget}</span> נקודות ל-<bdi dir="ltr">{EXEMPTION_SCORE}</bdi>.</>
-              : <>הגעת ל-<bdi dir="ltr">{EXEMPTION_SCORE}+</bdi>.</>}
+        {measured ? (
+          <>
+            <p
+              className="mt-1.5 text-[clamp(4.75rem,24vw,6.5rem)] font-extrabold leading-[0.95] tracking-[-0.045em] tabular-nums"
+              data-metric="headline-score"
+              data-count={measured.score}
+              data-count-from={50}
+            >{measured.score}</p>
+            <p className="mt-2 text-base text-stats-hero-soft" data-metric="points-to-target">
+              {measured.pointsToTarget > 0
+                ? <>עוד <span className="font-bold text-stats-hero-ink tabular-nums">{measured.pointsToTarget}</span> נקודות ל-<bdi dir="ltr" className="font-bold text-stats-gate">{EXEMPTION_SCORE}+</bdi></>
+                : <>הגעת ל-<bdi dir="ltr" className="font-bold text-stats-gate">{EXEMPTION_SCORE}+</bdi> במבחן הזה.</>}
+            </p>
+            <ScoreTrack score={measured.score} best={bestScore} fillRef={fill} />
+          </>
+        ) : (
+          <p className="mt-2 text-sm text-stats-hero-soft">עוד אין מבחן שמדד את הרמה שלך. במבחן הבא ענה בקצב רגיל, והציון יופיע כאן.</p>
+        )}
+        {excludedLowEffort > 0 && (
+          <p className="mt-3 text-xs text-stats-hero-soft" data-metric="excluded-low-effort">
+            לא כללנו כאן, במגמה ובמדד המוכנות {heCount(excludedLowEffort, 'exam')} {agree(excludedLowEffort, 'שנענה', 'שנענו')} בשניות בודדות לשאלה, ברמת הצלחה של ניחוש אקראי.
           </p>
-          <div className="mt-5">
-            <ScoreTrack markers={[{ score: measured.score, className: 'bg-exam-ink' }, { score: bestScore, className: 'bg-exam-alt' }]} />
-          </div>
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-exam-ink-soft">
-            <span className="inline-flex items-center gap-1.5"><span className="size-2.5 rounded-full bg-exam-ink" aria-hidden />{measured.isLatestExam ? 'המבחן האחרון' : 'המבחן האחרון שמדד אותך'}</span>
-            <span className="inline-flex items-center gap-1.5"><span className="size-2.5 rounded-full bg-exam-alt" aria-hidden />הציון הגבוה ביותר</span>
-          </div>
-        </>
-      ) : (
-        <p className="mt-2 text-sm text-exam-ink-soft">עוד אין מבחן שמדד את הרמה שלך. במבחן הבא ענה בקצב רגיל, והציון יופיע כאן.</p>
-      )}
-      {excludedLowEffort > 0 && (
-        <p className="mt-1 text-xs text-exam-ink-soft" data-metric="excluded-low-effort">
-          לא כללנו כאן, במגמה ובמדד המוכנות {heCount(excludedLowEffort, 'exam')} {agree(excludedLowEffort, 'שנענה', 'שנענו')} בשניות בודדות לשאלה, ברמת הצלחה של ניחוש אקראי.
-        </p>
-      )}
+        )}
 
-      <dl className="mt-4 grid grid-cols-2 gap-2 text-center">
-        {[
-          { label: 'מבחנים', value: examCount, metric: 'exam-count' },
-          { label: 'הציון הגבוה', value: bestScore, metric: 'best-score' },
-        ].map(f => (
-          <div key={f.metric} className="bg-exam-paper-alt rounded-xl py-2.5 px-1.5 flex flex-col-reverse">
-            <dt className="text-[11px] text-exam-ink-soft">{f.label}</dt>
-            <dd className="text-lg font-bold text-exam-ink tabular-nums" data-metric={f.metric}>{f.value}</dd>
+        <dl className="mt-4 pt-4 border-t border-white/10 flex gap-6">
+          <div className="flex flex-col-reverse">
+            <dt className="text-[13px] text-stats-hero-soft">מבחנים</dt>
+            <dd className="text-xl font-bold tabular-nums" data-metric="exam-count" data-count={examCount} data-count-from={0}>{examCount}</dd>
           </div>
-        ))}
-      </dl>
+          <div className="flex flex-col-reverse">
+            <dt className="text-[13px] text-stats-hero-soft">
+              <span aria-hidden className="inline-block size-0 me-1.5 align-[1px] border-x-4 border-x-transparent border-b-[6px] border-b-stats-best" />
+              הציון הגבוה
+            </dt>
+            <dd className="text-xl font-bold tabular-nums" data-metric="best-score" data-count={bestScore} data-count-from={50}>{bestScore}</dd>
+          </div>
+        </dl>
+      </section>
 
       {weakest && (
         <Link
           href={`/practice?type=${weakest.type}&difficulty=${weakest.level}`}
-          className="mt-4 flex items-center justify-between gap-3 p-4 min-h-14 bg-exam-accent rounded-xl shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-[box-shadow,transform] duration-300 ease-spring will-change-transform"
+          className="relative mx-2.5 -mt-[18px] pt-[30px] pb-3.5 px-3.5 flex items-center gap-3 rounded-b-[20px] bg-exam-surface border border-t-0 border-exam-border shadow-surface hover:translate-y-0.5 active:scale-[0.99] transition-transform duration-300 ease-spring-soft"
         >
-          <span>
-            <span className="block text-exam-accent-ink font-bold text-sm">הצעד הבא: {typeLabel(weakest.type)}</span>
-            <span className="block text-exam-accent-ink/80 text-xs mt-0.5">
-              ברמה {weakest.level} · סוג השאלה החלש שלך ({windowLabel(recent)})
-            </span>
+          <span className="grid place-items-center size-10 flex-none rounded-xl bg-exam-paper-alt text-exam-accent">
+            <PenLine className="size-5" aria-hidden />
           </span>
-          <ChevronLeft className="w-5 h-5 text-exam-accent-ink flex-shrink-0" aria-hidden />
+          <span className="min-w-0">
+            <span className="block font-bold text-[15px] text-exam-ink">הצעד הבא: {typeLabel(weakest.type)}</span>
+            <span className="block text-xs text-exam-ink-soft mt-0.5">ברמה {weakest.level}, סוג השאלה החלש שלך ({windowLabel(recent)})</span>
+          </span>
         </Link>
       )}
-
-      <button
-        type="button"
-        aria-expanded={open}
-        aria-controls={readinessId}
-        onClick={() => setOpen(o => !o)}
-        className="mt-3 flex w-full min-h-11 items-center gap-2 rounded-lg text-start text-sm font-medium text-exam-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-exam-accent"
-      >
-        <span>מדד מוכנות</span>
-        <span className={`px-2 py-0.5 rounded-lg text-xs font-bold ${verdict.cls}`}>{verdict.label}</span>
-        <ChevronDown className={`ms-auto w-4 h-4 text-exam-ink-soft transition-transform duration-300 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} aria-hidden />
-      </button>
-      <Reveal open={open} id={readinessId}>
-        <div className="pt-1 pb-1">
-          <p className="text-xs text-exam-ink-soft mb-2">{verdict.desc}</p>
-          <ul className="space-y-1.5">
-            {readiness.reasons.map((r, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm">
-                <span className={`mt-0.5 ${r.ok ? 'text-exam-sage-strong' : 'text-exam-alt'}`}>
-                  {r.ok ? <Check className="w-3.5 h-3.5" strokeWidth={3} aria-label="עומד ביעד" /> : <span role="img" aria-label="עוד לא">•</span>}
-                </span>
-                {r.href
-                  ? <Link href={r.href} className="text-exam-ink-soft underline underline-offset-2">{r.text}</Link>
-                  : <span className="text-exam-ink-soft">{r.text}</span>}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 pt-3 border-t border-exam-border text-xs text-exam-ink-soft">
-            הציון הגבוה שלך (<span className="tabular-nums">{bestScore}</span>) נמצא ב{bestClassification.label}. כל מוסד קובע בעצמו את הסף לפטור ולכל רמה, זה הטווח הנפוץ ולא תקן אחיד.
-          </p>
-        </div>
-      </Reveal>
-    </section>
+    </div>
   );
 }

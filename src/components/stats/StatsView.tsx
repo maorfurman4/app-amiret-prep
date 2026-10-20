@@ -5,6 +5,7 @@ import { isLowEffortExam } from '@/lib/exam-effort';
 import { BackNav } from '@/components/BackNav';
 import { OfficialScoresSection } from '@/components/official-score/OfficialScoresSection';
 import { StatsHero } from './StatsHero';
+import { ReadinessSection } from './ReadinessSection';
 import { TypePerformanceCard } from './TypePerformanceCard';
 import { VictoryPath } from './VictoryPath';
 
@@ -33,12 +34,14 @@ export function StatsView({ metrics, rows }: { metrics: StatsMetrics | null; row
   return (
     <div className="min-h-dvh bg-exam-paper" dir="rtl">
       <BackNav backHref="/exam" backLabel="מבחן" />
-      <main id="main" className="max-w-2xl mx-auto space-y-5 py-6 px-4">
-        <h1 className="text-2xl font-bold text-exam-ink">הסטטיסטיקה שלי</h1>
+      {/* Three depths on purpose: the score panel raised, the trend flat on the page, the types recessed. */}
+      <main id="main" className="max-w-2xl mx-auto flex flex-col gap-7 pt-5 pb-24 px-4">
+        <h1 className="text-2xl font-bold text-exam-ink -mb-3">הסטטיסטיקה שלי</h1>
         <StatsHero metrics={metrics} />
         {/* The trend line rests on the same measured exams as the current level. */}
         <VictoryPath sessions={rows.filter(r => !isLowEffortExam(r.section_results))} targetScore={134} />
         <TypePerformanceCard recent={metrics.recent} allTime={metrics.allTime} weakestType={metrics.weakest?.type ?? null} />
+        <ReadinessSection metrics={metrics} />
         <OfficialScoresSection />
       </main>
     </div>

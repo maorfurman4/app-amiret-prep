@@ -737,8 +737,6 @@ function PracticeContent() {
             <ErrorCauseTagger
               key={question.id}
               target={{ clientRef: logged[question.id].clientRef }}
-              questionType={question.type}
-              latencyMs={logged[question.id].latencyMs}
             />
           )}
 
@@ -842,8 +840,6 @@ function PracticeContent() {
           <ErrorCauseTagger
             key={q.id}
             target={{ clientRef: logged[q.id].clientRef }}
-            questionType={q.type}
-            latencyMs={logged[q.id].latencyMs}
           />
         )}
       />
@@ -965,8 +961,6 @@ function PracticeContent() {
                         <div className="px-4 pb-4">
                           <ErrorCauseTagger
                             target={{ clientRef: logged[q.id].clientRef }}
-                            questionType={q.type}
-                            latencyMs={logged[q.id].latencyMs}
                           />
                         </div>
                       )}

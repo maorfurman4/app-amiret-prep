@@ -26,7 +26,6 @@ export interface SrsEvent {
   correct: boolean;
   /** false = presented but left blank. Defaults to true. */
   answered?: boolean;
-  latencyMs: number | null;
   confidence?: number | null;
   /** When the answer happened; defaults to now. */
   at?: Date;
@@ -101,7 +100,7 @@ export interface FoldResult {
  * Replays a concept's events, in order, onto its card (or onto nothing,
  * if the owner has no card for it yet). Pure — exported for tests.
  */
-export function foldEvents(existing: CardRow | null, type: string, events: SrsEvent[], now: Date): FoldResult {
+export function foldEvents(existing: CardRow | null, events: SrsEvent[], now: Date): FoldResult {
   let state = existing ? toState(existing) : null;
   let createdBy: SrsEvent | null = null;
   let cleared = false;
@@ -114,7 +113,7 @@ export function foldEvents(existing: CardRow | null, type: string, events: SrsEv
   for (const event of events) {
     const at = event.at ?? now;
     const answered = event.answered ?? true;
-    const grade = gradeResponse({ correct: event.correct, latencyMs: event.latencyMs, type, confidence: event.confidence });
+    const grade = gradeResponse({ correct: event.correct, confidence: event.confidence });
     if (!state) {
       if (grade !== Again) continue;
       state = initialState(Again, at);
@@ -200,7 +199,7 @@ export async function applyResponsesToSrs(
   for (const [conceptKey, { item, events: conceptEvents }] of byConcept) {
     for (let attempt = 1; attempt <= MAX_CAS_ATTEMPTS; attempt++) {
       const existing = cards.get(conceptKey) ?? null;
-      const { state, createdBy, cleared, logs } = foldEvents(existing, item.type, conceptEvents, now);
+      const { state, createdBy, cleared, logs } = foldEvents(existing, conceptEvents, now);
       if (!state) break; // only correct answers on an unscheduled concept
 
       const due = scheduleDue(state.stability, state.lastReviewAt, examAt);

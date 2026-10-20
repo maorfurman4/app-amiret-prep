@@ -24,8 +24,8 @@ interface ReviewData {
   questions: ReviewQuestion[];
   selectedAnswers: (number | null)[];
   sectionBreaks: SectionBreak[];
-  /** Per item id: latency and any error-cause tag already given. */
-  responses?: Record<string, { latencyMs: number | null; errorCause: ErrorCause | null }>;
+  /** Per item id: any error-cause tag already given. */
+  responses?: Record<string, { errorCause: ErrorCause | null }>;
 }
 
 const TYPE_ICONS: Record<string, typeof PenLine> = {
@@ -92,8 +92,6 @@ export default function ReviewPage({ params }: { params: Promise<{ sessionId: st
         <ErrorCauseTagger
           key={question.id}
           target={{ sessionId, itemId: question.id }}
-          questionType={question.type}
-          latencyMs={data.responses?.[question.id]?.latencyMs}
           initialCause={data.responses?.[question.id]?.errorCause ?? null}
         />
       )}

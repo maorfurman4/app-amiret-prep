@@ -593,8 +593,6 @@ export default function ReviewQueuePage() {
           <ErrorCauseTagger
             key={question.id}
             target={{ clientRef: logged[question.id].clientRef }}
-            questionType={question.type}
-            latencyMs={logged[question.id].latencyMs}
           />
         )}
 

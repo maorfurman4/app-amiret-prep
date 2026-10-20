@@ -325,7 +325,7 @@ export async function POST(req: NextRequest) {
   // revealed mid-exam (anti-cheat), and an abandoned exam schedules nothing.
   // Every scored answer — right or wrong — feeds its concept's FSRS card,
   // read back from the response rows the commit above just logged, with
-  // their real latencies and timestamps. The exam itself is already safely
+  // their timestamps (graded on correctness only, never speed). The exam itself is already safely
   // committed, so a scheduling failure is logged, not surfaced.
   if (isLastSection) {
     const owner = { id: userKey, type: user ? 'user' as const : 'guest' as const };
@@ -338,8 +338,8 @@ export async function POST(req: NextRequest) {
       : await applyResponsesToSrs(
           supabase,
           owner,
-          ((logged ?? []) as { item_id: string; correct: boolean; chosen_option: number | null; latency_ms: number | null; created_at: string }[])
-            .map(r => ({ itemId: r.item_id, correct: r.correct, answered: r.chosen_option !== null, latencyMs: r.latency_ms, at: new Date(r.created_at) })),
+          ((logged ?? []) as { item_id: string; correct: boolean; chosen_option: number | null; created_at: string }[])
+            .map(r => ({ itemId: r.item_id, correct: r.correct, answered: r.chosen_option !== null, at: new Date(r.created_at) })),
         ).catch((e: unknown) => ({ error: String(e) }));
     if (srs.error) console.error('[exam/answer] SRS update failed:', srs.error);
 

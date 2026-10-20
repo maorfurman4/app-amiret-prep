@@ -107,7 +107,7 @@ describe('headline score and readiness rest on actual scores', () => {
 
   it('the headline is the last exam\'s score, with the gap to 134 from it', () => {
     const m = computeStatsMetrics(scored([50, 50, 53]))!;
-    expect(m.measured).toEqual({ score: 53, isLatestExam: true, pointsToTarget: 81 });
+    expect(m.measured).toEqual({ score: 53, pointsToTarget: 81 });
   });
 
   it('readiness quotes the lowest of the last 3 scores, and the verdict follows it', () => {
@@ -127,33 +127,29 @@ describe('headline score and readiness rest on actual scores', () => {
   });
 });
 
-describe('exams clicked through at random', () => {
-  // Those same three exams really were answered in about a second per
-  // question (median 0.7–0.9 s), at chance accuracy.
+describe('response time never matters', () => {
   const withSeconds = (row: StatsRow, seconds: number): StatsRow => ({
     ...row,
     section_results: (row.section_results as { answers: unknown[] }[]).map(sr => ({ ...sr, timings: sr.answers.map(() => seconds) })),
   });
-  const clicked = [0, 1, 2].map(i => withSeconds(exam(i, () => false, { score: 50 }), 1));
-  const measured = [124, 125].map((score, i) => withSeconds(exam(10 + i, (_s, q) => q < 3, { score }), 30));
+  // Three exams answered in about a second per question at chance accuracy —
+  // once left out as "clicked through", now counted like any other.
+  const fast = [0, 1, 2].map(i => withSeconds(exam(i, () => false, { score: 50 }), 1));
+  const steady = [124, 125].map((score, i) => withSeconds(exam(10 + i, (_s, q) => q < 3, { score }), 30));
 
-  it('are left out of the headline score and readiness, but still counted as exams', () => {
-    const m = computeStatsMetrics([...measured, ...clicked])!;
+  it('a fast, near-random exam counts in the headline score and readiness', () => {
+    const m = computeStatsMetrics([...steady, ...fast])!;
     expect(m.examCount).toBe(5);
-    expect(m.lastScore).toBe(50);
-    expect(m.excludedLowEffort).toBe(3);
-    expect(m.measured).toEqual({ score: 125, isLatestExam: false, pointsToTarget: 9 });
-    expect(m.readiness.reasons.some(r => r.text.includes('2 המבחנים האחרונים'))).toBe(true);
+    expect(m.measured).toEqual({ score: 50, pointsToTarget: 84 });
+    expect(m.readiness.reasons.some(r => r.text.includes('3 המבחנים האחרונים: 50'))).toBe(true);
   });
 
-  it('leave no headline score when nothing measured the student', () => {
-    const m = computeStatsMetrics(clicked)!;
-    expect(m.measured).toBeNull();
-    expect(m.excludedLowEffort).toBe(3);
+  it('a fast, all-correct exam counts fully', () => {
+    expect(computeStatsMetrics([withSeconds(exam(20, () => true, { score: 148 }), 1)])!.measured).toEqual({ score: 148, pointsToTarget: 0 });
   });
 
-  it('a fast exam that is right is not excluded', () => {
-    const fastAndRight = withSeconds(exam(20, () => true, { score: 148 }), 1);
-    expect(computeStatsMetrics([fastAndRight])!.excludedLowEffort).toBe(0);
+  it('the same answers give the same metrics at any speed', () => {
+    const rows = [exam(0, (_s, q) => q < 2, { score: 96 }), exam(1, () => false, { score: 50 }), exam(2, () => true, { score: 140 })];
+    expect(computeStatsMetrics(rows.map(r => withSeconds(r, 1)))).toEqual(computeStatsMetrics(rows.map(r => withSeconds(r, 90))));
   });
 });

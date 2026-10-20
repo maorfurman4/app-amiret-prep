@@ -112,6 +112,15 @@ describe('section helpers', () => {
     const allRight = updateThetaAfterSection(0, { questions: qs, answers: [0, 2, 1] });
     expect(allRight).toBeGreaterThan(allNull);
   });
+
+  it('the score depends on answers and item difficulty only, never on response time', () => {
+    const answers = [0, 1, 1];
+    const at = (seconds: number) => thetaToScore(updateThetaAfterSection(0, {
+      questions: qs, answers, timings: answers.map(() => seconds),
+    } as Parameters<typeof updateThetaAfterSection>[1]));
+    expect(at(1)).toBe(at(90));
+    expect(at(1)).toBe(thetaToScore(updateThetaAfterSection(0, { questions: qs, answers })));
+  });
 });
 
 describe('exam structure (must match the official AMIRNET format)', () => {

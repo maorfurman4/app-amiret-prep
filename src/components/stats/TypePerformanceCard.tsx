@@ -16,7 +16,7 @@ const DifficultyLabel = ({ b }: { b: DifficultyBucket }) => (
 );
 
 /** One colour scale for every accuracy on the page. */
-const tone = (pct: number) =>
+export const tone = (pct: number) =>
   pct >= 80
     ? { text: 'text-exam-sage-strong', bar: 'bg-exam-sage-strong', box: 'bg-exam-sage-bg border-exam-sage/40' }
     : pct >= 60

@@ -43,13 +43,13 @@ export function ResultsScorePrompt() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-exam-ink-soft animate-fade-up">
-        <Award className="w-4 h-4 text-exam-accent" aria-hidden />
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-0.5 text-sm text-exam-ink-soft">
+        <Award className="size-4 shrink-0 text-exam-accent" aria-hidden />
         <span>כבר נבחנת באמירנט האמיתי?</span>
         <button type="button" onClick={() => setOpen(true)} className="hit-44 font-semibold text-exam-accent hover:underline">
           הוסף את הציון
         </button>
-        <button type="button" onClick={decline} className="hit-44 text-xs hover:text-exam-ink">לא, תודה</button>
+        <button type="button" onClick={decline} className="hit-44 ms-auto text-xs hover:text-exam-ink">לא, תודה</button>
       </div>
       <Modal
         open={open}

@@ -479,6 +479,12 @@
 /* /stats load moment: the hatched "still to go" stretch appears once the score has counted up. */
 .stats-togo { transition: opacity 500ms var(--ease-spring-soft); }
 [data-counting] .stats-togo { opacity: 0; transition: none; }
+/* Results load moment: the knob rides with the score and turns green as it crosses 134, when the "+" pulses once. */
+.score-knob { background: var(--stats-hero-ink); transition: background-color 300ms var(--ease-spring-soft); }
+.score-knob[data-passed] { background: var(--stats-gate); }
+[data-below] .score-knob[data-passed] { background: var(--stats-hero-ink); }
+[data-crossed] .score-plus { animation: plus-lit 600ms var(--ease-spring) 1; }
+@keyframes plus-lit { 50% { transform: scale(1.5); } }
 /* Home "היום שלך" load moment: the accuracy bars grow from the start edge while the numbers count up. */
 .today-bar { transform-origin: right; animation: today-bar 900ms var(--ease-spring-soft) both; }
 @keyframes today-bar { from { transform: scaleX(0); } }

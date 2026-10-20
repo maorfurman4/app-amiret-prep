@@ -1,33 +1,15 @@
 /**
- * The 134+ mark without its app-icon tile, for use on the page itself.
- * Same geometry as public/logo.svg, but colored from theme tokens so it reads
- * on both the light paper and the dark background: numerals and cap in ink,
- * cap underside in soft ink, tassel cord and "+" in gold (a deeper gold on
- * light paper, where the brand #F1C779 would be too faint).
+ * The 134+ stacked lockup (target symbol over the numerals) for use on the page.
+ * Same geometry as public/brand/134plus-stacked.svg, coloured from theme tokens
+ * so it reads on both the light paper and the dark background: ring in the
+ * accent (navy / periwinkle), bullseye in the success green, numerals in ink.
  */
 export function BrandLogo({ className }: { className?: string }) {
   return (
-    <svg viewBox="82 92 418 346" role="img" aria-label="134+" className={className}>
-      <g
-        transform="translate(30 96) scale(.84)"
-        fill="none"
-        strokeWidth={44}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="stroke-exam-ink"
-      >
-        <path d="M90 214 L128 176 V376" />
-        <path d="M180 208 A48 48 0 1 1 225 272 A52 52 0 1 1 176 342 M206 272 H225" />
-        <path d="M392 376 V176 L300 316 H418" />
-      </g>
-      <g transform="rotate(-12 352 170)">
-        <path d="M290.6 186.5 V229 Q352 257.3 413.4 229 V186.5" className="fill-exam-ink-soft" />
-        <path d="M352 122.8 L470 170 L352 217.2 L234 170 Z" className="fill-exam-ink" />
-      </g>
-      <g fill="none" strokeLinecap="round" strokeLinejoin="round" className="stroke-[#D9A13B] dark:stroke-exam-alt">
-        <path d="M352 170 L442 151 V250" strokeWidth={15} />
-        <path d="M442 250 V318 M408 284 H476" strokeWidth={34} />
-      </g>
+    <svg viewBox="0 0 412.4 439.6" role="img" aria-label="134+" className={className}>
+      <path className="fill-exam-accent" d="M94.2 112A112 112 0 1 1 318.2 112A112 112 0 1 1 94.2 112ZM130.79 102.44A84.97 84.97 0 1 0 300.72 102.44A84.97 84.97 0 1 0 130.79 102.44Z" />
+      <path className="fill-exam-sage" d="M155.9 102.44A59.86 59.86 0 1 1 275.62 102.44A59.86 59.86 0 1 1 155.9 102.44ZM203.21 89.89H191.62A12.55 12.55 0 0 0 191.62 114.99H203.21V126.58A12.55 12.55 0 0 0 228.31 126.58V114.99H239.9A12.55 12.55 0 0 0 239.9 89.89H228.31V78.3A12.55 12.55 0 0 0 203.21 78.3Z" />
+      <path className="fill-exam-ink" d="M4.51 299.91L31.11 273.31A15.4 15.4 0 0 1 52.89 295.09L26.29 321.69A15.4 15.4 0 0 1 4.51 299.91Z M57.4 284.2L57.4 424.2A15.4 15.4 0 0 1 26.6 424.2L26.6 284.2A15.4 15.4 0 0 1 57.4 284.2Z M63.88 301.47A49 49 0 1 1 109.82 366.8A15.4 15.4 0 0 1 109.98 336A18.2 18.2 0 1 0 92.92 311.73A15.4 15.4 0 0 1 63.88 301.47Z M109.96 336A51.8 51.8 0 1 1 61.15 405.73A15.4 15.4 0 0 1 90.05 395.07A21 21 0 1 0 109.84 366.8A15.4 15.4 0 0 1 109.96 336Z M96.6 336L109.9 336A15.4 15.4 0 0 1 109.9 366.8L96.6 366.8A15.4 15.4 0 0 1 96.6 336Z M222.6 424.2L222.6 284.2A15.4 15.4 0 0 1 253.4 284.2L253.4 424.2A15.4 15.4 0 0 1 222.6 424.2Z M250.87 292.66L186.47 390.66A15.4 15.4 0 0 1 160.73 373.74L225.13 275.74A15.4 15.4 0 0 1 250.87 292.66Z M173.6 366.8L256.2 366.8A15.4 15.4 0 0 1 256.2 397.6L173.6 397.6A15.4 15.4 0 0 1 173.6 366.8Z M366.4 308.2L366.4 400.2A15.4 15.4 0 0 1 335.6 400.2L335.6 308.2A15.4 15.4 0 0 1 366.4 308.2Z M305 338.8L397 338.8A15.4 15.4 0 0 1 397 369.6L305 369.6A15.4 15.4 0 0 1 305 338.8Z" />
     </svg>
   );
 }

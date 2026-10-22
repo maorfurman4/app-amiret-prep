@@ -4,6 +4,7 @@ import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, isExperimentalSection, type Question, type SectionResult } from '@/types/exam';
 import { updateThetaAfterSection, thetaToScore, correctCount, estimateThetaEAP, itemIrtParams } from '@/lib/adaptive';
 import { planInformativeQuestions, planInformativePassage } from '@/lib/item-selection';
+import { shuffleAllOptions } from '@/lib/option-shuffle';
 import { usedOptionWords } from '@/lib/option-overlap';
 import { chooseRouteTarget, exemptionProbability, standardError } from '@/lib/calibration';
 import { calibrateItems } from '@/lib/calibration-server';
@@ -200,11 +201,26 @@ export async function POST(req: NextRequest) {
       questions: scoredResults.flatMap(sr => sr.questions as Question[]),
       answers: scoredResults.flatMap(sr => sr.answers as (number | null)[]),
     });
-    const baseScore = thetaToScore(baseTheta);
+    const baseScoreRaw = thetaToScore(baseTheta);
+    // Anchor the endpoints of the scored performance: a clean sweep of every
+    // scored item reports the top of the scale (150) and zero scored items
+    // the floor (50). The EAP posterior shrinks toward its N(0,1) prior, so
+    // even a flawless run estimates θ a touch below the ceiling (≈149) and a
+    // zero run a touch above the floor (≈52); the endpoints should read 150
+    // and 50. Everything in between keeps the monotonic θ→score mapping.
+    const scoredCorrect = scoredResults.reduce((s, sr) => s + sr.correctCount, 0);
+    const scoredTotal = scoredResults.reduce((s, sr) => s + sr.totalCount, 0);
+    const baseScore = scoredTotal > 0 && scoredCorrect === scoredTotal ? 150
+      : scoredTotal > 0 && scoredCorrect === 0 ? 50
+      : baseScoreRaw;
     // Official AMIRNET rule: the experimental section can only raise the
-    // final score, and by at most 2 points.
-    const scoreWithExperimental = Math.min(thetaToScore(newTheta), baseScore + 2);
-    const finalIsExperimental = scoreWithExperimental > baseScore;
+    // final score, and by at most 2 points. The raise is measured on the raw
+    // θ→score mapping (how much the experimental answers lift θ), then added
+    // on top of the anchored base — so an equally-weak experimental section
+    // never nudges an anchored floor off 50.
+    const experimentalRaise = Math.min(2, Math.max(0, thetaToScore(newTheta) - baseScoreRaw));
+    const scoreWithExperimental = Math.min(150, baseScore + experimentalRaise);
+    const finalIsExperimental = experimentalRaise > 0;
 
     const thetaFinal = finalIsExperimental ? newTheta : baseTheta;
     // Uncertainty of the reported θ, from the information of the items it
@@ -219,7 +235,7 @@ export async function POST(req: NextRequest) {
     updatePayload.theta_final = thetaFinal;
     if (Number.isFinite(thetaSe)) updatePayload.theta_se = thetaSe;
     updatePayload.p_exempt = exemptionProbability(thetaFinal, thetaSe);
-    updatePayload.score = Math.max(baseScore, scoreWithExperimental);
+    updatePayload.score = scoreWithExperimental;
     updatePayload.current_section_expires_at = null;
 
     activityDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jerusalem' }).format(new Date());
@@ -260,6 +276,11 @@ export async function POST(req: NextRequest) {
     if (nextQuestions.length !== nextCfg.questionCount) {
       return NextResponse.json({ error: 'לא הצלחנו לטעון את הפרק הבא. נסה שוב.' }, { status: 503 });
     }
+    // Shuffle option positions per presentation (same helper as practice) so
+    // the correct answer doesn't cluster on one letter; option_order is
+    // persisted with each question so the submit can map display answers back
+    // to the canonical stored index when grading/logging.
+    nextQuestions = shuffleAllOptions(nextQuestions);
     const newQIds = nextQuestions.map(q => q.id);
     seenQuestionIds = newQIds;
     updatePayload.used_question_ids = [...usedQIds, ...newQIds];

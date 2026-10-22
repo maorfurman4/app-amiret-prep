@@ -3,6 +3,7 @@ import { getServerClients } from '@/lib/supabase-server';
 import { SECTION_CONFIGS, type ExamMode, type Question } from '@/types/exam';
 import { recordSeenQuestions } from '@/lib/question-history';
 import { planInformativeQuestions } from '@/lib/item-selection';
+import { shuffleAllOptions } from '@/lib/option-shuffle';
 import { EXAM_START_THETA } from '@/lib/routed-level';
 
 /** Every exam starts where the ability prior is centred: the real test
@@ -56,8 +57,12 @@ export async function POST(req: NextRequest) {
   // Mark these questions as seen in cross-session history
   await recordSeenQuestions(supabase, userKey, section1Questions.map((q: Question) => q.id));
 
+  // Shuffle option positions per presentation (same helper as practice) so
+  // the correct answer doesn't cluster on one letter across the exam; the
+  // persisted question is self-consistent in display order and carries
+  // option_order for mapping answers back to the canonical stored index.
   const questionsBySection: Record<number, Question[]> = {
-    1: section1Questions,
+    1: shuffleAllOptions(section1Questions),
   };
 
   // Server timer for Section 1

@@ -52,8 +52,21 @@ export function standardError(theta: number, items: ItemLike[]): number {
 /** Sections from here on are decision sections: 5 and 6 are the last scored
  * sections, 7 the experimental one (which can still raise the score). */
 export const CUT_TARGET_FROM_SECTION = 5;
-/** The cut is "in play" while it lies within this many SEs of θ̂. */
-export const CUT_BAND_SE = 2;
+/**
+ * The cut is "in play" while it lies within this many SEs of θ̂.
+ *
+ * Kept deliberately narrow (½ SE): with a wide band a clearly-above student
+ * (e.g. an all-correct run reaches θ̂ ≈ 2.3 with SE ≈ 0.6, so 1 SE above the
+ * cut) was still pulled back to target the cut, pinning every decision
+ * section at θ = 1.7 and serving them level-4 items — they never reached the
+ * hardest items, so a flawless exam topped out around difficulty 4. At ½ SE
+ * only a genuinely borderline student (the cut sits inside θ̂'s ~38% CI) is
+ * aimed at the cut; a consistently-right student is escalated UP toward the
+ * hardest items and a consistently-wrong one descends toward the easiest,
+ * matching the real adaptive exam. Non-inferiority of the pass/fail decision
+ * at this band is pinned by the simulation in calibration.test.ts.
+ */
+export const CUT_BAND_SE = 0.5;
 
 export interface RouteTarget {
   theta: number;

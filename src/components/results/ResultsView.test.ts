@@ -83,4 +83,20 @@ describe('ResultsView page', () => {
     expect(html).not.toContain('font-mono');
     expect(html).not.toMatch(/animate-(fade-up|ambient-glow|check-pop|score-reveal)/);
   });
+
+  it('a perfect exam is internally consistent: 150 in the hero, 100% and 23/23 everywhere (Fix C)', () => {
+    const html = render(session(150, () => true));
+    // Hero score and correct-count agree with a clean sweep of the 23 scored items.
+    expect(metric(html, 'headline-score')).toEqual(['150']);
+    expect(metric(html, 'correct-count')).toEqual(['23 מתוך 23']);
+    // Every per-type row reads 100%…
+    const typeRows = [...html.matchAll(/<li data-type="[^"]+">(.*?)<\/li>/g)].map(m => m[1]);
+    expect(typeRows.length).toBeGreaterThan(0);
+    typeRows.forEach(row => expect(row).toContain('100%'));
+    // …and every scored per-section row does too (the experimental one included,
+    // it was answered, not skipped).
+    const sectionRows = [...html.matchAll(/<li class="flex items-center gap-3" data-section="\d+">(.*?)<\/li>/g)].map(m => m[1]);
+    expect(sectionRows.length).toBe(SECTION_CONFIGS.length);
+    sectionRows.forEach(row => { expect(row).toContain('100%'); expect(row).not.toContain('דילגת'); });
+  });
 });

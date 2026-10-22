@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
-import type { Question } from '@/types/exam';
+import type { Question, SectionResult } from '@/types/exam';
+import { updateThetaAfterSection, thetaToScore } from '@/lib/adaptive';
 
 const mocks = vi.hoisted(() => ({
   getServerClients: vi.fn(),
@@ -354,7 +355,8 @@ describe('POST /api/exam/answer', () => {
   });
 
   it('decision sections aim at the cut score while the exemption call is uncertain…', async () => {
-    // Entering section 5: answers put the student near θ ≈ 1.7.
+    // Entering section 5: 9 of 11 answers right on b = 1.7 items lands θ̂ ≈ 1.7,
+    // genuinely borderline (the cut sits inside the ½-SE band).
     const hard = questions.map(q => ({ ...q, b: 1.7, type: 'restatement' as const }));
     const db = createSupabase(session({
       current_section_index: 4,
@@ -368,7 +370,7 @@ describe('POST /api/exam/answer', () => {
     mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
     mocks.planInformativeQuestions.mockResolvedValue(hard.slice(0, 3)); // section 5 = 3 restatements
 
-    await POST(request(validBody({ sectionIndex: 4, answers: [0, 1, 0] })));
+    await POST(request(validBody({ sectionIndex: 4, answers: [0, 0, 0] })));
 
     expect(mocks.planInformativeQuestions.mock.calls[0][0].theta).toBe(1.7);
     const trail = db.getUpdatePayload()!.theta_history as Record<string, unknown>[];
@@ -473,5 +475,113 @@ describe('POST /api/exam/answer', () => {
     expect(res.status).toBe(200);
     expect(mocks.applyResponsesToSrs).toHaveBeenCalled();
     expect(mocks.calibrateItems).not.toHaveBeenCalled();
+  });
+
+  // ── Fix A: options are shuffled per presentation ────────────────────────
+  // Stored section with the correct option (canonical index 0) at a
+  // different display slot in each question; option_order maps display →
+  // canonical.
+  const shuffledSection1 = () => [
+    { ...questions[0], correct_answer: 2, option_order: [1, 3, 0, 2] }, // canonical 0 shown at display 2
+    { ...questions[1], correct_answer: 0, option_order: [0, 1, 2, 3] }, // display 0
+    { ...questions[2], correct_answer: 3, option_order: [1, 2, 3, 0] }, // display 3
+    { ...questions[3], correct_answer: 1, option_order: [2, 0, 3, 1] }, // display 1
+  ];
+
+  it('grades a shuffled section against the canonical key and logs canonical chosen_option', async () => {
+    const db = createSupabase(session({ questions_by_section: { 1: shuffledSection1() }, current_section_expires_at: '2999-01-01T00:00:00.000Z' }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+
+    // The student clicks the correct display slot of each question → all right.
+    const response = await POST(request(validBody({ answers: [2, 0, 3, 1] })));
+
+    expect(response.status).toBe(200);
+    expect(db.getUpdatePayload()?.section_results).toEqual([
+      expect.objectContaining({ correctCount: 4, totalCount: 4 }),
+    ]);
+    // Every pick is logged mapped back to its canonical index (0), correct.
+    const rows = db.spies.rpc.mock.calls[0][1].p_responses;
+    expect(rows.map((r: { chosen_option: number | null; correct: boolean }) => [r.chosen_option, r.correct]))
+      .toEqual([[0, true], [0, true], [0, true], [0, true]]);
+  });
+
+  it('shuffling is display-only: θ is identical to the same answers in canonical order', async () => {
+    const canonical = createSupabase(session({ current_section_expires_at: '2999-01-01T00:00:00.000Z' }));
+    mocks.getServerClients.mockResolvedValue({ supabase: canonical.supabase, user: null, guestId: 'owner-id' });
+    const r1 = await (await POST(request(validBody({ answers: [0, 0, 0, 0] })))).json(); // all right, canonical store
+
+    const db = createSupabase(session({ questions_by_section: { 1: shuffledSection1() }, current_section_expires_at: '2999-01-01T00:00:00.000Z' }));
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+    const r2 = await (await POST(request(validBody({ answers: [2, 0, 3, 1] })))).json(); // all right, shuffled store
+
+    expect(r2.newTheta).toBeCloseTo(r1.newTheta, 12);
+  });
+
+  // ── Fix B: the scored-performance endpoints are anchored ────────────────
+  // Six scored sections of the real exam's sizes (23 items), plus the
+  // experimental section 7 submitted last.
+  function completionWith(scoredCorrectPerSection: (size: number) => number) {
+    const sizes = [4, 4, 5, 3, 3, 4];
+    const scored: SectionResult[] = sizes.map((size, i) => {
+      const qs = Array.from({ length: size }, (_, k) => ({ ...questions[0], id: `s${i + 1}-q${k}`, b: 0 }));
+      const nCorrect = scoredCorrectPerSection(size);
+      const answers = qs.map((_, k) => (k < nCorrect ? 0 : 1)); // correct_answer = 0
+      return { sectionIndex: i + 1, type: 'sentence_completion', questions: qs, answers, thetaBefore: 0, thetaAfter: 0, correctCount: nCorrect, totalCount: size };
+    });
+    return scored;
+  }
+
+  it('reports 150 for a clean sweep of every scored item', async () => {
+    const db = createSupabase(session({
+      current_section_index: 7,
+      questions_by_section: { 7: questions },
+      section_results: completionWith(size => size), // 23/23
+      current_section_expires_at: '2999-01-01T00:00:00.000Z',
+    }), { data: true, error: null }, []);
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+
+    const response = await POST(request(validBody({ sectionIndex: 7, answers: [0, 0, 0, 0] })));
+
+    expect((await response.json()).score).toBe(150);
+    expect(db.getUpdatePayload()?.score).toBe(150);
+  });
+
+  it('reports 50 when no scored item is correct', async () => {
+    const db = createSupabase(session({
+      current_section_index: 7,
+      questions_by_section: { 7: questions },
+      section_results: completionWith(() => 0), // 0/23
+      current_section_expires_at: '2999-01-01T00:00:00.000Z',
+    }), { data: true, error: null }, []);
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+
+    const response = await POST(request(validBody({ sectionIndex: 7, answers: [1, 1, 1, 1] }))); // experimental also wrong
+
+    expect((await response.json()).score).toBe(50);
+    expect(db.getUpdatePayload()?.score).toBe(50);
+  });
+
+  it('leaves a mixed scored exam on the unchanged θ→score mapping', async () => {
+    const scored = completionWith(size => Math.ceil(size * 0.75)); // ~75% right, neither endpoint
+    const db = createSupabase(session({
+      current_section_index: 7,
+      questions_by_section: { 7: questions },
+      section_results: scored,
+      current_section_expires_at: '2999-01-01T00:00:00.000Z',
+    }), { data: true, error: null }, []);
+    mocks.getServerClients.mockResolvedValue({ supabase: db.supabase, user: null, guestId: 'owner-id' });
+
+    // Experimental section all wrong, so it can't raise the score — the
+    // reported score is exactly the scored θ→score mapping, unchanged.
+    const response = await POST(request(validBody({ sectionIndex: 7, answers: [1, 1, 1, 1] })));
+
+    const expectedTheta = updateThetaAfterSection(0, {
+      questions: scored.flatMap(sr => sr.questions),
+      answers: scored.flatMap(sr => sr.answers),
+    });
+    const score = (await response.json()).score;
+    expect(score).toBe(thetaToScore(expectedTheta));
+    expect(score).toBeGreaterThan(50);
+    expect(score).toBeLessThan(150);
   });
 });

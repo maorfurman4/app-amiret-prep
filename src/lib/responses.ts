@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { isCorrectAnswer, type Question } from '@/types/exam';
+import { toCanonicalOption } from '@/lib/option-shuffle';
 import { predictCorrect } from '@/lib/ability';
 
 /**
@@ -27,8 +28,11 @@ export interface ExamResponseRow {
 
 /**
  * One row per question in a submitted exam section, in the section's own
- * order. Exam options are never shuffled, so `answers` are already
- * canonical. `timingsSeconds` is the client's per-question dwell time and
+ * order. Options are shuffled per presentation (see src/lib/option-shuffle.ts),
+ * so each `answers[i]` is a display index that is mapped back to the stored
+ * (canonical) option via the question's `option_order` before logging —
+ * old sessions without option_order are already canonical and pass through
+ * unchanged. `timingsSeconds` is the client's per-question dwell time and
  * is optional — a section with no usable timings still logs every answer,
  * just without latency.
  */
@@ -56,7 +60,7 @@ export function buildExamResponseRows({
     // responses are practice data, not exam-condition data.
     context: isPractice ? 'practice' : 'exam',
     correct: isCorrectAnswer(question, answers[i] ?? null),
-    chosen_option: answers[i] ?? null,
+    chosen_option: toCanonicalOption(question, answers[i] ?? null),
     latency_ms: timingsSeconds ? Math.round(timingsSeconds[i] * 1000) : null,
     theta_before: thetaBefore,
     p_correct: predictCorrect(thetaBefore, question),

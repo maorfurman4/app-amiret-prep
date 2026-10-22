@@ -3,7 +3,7 @@ import {
   CUT_THETA, fisherInformation, testInformation, standardError, chooseRouteTarget,
   normalCdf, exemptionProbability, eloStep, ELO_K0, B_BOUND,
 } from './calibration';
-import { irtProbability, itemIrtParams, estimateThetaEAP, estimateThetaMLE } from './adaptive';
+import { irtProbability, itemIrtParams, estimateThetaEAP, estimateThetaMLE, routeNextDifficulty } from './adaptive';
 import { isRapidGuess } from './calibration-server';
 
 /** Deterministic RNG (mulberry32) so simulations are reproducible. */
@@ -58,12 +58,16 @@ describe('routing target', () => {
   it('early sections always aim at the ability estimate', () => {
     expect(chooseRouteTarget({ nextSectionIndex: 3, theta: 1.6, se: 0.3 })).toEqual({ theta: 1.6, reason: 'ability' });
   });
-  it('decision sections aim at the cut while it is within 2 SE of θ̂', () => {
-    expect(chooseRouteTarget({ nextSectionIndex: 5, theta: 1.2, se: 0.3 })).toEqual({ theta: CUT_THETA, reason: 'cut_score' });
-    expect(chooseRouteTarget({ nextSectionIndex: 7, theta: 2.2, se: 0.3 })).toEqual({ theta: CUT_THETA, reason: 'cut_score' });
+  it('decision sections aim at the cut only while it is within ½ SE of θ̂', () => {
+    expect(chooseRouteTarget({ nextSectionIndex: 5, theta: 1.75, se: 0.4 })).toEqual({ theta: CUT_THETA, reason: 'cut_score' });
+    expect(chooseRouteTarget({ nextSectionIndex: 7, theta: 1.6, se: 0.5 })).toEqual({ theta: CUT_THETA, reason: 'cut_score' });
   });
-  it('…and back at θ̂ once the decision is already clear', () => {
-    expect(chooseRouteTarget({ nextSectionIndex: 6, theta: 0.5, se: 0.3 })).toEqual({ theta: 0.5, reason: 'ability' });
+  it('…and back at θ̂ once the student is clearly above or below the cut', () => {
+    // A consistently-right student (θ̂ a full SE above the cut) is escalated
+    // toward the hardest items instead of being pinned at the cut — the
+    // under-escalation fix.
+    expect(chooseRouteTarget({ nextSectionIndex: 6, theta: 2.3, se: 0.5 })).toEqual({ theta: 2.3, reason: 'ability' });
+    expect(chooseRouteTarget({ nextSectionIndex: 6, theta: 0.8, se: 0.5 })).toEqual({ theta: 0.8, reason: 'ability' });
     expect(chooseRouteTarget({ nextSectionIndex: 6, theta: 0.5, se: Infinity }).reason).toBe('cut_score'); // nothing known yet
   });
 });
@@ -171,6 +175,53 @@ describe('cut-score targeting (simulation)', () => {
     const r = compare(rr => 0.8 + 0.8 * gauss(rr), 3000);
     expect(r.rmseCut).toBeLessThan(r.rmseAbility + 0.03);
     expect(r.accCut).toBeGreaterThan(r.accAbility - 0.02);
+  });
+});
+
+describe('adaptive difficulty path (simulation)', () => {
+  /**
+   * Runs the real routing loop — EAP θ̂, SE, chooseRouteTarget at the
+   * production band — for a 7-section exam and returns the difficulty level
+   * (routeNextDifficulty of the target) each section was served at. Section 1
+   * is fixed at θ = 0; every later section is routed from the answers so far.
+   * `outcome(trueTheta)` decides each item right/wrong.
+   */
+  function servedLevels(outcome: (b: number) => 0 | 1): number[] {
+    const sizes = [4, 4, 5, 3, 3, 4, 4];
+    const items: { b: number }[] = [];
+    const resp: number[] = [];
+    const levels: number[] = [];
+    let target = 0; // section 1 aims at the prior mean
+    sizes.forEach((size, s) => {
+      levels.push(routeNextDifficulty(target));
+      // The most informative item at the target (continuous bank).
+      const b = target - Math.log((1 + Math.sqrt(3)) / 2) / 1.2;
+      for (let k = 0; k < size; k++) { items.push({ b }); resp.push(outcome(b)); }
+      const theta = estimateThetaEAP(items.map(i => itemIrtParams(i)), resp);
+      const se = standardError(theta, items);
+      target = chooseRouteTarget({ nextSectionIndex: s + 2, theta, se }).theta;
+    });
+    return levels;
+  }
+
+  it('escalates a consistently-right taker to the hardest level by the later sections', () => {
+    const levels = servedLevels(() => 1);
+    // Climbs, and the last scored + experimental sections serve level 5 —
+    // the fidelity fix: a flawless run must reach the hardest items.
+    expect(levels.slice(4)).toEqual([5, 5, 5]);
+    expect(levels[0]).toBe(3); // always starts in the middle
+  });
+
+  it('descends a consistently-wrong taker to the easiest level', () => {
+    const levels = servedLevels(() => 0);
+    expect(levels.slice(3)).toEqual([1, 1, 1, 1]);
+  });
+
+  it('keeps a middling taker in the middle of the scale', () => {
+    const r = rng(42);
+    // ~50/50 at θ = 0 against the items it is served.
+    const levels = servedLevels(b => (r() < irtProbability(0, itemIrtParams({ b })) ? 1 : 0));
+    levels.forEach(l => { expect(l).toBeGreaterThanOrEqual(2); expect(l).toBeLessThanOrEqual(4); });
   });
 });
 

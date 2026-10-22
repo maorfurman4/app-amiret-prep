@@ -2,12 +2,13 @@
 
 import { useId, useState } from 'react';
 import Link from 'next/link';
-import { CalendarClock, CalendarCheck, CalendarDays, ChevronLeft, Pencil, Trash2 } from 'lucide-react';
+import { CalendarClock, CalendarCheck, ChevronLeft, Pencil, Trash2 } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 import { authFetch } from '@/lib/auth-fetch';
 import { addLocalDays, localDaysBetween, todayLocalStr } from '@/lib/date-local';
 import { heCount } from '@/lib/hebrew-count';
 import { CARD, CARD_LINK, ICON_TILE } from './surfaces';
+import { ExamDatePicker } from './ExamDatePicker';
 
 /** Same window PUT /api/goals enforces. */
 const MAX_DAYS_AHEAD = 730;
@@ -20,6 +21,13 @@ const SUB = 'block mt-0.5 text-[12.5px] leading-snug text-exam-ink-soft';
 /** "24 בנובמבר 2026". */
 export function formatExamDate(dateStr: string): string {
   return new Intl.DateTimeFormat('he-IL', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+    .format(new Date(`${dateStr}T00:00:00Z`));
+}
+
+/** "יום חמישי, 24 בדצמבר" (the year only when it isn't this one). */
+function pickedDayCopy(dateStr: string, today: string): string {
+  const sameYear = dateStr.slice(0, 4) === today.slice(0, 4);
+  return new Intl.DateTimeFormat('he-IL', { weekday: 'long', day: 'numeric', month: 'long', ...(sameYear ? {} : { year: 'numeric' }), timeZone: 'UTC' })
     .format(new Date(`${dateStr}T00:00:00Z`));
 }
 
@@ -44,7 +52,7 @@ function countdownCopy(daysLeft: number): string {
  */
 export function ExamDateCard() {
   const { data } = useDashboardSummary();
-  const inputId = useId();
+  const titleId = useId();
   // null = "not overridden yet": show what the server sent.
   const [savedDate, setSavedDate] = useState<string | null | undefined>(undefined);
   const [editing, setEditing] = useState(false);
@@ -67,8 +75,8 @@ export function ExamDateCard() {
       <Link href="/auth/login?next=/" className={BANNER_CLASSES}>
         <span className={`${ICON_TILE} size-10`}><CalendarClock className="w-5 h-5" strokeWidth={1.75} aria-hidden /></span>
         <span className="flex-1 min-w-0">
-          <span className={TITLE}>מתי המבחן שלך?</span>
-          <span className={SUB}>התחבר כדי לקבוע תאריך, ונתזמן את החזרות כך שהזיכרון שלך יהיה בשיא ביום המבחן</span>
+          <span className={TITLE}>קבע תאריך מבחן</span>
+          <span className={SUB}>התחבר כדי לשמור אותו</span>
         </span>
         <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
       </Link>
@@ -108,42 +116,22 @@ export function ExamDateCard() {
       <form
         className={`w-full p-4 space-y-3 animate-fade-up ${CARD}`}
         onSubmit={e => { e.preventDefault(); if (draft) void save(draft); }}
+        aria-labelledby={titleId}
       >
-        <label htmlFor={inputId} className="flex items-center gap-2 font-semibold text-sm">
+        <h3 id={titleId} className="flex items-center gap-2 font-bold text-[15px] tracking-[-0.01em]">
           <CalendarClock className="w-5 h-5 text-exam-accent" strokeWidth={1.75} aria-hidden />
-          מתי המבחן שלך?
-        </label>
-        {/* The native date field formats by the browser's locale ("24 Nov 2026"),
-            so it sits invisibly over a Hebrew label and still opens the native
-            picker on tap. */}
-        <div className="relative flex items-center justify-between gap-3 w-full px-4 py-3 bg-exam-paper-alt border border-exam-border-input rounded-xl shadow-pressed has-[:focus-visible]:border-exam-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-exam-accent/30 transition-[border-color,box-shadow] duration-300 ease-spring">
-          <span className={`text-lg font-semibold ${draft ? 'text-exam-ink' : 'text-exam-ink-soft'}`} aria-hidden>
-            {draft ? formatExamDate(draft) : 'בחר תאריך'}
-          </span>
-          <CalendarDays className="w-5 h-5 text-exam-ink-soft flex-shrink-0" aria-hidden />
-          <input
-            id={inputId}
-            type="date"
-            required
-            autoFocus
-            min={today}
-            max={addLocalDays(today, MAX_DAYS_AHEAD)}
-            value={draft}
-            onChange={e => setDraft(e.target.value)}
-            onClick={e => { try { e.currentTarget.showPicker(); } catch { /* the field itself still works */ } }}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-            aria-describedby={error ? `${inputId}-error` : undefined}
-          />
-        </div>
-        <p className="text-xs text-exam-ink-soft">
-          נתזמן את החזרות כך שהחזרה האחרונה על כל נושא תהיה 1–3 ימים לפני המבחן, והמרווחים יתקצרו ככל שהוא מתקרב.
+          תאריך המבחן
+        </h3>
+        <ExamDatePicker value={draft} min={today} max={addLocalDays(today, MAX_DAYS_AHEAD)} onChange={setDraft} labelledBy={titleId} />
+        <p aria-live="polite" className="text-center text-[13px] text-exam-ink-soft">
+          {draft ? `${pickedDayCopy(draft, today)}. ${countdownCopy(localDaysBetween(today, draft))}` : 'בחר יום בלוח'}
         </p>
-        {error && <p id={`${inputId}-error`} role="alert" className="text-xs font-semibold text-exam-wrong">{error}</p>}
+        {error && <p role="alert" className="text-xs font-semibold text-exam-wrong">{error}</p>}
         <div className="flex items-center gap-2">
           <button
             type="submit"
             disabled={!draft || saving}
-            className={`flex-1 py-2.5 bg-exam-accent text-exam-accent-ink font-bold rounded-xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none ${TACTILE}`}
+            className={`flex-1 h-11 bg-exam-accent text-exam-accent-ink font-bold rounded-xl shadow-raised hover:shadow-overlay active:shadow-pressed hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none ${TACTILE}`}
           >
             {saving ? 'שומר…' : 'שמור תאריך'}
           </button>
@@ -151,7 +139,7 @@ export function ExamDateCard() {
             type="button"
             onClick={() => setEditing(false)}
             disabled={saving}
-            className={`px-4 py-2.5 rounded-xl border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt active:scale-[0.97] ${TACTILE}`}
+            className={`h-11 px-4 rounded-xl border border-exam-border text-exam-ink-soft hover:bg-exam-paper-alt active:scale-[0.97] ${TACTILE}`}
           >
             ביטול
           </button>
@@ -170,7 +158,6 @@ export function ExamDateCard() {
           </div>
           <div className="mt-0.5 text-[12.5px] leading-snug text-exam-ink-soft">
             {formatExamDate(examDate)}
-            {daysLeft! <= 14 && daysLeft! > 0 && '. המרווחים בין החזרות מתקצרים לקראת המבחן.'}
           </div>
           {error && <div role="alert" className="text-xs font-semibold text-exam-wrong mt-0.5">{error}</div>}
         </div>
@@ -201,8 +188,8 @@ export function ExamDateCard() {
     <button type="button" onClick={openEditor} className={BANNER_CLASSES}>
       <span className={`${ICON_TILE} size-10`}><CalendarClock className="w-5 h-5" strokeWidth={1.75} aria-hidden /></span>
       <span className="flex-1 min-w-0">
-        <span className={TITLE}>{hadPastDate ? 'תאריך המבחן עבר. מתי המבחן הבא?' : 'מתי המבחן שלך?'}</span>
-        <span className={SUB}>קבע תאריך, ונתזמן את החזרות כך שהזיכרון שלך יהיה בשיא ביום המבחן</span>
+        <span className={TITLE}>{hadPastDate ? 'תאריך המבחן עבר' : 'קבע תאריך מבחן'}</span>
+        <span className={SUB}>{hadPastDate ? 'קבע את התאריך הבא' : 'החזרות יתוזמנו לפיו'}</span>
       </span>
       <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
     </button>

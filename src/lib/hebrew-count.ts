@@ -19,6 +19,7 @@ export const NOUNS = {
   mistake: { one: 'טעות', many: 'טעויות', gender: 'f' },
   point: { one: 'נקודה', many: 'נקודות', gender: 'f' },
   second: { one: 'שנייה', many: 'שניות', gender: 'f' },
+  review: { one: 'חזרה', many: 'חזרות', gender: 'f' },
 } as const satisfies Record<string, HebrewNoun>;
 
 export type NounKey = keyof typeof NOUNS;

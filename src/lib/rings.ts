@@ -12,11 +12,13 @@ import { localDayStart, localWeekStart } from '@/lib/date-local';
  *              items that are too easy or hopeless doesn't count.
  *   retention  Ring B — FSRS reviews completed today of cards that were
  *              actually due (srs_review_log.was_due, decided server-side),
- *              against what's still due right now.
+ *              against today's share of what's due (reviewTarget).
  *   simulation Ring C — a completed, timed full exam since the start of
  *              this (Israeli, Sunday-first) week.
  */
 export const DEFAULT_EFFORT_TARGET = 15;
+/** Reviews asked of a day: one /today session's worth (it serves this many). */
+export const DAILY_REVIEW_TARGET = 8;
 
 export interface Rings {
   effort: { done: number; target: number };
@@ -31,12 +33,26 @@ export interface RingProgress {
 }
 
 /**
- * Fill ratio (0..1) per ring. Retention is complete when nothing is left
- * due — an empty queue is settled, not an invented obligation.
+ * Today's review goal: what's due, capped at DAILY_REVIEW_TARGET, so a
+ * backlog of hundreds reads as "8 today" and the rest wait for later days.
+ * Never below what was already done, so extra reviews show as 12/12, not 12/8.
+ */
+export function reviewTarget({ done, due }: Rings['retention']): number {
+  return Math.max(done, Math.min(done + due, DAILY_REVIEW_TARGET));
+}
+
+/** Reviews still left in today's goal (0 once it's met). */
+export function reviewsLeftToday(retention: Rings['retention']): number {
+  return reviewTarget(retention) - retention.done;
+}
+
+/**
+ * Fill ratio (0..1) per ring. Retention is complete when today's goal is
+ * met; an empty queue is settled, not an invented obligation.
  */
 export function ringProgress(r: Rings): RingProgress {
   const clamp = (x: number) => Math.min(1, Math.max(0, x));
-  const retentionTarget = r.retention.done + r.retention.due;
+  const retentionTarget = reviewTarget(r.retention);
   return {
     effort: clamp(r.effort.done / Math.max(1, r.effort.target)),
     retention: retentionTarget > 0 ? clamp(r.retention.done / retentionTarget) : 1,

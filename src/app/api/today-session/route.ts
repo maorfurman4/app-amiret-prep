@@ -4,9 +4,11 @@ import { computeWeakestType } from '@/lib/weakness';
 import { fetchUnseenQuestions, fetchUnseenRCQuestions, PoolUnavailableError } from '@/lib/question-history';
 import { shuffleAllOptions } from '@/lib/option-shuffle';
 import { selectDueReviewQuestions } from '@/lib/srs';
+import { DAILY_REVIEW_TARGET } from '@/lib/rings';
 import type { Question, QuestionType } from '@/types/exam';
 
-const REVIEW_LIMIT = 8;
+// One session serves exactly a day's review goal (src/lib/rings.ts).
+const REVIEW_LIMIT = DAILY_REVIEW_TARGET;
 const WEAK_PRACTICE_COUNT = 5;
 const VOCAB_LIMIT = 8;
 

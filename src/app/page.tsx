@@ -6,6 +6,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { DashboardSummaryProvider } from '@/lib/dashboard-context';
 import { StreakBadge } from '@/components/home/StreakBadge';
 import { Greeting } from '@/components/home/Greeting';
+import { DailySlogan } from '@/components/home/DailySlogan';
 import { DiagnosticBanner } from '@/components/home/DiagnosticBanner';
 import { ReviewQueueCard } from '@/components/home/ReviewQueueCard';
 import { StatsCard } from '@/components/home/StatsCard';
@@ -48,13 +49,14 @@ export default function HomePage() {
             <ThemeToggle />
           </div>
 
-          {/* Hero: the mark, then a greeting by name */}
+          {/* Hero: the mark, a greeting by name, then the day's slogan */}
           <div className="mt-[18px] text-center">
             <h1>
               <BrandLogo className="w-[136px] h-auto mx-auto" />
               <span className="sr-only">: הכנה לאמירנ&quot;ט</span>
             </h1>
             <Greeting />
+            <DailySlogan />
           </div>
 
           <div className="mt-[26px] flex flex-col gap-3.5">

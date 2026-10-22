@@ -6,7 +6,7 @@ import { Check, Sparkles } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 import { typeLabel } from '@/lib/stats-metrics';
 import { heCount } from '@/lib/hebrew-count';
-import type { Rings } from '@/lib/rings';
+import { reviewTarget, reviewsLeftToday, type Rings } from '@/lib/rings';
 import type { TodayActivity } from '@/lib/today-activity';
 import { ReviewDueNudge } from './ReviewDueNudge';
 
@@ -21,7 +21,7 @@ const COUNT_MS = 900;
  */
 export function TodaySessionCta() {
   const { data } = useDashboardSummary();
-  const due = data?.todayDueCount ?? 0;
+  const left = data ? reviewsLeftToday(data.rings.retention) : 0;
   const panel = useRef<HTMLDivElement>(null);
   const answered = data?.today.answered ?? 0;
 
@@ -67,13 +67,16 @@ export function TodaySessionCta() {
       >
         <Sparkles className="w-5 h-5" aria-hidden />
         התרגול היומי שלי
-        {due > 0 && (
-          <span className="absolute left-3 min-w-[22px] h-[22px] px-1.5 flex items-center justify-center rounded-full bg-exam-sage-strong text-on-emerald text-xs font-extrabold animate-check-pop">
-            {due > 99 ? '99+' : due}
-          </span>
+        {left > 0 && (
+          <>
+            <span aria-hidden className="absolute left-3 min-w-[22px] h-[22px] px-1.5 flex items-center justify-center rounded-full bg-exam-sage-strong text-on-emerald text-xs font-extrabold animate-check-pop">
+              {left}
+            </span>
+            <span className="sr-only">, {heCount(left, 'review')} להיום</span>
+          </>
         )}
       </Link>
-      {data && due > 0 && <div className="mt-2.5 px-1.5"><ReviewDueNudge dueCount={due} /></div>}
+      {data && <ReviewDueNudge retention={data.rings.retention} />}
     </div>
   );
 }
@@ -121,19 +124,17 @@ function Kpi({ label, children }: { label: string; children: ReactNode }) {
 
 function PlanLeft({ rings }: { rings: Rings }) {
   const { effort, retention, simulation } = rings;
+  const target = reviewTarget(retention);
   return (
     <ul className="flex flex-col gap-2.5 p-3 bg-exam-surface rounded-2xl shadow-surface text-[13.5px] text-exam-ink-soft">
       <PlanItem done={effort.done >= effort.target} value={<bdi dir="ltr">{effort.done}/{effort.target}</bdi>}>
         <b className="font-bold text-exam-ink">שאלות ברמה המאתגרת</b> בשבילך
       </PlanItem>
       <PlanItem
-        done={retention.due === 0}
-        value={retention.due > 0 && <bdi dir="ltr">{retention.done}/{retention.done + retention.due}</bdi>}
+        done={retention.done >= target}
+        value={target > 0 ? <bdi dir="ltr">{retention.done}/{target}</bdi> : <span className="font-semibold text-exam-ink-soft">אין להיום</span>}
       >
-        <b className="font-bold text-exam-ink">חזרות בזמן</b>{' '}
-        {retention.due > 0
-          ? `(עוד ${retention.due === 1 ? 'אחת ממתינה' : `${retention.due} ממתינות`})`
-          : retention.done > 0 ? `(סיימת ${retention.done})` : '(אין להיום)'}
+        <b className="font-bold text-exam-ink">חזרה</b> על מה שכבר תרגלת
       </PlanItem>
       <PlanItem
         done={simulation.done}

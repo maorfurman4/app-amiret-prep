@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { todayLocalStr } from '@/lib/date-local';
 import { AchievementGlow, useIncrease } from './AchievementMotion';
 import { Check } from 'lucide-react';
-import { ringProgress, type Rings } from '@/lib/rings';
+import { reviewTarget, ringProgress, type Rings } from '@/lib/rings';
 
 /**
  * Three concentric Apple-Fitness-style rings for the home page's "Today"
@@ -12,7 +12,7 @@ import { ringProgress, type Rings } from '@/lib/rings';
  * (src/lib/rings.ts) — never a client-reported count:
  *   outer  (accent) — effortful practice: questions answered today in the
  *                     student's difficulty sweet spot
- *   middle (sage)   — due FSRS reviews completed today
+ *   middle (sage)   — due FSRS reviews completed today, against the daily goal
  *   inner  (amber)  — a full, timed exam simulation this week
  * Hand-rolled SVG (stroke-dasharray/stroke-dashoffset) — three circles
  * don't need a charting library.
@@ -65,8 +65,8 @@ export function DailyRings({ rings, persistCelebration = true }: { rings: Rings;
     return () => clearTimeout(timer);
   }, [allClosed, persistCelebration]);
   const celebrate = allClosed && (closure.increased || arrivalReward);
-  const reviewsCaughtUp = rings.retention.due === 0;
-  const retentionTarget = rings.retention.done + rings.retention.due;
+  const retentionTarget = reviewTarget(rings.retention);
+  const reviewsCaughtUp = rings.retention.done >= retentionTarget;
 
   return (
     <div className="flex items-center gap-4 px-3" dir="rtl" role="group" aria-label="ההתקדמות שלך היום">
@@ -98,7 +98,7 @@ export function DailyRings({ rings, persistCelebration = true }: { rings: Rings;
           <span className="text-exam-ink-soft">חזרות בזמן</span>
           {reviewsCaughtUp ? (
             <span className="font-semibold text-exam-sage-strong">
-              {rings.retention.done > 0 ? `הכול מעודכן, סיימת ${rings.retention.done}` : 'אין חזרות להיום'}
+              {rings.retention.done > 0 ? `סיימת ${rings.retention.done} להיום` : 'אין חזרות להיום'}
             </span>
           ) : (
             <span className="font-bold text-exam-ink tabular-nums" dir="ltr">{rings.retention.done}/{retentionTarget}</span>

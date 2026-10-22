@@ -9,7 +9,8 @@
  *   ?guest=1         no session (guest pill)
  *   ?stats=none      no completed exams
  *   ?stats=error     /api/stats fails
- *   ?fail=name|avatar|password   that write returns an error
+ *   ?fail=name|avatar|password|delete   that write returns an error
+ *   ?streak=N        the streak /api/streak reports (default 5)
  *   ?provider=google a Google user: user_metadata.avatar_url is the Google
  *                    photo, as every Google sign-in resets it to
  *   ?avatar=custom   user_stats.avatar_url already holds a custom upload
@@ -92,6 +93,8 @@ export function installProfileStub() {
     displayName: 'נועה Levi 2',
     avatarUrl: params.get('avatar') === 'custom' ? CUSTOM_PHOTO : null,
     passwordLength: 0,
+    examDate: '2026-12-14',
+    deleted: false,
   };
   const calls: Call[] = [];
   w.__profileStub = { calls, state };
@@ -141,6 +144,27 @@ export function installProfileStub() {
       if (url.pathname === '/api/auth/guest') {
         log();
         return json({ ok: true, guestId: 'stub-guest' });
+      }
+      if (url.pathname === '/api/streak') {
+        log();
+        return json({ streak: Number(params.get('streak') ?? 5), hasActivityToday: true });
+      }
+      if (url.pathname === '/api/goals') {
+        if (method === 'PUT') {
+          const body = JSON.parse(String(init.body ?? '{}')) as { examDate?: string | null };
+          log(body);
+          state.examDate = body.examDate ?? null;
+          return json({ ok: true, examDate: state.examDate });
+        }
+        log();
+        return json({ examDate: state.examDate, dailyActivityTarget: 15 });
+      }
+      // Never reaches the server: the preview can't delete anything.
+      if (url.pathname === '/api/account' && method === 'DELETE') {
+        log(JSON.parse(String(init.body ?? '{}')));
+        if (fail === 'delete') return json({ error: 'המחיקה נכשלה (stub)' }, 500);
+        state.deleted = true;
+        return json({ ok: true });
       }
       return realFetch(input, init);
     }

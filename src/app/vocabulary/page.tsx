@@ -24,6 +24,7 @@ import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { reconcileLocalOwner } from '@/lib/local-learning-data';
 import { addPending, applyPending, readPending, settlePending, writePending, type PendingOp } from '@/lib/vocab-sync';
 import { timedAdvanceDelay } from '@/lib/vocab-timed';
+import { speakWord } from '@/lib/sound-preference';
 import { Modal } from '@/components/ui/Modal';
 
 /** Small inline star-rating row (filled/outline), used wherever a raw ★/☆ repeat used to render. */
@@ -273,14 +274,7 @@ function VocabularyContent() {
   const speak = useCallback((word: string) => {
     if (typeof window === 'undefined') return;
     if (speakTimerRef.current) clearTimeout(speakTimerRef.current);
-    speakTimerRef.current = setTimeout(() => {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(word);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.85;
-      utterance.pitch = 1;
-      window.speechSynthesis.speak(utterance);
-    }, 150);
+    speakTimerRef.current = setTimeout(() => speakWord(word), 150);
   }, []);
   useEffect(() => {
     return () => {

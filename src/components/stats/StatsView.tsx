@@ -1,15 +1,22 @@
 import Link from 'next/link';
 import { BarChart3 } from 'lucide-react';
 import type { StatsMetrics, StatsRow } from '@/lib/stats-metrics';
+import type { StatsActivity } from '@/lib/stats-client';
 import { BackNav } from '@/components/BackNav';
 import { OfficialScoresSection } from '@/components/official-score/OfficialScoresSection';
 import { StatsHero } from './StatsHero';
 import { ReadinessSection } from './ReadinessSection';
 import { TypePerformanceCard } from './TypePerformanceCard';
+import { PracticeActivityCard } from './PracticeActivityCard';
+import { ErrorCauseCard } from './ErrorCauseCard';
 import { VictoryPath } from './VictoryPath';
 
-/** The loaded screen. Split out so it can be rendered (and tested) from metrics alone. */
-export function StatsView({ metrics, rows }: { metrics: StatsMetrics | null; rows: StatsRow[] }) {
+/**
+ * The loaded screen. Split out so it can be rendered (and tested) from metrics
+ * alone. `activity` (practice counts + tagged errors) is an optional add-on —
+ * its widgets simply don't render until it's loaded.
+ */
+export function StatsView({ metrics, rows, activity }: { metrics: StatsMetrics | null; rows: StatsRow[]; activity?: StatsActivity | null }) {
   if (!metrics) {
     return (
       <div className="min-h-dvh bg-exam-paper" dir="rtl">
@@ -37,8 +44,10 @@ export function StatsView({ metrics, rows }: { metrics: StatsMetrics | null; row
       <main id="main" className="max-w-2xl mx-auto flex flex-col gap-7 pt-5 pb-24 px-4">
         <h1 className="text-2xl font-bold text-exam-ink -mb-3">הסטטיסטיקה שלי</h1>
         <StatsHero metrics={metrics} />
+        {activity && <PracticeActivityCard practice={activity.practice} />}
         <VictoryPath sessions={rows} targetScore={134} />
         <TypePerformanceCard recent={metrics.recent} allTime={metrics.allTime} weakestType={metrics.weakest?.type ?? null} />
+        {activity && <ErrorCauseCard breakdown={activity.errorCauses} />}
         <ReadinessSection metrics={metrics} />
         <OfficialScoresSection />
       </main>

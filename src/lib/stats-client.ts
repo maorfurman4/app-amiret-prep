@@ -1,5 +1,26 @@
 import { authFetch } from './auth-fetch';
 import type { StatsRow } from './stats-metrics';
+import type { ErrorCauseBreakdown, PracticeActivity } from './practice-activity';
+
+export interface StatsActivity {
+  practice: PracticeActivity;
+  errorCauses: ErrorCauseBreakdown;
+}
+
+/**
+ * The practice-activity counts and tagged-error breakdown behind the two
+ * extra stats widgets. Additive and optional: a failed read returns null so
+ * the widgets simply don't render — it never blocks the exam-based page.
+ */
+export async function fetchStatsActivity(): Promise<StatsActivity | null> {
+  try {
+    const res = await authFetch('/api/stats/activity');
+    if (!res.ok) return null;
+    return await res.json() as StatsActivity;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * The one client read behind every stats number: /stats and the profile

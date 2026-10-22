@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchStatsRows } from '@/lib/stats-client';
+import { fetchStatsRows, fetchStatsActivity, type StatsActivity } from '@/lib/stats-client';
 import { computeStatsMetrics, type StatsRow } from '@/lib/stats-metrics';
 import { BackNav } from '@/components/BackNav';
 import { StatsView } from '@/components/stats/StatsView';
@@ -14,6 +14,7 @@ import { AlertTriangle } from 'lucide-react';
  */
 export default function StatsPage() {
   const [rows, setRows] = useState<StatsRow[]>([]);
+  const [activity, setActivity] = useState<StatsActivity | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [loadToken, setLoadToken] = useState(0);
@@ -36,6 +37,9 @@ export default function StatsPage() {
         setError(true);
         setLoading(false);
       });
+    // The practice/error-cause widgets are additive — their fetch never blocks
+    // or fails the page; it just stays null until (and unless) it resolves.
+    fetchStatsActivity().then(a => { if (!cancelled) setActivity(a); });
     return () => { cancelled = true; };
   }, [loadToken]);
 
@@ -66,5 +70,5 @@ export default function StatsPage() {
     );
   }
 
-  return <StatsView metrics={computeStatsMetrics(rows)} rows={rows} />;
+  return <StatsView metrics={computeStatsMetrics(rows)} rows={rows} activity={activity} />;
 }

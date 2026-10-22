@@ -475,7 +475,7 @@ export default function ExamPage({ params }: { params: Promise<{ sessionId: stri
             <div className="flex flex-col flex-1">
               <h1 className="text-sm font-bold text-exam-ink">סימולציית פרקי הליבה</h1>
               <span className="text-xs text-exam-ink-soft">
-                פרק {currentSection} — {currentCfg?.type === 'sentence_completion' ? 'השלמת משפטים' :
+                פרק {currentSection} מתוך {SECTION_CONFIGS.length} — {currentCfg?.type === 'sentence_completion' ? 'השלמת משפטים' :
                   currentCfg?.type === 'restatement' ? 'ניסוח מחדש' :
                   currentCfg?.type === 'reading_comprehension' ? 'הבנת הנקרא' : 'אנגלית ESRA'}
                 {currentCfg?.experimental && (

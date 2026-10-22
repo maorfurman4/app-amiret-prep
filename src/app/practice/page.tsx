@@ -19,7 +19,7 @@ import { ErrorCauseTagger } from '@/components/exam/ErrorCauseTagger';
 import { PaceGauge } from '@/components/exam/PaceGauge';
 import { ExamReview } from '@/components/exam/ExamReview';
 import type { ResponseLogEntry } from '@/lib/response-log-client';
-import { PenLine, RotateCcw, BookOpen, Dices, PartyPopper, ThumbsUp, Check, X, Shuffle, type LucideIcon, ChevronLeft, Clock, FileText, ChevronRight, ArrowRight, Plus, Minus, Info } from 'lucide-react';
+import { PenLine, RotateCcw, BookOpen, Dices, PartyPopper, ThumbsUp, Check, X, Shuffle, Stethoscope, type LucideIcon, ChevronLeft, Clock, FileText, ChevronRight, ArrowRight, Plus, Minus, Info } from 'lucide-react';
 import { heCount } from '@/lib/hebrew-count';
 import { focusedControlOwnsKey } from '@/lib/keyboard-shortcuts';
 import { blankLabel } from '@/lib/section-practice';
@@ -450,6 +450,20 @@ function PracticeContent() {
                 </div>
               </button>
             ))}
+          </div>
+
+          {/* Quick diagnostic — a distinct entry, set apart from the type cards above. */}
+          <div className="mt-6 pt-6 border-t border-exam-border animate-fade-up [animation-delay:245ms]">
+            <Link
+              href="/diagnostic"
+              className="w-full text-right p-5 bg-exam-surface rounded-2xl border border-exam-border shadow-surface hover:shadow-raised active:shadow-pressed hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] hover:border-exam-border-strong transition-[background-color,border-color,box-shadow,transform] duration-300 ease-spring will-change-transform flex items-center gap-4"
+            >
+              <Stethoscope className="w-8 h-8 text-exam-ink-soft flex-shrink-0" strokeWidth={1.75} aria-hidden />
+              <div>
+                <div className="font-bold text-exam-ink text-lg">אבחון רמה מהיר</div>
+                <div className="text-exam-ink-soft text-sm">6–10 שאלות אדפטיביות בכ-5 דקות. גלה את הרמה שלך ומאיפה להתחיל</div>
+              </div>
+            </Link>
           </div>
 
           {/* Review queue */}

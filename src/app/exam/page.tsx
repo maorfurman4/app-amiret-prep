@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Target, BookOpen, Search, Stethoscope, Sparkles, type LucideIcon } from 'lucide-react';
+import { Target, BookOpen, Sparkles, type LucideIcon } from 'lucide-react';
 import type { ExamMode } from '@/types/exam';
 import { BackNav } from '@/components/BackNav';
 import { authFetch } from '@/lib/auth-fetch';
@@ -22,12 +22,6 @@ const MODES: { mode: ExamMode; title: string; desc: string; icon: LucideIcon; is
     desc: 'בלי טיימר, עם הסבר מיד אחרי כל תשובה, בקצב שלך',
     icon: BookOpen,
     isPractice: true,
-  },
-  {
-    mode: 'section',
-    title: 'תרגול סעיף',
-    desc: 'בחר סוג שאלות ספציפי לתרגול ממוקד',
-    icon: Search,
   },
 ];
 
@@ -52,12 +46,6 @@ export default function ExamModePage() {
   const startExam = async (mode: ExamMode, isPractice = false) => {
     setLoading(true);
     setError(null);
-
-    if (mode === 'section') {
-      setLoading(false);
-      router.push('/practice');
-      return;
-    }
 
     try {
       const guestId = getOrCreateGuestId();
@@ -98,7 +86,7 @@ export default function ExamModePage() {
         )}
 
         <p role="status" className="sr-only">{loading ? 'מכין את המבחן...' : ''}</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4" aria-busy={loading}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" aria-busy={loading}>
           {MODES.map(m => (
             <button
               key={m.mode}
@@ -111,22 +99,6 @@ export default function ExamModePage() {
               <div className="text-sm text-exam-ink-soft leading-relaxed">{m.desc}</div>
             </button>
           ))}
-        </div>
-
-        {/* Quick diagnostic */}
-        <div className="mt-4">
-          <Link
-            href="/diagnostic"
-            className="block w-full text-right p-6 bg-exam-surface rounded-md border border-exam-border hover:bg-exam-paper-alt hover:border-exam-border-strong transition-colors"
-          >
-            <div className="flex items-center gap-4">
-              <Stethoscope className="w-8 h-8 text-exam-ink-soft flex-shrink-0" strokeWidth={1.5} aria-hidden />
-              <div>
-                <div className="text-lg font-bold text-exam-ink">אבחון רמה מהיר</div>
-                <div className="text-sm text-exam-ink-soft leading-relaxed">6–10 שאלות אדפטיביות בכ-5 דקות. גלה את הרמה שלך ומאיפה להתחיל</div>
-              </div>
-            </div>
-          </Link>
         </div>
 
         {/* Strategies guide link */}

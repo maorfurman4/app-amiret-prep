@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { computeRings, ringProgress, type Rings } from './rings';
+import { computeRings, DAILY_REVIEW_TARGET, reviewsLeftToday, reviewTarget, ringProgress, type Rings } from './rings';
 
 const rings = (o: Partial<{ effort: number; target: number; done: number; due: number; sim: boolean }> = {}): Rings => ({
   effort: { done: o.effort ?? 0, target: o.target ?? 15 },
@@ -19,6 +19,35 @@ describe('ringProgress', () => {
     expect(ringProgress(rings({ done: 2, due: 3 })).retention).toBeCloseTo(0.4, 10);
     expect(ringProgress(rings({ done: 0, due: 0 })).retention).toBe(1);
     expect(ringProgress(rings({ done: 0, due: 4 })).retention).toBe(0);
+  });
+
+  it('retention fills toward the capped daily goal, not the whole backlog', () => {
+    expect(ringProgress(rings({ done: 4, due: 326 })).retention).toBe(0.5);
+    expect(ringProgress(rings({ done: 8, due: 322 })).retention).toBe(1);
+  });
+});
+
+describe('reviewTarget (the daily review goal)', () => {
+  const t = (done: number, due: number) => reviewTarget({ done, due });
+
+  it('is what is due, capped at the daily goal', () => {
+    expect(DAILY_REVIEW_TARGET).toBe(8);
+    expect(t(0, 330)).toBe(8);
+    expect(t(0, 3)).toBe(3);
+    expect(t(3, 2)).toBe(5);
+    expect(t(0, 0)).toBe(0);
+  });
+
+  it('never drops below what was already done', () => {
+    expect(t(8, 322)).toBe(8);
+    expect(t(12, 318)).toBe(12);
+  });
+
+  it('reports what is left of today, never the backlog', () => {
+    expect(reviewsLeftToday({ done: 0, due: 330 })).toBe(8);
+    expect(reviewsLeftToday({ done: 5, due: 325 })).toBe(3);
+    expect(reviewsLeftToday({ done: 12, due: 318 })).toBe(0);
+    expect(reviewsLeftToday({ done: 0, due: 0 })).toBe(0);
   });
 
   it('simulation is binary', () => {

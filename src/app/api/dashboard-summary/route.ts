@@ -10,10 +10,8 @@ export interface DashboardSummary {
   streak: number;
   lastScore: number | null;
   examCount: number;
-  reviewDueCount: number;
-  todayDueCount: number;
   hasActivityToday: boolean;
-  /** Server-derived learning rings (src/lib/rings.ts). */
+  /** Server-derived learning rings (src/lib/rings.ts); retention.due is the whole due backlog. */
   rings: Rings;
   /** The account's exam date (YYYY-MM-DD), null if unset or a guest. */
   examDate: string | null;
@@ -32,8 +30,6 @@ const EMPTY: DashboardSummary = {
   streak: 0,
   lastScore: null,
   examCount: 0,
-  reviewDueCount: 0,
-  todayDueCount: 0,
   hasActivityToday: false,
   rings: {
     effort: { done: 0, target: DEFAULT_EFFORT_TARGET },
@@ -73,16 +69,6 @@ export async function GET() {
     .eq('owner_id', owner)
     .lte('due_at', now);
 
-  // Vocab spaced-repetition only exists for signed-in users (user_vocab_known
-  // has no guest_id column — guest known/favorites are localStorage-only).
-  const vocabDueQuery = user
-    ? supabase
-        .from('user_vocab_known')
-        .select('word_id', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-        .lte('next_review_at', now)
-    : null;
-
   const goalQuery = user
     ? supabase.from('user_goals').select('daily_activity_target, exam_date, score_prompt_dismissed_for').eq('user_id', user.id).maybeSingle()
     : null;
@@ -93,7 +79,7 @@ export async function GET() {
     : null;
   const ownerRef = { id: owner, type: user ? 'user' as const : 'guest' as const };
 
-  const [streakInfo, lastScoreRes, examCountRes, reviewCountRes, vocabDueRes, goalRes, nameRes, today] = await Promise.all([
+  const [streakInfo, lastScoreRes, examCountRes, reviewCountRes, goalRes, nameRes, today] = await Promise.all([
     computeStreakInfo(supabase, owner),
     supabase
       .from('exam_sessions')
@@ -113,14 +99,12 @@ export async function GET() {
       .not('completed_at', 'is', null)
       .not('score', 'is', null),
     reviewQuery,
-    vocabDueQuery,
     goalQuery,
     nameQuery,
     fetchTodayActivity(supabase, ownerRef),
   ]);
 
   const reviewDueCount = reviewCountRes.count ?? 0;
-  const vocabDueCount = vocabDueRes?.count ?? 0;
   const goal = goalRes?.data as {
     daily_activity_target?: number | null;
     exam_date?: string | null;
@@ -153,8 +137,6 @@ export async function GET() {
     streak: streakInfo.streak,
     lastScore: lastScoreRes.data?.score ?? null,
     examCount: examCountRes.count ?? 0,
-    reviewDueCount,
-    todayDueCount: reviewDueCount + vocabDueCount,
     hasActivityToday: streakInfo.hasActivityToday,
     rings,
     examDate: goal?.exam_date ?? null,

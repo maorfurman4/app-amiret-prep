@@ -26,13 +26,16 @@ describe('ExamDateCard', () => {
 
   it('asks a guest to sign in (dates live on the account)', () => {
     const html = render(null, false);
-    expect(html).toContain('מתי המבחן שלך?');
+    expect(html).toContain('קבע תאריך מבחן');
+    expect(html).toContain('התחבר כדי לשמור אותו');
     expect(html).toContain('href="/auth/login?next=/"');
   });
 
   it('prompts a signed-in student without a date to set one', () => {
     const html = render(null);
-    expect(html).toContain('מתי המבחן שלך?');
+    expect(html).toContain('קבע תאריך מבחן');
+    expect(html).toContain('החזרות יתוזמנו לפיו');
+    expect(html).not.toContain('בשיא ביום המבחן');
     expect(html).toContain('<button');
     expect(html).not.toContain('href=');
   });
@@ -55,5 +58,6 @@ describe('ExamDateCard', () => {
 
   it('treats a past date as needing a new one', () => {
     expect(render('2026-09-01')).toContain('תאריך המבחן עבר');
+    expect(render('2026-09-01')).toContain('קבע את התאריך הבא');
   });
 });

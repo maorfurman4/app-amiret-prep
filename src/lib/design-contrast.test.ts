@@ -21,8 +21,10 @@ for (const selector of [':root', '.dark']) {
     ['exam-accent-ink', 'exam-accent'],
     ['on-emerald', 'exam-sage'], ['on-emerald', 'exam-sage-strong'],
     ['on-amber', 'exam-alt'], ['on-danger', 'exam-wrong'],
-    // Home "היום שלך": the due count in the review nudge sits on the green card.
-    ['exam-wrong', 'exam-sage-bg'],
+    // Home "היום שלך": the review line and plan text on the green card, the CTA's count badge.
+    ['exam-ink-soft', 'exam-sage-bg'], ['on-emerald', 'exam-sage-strong'],
+    // Home exam-date picker: weekday names, the picked day, the active month chip.
+    ['exam-ink-soft', 'exam-surface'], ['exam-accent-ink', 'exam-accent'],
     // Recessed panels (results breakdown by type, /stats types): the accuracy colors on paper-alt.
     ...['exam-sage-strong', 'exam-alt', 'exam-wrong'].map(fg => [fg, 'exam-paper-alt']),
   ];
@@ -47,8 +49,10 @@ for (const selector of [':root', '.dark']) {
       expect(ratio(fg, bg)).toBeGreaterThanOrEqual(4.5);
     });
   });
-  describe(`${selector} menu UI contrast`, () => {
-    it.each(menuUiPairs)('%s on %s meets 3:1', (fg, bg) => {
+  // Home exam-date picker: today's ring, the focus outline and the chip borders against the card.
+  const pickerUiPairs = [['exam-accent', 'exam-surface'], ['exam-border-input', 'exam-surface']];
+  describe(`${selector} UI contrast`, () => {
+    it.each([...menuUiPairs, ...pickerUiPairs])('%s on %s meets 3:1', (fg, bg) => {
       expect(ratio(fg, bg)).toBeGreaterThanOrEqual(3);
     });
   });

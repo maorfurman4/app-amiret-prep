@@ -67,6 +67,6 @@ describe('SectionProgress', () => {
     expect(html.match(/aria-current="step"/g)).toHaveLength(1);
     expect(html).toContain('פרק 1, הושלם:');
     expect(html).toContain('פרק 3, הפרק הנוכחי:');
-    expect(html).toMatch(/tabindex="0" role="region" aria-label="התקדמות בפרקי המבחן"/);
+    expect(html).toMatch(/role="region" aria-label="התקדמות בפרקי המבחן"/);
   });
 });

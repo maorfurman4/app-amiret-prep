@@ -48,9 +48,14 @@ describe('ExamDateCard', () => {
     expect(html).toContain('1 בנובמבר 2026');
   });
 
-  it('mentions compression inside the final two weeks, and handles tomorrow/today', () => {
-    expect(render('2026-10-01')).toContain('המרווחים בין החזרות מתקצרים');
-    expect(render('2026-11-01')).not.toContain('המרווחים בין החזרות מתקצרים');
+  it('shows only the countdown and the date, also inside the final two weeks', () => {
+    const html = render('2026-10-01');
+    expect(html).toContain('עוד 8 ימים למבחן');
+    expect(html).toContain('1 באוקטובר 2026');
+    expect(html).not.toContain('המרווחים בין החזרות מתקצרים');
+  });
+
+  it('handles tomorrow and today', () => {
     expect(render('2026-09-24')).toContain('המבחן מחר');
     expect(render('2026-09-25')).toContain('עוד יומיים למבחן');
     expect(render('2026-09-23')).toContain('המבחן היום');

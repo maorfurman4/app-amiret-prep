@@ -158,7 +158,6 @@ export function ExamDateCard() {
           </div>
           <div className="mt-0.5 text-[12.5px] leading-snug text-exam-ink-soft">
             {formatExamDate(examDate)}
-            {daysLeft! <= 14 && daysLeft! > 0 && '. המרווחים בין החזרות מתקצרים לקראת המבחן.'}
           </div>
           {error && <div role="alert" className="text-xs font-semibold text-exam-wrong mt-0.5">{error}</div>}
         </div>

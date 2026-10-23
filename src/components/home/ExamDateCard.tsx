@@ -2,7 +2,7 @@
 
 import { useId, useState } from 'react';
 import Link from 'next/link';
-import { CalendarClock, CalendarCheck, ChevronLeft, Pencil, Trash2 } from 'lucide-react';
+import { CalendarClock, CalendarCheck, ChevronLeft, ExternalLink, Pencil, Trash2 } from 'lucide-react';
 import { useDashboardSummary } from '@/lib/dashboard-context';
 import { authFetch } from '@/lib/auth-fetch';
 import { addLocalDays, localDaysBetween, todayLocalStr } from '@/lib/date-local';
@@ -17,6 +17,28 @@ const TACTILE = 'transition-[background-color,border-color,box-shadow,transform]
 const BANNER_CLASSES = `w-full flex items-center gap-3 p-3.5 text-right ${CARD_LINK}`;
 const TITLE = 'block font-bold text-[15px] tracking-[-0.01em]';
 const SUB = 'block mt-0.5 text-[12.5px] leading-snug text-exam-ink-soft';
+
+/** NITE's official AMIRNET page, where the real exam is booked. Opened as is: no query, nothing about the user. */
+export const NITE_AMIRNET_URL = 'https://www.nite.org.il/other-tests/amirnet/';
+
+/** A quiet way out to book the real exam; separate from the date saved here. */
+function BookRealExam() {
+  return (
+    <p className="text-center text-[12.5px] text-exam-ink-soft" data-book-real-exam>
+      לא קבעת עדיין מבחן?{' '}
+      <a
+        href={NITE_AMIRNET_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1 font-semibold text-exam-accent underline underline-offset-2 hover:opacity-80 transition-opacity"
+      >
+        קבע מבחן
+        <ExternalLink className="w-3 h-3" aria-hidden />
+        <span className="sr-only">באתר מאל&quot;ו (נפתח בכרטיסייה חדשה)</span>
+      </a>
+    </p>
+  );
+}
 
 /** "24 בנובמבר 2026". */
 export function formatExamDate(dateStr: string): string {
@@ -72,14 +94,17 @@ export function ExamDateCard() {
 
   if (!data.canSetExamDate) {
     return (
-      <Link href="/auth/login?next=/" className={BANNER_CLASSES}>
-        <span className={`${ICON_TILE} size-10`}><CalendarClock className="w-5 h-5" strokeWidth={1.75} aria-hidden /></span>
-        <span className="flex-1 min-w-0">
-          <span className={TITLE}>קבע תאריך מבחן</span>
-          <span className={SUB}>התחבר כדי לשמור אותו</span>
-        </span>
-        <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
-      </Link>
+      <div className="space-y-2">
+        <Link href="/auth/login?next=/" className={BANNER_CLASSES}>
+          <span className={`${ICON_TILE} size-10`}><CalendarClock className="w-5 h-5" strokeWidth={1.75} aria-hidden /></span>
+          <span className="flex-1 min-w-0">
+            <span className={TITLE}>קבע תאריך מבחן</span>
+            <span className={SUB}>התחבר כדי לשמור אותו</span>
+          </span>
+          <ChevronLeft className="w-4 h-4 text-exam-ink-soft flex-shrink-0" aria-hidden />
+        </Link>
+        <BookRealExam />
+      </div>
     );
   }
 
@@ -144,6 +169,7 @@ export function ExamDateCard() {
             ביטול
           </button>
         </div>
+        <BookRealExam />
       </form>
     );
   }

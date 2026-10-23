@@ -31,6 +31,12 @@ describe('ExamDateCard', () => {
     expect(html).toContain('href="/auth/login?next=/"');
   });
 
+  it('offers a guest the official NITE booking page, in a new tab, without signing in', () => {
+    const html = render(null, false);
+    expect(html).toContain('לא קבעת עדיין מבחן?');
+    expect(html).toMatch(/<a href="https:\/\/www\.nite\.org\.il\/other-tests\/amirnet\/" target="_blank" rel="noopener noreferrer"[^>]*>קבע מבחן/);
+  });
+
   it('prompts a signed-in student without a date to set one', () => {
     const html = render(null);
     expect(html).toContain('קבע תאריך מבחן');

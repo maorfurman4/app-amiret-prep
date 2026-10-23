@@ -10,6 +10,7 @@ import { ResultsScorePrompt } from '@/components/official-score/ResultsScoreProm
 import { localDateStr, todayLocalStr } from '@/lib/date-local';
 import { loadFailure, type LoadFailure } from '@/lib/session-lookup';
 import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
+import { SessionGoalCelebration } from '@/components/home/SessionGoalCelebration';
 import { ResultsView, type ResultsSession } from '@/components/results/ResultsView';
 
 export default function ResultsPage({ params }: { params: Promise<{ sessionId: string }> }) {
@@ -77,9 +78,9 @@ export default function ResultsPage({ params }: { params: Promise<{ sessionId: s
       session={session}
       sessionId={sessionId}
       between={<>
-        {/* Only the exam just finished can have earned today's streak — not a
-            results page reopened from history. */}
-        {session.completed_at && localDateStr(new Date(session.completed_at)) === todayLocalStr() && <SessionStreakCelebration />}
+        {/* Only the exam just finished can have earned today's streak (or goal) —
+            not a results page reopened from history. */}
+        {session.completed_at && localDateStr(new Date(session.completed_at)) === todayLocalStr() && <><SessionStreakCelebration /><SessionGoalCelebration /></>}
         {!session.is_practice && <ResultsScorePrompt />}
         <AuthCTA message="התחבר כדי לשמור את הציון הזה ולהמשיך מכל מכשיר. כל מה שעשית עד עכשיו יעבור אוטומטית לחשבון." />
       </>}

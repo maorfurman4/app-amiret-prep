@@ -12,6 +12,7 @@ import type { Question } from '@/types/exam';
 import { authFetch } from '@/lib/auth-fetch';
 import { DwellTimer, logResponses, responseEntry } from '@/lib/response-log-client';
 import { SessionStreakCelebration } from '@/components/home/StreakCelebration';
+import { SessionGoalCelebration } from '@/components/home/SessionGoalCelebration';
 import { toCanonicalOption } from '@/lib/option-shuffle';
 import { ensureGuestIdentity } from '@/lib/guest';
 import { useActivityGuard } from '@/lib/activity-guard';
@@ -258,6 +259,7 @@ function PlanScreen({ plan, answered }: { plan: StartPlan; answered: number }) {
   return (
     <main id="main" className="min-h-dvh bg-exam-paper px-4 py-8" dir="rtl">
       <SessionStreakCelebration />
+      <SessionGoalCelebration />
       <div className="max-w-lg mx-auto space-y-5">
         <div className="text-center animate-fade-up">
           <Sparkles className="w-9 h-9 mx-auto mb-2 text-exam-accent animate-check-pop" strokeWidth={1.5} aria-hidden />

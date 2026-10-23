@@ -124,7 +124,7 @@ describe('UserMenu — signed in', () => {
     expect(byText('הסטטיסטיקה שלי', panel).getAttribute('href')).toBe('/stats');
     expect(byText('הציון הרשמי', panel).getAttribute('href')).toBe('/stats#official-scores');
     expect(panel.querySelector('[data-value="exam-date"]')?.textContent).toBe('14 בדצמבר 2026');
-    expect(panel.querySelector('[data-value="daily-goal"]')?.textContent).toBe('15 שאלות');
+    expect(panel.querySelector('[data-goal-value]')?.textContent).toBe('15');
     expect(panel.querySelector('[role="radiogroup"]')?.textContent).toBe('בהירכהה');
     expect(panel.querySelector('[role="switch"]')?.textContent).toContain('הגיית מילים');
     for (const label of ['שם תצוגה ותמונה', 'שינוי סיסמה', 'מחיקת חשבון', 'התנתקות']) expect(byText(label, panel)).toBeTruthy();
@@ -165,6 +165,54 @@ describe('UserMenu — signed in', () => {
     await act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' })); });
     expect(document.activeElement).not.toBe(first);
     expect(panel.contains(document.activeElement)).toBe(true);
+  });
+});
+
+describe('UserMenu — daily goal', () => {
+  it('reads the target from /api/goals and saves a change with one PUT', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      await render(emailUser);
+      const panel = await openMenu();
+      const more = panel.querySelector<HTMLButtonElement>('button[aria-label="יותר שאלות"]')!;
+      await click(more);
+      await click(more);
+      expect(panel.querySelector('[data-goal-value]')?.textContent).toBe('25');
+      expect(m.authFetch).not.toHaveBeenCalledWith('/api/goals', expect.objectContaining({ method: 'PUT' }));
+      await act(async () => { vi.advanceTimersByTime(500); });
+      const puts = m.authFetch.mock.calls.filter(([url, init]) => url === '/api/goals' && init?.method === 'PUT');
+      expect(puts).toHaveLength(1);
+      expect(JSON.parse(puts[0][1].body)).toEqual({ dailyActivityTarget: 25 });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('goes back to the saved value when the save fails', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+    try {
+      m.authFetch.mockImplementation((url: string, init: RequestInit = {}) => {
+        if (url === '/api/goals') return init.method === 'PUT' ? ok({ error: 'x' }, 500) : ok({ examDate: null, dailyActivityTarget: 15 });
+        return ok({ streak: 0 });
+      });
+      await render(emailUser);
+      const panel = await openMenu();
+      await click(panel.querySelector<HTMLButtonElement>('button[aria-label="פחות שאלות"]')!);
+      expect(panel.querySelector('[data-goal-value]')?.textContent).toBe('10');
+      await act(async () => { vi.advanceTimersByTime(500); });
+      await act(async () => {});
+      expect(panel.querySelector('[data-goal-value]')?.textContent).toBe('15');
+      expect(panelText()).toContain('לא נשמר. נסה שוב');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('stops at the 5–50 range', async () => {
+    m.authFetch.mockImplementation((url: string) => ok(url === '/api/goals' ? { examDate: null, dailyActivityTarget: 50 } : { streak: 0 }));
+    await render(emailUser);
+    const panel = await openMenu();
+    expect(panel.querySelector<HTMLButtonElement>('button[aria-label="יותר שאלות"]')!.disabled).toBe(true);
   });
 });
 

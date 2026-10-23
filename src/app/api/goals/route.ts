@@ -4,6 +4,7 @@ import { getServerClients } from '@/lib/supabase-server';
 import { addLocalDays, todayLocalStr } from '@/lib/date-local';
 import { examInstant } from '@/lib/fsrs';
 import { recapCardsToExam } from '@/lib/srs';
+import { MAX_DAILY_TARGET, MIN_DAILY_TARGET } from '@/lib/daily-goal';
 
 const DEFAULT_DAILY_ACTIVITY_TARGET = 15;
 /** Nobody books an AMIRNET sitting further out than this. */
@@ -11,8 +12,10 @@ const MAX_DAYS_AHEAD = 730;
 
 const putSchema = z.object({
   // YYYY-MM-DD in Israel time, or null to clear.
-  examDate: z.iso.date().nullable(),
-});
+  examDate: z.iso.date().nullable().optional(),
+  // Questions a day for the practice ring.
+  dailyActivityTarget: z.int().min(MIN_DAILY_TARGET).max(MAX_DAILY_TARGET).optional(),
+}).refine(b => b.examDate !== undefined || b.dailyActivityTarget !== undefined);
 
 /**
  * GET /api/goals → { examDate, dailyActivityTarget }
@@ -35,10 +38,12 @@ export async function GET() {
 }
 
 /**
- * PUT /api/goals { examDate: 'YYYY-MM-DD' | null }
- * Sets (or clears) the exam date the spaced-repetition scheduler compresses
- * toward. Setting it immediately pulls every card that would come due after
- * the pre-exam window back into it (src/lib/srs.ts recapCardsToExam).
+ * PUT /api/goals { examDate?: 'YYYY-MM-DD' | null, dailyActivityTarget?: 5..50 }
+ * Either field, or both; one left out is left as it was.
+ * examDate sets (or clears) the exam date the spaced-repetition scheduler
+ * compresses toward. Setting it immediately pulls every card that would come
+ * due after the pre-exam window back into it (src/lib/srs.ts recapCardsToExam).
+ * dailyActivityTarget is the practice ring's daily question count.
  */
 export async function PUT(req: Request) {
   const { supabase, user } = await getServerClients();
@@ -46,9 +51,9 @@ export async function PUT(req: Request) {
 
   const parsed = putSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
-  const { examDate } = parsed.data;
+  const { examDate, dailyActivityTarget } = parsed.data;
 
-  if (examDate !== null) {
+  if (examDate) {
     const today = todayLocalStr();
     if (examDate < today || examDate > addLocalDays(today, MAX_DAYS_AHEAD)) {
       return NextResponse.json({ error: 'Exam date must be between today and two years from now' }, { status: 400 });
@@ -57,14 +62,19 @@ export async function PUT(req: Request) {
 
   const { error } = await supabase
     .from('user_goals')
-    .upsert({ user_id: user.id, exam_date: examDate, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
-  if (error) return NextResponse.json({ error: 'Failed to save exam date' }, { status: 500 });
+    .upsert({
+      user_id: user.id,
+      ...(examDate !== undefined && { exam_date: examDate }),
+      ...(dailyActivityTarget !== undefined && { daily_activity_target: dailyActivityTarget }),
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id' });
+  if (error) return NextResponse.json({ error: 'Failed to save goals' }, { status: 500 });
 
-  const examAt = examInstant(examDate);
+  const examAt = examDate ? examInstant(examDate) : null;
   if (examAt) {
     const recap = await recapCardsToExam(supabase, { id: user.id, type: 'user' }, examAt);
     if (recap.error) console.error('[goals] exam recap failed:', recap.error);
   }
 
-  return NextResponse.json({ ok: true, examDate });
+  return NextResponse.json({ ok: true, ...(examDate !== undefined && { examDate }), ...(dailyActivityTarget !== undefined && { dailyActivityTarget }) });
 }

@@ -11,6 +11,8 @@ import { DiagnosticBanner } from '@/components/home/DiagnosticBanner';
 import { ReviewQueueCard } from '@/components/home/ReviewQueueCard';
 import { StatsCard } from '@/components/home/StatsCard';
 import { StreakCelebration } from '@/components/home/StreakCelebration';
+import { GoalMetCelebration } from '@/components/home/GoalMetCelebration';
+import { DailyGoalPrompt } from '@/components/home/DailyGoalPrompt';
 import { TodaySessionCta } from '@/components/home/TodaySessionCta';
 import { ExamDateCard } from '@/components/home/ExamDateCard';
 import { OfficialScorePrompt } from '@/components/home/OfficialScorePrompt';
@@ -41,6 +43,7 @@ export default function HomePage() {
     <main id="main" className="min-h-dvh overflow-x-clip bg-exam-paper flex flex-col items-center px-4 pt-3.5 pb-8 text-exam-ink" dir="rtl">
       <DashboardSummaryProvider>
         <StreakCelebration />
+        <GoalMetCelebration />
         <div className="w-full max-w-lg">
           {/* Top bar: account + theme, in-flow (not floating) */}
           <div className="flex items-center justify-end gap-2 [&_a]:text-exam-ink-soft [&_a:hover]:text-exam-ink [&_a:hover]:bg-exam-paper-alt">
@@ -65,6 +68,7 @@ export default function HomePage() {
                 Once the date has passed, the same slot asks for the official
                 score instead (the two never show together). */}
             <div className="empty:hidden"><ExamDateCard /><OfficialScorePrompt /></div>
+            <div className="empty:hidden"><DailyGoalPrompt /></div>
 
             {/* Primary action — the one raised, navy-shadowed control on the page */}
             <Link

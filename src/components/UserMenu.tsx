@@ -15,6 +15,7 @@ import { DELETE_CONFIRMATION } from '@/lib/account-deletion';
 import { setWordAudio, useWordAudio } from '@/lib/sound-preference';
 import { Reveal } from '@/components/strategies/Reveal';
 import { Modal } from '@/components/ui/Modal';
+import { GoalStepper } from '@/components/GoalStepper';
 import { setTheme, useIsDark } from '@/components/ThemeToggle';
 import { ExamDatePicker } from '@/components/home/ExamDatePicker';
 import { formatExamDate } from '@/components/home/ExamDateCard';
@@ -135,6 +136,11 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
   const [examSaving, setExamSaving] = useState(false);
   const [examError, setExamError] = useState<string | null>(null);
 
+  // The daily goal saves itself shortly after the last step (one PUT per burst of clicks).
+  const [goalError, setGoalError] = useState(false);
+  const goalSave = useRef<{ timer: ReturnType<typeof setTimeout>; value: number } | null>(null);
+  const savedTarget = useRef<number | null>(null);
+
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteWord, setDeleteWord] = useState('');
   const [deleting, setDeleting] = useState(false);
@@ -193,7 +199,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
     if (!signedIn) return;
     authFetch('/api/goals')
       .then(r => (r.ok ? r.json() : Promise.reject()))
-      .then((d: Goals) => { if (req === loadRequest.current) setGoals(d); })
+      .then((d: Goals) => { if (req === loadRequest.current) { savedTarget.current = d.dailyActivityTarget; setGoals(d); } })
       .catch(() => { if (req === loadRequest.current) setGoals(null); });
   }, []);
 
@@ -445,6 +451,35 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
     }
   };
 
+  const putDailyTarget = (value: number) => {
+    goalSave.current = null;
+    authFetch('/api/goals', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dailyActivityTarget: value }),
+    })
+      .then(res => { if (!res.ok) throw new Error(String(res.status)); savedTarget.current = value; })
+      .catch(() => {
+        setGoalError(true);
+        // Back to what the server has, so the row never shows an unsaved value.
+        const saved = savedTarget.current;
+        if (saved !== null) setGoals(g => (g ? { ...g, dailyActivityTarget: saved } : g));
+      });
+  };
+
+  const changeDailyTarget = (value: number) => {
+    setGoalError(false);
+    setGoals(g => (g ? { ...g, dailyActivityTarget: value } : g));
+    if (goalSave.current) clearTimeout(goalSave.current.timer);
+    goalSave.current = { value, timer: setTimeout(() => putDailyTarget(value), 500) };
+  };
+
+  // Leaving the page with a step still waiting: send it now rather than drop it.
+  useEffect(() => () => {
+    const pending = goalSave.current;
+    if (pending) { clearTimeout(pending.timer); putDailyTarget(pending.value); }
+  }, []);
+
   const handleDeleteAccount = async () => {
     if (deleting || deleteWord.trim() !== DELETE_WORD) return;
     setDeleting(true);
@@ -673,13 +708,18 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
             </span>
             <ChevronLeft className="w-4 h-4 flex-shrink-0 text-menu-ink-soft" aria-hidden />
           </button>
-          {/* shortcut: read-only — no editor or API writes daily_activity_target yet; make it a row button once one exists. */}
           <div className={ROW_STATIC}>
             <Target className={ROW_ICON} aria-hidden />
-            <span className="flex-1">יעד יומי</span>
-            <span className={ROW_VALUE} data-value="daily-goal">
-              {goals ? heCount(goals.dailyActivityTarget, 'question') : '…'}
+            <span className="flex-1">
+              <span id={`${uid}-goal`}>יעד יומי</span>
+              {goalError && <span role="alert" className="block text-[11px] font-semibold text-menu-danger">לא נשמר. נסה שוב</span>}
             </span>
+            {goals ? (
+              <>
+                <GoalStepper value={goals.dailyActivityTarget} onChange={changeDailyTarget} labelledBy={`${uid}-goal`} buttonClass="border border-menu-border-input text-menu-ink hover:bg-menu-hover" />
+                <span className="text-xs font-medium text-menu-ink-soft">שאלות</span>
+              </>
+            ) : <span className={ROW_VALUE} data-value="daily-goal">…</span>}
           </div>
         </>
       ))}

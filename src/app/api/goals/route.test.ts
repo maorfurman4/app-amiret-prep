@@ -61,6 +61,45 @@ describe('/api/goals', () => {
     expect(mocks.recapCardsToExam).toHaveBeenCalledWith(d.supabase, { id: 'u', type: 'user' }, new Date('2026-11-01T06:00:00.000Z'));
   });
 
+  it('PUT saves the daily target alone, leaving the exam date untouched', async () => {
+    const d = db();
+    mocks.getServerClients.mockResolvedValue({ supabase: d.supabase, user: { id: 'u' } });
+    const res = await put({ dailyActivityTarget: 25 });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true, dailyActivityTarget: 25 });
+    const row = d.upsert.mock.calls[0][0];
+    expect(row).toMatchObject({ user_id: 'u', daily_activity_target: 25 });
+    expect(row).not.toHaveProperty('exam_date');
+    expect(mocks.recapCardsToExam).not.toHaveBeenCalled();
+  });
+
+  it('PUT saves both fields together', async () => {
+    const d = db();
+    mocks.getServerClients.mockResolvedValue({ supabase: d.supabase, user: { id: 'u' } });
+    expect((await put({ examDate: '2026-11-01', dailyActivityTarget: 5 })).status).toBe(200);
+    expect(d.upsert).toHaveBeenCalledWith(expect.objectContaining({ exam_date: '2026-11-01', daily_activity_target: 5 }), { onConflict: 'user_id' });
+  });
+
+  it.each([
+    ['below the range', 4],
+    ['above the range', 51],
+    ['a fraction', 12.5],
+    ['a string', '15'],
+    ['null', null],
+  ])('PUT rejects a daily target %s', async (_label, dailyActivityTarget) => {
+    const d = db();
+    mocks.getServerClients.mockResolvedValue({ supabase: d.supabase, user: { id: 'u' } });
+    expect((await put({ dailyActivityTarget })).status).toBe(400);
+    expect(d.upsert).not.toHaveBeenCalled();
+  });
+
+  it('PUT keeps the exam-date-only body working as before (no target written)', async () => {
+    const d = db();
+    mocks.getServerClients.mockResolvedValue({ supabase: d.supabase, user: { id: 'u' } });
+    expect(await (await put({ examDate: '2026-11-01' })).json()).toEqual({ ok: true, examDate: '2026-11-01' });
+    expect(d.upsert.mock.calls[0][0]).not.toHaveProperty('daily_activity_target');
+  });
+
   it('PUT null clears the date without recapping', async () => {
     const d = db();
     mocks.getServerClients.mockResolvedValue({ supabase: d.supabase, user: { id: 'u' } });

@@ -32,6 +32,7 @@ export const LEARNING_KEYS = [
   // A pending merge would otherwise run for whoever signs in next.
   'amiret_pending_guest_merge',
   'amiret_streak_celebration_seen_date',
+  'amiret_goal_celebration_seen_date',
   LOCAL_OWNER_KEY,
 ] as const;
 

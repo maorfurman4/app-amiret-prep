@@ -2,32 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
-import { Home, Target, PenLine, BookOpen, BarChart3 } from 'lucide-react';
-import { useActivityGuard } from '@/lib/activity-guard';
-
-// 5 tabs max — thumb-friendly on narrow screens.
-// חזרה חכמה, אסטרטגיות וטיפים נגישים מדף הבית.
-const TABS = [
-  { href: '/',            icon: Home,      label: 'בית'       },
-  { href: '/exam',        icon: Target,    label: 'מבחן'      },
-  { href: '/practice',    icon: PenLine,   label: 'תרגול'    },
-  { href: '/vocabulary',  icon: BookOpen,  label: 'מילים'     },
-  { href: '/stats',       icon: BarChart3, label: 'סטטיסטיקה' },
-];
-
-const CONFIRM_WINDOW_MS = 2500;
-
-// Hide during active exam/review sessions
-function shouldHide(pathname: string): boolean {
-  // /exam/[sessionId] — active exam
-  if (/^\/exam\/[^/]+/.test(pathname)) return true;
-  // /review/[sessionId] — reviewing past session
-  if (/^\/review\/[^/]+/.test(pathname)) return true;
-  // Login / signup / callback / reset — a focused flow with its own exits.
-  if (pathname === '/auth' || pathname.startsWith('/auth/')) return true;
-  return false;
-}
+import { NAV_ITEMS, isNavActive, shouldHideNav, useNavClick } from '@/lib/nav';
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -35,15 +10,9 @@ export function BottomNav() {
 }
 
 function BottomNavContent({ pathname }: { pathname: string }) {
-  const { inProgress } = useActivityGuard();
-  const [pendingHref, setPendingHref] = useState<string | null>(null);
-  const pendingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { pendingHref, onNavClick } = useNavClick(pathname);
 
-  useEffect(() => () => {
-    if (pendingTimerRef.current) clearTimeout(pendingTimerRef.current);
-  }, []);
-
-  if (shouldHide(pathname)) return null;
+  if (shouldHideNav(pathname)) return null;
 
   return (
     <nav
@@ -58,41 +27,16 @@ function BottomNavContent({ pathname }: { pathname: string }) {
       {/* The first tap mid-activity only swaps a label; say why nothing happened. */}
       <p role="status" className="sr-only">{pendingHref ? 'באמצע תרגול. לחץ שוב כדי לצאת' : ''}</p>
       <div className="flex">
-        {TABS.map(tab => {
-          const active =
-            tab.href === '/'
-              ? pathname === '/'
-              : pathname === tab.href || pathname.startsWith(tab.href + '/');
+        {NAV_ITEMS.map(tab => {
+          const active = isNavActive(tab.href, pathname);
           const isPending = pendingHref === tab.href;
           const Icon = tab.icon;
-
-          const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
-            // Mid-activity (answering a practice question, mid vocab deck):
-            // the FIRST tap on any tab — including the one you're already on,
-            // which would otherwise hard-reload and wipe progress — only asks
-            // for confirmation. A second tap within the window goes through.
-            if (inProgress && !isPending) {
-              e.preventDefault();
-              setPendingHref(tab.href);
-              if (pendingTimerRef.current) clearTimeout(pendingTimerRef.current);
-              pendingTimerRef.current = setTimeout(() => setPendingHref(null), CONFIRM_WINDOW_MS);
-              return;
-            }
-            // Clicking the tab you're already on is a no-op for Next's router
-            // (same URL → no navigation event → no remount), so any in-page
-            // state — practice's picked type, vocabulary's mode — just sits
-            // there. Force a hard reload back to that tab's home screen instead.
-            if (pathname === tab.href) {
-              e.preventDefault();
-              window.location.href = tab.href;
-            }
-          };
 
           return (
             <Link
               key={tab.href}
               href={tab.href}
-              onClick={handleClick}
+              onClick={onNavClick(tab.href)}
               aria-current={active ? 'page' : undefined}
               className={`relative flex-1 flex flex-col items-center pt-2.5 pb-2 gap-1 transition-colors ${
                 active
@@ -108,7 +52,7 @@ function BottomNavContent({ pathname }: { pathname: string }) {
               ) : (
                 <Icon className="w-6 h-6" strokeWidth={active ? 2.25 : 1.75} aria-hidden />
               )}
-              <span className={`text-[11px] leading-tight ${active ? 'font-bold' : 'font-medium'} ${isPending ? 'text-exam-alt' : ''}`}>
+              <span className={`text-[11px] leading-tight text-center ${active ? 'font-bold' : 'font-medium'} ${isPending ? 'text-exam-alt' : ''}`}>
                 {tab.label}
               </span>
             </Link>

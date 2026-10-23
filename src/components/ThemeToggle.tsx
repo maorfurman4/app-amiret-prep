@@ -11,14 +11,16 @@ function subscribeTheme(listener: () => void) {
 const readTheme = () => document.documentElement.classList.contains('dark');
 const serverTheme = () => false;
 
-export function ThemeToggle() {
-  const isDark = useSyncExternalStore(subscribeTheme, readTheme, serverTheme);
+export const useIsDark = () => useSyncExternalStore(subscribeTheme, readTheme, serverTheme);
 
-  const toggle = () => {
-    const next = !isDark;
-    try { localStorage.setItem('theme', next ? 'dark' : 'light'); } catch { /* The in-page theme still works. */ }
-    document.documentElement.classList.toggle('dark', next);
-  };
+export function setTheme(dark: boolean) {
+  try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch { /* The in-page theme still works. */ }
+  document.documentElement.classList.toggle('dark', dark);
+}
+
+export function ThemeToggle() {
+  const isDark = useIsDark();
+  const toggle = () => setTheme(!isDark);
 
   return (
     <button

@@ -19,6 +19,7 @@ import {
   PartyPopper, ThumbsUp, AlertTriangle, ChevronLeft,
 } from 'lucide-react';
 import { agree, heCount } from '@/lib/hebrew-count';
+import { speakWord as speak } from '@/lib/sound-preference';
 
 interface VocabWord {
   id: string;
@@ -51,15 +52,6 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const VOCAB_MAX_INTERVAL_DAYS = 60;
-
-function speak(word: string) {
-  if (typeof window === 'undefined') return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(word);
-  u.lang = 'en-US';
-  u.rate = 0.85;
-  window.speechSynthesis.speak(u);
-}
 
 export default function TodaySessionPage() {
   const supabase = createClient();

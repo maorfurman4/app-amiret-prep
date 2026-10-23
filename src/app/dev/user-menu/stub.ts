@@ -10,7 +10,8 @@
  *   ?stats=none      no completed exams
  *   ?stats=error     /api/stats fails
  *   ?fail=name|avatar|password|delete   that write returns an error
- *   ?streak=N        the streak /api/streak reports (default 5)
+ *   ?streak=N        the streak /api/streak and the dashboard report (default 5)
+ *   ?target=N&done=N today's practice goal and progress (dashboard-summary)
  *   ?provider=google a Google user: user_metadata.avatar_url is the Google
  *                    photo, as every Google sign-in resets it to
  *   ?avatar=custom   user_stats.avatar_url already holds a custom upload
@@ -94,6 +95,7 @@ export function installProfileStub() {
     avatarUrl: params.get('avatar') === 'custom' ? CUSTOM_PHOTO : null,
     passwordLength: 0,
     examDate: '2026-12-14',
+    dailyTarget: Number(params.get('target') ?? 15),
     deleted: false,
   };
   const calls: Call[] = [];
@@ -151,13 +153,23 @@ export function installProfileStub() {
       }
       if (url.pathname === '/api/goals') {
         if (method === 'PUT') {
-          const body = JSON.parse(String(init.body ?? '{}')) as { examDate?: string | null };
+          const body = JSON.parse(String(init.body ?? '{}')) as { examDate?: string | null; dailyActivityTarget?: number };
           log(body);
-          state.examDate = body.examDate ?? null;
-          return json({ ok: true, examDate: state.examDate });
+          if (body.examDate !== undefined) state.examDate = body.examDate;
+          if (body.dailyActivityTarget !== undefined) state.dailyTarget = body.dailyActivityTarget;
+          return json({ ok: true, ...body });
         }
         log();
-        return json({ examDate: state.examDate, dailyActivityTarget: 15 });
+        return json({ examDate: state.examDate, dailyActivityTarget: state.dailyTarget });
+      }
+      if (url.pathname === '/api/dashboard-summary') {
+        log();
+        return json({
+          streak: Number(params.get('streak') ?? 5), lastScore: null, examCount: 0, hasActivityToday: true,
+          rings: { effort: { done: Number(params.get('done') ?? 0), target: state.dailyTarget }, retention: { done: 0, due: 0 }, simulation: { done: false } },
+          examDate: state.examDate, canSetExamDate: true, officialScorePrompt: null, displayName: 'נועה',
+          today: { answered: 0, correct: 0, timeMs: 0, byType: [] },
+        });
       }
       // Never reaches the server: the preview can't delete anything.
       if (url.pathname === '/api/account' && method === 'DELETE') {

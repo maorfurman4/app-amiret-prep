@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Heebo, Lora } from 'next/font/google';
 import './globals.css';
 import { BottomNav } from '@/components/BottomNav';
+import { DesktopNav } from '@/components/DesktopNav';
 import { DevMobileAudit } from '@/components/DevMobileAudit';
 import { GuestMergeRetry } from '@/components/GuestMergeRetry';
 import { ActivityGuardProvider } from '@/lib/activity-guard';
@@ -76,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ActivityGuardProvider>
           {children}
           <BottomNav />
+          <DesktopNav />
         </ActivityGuardProvider>
         <GuestMergeRetry />
         {process.env.NODE_ENV === 'development' && <DevMobileAudit />}

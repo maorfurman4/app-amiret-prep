@@ -4,6 +4,7 @@ import { forwardRef, useEffect, useState, type ComponentType, type InputHTMLAttr
 import Link from 'next/link';
 import { AlertCircle, CheckCircle2, Eye, EyeOff, Info } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
+import { LegalLinks } from '@/components/LegalLinks';
 
 /**
  * Shared building blocks for every auth screen (login/signup, forgot,
@@ -30,6 +31,7 @@ export function AuthShell({ children, footer, srTitle }: { children: ReactNode; 
           {children}
         </div>
         {footer && <div className="mt-5 text-center text-xs text-exam-ink-soft leading-relaxed space-y-2">{footer}</div>}
+        <LegalLinks className="mt-4 text-center text-exam-ink-soft" />
       </div>
     </main>
   );

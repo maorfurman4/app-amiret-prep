@@ -20,9 +20,10 @@ import { setTheme, useIsDark } from '@/components/ThemeToggle';
 import { ExamDatePicker } from '@/components/home/ExamDatePicker';
 import { formatExamDate } from '@/components/home/ExamDateCard';
 import {
-  BarChart3, Award, CalendarClock, Target, SunMoon, Volume2, UserRound, Lock, Trash2, LifeBuoy, ShieldCheck,
+  BarChart3, Award, CalendarClock, Target, SunMoon, Volume2, UserRound, Lock, Trash2, LifeBuoy,
   LogOut, LogIn, ChevronDown, ChevronLeft, Camera, Eye, EyeOff, Check, PenLine, Flame,
 } from 'lucide-react';
+import { LegalLinks } from '@/components/LegalLinks';
 
 type Section = 'profile' | 'password';
 type Goals = { examDate: string | null; dailyActivityTarget: number };
@@ -615,7 +616,6 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
   const info = group('info', 'מידע', (
     <>
       {linkRow('/help', <LifeBuoy className={ROW_ICON} aria-hidden />, 'עזרה ותמיכה')}
-      {linkRow('/privacy', <ShieldCheck className={ROW_ICON} aria-hidden />, 'פרטיות ותנאים')}
     </>
   ));
 
@@ -880,6 +880,7 @@ export function UserMenu({ previewUser }: { previewUser?: User } = {}) {
       className="fixed z-[1000] max-h-[calc(100dvh-5rem)] overflow-y-auto overscroll-contain origin-top-left rounded-2xl border border-menu-border bg-menu-surface p-2 text-menu-ink shadow-raised ring-1 ring-black/5 focus:outline-none animate-in fade-in-0 zoom-in-95 slide-in-from-top-1 duration-200 ease-spring-soft"
     >
       {user ? accountBody : guestBody}
+      <LegalLinks className="mt-3 pt-2 text-center text-menu-ink-soft" />
     </div>,
     document.body,
   );

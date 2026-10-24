@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BackNav } from '@/components/BackNav';
+import { ContactEmailLink } from '@/components/ContactEmailLink';
 
 export const metadata: Metadata = { title: 'עזרה ותמיכה | 134+' };
 
@@ -52,6 +53,9 @@ export default function HelpPage() {
               </details>
             ))}
           </div>
+          <p className="mt-6 text-center text-sm text-exam-ink-soft">
+            לא מצאת תשובה? כתוב לנו ל<ContactEmailLink className={LINK} />
+          </p>
         </div>
       </main>
     </div>

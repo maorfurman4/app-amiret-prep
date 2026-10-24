@@ -129,9 +129,11 @@ describe('UserMenu — signed in', () => {
     expect(panel.querySelector('[role="switch"]')?.textContent).toContain('הגיית מילים');
     for (const label of ['שם תצוגה ותמונה', 'שינוי סיסמה', 'מחיקת חשבון', 'התנתקות']) expect(byText(label, panel)).toBeTruthy();
     expect(byText('עזרה ותמיכה', panel).getAttribute('href')).toBe('/help');
-    expect(byText('פרטיות ותנאים', panel).getAttribute('href')).toBe('/privacy');
-    // Sign-out sits last, after the info group.
-    expect(panel.lastElementChild?.textContent).toBe('התנתקות');
+    // Privacy/terms are demoted to small-print at the very bottom; both links open /privacy.
+    const legal = [...panel.querySelectorAll('a[href="/privacy"]')];
+    expect(legal.map(a => a.textContent)).toEqual(['תנאי שימוש', 'מדיניות פרטיות']);
+    expect(byText('התנתקות', panel)).toBeTruthy();
+    expect(panel.lastElementChild?.textContent).toBe('תנאי שימוש · מדיניות פרטיות');
   });
 
   it('offers to set a display name when there is none', async () => {

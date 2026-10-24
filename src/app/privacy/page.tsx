@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { BackNav } from '@/components/BackNav';
+import { ContactEmailLink } from '@/components/ContactEmailLink';
 
 export const metadata: Metadata = { title: 'פרטיות ותנאים | 134+' };
 
@@ -59,6 +60,12 @@ export default function PrivacyPage() {
                 </ul>
               </section>
             ))}
+            <section className="rounded-2xl border border-exam-border bg-exam-surface p-5 shadow-surface">
+              <h2 className="font-bold text-exam-ink mb-2">יצירת קשר</h2>
+              <p className="text-sm leading-relaxed text-exam-ink-soft">
+                לשאלות על הפרטיות או בקשת מחיקת נתונים: <ContactEmailLink className="font-bold text-exam-accent underline underline-offset-2" />
+              </p>
+            </section>
           </div>
         </article>
       </main>
